@@ -92,13 +92,11 @@ img.grayscale {
 
 
 .header h1 {
-  font-size:80px;
-  -webkit-text-stroke: 1px rgba(1,1,1,0.1);
-  color:#431a6d;
-  color:#fff;
-  margin-left:-5px;
-  margin-bottom:5px;
-  text-transform:uppercase;
+  font-size: 80px;
+  color: #fff;
+  margin-left: -5px;
+  margin-bottom: 5px;
+  text-transform: uppercase;
 }
 
 .header .lead {
@@ -107,29 +105,10 @@ img.grayscale {
 }
 
 .header {
-  height: 80%;
+  height: 100%;
+  vertical-align: middle;
   background: #f68076 url('http://www.bootply.com/assets/example/pt_topo_l.png') repeat center center fixed;
 }
-
-/* use alt in navbar and header for different color */
-
-.alt {
-  background-color: #6E28C9;
-}
-
-.alt .lead {
-  color: #3B0496;
-}
-
-.alt.affix {
-  background-color:#4C06AB;
-}
-
-.alt li a:hover, .alt li.active {
-  background-color:#5D17BA;
-}
-
-
 
 .blurb {
   padding: 120px 0;
