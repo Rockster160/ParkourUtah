@@ -37,21 +37,6 @@ img.grayscale {
   background-color:#fff;
 }
 
-.scroll-down a, .scroll-top a {
-  color:#ffffff;
-}
-
-.scroll-down {
-  position:fixed;
-  bottom:20%;
-  right:0%;
-  color:#f9f9f9;
-}
-
-.scroll-top {
-  background-color:#dbdbdb;
-}
-
 .vert {
   vertical-align: middle;
   width:100%;
@@ -59,12 +44,20 @@ img.grayscale {
   text-align:center;
 }
 
+.header-container {
+  height: 100%;
+}
+
 .header .btn-lg {
   font-size:28px;
-  border-color:#eeeeee;
+  border-color:#eee;
   padding:15px;
   background-color:transparent;
-  color:#ffffff;
+  color:#fff;
+}
+
+.container > h1 {
+  color: red;
 }
 
 .header .btn-lg:hover {
@@ -73,12 +66,13 @@ img.grayscale {
 }
 
 .navbar a {
-  color:#fff;
-  font-size:14px;
+  color: #001;
+  text-shadow: 1px -2px #00E;
+  font-size: 16px;
 }
 
 .navbar-bold.affix {
-  background-color:#d46054;
+  color: #F00;
 }
 
 .navbar-bold {
@@ -87,7 +81,7 @@ img.grayscale {
 }
 
 .navbar-bold li a:hover, .navbar-bold li.active {
-  background-color:#d46054;
+  color: #00F;
 }
 
 
@@ -100,14 +94,13 @@ img.grayscale {
 }
 
 .header .lead {
-  color:#d46054;
-  font-size:25px;
+  color: #d46054;
+  font-size: 25px;
 }
 
 .header {
   height: 100%;
-  vertical-align: middle;
-  background: #f68076 url('http://www.bootply.com/assets/example/pt_topo_l.png') repeat center center fixed;
+  background: #aaa url('http://www.bootply.com/assets/example/pt_topo_l.png') repeat center center fixed;
 }
 
 .blurb {
@@ -164,15 +157,6 @@ img.grayscale {
 
 .gallery {
   padding: 50px 0;
-}
-
-.call-to-action {
-  background: #eeeeee;
-  padding: 50px 0;
-}
-
-.call-to-action .btn {
-  margin: 10px;
 }
 
 footer {
