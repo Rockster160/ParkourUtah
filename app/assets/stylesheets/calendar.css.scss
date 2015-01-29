@@ -1,0 +1,23 @@
+.calendar {
+  table-layout: fixed;
+}
+
+.calendar-date-link a {
+  color: black;
+  float: left;
+  border: solid 2px black;
+  width: 24px;
+  height: 24px;
+  background: white;
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.today {
+  background: yellow;
+}
+
+.today a {
+  background: red;
+}
