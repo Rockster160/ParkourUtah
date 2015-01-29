@@ -5,7 +5,7 @@ class Calendar < Struct.new(:view, :date, :callback)
   delegate :content_tag, to: :view
 
   def table
-    content_tag :table, class: "calendar table table-bordered table-striped" do
+    content_tag :table, class: "calendar table table-bordered" do
       header + week_rows
     end
   end
@@ -25,7 +25,7 @@ class Calendar < Struct.new(:view, :date, :callback)
   end
 
   def day_cell(day)
-    content_tag :td, view.capture(day, &callback), class: day_classes(day)
+    content_tag :td, view.capture(day, &callback), class: "#{day_classes(day)} day-cell"
   end
 
   def day_classes(day)

@@ -11,13 +11,18 @@
   background: white;
   &:hover {
     text-decoration: none;
+    background: #EEE;
+    border-color: #AAA
   }
 }
 
 .today {
-  background: yellow;
 }
 
 .today a {
-  background: red;
+  background: yellow;
+}
+
+.day-cell {
+  height: 9.52381vw; //(((width / 12)*8) / 7) = 9.523809523809524
 }
