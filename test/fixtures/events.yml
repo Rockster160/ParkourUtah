@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  when: 2015-01-29 16:36:43
+  host: MyString
+  cost: 1.5
+  description: MyText
+  location: MyString
+  type: 
+  summary: MyString
+
+two:
+  when: 2015-01-29 16:36:43
+  host: MyString
+  cost: 1.5
+  description: MyText
+  location: MyString
+  type: 
+  summary: MyString
