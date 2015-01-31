@@ -1,47 +1,50 @@
 <div class="row">
   <div class="col-md-12 text-center">
-    <div class="well controls">
-      <select multiple>
-        <option value="volvo">Volvo</option>
-        <option value="saab">Saab</option>
-        <option value="opel">Opel</option>
-        <option value="audi">Audi</option>
+    <div class="container well controls">
+      <select class="select-dropbox col-xs-4" multiple="multiple" placeholder="All Events(Default)">
+        <% classes.each do |class_name| %>
+            <option value="<%= class_name %>"><%= class_name.capitalize %></option>
+        <% end %>s
       </select>
-      <%= link_to calendar_path(date: @date - 1.month), class: "btn btn-default" do %>
-        <%= icon('chevron-left', '', class: '') %>
-      <% end %>
-      <%= "#{@date.strftime("%B")} #{@date.year}" %>
-      <%= link_to calendar_path(date: @date + 1.month), class: "btn btn-default" do %>
-        <%= icon('chevron-right', '', class: '') %>
-      <% end %>
-      <select multiple>
-        <option value="volvo">Volvo</option>
-        <option value="saab">Saab</option>
-        <option value="opel">Opel</option>
-        <option value="audi">Audi</option>
+      <span class="col-xs-4">
+        <%= link_to calendar_path(date: calendar_date - 1.month), class: "btn btn-default" do %>
+          <%= icon('chevron-left', '', class: '') %>
+        <% end %>
+        <%= "#{calendar_date.strftime("%B")} #{calendar_date.year}" %>
+        <%= link_to calendar_path(date: calendar_date + 1.month), class: "btn btn-default" do %>
+          <%= icon('chevron-right', '', class: '') %>
+        <% end %>
+      </span>
+      <select class="select-dropbox col-xs-4" multiple="multiple" placeholder="All Cities(Default)">
+        <% cities.each do |city| %>
+          <option value="<%= city %>"><%= city.capitalize %></option>
+        <% end %>
       </select>
     </div>
   </div>
 </div>
+
+
 <div class="row">
   <div class="col-md-12">
-    <%= calendar @date do |date| %>
+    <%= calendar calendar_date do |date| %>
       <div class="row calendar-date-link <%#= date.event - return strings %>"><%= link_to date.day, calendar_show_path(date: date) %></div>
       <div class="row">
         <% if @events[[date.month, date.day]] %>
         <ul>
           <% @events[[date.month, date.day]].sort_by { |event| event[:date] }.each do |event| %>
-            <li href="<%= event_path(event.id) %>" rel="tooltip" class="calendar-event <%= event.class_name %>" title=
-'
-Instructor: <%= event.host %>
+            <% if classes.include?(event.class) && cities.include?(event.city)  %>
+              <li href="<%= event_path(event.id) %>" rel="tooltip" class="calendar-event <%= event.class_name %>" title=
+'Instructor: <%= event.host %>
 <%= event.city %>
 <%= event.address %>
 <%= event.date.strftime('%l:%M %p') %>
 
 <%= event.description %>
 ' data-html="true">
-              <%= event.class_name.capitalize %>
-            </li>
+                <%= event.class_name.capitalize %>
+              </li>
+            <% end %>
           <% end %>
         </ul>
         <% end %>

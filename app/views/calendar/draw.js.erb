@@ -1,0 +1,2 @@
+$('.calendar-container').html("");
+$('.calendar-container').append('<%= j render partial: "calendar/show", locals: {calendar_date: @date, classes: @classes, cities: @cities} %>')

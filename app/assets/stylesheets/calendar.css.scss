@@ -21,19 +21,40 @@
   text-align: center;
 }
 
+$jam: rgb(0, 0, 255);
+$beginner: rgb(255, 255, 0);
+$intermediate: rgb(255, 0, 0);
+$conditioning: rgb(255, 125, 0);
+$special: rgb(0, 255, 66);
+
 .calendar-event {
   margin-left: -40px;
   overflow: hidden;
   list-style-type: none;
   text-decoration: none;
   color: black;
-  &:hover { cursor: pointer; }
-  &.jam { background: rgba(0, 0, 255, 0.5); }
-  &.beginner { background: rgba(255, 255, 0, 0.5); }
-  &.intermediate { background: rgba(255, 0, 0, 0.5); }
-  &.conditioning { background: rgba(255, 125, 0, 0.5); }
-  &.special { background: rgba(0, 250, 66, 0.5); }
+  &.jam {
+    background: lighten($jam, 25%);
+    &:hover { background: $jam; }
+  }
+  &.beginner {
+    background: lighten($beginner, 25%);
+    &:hover { background: $beginner; }
+  }
+  &.intermediate {
+    background: lighten($intermediate, 25%);
+    &:hover { background: $intermediate; }
+  }
+  &.conditioning {
+    background: lighten($conditioning, 25%);
+    &:hover { background: $conditioning; }
+  }
+  &.special {
+    background: lighten($special, 25%);
+    &:hover { background: $special; }
+  }
   & a { color: black; }
+  &:hover { cursor: pointer; }
 }
 .tooltip > title { color: green; }
 

@@ -6,6 +6,7 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 cities = %w[ Sandy Draper Salt\ Lake\ City Lehi Orem Provo Murray Holladay South\ Jordan ]
+classes = %w[ beginner intermediate condition jam tricking ]
 100.times do |t|
   Event.create(
     date: Faker::Time.between(50.days.ago, 50.days.from_now, :day),
@@ -14,7 +15,7 @@ cities = %w[ Sandy Draper Salt\ Lake\ City Lehi Orem Provo Murray Holladay South
     city: cities.sample, # Make expandable for any number of cities- main ones selectable, others in drop-down
     address: Faker::Address.street_address,
     location_instructions: Faker::Lorem.sentence,
-    class_name: ["beginner", "intermediate", "conditioning", "jam"].sample
+    class_name: classes.sample
   )
 end
 
