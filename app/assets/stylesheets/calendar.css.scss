@@ -12,17 +12,37 @@
   &:hover {
     text-decoration: none;
     background: #EEE;
-    border-color: #AAA
+    border-color: #AAA;
+    color: black;
   }
 }
 
-.today {
+.tooltip {
+  text-align: center;
 }
 
+.calendar-event {
+  margin-left: -40px;
+  overflow: hidden;
+  list-style-type: none;
+  text-decoration: none;
+  color: black;
+  &:hover { cursor: pointer; }
+  &.jam { background: rgba(0, 0, 255, 0.5); }
+  &.beginner { background: rgba(255, 255, 0, 0.5); }
+  &.intermediate { background: rgba(255, 0, 0, 0.5); }
+  &.conditioning { background: rgba(255, 125, 0, 0.5); }
+  &.special { background: rgba(0, 250, 66, 0.5); }
+  & a { color: black; }
+}
+.tooltip > title { color: green; }
+
 .today a {
-  background: yellow;
+  background: black;
+  color: white;
 }
 
 .day-cell {
-  height: 9.52381vw; //(((width / 12)*8) / 7) = 9.523809523809524
+  height: 9.52381vw; //(((width / 12)*8 columns) / 7 days a week) = 9.523809523809524
+  // overflow: hidden; Doesn't work?
 }

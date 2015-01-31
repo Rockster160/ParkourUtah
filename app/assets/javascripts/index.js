@@ -8,6 +8,13 @@ $(document).ready(function(){/* smooth scrolling for scroll to top */
     }
   })
 
+  $('li').click(function() {
+    var $location = $(this).attr('href');
+    if ($location) {
+      window.location.href = $location;
+    }
+  })
+
   /* highlight the top nav as scrolling occurs */
   $('body').scrollspy({ target: '#navbar' })
 });
