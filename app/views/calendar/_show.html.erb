@@ -33,7 +33,8 @@
         <% if @events[[date.month, date.day]] %>
         <ul>
           <% @events[[date.month, date.day]].sort_by { |event| event[:date] }.each do |event| %>
-            <% if classes.include?(event.class) && cities.include?(event.city)  %>
+          <%# binding.pry %>
+            <% if event.class_name == "special" || (classes.include?(event.class_name) && cities.include?(event.city))  %>
               <li href="<%= event_path(event.id) %>" rel="tooltip" class="calendar-event <%= event.class_name %>" title=
 'Instructor: <%= event.host %>
 <%= event.city %>

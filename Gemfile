@@ -19,6 +19,7 @@ gem "twitter-bootstrap-rails"
 gem "font-awesome-sass"
 gem "select2-rails"
 gem 'pry-nav'
+gem 'pry-rails'
 gem 'autoprefixer-rails'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
