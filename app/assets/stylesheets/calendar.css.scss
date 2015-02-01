@@ -56,11 +56,16 @@ $special: rgb(0, 255, 66);
   & a { color: black; }
   &:hover { cursor: pointer; }
 }
+
 .tooltip > title { color: green; }
 
 .today a {
   background: black;
   color: white;
+}
+
+.not-month {
+  background: #eee;
 }
 
 .day-cell {
