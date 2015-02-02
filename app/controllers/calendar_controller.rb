@@ -2,7 +2,8 @@ class CalendarController < ApplicationController
   def index
   end
 
-  def show
+  def day
+    @events = Event.all.to_a.group_by { |event| event.date.strftime('%Y-%m-%d') }[params[:date]]
   end
 
   def draw

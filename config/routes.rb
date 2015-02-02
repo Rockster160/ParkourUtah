@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   root 'index#index'
 
   get 'calendar/index' => 'calendar#index', as: 'calendar'
-  get 'calendar/show/:date' => 'calendar#show', as: 'calendar_show'
+  get 'calendar/day/:date' => 'calendar#day', as: 'calendar_day'
   get 'calendar/draw' => 'calendar#draw'
 
   get 'events/show/:id' => 'event#show', as: 'event'

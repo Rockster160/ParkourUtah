@@ -5,7 +5,7 @@
 <div class="row">
   <div class="col-md-12">
     <%= calendar calendar_date do |date| %>
-      <div class="row calendar-date-link <%#= date.event - return strings %>"><%= link_to date.day, calendar_show_path(date: date) %></div>
+      <div class="row calendar-date-link <%#= date.event - return strings %>"><%= link_to date.day, calendar_day_path(date) %></div>
       <div class="row">
         <% if @events[[date.month, date.day]] %>
         <ul>
