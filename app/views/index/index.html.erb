@@ -106,9 +106,35 @@
 </div>
 
 <div class="gallery" id="schedule">
+
+  <div class="row">
+    <div class="text-center">
+      <div class="well controls col-md-8 col-md-offset-2">
+        <select class="select-dropbox class-name-search col-xs-4" multiple="multiple" placeholder="All Events(Default)">
+          <% @classes.each do |class_name| %>
+          <option value="<%= class_name %>"><%= class_name.capitalize %></option>
+          <% end %>
+        </select>
+        <span class="col-xs-4">
+          <%= link_to calendar_path(date: @date - 1.month), class: "btn btn-default" do %>
+          <%= icon('chevron-left', '', class: '') %>
+          <% end %>
+          <%= "#{@date.strftime("%B")} #{@date.year}" %>
+          <%= link_to calendar_path(date: @date + 1.month), class: "btn btn-default" do %>
+          <%= icon('chevron-right', '', class: '') %>
+          <% end %>
+        </span>
+        <select class="select-dropbox city-name-search col-xs-4" multiple="multiple" placeholder="All Cities(Default)">
+          <% @cities.each do |city| %>
+          <option value="<%= city %>"><%= city.capitalize %></option>
+          <% end %>
+        </select>
+      </div>
+    </div>
+  </div>
   <div class="row">
     <div class="col-md-8 col-md-offset-2 text-center calendar-container">
-      <%= render partial: "calendar/show", locals: {calendar_date: @date, classes: @classes, cities: @cities}  %>
+      <%= render partial: "calendar/show", locals: {calendar_date: @date, classes: @selected_classes, cities: @selected_cities}  %>
       <br>
     </div>
   </div>

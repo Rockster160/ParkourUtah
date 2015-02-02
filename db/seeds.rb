@@ -6,7 +6,7 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 cities = %w[ Sandy Draper Salt\ Lake\ City Lehi Orem Provo Murray Holladay South\ Jordan ]
-classes = %w[ beginner intermediate condition jam tricking ]
+classes = %w[ beginner intermediate conditioning jam tricking ]
 100.times do |t|
   Event.create(
     date: Faker::Time.between(50.days.ago, 50.days.from_now, :day),
@@ -20,7 +20,7 @@ classes = %w[ beginner intermediate condition jam tricking ]
 end
 
 Event.create(
-  date: Faker::Time.between(20.days.ago, Time.now, :day),
+  date: Faker::Time.between(Time.now, 25.days.from_now, :day),
   host: "Justin & Ryan",
   description: "Bring your punch card and have a great time jumping on the huge Air Mat! We'll be going over advanced movements, so bring your A-Game!",
   city: "Draper",

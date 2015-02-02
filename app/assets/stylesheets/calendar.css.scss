@@ -24,6 +24,7 @@
 $jam: rgb(0, 0, 255);
 $beginner: rgb(255, 255, 0);
 $intermediate: rgb(255, 0, 0);
+$tricking: rgb(255, 0, 255);
 $conditioning: rgb(255, 125, 0);
 $special: rgb(0, 255, 66);
 
@@ -44,6 +45,10 @@ $special: rgb(0, 255, 66);
   &.intermediate {
     background: lighten($intermediate, 25%);
     &:hover { background: $intermediate; }
+  }
+  &.tricking {
+    background: lighten($tricking, 25%);
+    &:hover { background: $tricking; }
   }
   &.conditioning {
     background: lighten($conditioning, 25%);
