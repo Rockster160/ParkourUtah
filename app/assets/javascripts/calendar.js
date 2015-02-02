@@ -31,7 +31,9 @@ loadJS = function() {
     }
   });
 
-  $('.select-dropbox').select2()
+  $('.select-dropbox').select2({
+
+  })
   .on('change', function(e) {
     update();
   });
