@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   get 'calendar/index' => 'calendar#index', as: 'calendar'
   get 'calendar/day/:date' => 'calendar#day', as: 'calendar_day'
-  get 'calendar/draw' => 'calendar#draw'
+  get 'calendar/draw' => 'calendar#draw', as: 'calendar_draw'
 
   get 'events/show/:id' => 'event#show', as: 'event'
   # The priority is based upon order of creation: first created -> highest priority.
