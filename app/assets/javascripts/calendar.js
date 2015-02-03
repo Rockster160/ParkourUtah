@@ -1,6 +1,4 @@
 $(document).ready(function() {
-  loadJS();
-
   update = function() {
     var classes = [], cities = [];
     select_class = $('.class-name-search').select2('data');
@@ -16,10 +14,11 @@ $(document).ready(function() {
       classes: classes,
       cities: cities,
       date: set_date
-    }, function() {
-      new loadJS;
     });
   }
+
+  loadJS();
+  update();
 });
 
 

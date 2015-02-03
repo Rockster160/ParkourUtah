@@ -1,0 +1,12 @@
+Instructor: <%= @event.host %><br/>
+<br/>
+<%= @event.address %><br/>
+<%= @event.city %><br/>
+<%= @event.date.strftime('%l:%M %p') %><br/>
+<br/>
+<%= @event.class_name.capitalize %><br/>
+Cost: <%= @event.cost.to_i %><br/>
+<br/>
+<%= @event.description %><br/>
+<br/>
+<%= @event.location_instructions %>

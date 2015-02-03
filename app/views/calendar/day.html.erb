@@ -1,0 +1,7 @@
+<% if @events %>
+  <% @events.each do |event| %>
+    <%= event.city %> - <%= event.host %> - <%= event.class_name.capitalize %><br/><br/>
+  <% end %>
+<% else %>
+  No events on this day.
+<% end %>

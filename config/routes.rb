@@ -3,10 +3,10 @@ Rails.application.routes.draw do
   root 'index#index'
 
   get 'calendar/index' => 'calendar#index', as: 'calendar'
-  get 'calendar/show/:date' => 'calendar#show', as: 'calendar_show'
-  get 'calendar/draw' => 'calendar#draw'
+  get 'calendar/day/:date' => 'calendar#day', as: 'calendar_day'
+  get 'calendar/draw' => 'calendar#draw', as: 'calendar_draw'
 
-  get 'events/:id' => 'event#show', as: 'event'
+  get 'events/show/:id' => 'event#show', as: 'event'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
