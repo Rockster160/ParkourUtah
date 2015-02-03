@@ -7,9 +7,9 @@
     <%= calendar calendar_date do |date| %>
       <div class="row calendar-date-link <%#= date.event - return strings %>"><%= link_to date.day, calendar_day_path(date) %></div>
       <div class="row">
-        <% if @events[[date.month, date.day]] %>
+        <% if @events[[date.year, date.month, date.day]] %>
         <ul>
-          <% @events[[date.month, date.day]].sort_by { |event| event[:date] }.each do |event| %>
+          <% @events[[date.year, date.month, date.day]].sort_by { |event| event[:date] }.each do |event| %>
             <% if event.class_name == "special" || (@selected_classes.include?(event.class_name) && @selected_cities.include?(event.city))  %>
               <li href="<%= event_path(event.id) %>" rel="tooltip" class="calendar-event <%= event.class_name %>" title=
 'Instructor: <%= event.host %>

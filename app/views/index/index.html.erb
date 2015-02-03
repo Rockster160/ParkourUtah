@@ -116,12 +116,12 @@
           <% end %>
         </select>
         <span class="col-xs-4">
-          <%= link_to calendar_draw_path(date: @date - 1.month), remote: true, class: "btn btn-default" do %>
-          <%= icon('chevron-left', '', class: '') %>
+          <%= link_to calendar_draw_path(date: @date - 1.month), remote: true, class: "btn btn-default back-month" do %>
+            <%= icon('chevron-left', '', class: '') %>
           <% end %>
           <span class="date-holder"><%= "#{@date.strftime("%B")} #{@date.year}" %></span>
-          <%= link_to calendar_draw_path(date: @date + 1.month), remote: true, class: "btn btn-default" do %>
-          <%= icon('chevron-right', '', class: '') %>
+          <%= link_to calendar_draw_path(date: @date + 1.month), remote: true, class: "btn btn-default forward-month" do %>
+            <%= icon('chevron-right', '', class: '') %>
           <% end %>
         </span>
         <select class="select-dropbox city-name-search col-xs-4" multiple="multiple" placeholder="All Cities(Default)">
