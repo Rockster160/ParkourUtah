@@ -1,0 +1,29 @@
+<%= javascript_tag do %>
+  window.set_date = '<%= @date %>'
+<% end %>
+
+<div class="col-md-12 calendar-partial">
+  <%= calendar @date do |date| %>
+  <div class="row calendar-date-link <%#= date.event - return strings %>"><%= link_to date.day, calendar_day_path(date) %></div>
+  <div class="row">
+    <% if @events[[date.year, date.month, date.day]] %>
+    <ul>
+      <% @events[[date.year, date.month, date.day]].sort_by { |event| event[:date] }.each do |event| %>
+      <% if event.class_name == "special" || (@selected_classes.include?(event.class_name) && @selected_cities.include?(event.city))  %>
+      <li href="<%= event_path(event.id) %>" rel="tooltip" class="calendar-event <%= event.class_name %>" title=
+'Instructor: <%= event.host %>
+<%= event.city %>
+<%= event.address %>
+<%= event.date.strftime('%l:%M %p') %>
+
+<%= event.description %>
+' data-html="true">
+        <%= event.class_name.capitalize %>
+      </li>
+      <% end %>
+      <% end %>
+    </ul>
+    <% end %>
+  </div>
+  <% end %>
+</div>

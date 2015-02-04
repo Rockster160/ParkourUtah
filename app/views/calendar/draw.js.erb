@@ -1,7 +1,5 @@
-$('.date-holder').html("");
-$('.date-holder').append('<%= @date.strftime("%B %Y") %>');
-$('.calendar-container').html("");
-$('.calendar-container').append('<%= j render partial: "calendar/show", locals: {calendar_date: @date, classes: @classes, cities: @cities} %>')
-$('.forward-month').attr('href', 'calendar/draw?date=<%= (@date + 1.month) %>')
-$('.back-month').attr('href', 'calendar/draw?date=<%= (@date - 1.month) %>')
+$('.date-holder').html('<%= @date.strftime("%B %Y") %>');
+$('.calendar-container').html('<%= j render partial: "calendar/display", locals: {calendar_date: @date, classes: @selected_classes, cities: @selected_cities} %>')
+$('.forward-month').attr('href', '/calendar/draw?date=<%= (@date + 1.month) %>')
+$('.back-month').attr('href', '/calendar/draw?date=<%= (@date - 1.month) %>')
 new loadJS;

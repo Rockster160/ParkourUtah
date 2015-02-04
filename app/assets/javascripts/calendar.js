@@ -10,12 +10,18 @@ $(document).ready(function() {
       cities.push(select_city[i].id);
     }
 
-    $.get('calendar/draw', {
+    $.get('/calendar/draw', {
       classes: classes,
       cities: cities,
       date: set_date
     });
   }
+
+  $('.back-month, .forward-month').click(function(e) {
+    e.preventDefault();
+    set_date = $(this).attr('href');
+    update();
+  })
 
   loadJS();
   update();
@@ -24,9 +30,9 @@ $(document).ready(function() {
 
 loadJS = function() {
   $('li').click(function() {
-    var $location = $(this).attr('href');
-    if ($location) {
-      window.location.href = $location;
+    var $event_details = $(this).attr('href');
+    if ($event_details) {
+      window.location.href = $event_details;
     }
   });
 
