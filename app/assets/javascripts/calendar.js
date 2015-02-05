@@ -1,4 +1,4 @@
-$(document).ready(function() {
+var ready = function () {
   update = function() {
     var classes = [], cities = [];
     select_class = $('.class-name-search').select2('data');
@@ -9,12 +9,13 @@ $(document).ready(function() {
     for (i=0;i<select_city.length;i++) {
       cities.push(select_city[i].id);
     }
-
-    $.get('/calendar/draw', {
-      classes: classes,
-      cities: cities,
-      date: set_date
-    });
+    if (window.location.pathname.indexOf("/schedule") > -1) {
+      $.get('/calendar/draw', {
+        classes: classes,
+        cities: cities,
+        date: set_date
+      });
+    }
   }
 
   $('.back-month, .forward-month').click(function(e) {
@@ -25,10 +26,13 @@ $(document).ready(function() {
 
   loadJS();
   update();
-});
+};
 
 
 loadJS = function() {
+  var url = window.location.pathname.split("/");
+  var city = unescape(url[url.length - 1]);
+
   $('li').click(function() {
     var $event_details = $(this).attr('href');
     if ($event_details) {
@@ -39,7 +43,11 @@ loadJS = function() {
   $('.select-dropbox').select2({
 
   })
+  .select2("val", city)
   .on('change', function(e) {
     update();
   });
 }
+
+$(document).ready(ready);
+$(document).on('page:load', ready);
