@@ -20,6 +20,7 @@ gem "font-awesome-sass"
 gem "select2-rails"
 gem 'autoprefixer-rails'
 gem 'rails_12factor', group: :production
+gem 'devise'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
