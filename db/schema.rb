@@ -18,6 +18,7 @@ ActiveRecord::Schema.define(version: 20150205144756) do
 
   create_table "events", force: :cascade do |t|
     t.datetime "date"
+    t.string   "title"
     t.string   "host"
     t.float    "cost"
     t.text     "description"

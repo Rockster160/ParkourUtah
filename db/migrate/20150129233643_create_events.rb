@@ -2,6 +2,7 @@ class CreateEvents < ActiveRecord::Migration
   def change
     create_table :events do |t|
       t.datetime :date # Saturday, Feb 12, 2015 10:00 am
+      t.string :title # Higgie's Homecoming Jam!
       t.string :host #Justin, Higgie, Ryan, Christian
       t.float :cost #2.50
       t.text :description #Tricking session followed by lunch on us

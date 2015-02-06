@@ -1,0 +1,13 @@
+<%= form_for @event, url: {action: "create"} do |f| %>
+  <%= f.text_field :title, placeholder: 'Event Title:' %><br/>
+  <%= f.text_field :host, placeholder: 'Host Name:' %><br/> <!-- Search for Mods! -->
+  <%= f.number_field :cost, placeholder: 'Cost:' %><br/>
+  <%= f.text_area :description, placeholder: 'Event Description:' %><br/>
+  <%= f.text_field :city, placeholder: 'City:' %><br/> <!-- Searchable -->
+  <%= f.text_field :address, placeholder: 'Full Address:' %><br/>
+  <%= f.text_area :location_instructions, placeholder: 'Special Instructions' %><br/>
+  <%= f.text_field :class_name, placeholder: 'Class' %><br/> <!-- Dropdown -->
+<!-- Date- Jquery datepicker -->
+<!-- Repeat? -->
+  <%= submit_tag "√" %>
+<% end %>
