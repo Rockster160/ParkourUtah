@@ -9,9 +9,14 @@ class EventController < ApplicationController
 
   def new
     @event = Event.new
+    all_events = Event.all.to_a
+    @cities = all_events.group_by { |event| event.city }.keys
+    @classes = all_events.group_by { |event| event.class_name }.keys
+    @mods = User.where("role > ?", 0)
   end
 
   def create
+    raise 'a'
     Event.create(event_params)
   end
 

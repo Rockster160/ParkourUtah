@@ -1,4 +1,14 @@
 var ready = function () {
+
+  if ($('.date-picker').length > 0) {
+    $('.date-picker').datepicker({
+      onSelect: function(dateText, inst) {
+        $('.datepicker-placeholder').val(dateText);
+        console.log(dateText);
+      }
+    });
+  }
+
   update = function() {
     var classes = [], cities = [];
     select_class = $('.class-name-search').select2('data');

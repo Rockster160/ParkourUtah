@@ -1,13 +1,27 @@
 <%= form_for @event, url: {action: "create"} do |f| %>
-  <%= f.text_field :title, placeholder: 'Event Title:' %><br/>
-  <%= f.text_field :host, placeholder: 'Host Name:' %><br/> <!-- Search for Mods! -->
+  <div class="date-picker pull-left"></div>
+  <%= f.text_field :title, placeholder: 'Title:' %><br/>
+  <%= f.text_field :host, placeholder: 'Host:' %><br/> <!-- Search for Mods! -->
   <%= f.number_field :cost, placeholder: 'Cost:' %><br/>
   <%= f.text_area :description, placeholder: 'Event Description:' %><br/>
   <%= f.text_field :city, placeholder: 'City:' %><br/> <!-- Searchable -->
   <%= f.text_field :address, placeholder: 'Full Address:' %><br/>
   <%= f.text_area :location_instructions, placeholder: 'Special Instructions' %><br/>
-  <%= f.text_field :class_name, placeholder: 'Class' %><br/> <!-- Dropdown -->
-<!-- Date- Jquery datepicker -->
-<!-- Repeat? -->
+  <select name="event[host]">
+      <option value="">Host</option>
+    <% @mods.each do |mod| %>
+      <option value="<%= mod.id %>"><%= mod.first_name %> <%= mod.last_name %></option>
+    <% end %>
+  </select>
+  <select name="event[class_name]">
+    <option value="">Class</option>
+    <% @classes.each do |class_name| %>
+    <option value="<%= class_name %>"><%= class_name.capitalize %></option>
+    <% end %>
+  </select>
+  <%= label_tag :repeat, "Repeat Weekly?" %>
+  <%= check_box_tag :repeat %>
+  <%= hidden_field_tag :date, "", class: "datepicker-placeholder" %>
+
   <%= submit_tag "√" %>
 <% end %>
