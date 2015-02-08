@@ -1,27 +1,46 @@
 <%= form_for @event, url: {action: "create"} do |f| %>
   <div class="date-picker pull-left"></div>
-  <%= f.text_field :title, placeholder: 'Title:' %><br/>
-  <%= f.text_field :host, placeholder: 'Host:' %><br/> <!-- Search for Mods! -->
-  <%= f.number_field :cost, placeholder: 'Cost:' %><br/>
-  <%= f.text_area :description, placeholder: 'Event Description:' %><br/>
-  <%= f.text_field :city, placeholder: 'City:' %><br/> <!-- Searchable -->
-  <%= f.text_field :address, placeholder: 'Full Address:' %><br/>
-  <%= f.text_area :location_instructions, placeholder: 'Special Instructions' %><br/>
-  <select name="event[host]">
+  <%= f.text_field :title, placeholder: 'Title:', required: true %><br/>
+  <%= f.number_field :cost, placeholder: 'Cost:', required: true %><br/>
+  <%= f.text_area :description, placeholder: 'Event Description:', required: true %><br/>
+  <%= f.text_field :city, placeholder: 'City:' , required: true%><br/>
+  <!-- Searchable -->
+  <%= f.text_field :address, placeholder: 'Full Address:', required: true %><br/>
+  <%= f.text_area :location_instructions, placeholder: 'Special Instructions', required: true %><br/>
+  <select name="event[host_id]" required="required">
+    <!-- Should be live-searchable -->
       <option value="">Host</option>
     <% @mods.each do |mod| %>
-      <option value="<%= mod.id %>"><%= mod.first_name %> <%= mod.last_name %></option>
+      <option value="<%= mod.id %>"><%= mod.full_name %></option>
     <% end %>
   </select>
-  <select name="event[class_name]">
+  <select name="event[class_name]" required="required">
     <option value="">Class</option>
     <% @classes.each do |class_name| %>
-    <option value="<%= class_name %>"><%= class_name.capitalize %></option>
+      <option value="<%= class_name %>"><%= class_name.capitalize %></option>
+    <% end %>
+  </select><br/>
+  <select name="time[hour]" required="required">
+    <option value="">Hr</option>
+    <% (1..12).each do |hour| %>
+      <option value="<%= hour %>"><%= hour %></option>
     <% end %>
   </select>
+  <select name="time[minute]" required="required">
+    <option value="">Min</option>
+    <% ["00", "15", "30", "45"].each do |min| %>
+      <option value="<%= min %>"><%= min %></option>
+    <% end %>
+  </select>
+  <select name="time[meridiam]" required="required">
+    <option value="">AMPM</option>
+    <% ["AM", "PM"].each do |ampm| %>
+      <option value="<%= ampm %>"><%= ampm %></option>
+    <% end %>
+  </select><br/>
   <%= label_tag :repeat, "Repeat Weekly?" %>
   <%= check_box_tag :repeat %>
-  <%= hidden_field_tag :date, "", class: "datepicker-placeholder" %>
+  <%= hidden_field_tag :date, "", class: "datepicker-placeholder", required: true %>
 
   <%= submit_tag "√" %>
 <% end %>
