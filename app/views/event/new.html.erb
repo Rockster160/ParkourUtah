@@ -1,12 +1,12 @@
 <%= form_for @event, url: {action: "create"} do |f| %>
-  <div class="date-picker pull-left"></div>
+  <div class="date-picker"></div><br/>
   <%= f.text_field :title, placeholder: 'Title:', required: true %><br/>
-  <%= f.number_field :cost, placeholder: 'Cost:', required: true %><br/>
+  <%= f.number_field :cost, placeholder: 'Cost:' %><br/>
   <%= f.text_area :description, placeholder: 'Event Description:', required: true %><br/>
-  <%= f.text_field :city, placeholder: 'City:' , required: true%><br/>
+  <%= f.text_field :city, placeholder: 'City:' , required: true %><br/>
   <!-- Searchable -->
   <%= f.text_field :address, placeholder: 'Full Address:', required: true %><br/>
-  <%= f.text_area :location_instructions, placeholder: 'Special Instructions', required: true %><br/>
+  <%= f.text_area :location_instructions, placeholder: 'Special Instructions' %><br/>
   <select name="event[host_id]" required="required">
     <!-- Should be live-searchable -->
       <option value="">Host</option>

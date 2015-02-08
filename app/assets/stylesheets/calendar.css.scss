@@ -21,6 +21,7 @@
   text-align: center;
 }
 
+$default: steelblue;
 $jam: rgb(0, 0, 255);
 $beginner: rgb(255, 255, 0);
 $intermediate: rgb(255, 0, 0);
@@ -34,6 +35,8 @@ $special: rgb(0, 255, 66);
   list-style-type: none;
   text-decoration: none;
   color: black;
+  background: lighten($default, 25%);
+  &:hover { $default }
   &.jam {
     background: lighten($jam, 25%);
     &:hover { background: $jam; }

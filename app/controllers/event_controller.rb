@@ -1,5 +1,5 @@
 class EventController < ApplicationController
-  # vefore_action :authenticate_user! only: { :create, :delete }
+  before_action :validate_user, only: [ :create, :new ]
   # vefore_action :authenticate_mod/admin only: { :create, :delete }
   # https://github.com/plataformatec/devise#strong-parameters
 
@@ -18,17 +18,15 @@ class EventController < ApplicationController
   def create
     date_time = convertToRailsTime(params[:date], params[:time])
     dates = []
-    if params[:repeat] == "1"
-      50.times do |each_week|
-        dates << date_time + (each_week.weeks)
-      end
-    else
-      dates = date_time
+    iterate = params[:repeat] ? 50 : 1
+    iterate.times do |each_week|
+      dates << date_time + (each_week.weeks)
     end
     dates.each do |date|
       params[:event][:date] = date
       Event.create(event_params)
     end
+    redirect_to calendar_show_path("all")
   end
 
   private
@@ -48,5 +46,12 @@ class EventController < ApplicationController
   def event_params
     params.require(:event).permit(:title, :host_id, :cost, :description, :city,
                               :date, :address, :location_instructions, :class_name)
+  end
+
+  def validate_user
+    unless user_signed_in? && current_user.role > 0
+      flash[:error] = "You are not permitted to create Events."
+      redirect_to root_path
+    end
   end
 end
