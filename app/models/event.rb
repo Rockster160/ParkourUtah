@@ -1,5 +1,5 @@
 class Event < ActiveRecord::Base
-  def host
-    User.find(host_id)
+  def host_by_id
+    User.find(host)
   end
 end

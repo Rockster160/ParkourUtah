@@ -36,7 +36,7 @@ $special: rgb(0, 255, 66);
   text-decoration: none;
   color: black;
   background: lighten($default, 25%);
-  &:hover { $default }
+  &:hover { background: $default; }
   &.jam {
     background: lighten($jam, 25%);
     &:hover { background: $jam; }

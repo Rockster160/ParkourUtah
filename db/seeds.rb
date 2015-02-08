@@ -38,7 +38,7 @@ mods = User.where("role > ?", 0).pluck(:id)
 100.times do |t|
   # Event.create(
   #   date: Faker::Time.between(50.days.ago, 50.days.from_now, :day),
-  #   host_id: mods.sample,
+  #   host: mods.sample,
   #   description: Faker::Lorem.paragraph,
   #   city: cities.sample, # Make expandable for any number of cities- main ones selectable, others in drop-down
   #   address: Faker::Address.street_address,
@@ -49,7 +49,7 @@ end
 
 Event.create(
   date: Faker::Time.between(Time.now, 25.days.from_now, :day),
-  host_id: 2,
+  host: 2,
   description: "Bring your punch card and have a great time jumping on the huge Air Mat! We'll be going over advanced movements, so bring your A-Game!",
   city: "Draper",
   address: "12500 South 1300 East",

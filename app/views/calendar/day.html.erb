@@ -1,6 +1,6 @@
 <% if @events %>
   <% @events.each do |event| %>
-    <%= event.city %> - <%= User.find(event.host_id).full_name %> - <%= event.class_name.capitalize %> - <%= link_to "Event", event_path(event.id) %><br/><br/>
+    <%= event.city %> - <%= event.host %> - <%= event.class_name.capitalize %> - <%= link_to "Event", event_path(event.id) %><br/><br/>
   <% end %>
 <% else %>
   No events on this day.

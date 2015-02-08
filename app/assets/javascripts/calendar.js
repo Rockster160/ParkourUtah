@@ -4,6 +4,7 @@ var ready = function () {
     $('.date-picker').datepicker({
       onSelect: function(dateText, inst) {
         $('.datepicker-placeholder').val(dateText);
+        $('.date-placeholder').text(dateText);
       }
     });
   }

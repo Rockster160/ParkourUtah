@@ -10,8 +10,8 @@
     <ul>
       <% @events[[date.year, date.month, date.day]].sort_by { |event| event[:date] }.each do |event| %>
       <% if event.class_name == "special" || (@selected_classes.include?(event.class_name) && @selected_cities.include?(event.city))  %>
-      <li href="<%= event_path(event.id) %>" rel="tooltip" class="calendar-event <%= event.class_name %>" title=
-'Instructor: <%= event.host.full_name %>
+      <li href="<%= event_path(event.id) %>" rel="tooltip" class="calendar-event <%= event.class_name.parameterize %>" title=
+'Instructor: <%= event.host %>
 <%= event.city %>
 <%= event.address %>
 <%= event.date.strftime('%l:%M %p') %>
