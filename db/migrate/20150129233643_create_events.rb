@@ -2,6 +2,7 @@ class CreateEvents < ActiveRecord::Migration
   def change
     create_table :events do |t|
       t.datetime :date # Saturday, Feb 12, 2015 10:00 am
+      t.integer :token # Random token used to connect repeating events
       t.string :title # Higgie's Homecoming Jam!
       t.string :host #Justin, Higgie, Ryan, Christian
       t.float :cost #2.50

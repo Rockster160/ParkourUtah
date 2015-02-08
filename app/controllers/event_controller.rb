@@ -22,9 +22,24 @@ class EventController < ApplicationController
     iterate.times do |each_week|
       dates << date_time + (each_week.weeks)
     end
+    params[:event][:token] = DateTime.now.to_i if iterate > 1
     dates.each do |date|
       params[:event][:date] = date
       Event.create(event_params)
+    end
+    redirect_to calendar_show_path("all")
+  end
+
+  def destroy
+    if params[:future]
+      event = Event.find(params[:id])
+      token = event.token
+      date = event.date
+      Event.where("token = :token AND date > :date", token: token, date: date).each do |event|
+        event.destroy
+      end
+    else
+      Event.find(params[:id]).destroy
     end
     redirect_to calendar_show_path("all")
   end
@@ -44,7 +59,7 @@ class EventController < ApplicationController
   end
 
   def event_params
-    params.require(:event).permit(:title, :host, :cost, :description, :city,
+    params.require(:event).permit(:title, :host, :cost, :description, :city, :token,
                               :date, :address, :location_instructions, :class_name)
   end
 

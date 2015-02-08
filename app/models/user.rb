@@ -3,10 +3,16 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
-  # Scope -> .is_mod true if role == 1
-  # Scope -> .is_admin true if role == 2
 
   def full_name
     "#{self.first_name.capitalize} #{self.last_name.capitalize}"
+  end
+
+  def is_mod?
+    self.role > 0
+  end
+
+  def is_admin?
+    self.role > 1
   end
 end

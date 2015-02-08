@@ -9,4 +9,9 @@ Cost: <%= @event.cost.to_i %><br/>
 <br/>
 <%= @event.description %><br/>
 <br/>
-<%= @event.location_instructions %>
+<%= @event.location_instructions %><br/><br/>
+
+<% if current_user.is_mod? %>
+  <%= link_to 'Destroy Event', destroy_event_path(id: @event.id), method: :delete, data: {confirm: "Are you sure?"} %><br/>
+  <%= link_to 'Destroy all future occurrences', destroy_event_path(future: "all", id: @event.id), method: :delete, data:{confirm: "Are you sure? This will delete this and all future events tied to this one."} if @event.token %>
+<% end %>
