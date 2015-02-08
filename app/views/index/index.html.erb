@@ -100,6 +100,9 @@
         <div class="col-sm-2"><img class="img-circle grayscale" src="http://api.randomuser.me/portraits/thumb/men/27.jpg"></div>
         <div class="col-sm-2"><img class="img-circle grayscale" src="http://api.randomuser.me/portraits/thumb/women/15.jpg"></div>
         <div class="col-sm-2"><img class="img-circle grayscale" src="http://api.randomuser.me/portraits/thumb/men/18.jpg"></div>
+        <!-- Display all mod avatars -->
+        <div class="col-sm-2"><%= image_tag(current_user.avatar.url(:medium), class: "img-circle") %></div>
+        <div class="col-sm-2"><%= image_tag(current_user.avatar_2.url(:medium), class: "img-circle") %></div>
       </div>
     </div>
   </div>

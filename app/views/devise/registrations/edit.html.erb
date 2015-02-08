@@ -13,6 +13,18 @@
   <% end %>
 
   <div class="field">
+    <%= f.label :avatar %> <i></i><br />
+    <%= f.file_field :avatar %>
+  </div>
+
+  <% if current_user.is_mod? %>
+    <div class="field">
+      <%= f.label :avatar_2 %> <i></i><br />
+      <%= f.file_field :avatar_2 %>
+    </div>
+  <% end %>
+
+  <div class="field">
     <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
     <%= f.password_field :password, autocomplete: "off" %>
   </div>
