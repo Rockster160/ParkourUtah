@@ -150,13 +150,13 @@ img.grayscale {
 
 .callout {
   color: #ffffff;
-  padding-top:7%;
-  height: 100%;
-  width: 100%;
+  min-height: 500px;
+  padding-bottom: 50px;
+
   background: url('http://www.bootply.com/assets/example/bg_suburb.jpg') no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
+  // -webkit-background-size: cover;
+  // -moz-background-size: cover;
+  // -o-background-size: cover;
   background-size: cover;
 }
 

@@ -22,6 +22,7 @@ role: 2
   email: "mod#{t}@email.com",
   first_name: Faker::Name.first_name,
   last_name: Faker::Name.last_name,
+  bio: Faker::Lorem.paragraph,
   password: "password",
   role: 1
   )
@@ -36,15 +37,15 @@ end
 mods = User.where("role > ?", 0).pluck(:id)
 
 100.times do |t|
-  # Event.create(
-  #   date: Faker::Time.between(50.days.ago, 50.days.from_now, :day),
-  #   host: mods.sample,
-  #   description: Faker::Lorem.paragraph,
-  #   city: cities.sample, # Make expandable for any number of cities- main ones selectable, others in drop-down
-  #   address: Faker::Address.street_address,
-  #   location_instructions: Faker::Lorem.sentence,
-  #   class_name: classes.sample
-  # )
+  Event.create(
+    date: Faker::Time.between(50.days.ago, 50.days.from_now, :day),
+    host: mods.sample,
+    description: Faker::Lorem.paragraph,
+    city: cities.sample, # Make expandable for any number of cities- main ones selectable, others in drop-down
+    address: Faker::Address.street_address,
+    location_instructions: Faker::Lorem.sentence,
+    class_name: classes.sample
+  )
 end
 
 Event.create(
