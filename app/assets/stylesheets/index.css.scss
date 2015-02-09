@@ -51,6 +51,7 @@ img.grayscale {
 
 .header-container {
   min-height: 100%;
+  background: #aaa url('http://www.bootply.com/assets/example/pt_topo_l.png') repeat center center fixed;
 }
 
 .header .btn-lg {
@@ -96,6 +97,12 @@ img.grayscale {
 }
 
 
+.inner-header-container {
+  height: 100%;
+  width: 100%;
+  background: #aaa url('check-background.png') repeat center center fixed;
+}
+
 .header h1 {
   font-size: 80px;
   color: #fff;
@@ -111,7 +118,7 @@ img.grayscale {
 
 .header {
   height: 100%;
-  background: #aaa url('http://www.bootply.com/assets/example/pt_topo_l.png') repeat center center fixed;
+  background: #aaa url('check-background.png') repeat center center fixed;
 }
 
 .blurb {

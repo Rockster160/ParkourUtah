@@ -12,14 +12,14 @@
     <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :avatar %> <i></i><br />
-    <%= f.file_field :avatar %>
-  </div>
-
   <% if current_user.is_mod? %>
     <div class="field">
-      <%= f.label :avatar_2 %> <i></i><br />
+      <%= f.label 'Serious Face' %> <i></i><br />
+      <%= f.file_field :avatar %>
+    </div>
+
+    <div class="field">
+      <%= f.label 'Silly Face' %> <i></i><br />
       <%= f.file_field :avatar_2 %>
     </div>
 

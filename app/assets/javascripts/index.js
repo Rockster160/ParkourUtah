@@ -10,13 +10,11 @@ var ready = function() {
 
   /* highlight the top nav as scrolling occurs */
   $('body').scrollspy({ target: '#navbar' });
-  if ($('.header-container').length > 0) {
-    $('.navbar-fixed-top').affix({
-      offset: {
-        top: $('.header-container').height()
-      }
-    });
-  }
+  $('.navbar-fixed-top').affix({
+    offset: {
+      top: $('.header-container').height()
+    }
+  });
 };
 
 $(document).ready(ready);
