@@ -1,7 +1,7 @@
-<div class="navbar navbar-fixed-top" data-spy="affix" data-offset-top="1000">
+<div class="navbar navbar-fixed-top" data-spy="affix">
   <div class="container">
     <div class="navbar-header">
-      <a href="#home" class="navbar-brand scroll-link">PKUT</a>
+      <a href="/" class="navbar-brand scroll-link">PKUT</a>
       <a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -10,11 +10,17 @@
     </div>
     <div class="navbar-collapse collapse pull-right" id="navbar">
       <ul class="nav navbar-nav">
-        <li><a class="scroll-link" href="#about">About Us</a></li>
-        <li><a class="scroll-link" href="#media">Videos</a></li>
-        <li><a class="scroll-link" href="#peeps">Our peeps</a></li>
-        <li><a class="scroll-link" href="#schedule">Schedule</a></li>
-        <li><a class="scroll-link" href="#join">Join us</a></li>
+        <% if user_signed_in? %>
+          <li><a class="scroll-link" href="#about">Account</a></li>
+          <li><a class="scroll-link" href="#media">Store</a></li>
+          <li><a class="scroll-link" href="#schedule">Schedule</a></li>
+          <li><a class="scroll-link" href="<%= destroy_user_session_path %>">Sign Out</a></li>
+        <% else %>
+          <li><a class="scroll-link" href="#about">Sign In</a></li>
+          <li><a class="scroll-link" href="#about">Store</a></li>
+          <li><a class="scroll-link" href="#schedule">Schedule</a></li>
+          <li><a class="scroll-link" href="#schedule">Contact Us</a></li>
+        <% end %>
       </ul>
     </div>
   </div>

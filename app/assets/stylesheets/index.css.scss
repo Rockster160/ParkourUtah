@@ -72,22 +72,26 @@ img.grayscale {
   color:#777777;
 }
 
+.navbar {
+  transition: 1s;
+}
+
 .navbar a {
   color: #001;
   text-shadow: 1px -2px #FFF;
   font-size: 16px;
 }
 
-.navbar-bold.affix {
+.navbar.affix {
   color: #F00;
+  background-color: #EEE;
 }
 
-.navbar-bold {
-  background-color:#f68076;
+.navbar {
   font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
 }
 
-.navbar-bold li a:hover, .navbar-bold li.active {
+.navbar li a:hover, .navbar li.active {
   color: #00F;
 }
 
