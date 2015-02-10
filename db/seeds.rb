@@ -13,6 +13,7 @@ User.create(
 email: "test@email.com",
 first_name: "Rocco",
 last_name: "Nicholls",
+bio: Faker::Lorem.paragraphs(5),
 password: "password",
 role: 2
 )

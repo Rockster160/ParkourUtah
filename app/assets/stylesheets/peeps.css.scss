@@ -5,6 +5,26 @@
   color: black;
 }
 
+.card-bio-text {
+  font-size: 1.4em;
+  overflow: hidden;
+  height: 82%;
+}
+
+.bio-link {
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+  background: #BBB;
+  border-radius: 10%/50%;
+  border: 2px solid black;
+  padding: 5px;
+  &:hover {
+    text-decoration: none;
+    color: blue;
+  }
+}
+
 .mods-container > .flip-container {
   margin-top: 16px;
   vertical-align: top;
@@ -22,6 +42,7 @@
 .bio-background {
   height: 100%;
   width: 100%;
+  padding: 10px;
   background: rgba(200, 200, 200, 0.7);
   text-align: center;
 }
