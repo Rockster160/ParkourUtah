@@ -43,6 +43,10 @@ body {
   }
 }
 
+video::-webkit-media-controls {
+  display:none !important;
+}
+
 /* use special fonts in certain elements */
 h1,h2,h3,h4,.lead,.btn,.navbar a {
   text-transform:uppercase;
@@ -112,6 +116,7 @@ h1 {
   color: #F00;
   background-color: #EEE;
 }
+.navbar-offset { height: 50px; }
 
 .navbar {
   font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
@@ -183,6 +188,7 @@ h1 {
 .callout-container {
   min-height: 100%;
   min-width: 100%;
+  background: url('http://4vector.com/i/free-vector-dynamic-brilliant-color-background-02-vector_017212_2.jpg');
 }
 .callout {
   color: #ffffff;
@@ -191,19 +197,13 @@ h1 {
   min-height: 100%;
   min-width: 100%;
   position: relative;
-}
-.callout-background {
-  position: absolute;
-  background: url('http://4vector.com/i/free-vector-dynamic-brilliant-color-background-02-vector_017212_2.jpg') no-repeat fixed;
-  min-height: 100%;
-  min-width: 100%;
-  // position: fixed;
+  background-image: url('check-background.png');
 }
 
 
 .gallery {
   padding: 50px 0;
-  background: rgba(200, 200, 200, 0.7);
+  background: rgba(220, 220, 220, 0.7);
 }
 
 footer {

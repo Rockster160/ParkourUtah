@@ -8,13 +8,6 @@ var ready = function() {
     }
   });
 
-  $(window).scroll(function() {
-    var $bgobj = $('.callout-background');
-    var yPos = -($(window).scrollTop() / $bgobj.data('speed'));
-    var coords = '50% '+ yPos + 'px';
-    $bgobj.css({ backgroundPosition: coords });
-  });
-
   /* highlight the top nav as scrolling occurs */
   $('body').scrollspy({ target: '#navbar' });
   $('.navbar-fixed-top').affix({
