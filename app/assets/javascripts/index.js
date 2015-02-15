@@ -1,20 +1,22 @@
 var ready = function() {
-  /* smooth scrolling for scroll to top */
-  $('.scroll-link').click(function(e){
-    if (window.location.pathname == "/") {
+
+  if (window.location.pathname == "/") {
+    /* smooth scrolling for scroll to top */
+    $('.scroll-link').click(function(e){
       e.preventDefault();
       $href = e.target.hash
       $('body,html').animate({scrollTop:$($href).offset().top},500);
-    }
-  });
-
-  /* highlight the top nav as scrolling occurs */
-  $('body').scrollspy({ target: '#navbar' });
-  $('.navbar-fixed-top').affix({
-    offset: {
-      top: $('.header-container').height()
-    }
-  });
+    });
+    /* Remove buffer for Navbar. */
+    $('.navbar-offset').hide();
+    /* highlight the top nav as scrolling occurs */
+    $('body').scrollspy({ target: '#navbar' });
+    $('.navbar-fixed-top').affix({
+      offset: {
+        top: $('.header-container').height()
+      }
+    });
+  }
 };
 
 $(document).ready(ready);
