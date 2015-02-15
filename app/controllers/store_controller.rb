@@ -1,4 +1,5 @@
 class StoreController < ApplicationController
+  before_action :set_categories, only: [:edit, :new]
 
   def index
     @items = LineItem.all
@@ -6,6 +7,15 @@ class StoreController < ApplicationController
 
   def new
     @item = LineItem.new
+  end
+
+  def edit
+    @item = LineItem.find(params[:id])
+  end
+
+  def update
+    LineItem.find(params[:id]).update(item_params)
+    redirect_to store_path
   end
 
   def create
@@ -16,6 +26,10 @@ class StoreController < ApplicationController
   private
 
   def item_params
-    params.require(:line_item).permit(:description, :title, :display, :cost)
+    params.require(:line_item).permit(:description, :title, :display, :cost, :category)
+  end
+
+  def set_categories
+    @categories = ["Other", "Shoes", "Shirts", "Stuff"]
   end
 end

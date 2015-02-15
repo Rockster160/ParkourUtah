@@ -2,6 +2,7 @@
   <%= f.text_field :title, placeholder: 'Title', required: true %><br/>
   <%= f.number_field :cost, placeholder: 'Cost', required: true %><br/>
   <%= f.text_area :description, placeholder: 'Description', required: true %><br/>
+  <%= f.select :category, @categories %>
   <%= f.file_field :display, placeholder: 'Display', required: true %><br/>
   <br/>
   <%= submit_tag "√", class: "btn btn-success" %>

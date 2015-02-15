@@ -19,6 +19,8 @@ Rails.application.routes.draw do
 
   get '/store' => 'store#index', as: 'store'
   get '/store/new' => 'store#new', as: 'add_item'
+  get '/store/edit/:id' => 'store#edit', as: 'edit_item'
+  patch '/store/update/:id' => 'store#update'
   post '/store/create' => 'store#create'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

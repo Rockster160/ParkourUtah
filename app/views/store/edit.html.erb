@@ -1,0 +1,9 @@
+<%= form_for @item, url: {action: "update", id: @item.id} do |f| %>
+<%= f.text_field :title, placeholder: 'Title', required: true, autocomplete: "off" %><br/>
+<%= f.number_field :cost, placeholder: 'Cost', required: true, autocomplete: "off" %><br/>
+<%= f.text_area :description, placeholder: 'Description', required: true, autocomplete: "off" %><br/>
+<%= f.select :category, @categories %>
+<%= f.file_field :display, placeholder: 'Display' %><br/>
+<br/>
+<%= submit_tag "√", class: "btn btn-success" %>
+<% end %>

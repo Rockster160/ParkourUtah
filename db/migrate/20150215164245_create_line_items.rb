@@ -5,6 +5,7 @@ class CreateLineItems < ActiveRecord::Migration
       t.text :description
       t.float :cost
       t.string :title
+      t.string :category
 
       t.timestamps null: false
     end
