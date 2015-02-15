@@ -12,12 +12,14 @@ Rails.application.routes.draw do
 
   get 'events/show/:id' => 'event#show', as: 'event'
   get 'events/new' => 'event#new', as: 'add_event'
-  post 'events/create' => 'event#create', as: 'create_event'
+  post 'events/create' => 'event#create'
   delete 'events/destroy' => 'event#destroy', as: 'destroy_event'
 
   get 'peeps/show/:id' => 'peeps#show', as: 'peep_show'
 
   get '/store' => 'store#index', as: 'store'
+  get '/store/new' => 'store#new', as: 'add_item'
+  post '/store/create' => 'store#create'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

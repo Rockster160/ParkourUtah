@@ -10,12 +10,12 @@ classes = %w[ beginner intermediate conditioning jam tricking ]
 
 
 User.create(
-email: "test@email.com",
-first_name: "Rocco",
-last_name: "Nicholls",
-bio: Faker::Lorem.paragraphs(5),
-password: "password",
-role: 2
+  email: "test@email.com",
+  first_name: "Rocco",
+  last_name: "Nicholls",
+  bio: Faker::Lorem.paragraphs(5),
+  password: "password",
+  role: 2
 )
 
 10.times do |t|
@@ -35,7 +35,7 @@ role: 2
   )
 end
 
-mods = User.where("role > ?", 0).pluck(:id)
+mods = User.where("role > ?", 0).pluck(:first_name)
 
 100.times do |t|
   Event.create(

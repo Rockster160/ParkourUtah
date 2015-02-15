@@ -1,1 +1,11 @@
-This is the store.
+This is the store.<br/>
+There are <%= @items.count %> items in the store.<br/>
+<% @items.each do |item| %>
+  <div>
+    <%= item.title %><br/>
+    *<%= item.description %><br/>
+    <%= image_tag(item.display.url(:thumb)) %>
+    <%= number_to_currency(item.cost) %>
+  </div>
+<% end %>
+<%= link_to "Add new item", add_item_path if user_signed_in? && current_user.is_admin? %>
