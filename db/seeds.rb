@@ -50,7 +50,7 @@ mods = User.where("role > ?", 0).pluck(:id)
 end
 
 Event.create(
-  date: Faker::Time.between(Time.now, 25.days.from_now, :day),
+  date: Faker::Time.between(Time.zone.now, 25.days.from_now, :day),
   host: 2,
   description: "Bring your punch card and have a great time jumping on the huge Air Mat! We'll be going over advanced movements, so bring your A-Game!",
   city: "Draper",

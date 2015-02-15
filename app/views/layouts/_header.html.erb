@@ -12,12 +12,12 @@
       <ul class="nav navbar-nav">
         <% if user_signed_in? %>
           <li><%= link_to "Account", edit_user_registration_path %></li>
-          <li><a class="scroll-link" href="#join">Store</a></li>
+          <li><%= link_to "Store", store_path %></li>
           <li><%= link_to "Schedule", calendar_show_path('all') %></li>
           <li><%= link_to "Sign Out", destroy_user_session_path, method: :delete %></li>
         <% else %>
           <li><a class="scroll-link" href="#join">Contact Us</a></li>
-          <li><a class="scroll-link" href="#join">Store</a></li>
+          <li><%= link_to "Store", store_path %></li>
           <li><%= link_to "Schedule", calendar_show_path('all') %></li>
           <li><%= link_to "Sign In", new_user_session_path %></li>
         <% end %>

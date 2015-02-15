@@ -16,6 +16,8 @@ Rails.application.routes.draw do
   delete 'events/destroy' => 'event#destroy', as: 'destroy_event'
 
   get 'peeps/show/:id' => 'peeps#show', as: 'peep_show'
+
+  get '/store' => 'store#index', as: 'store'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
