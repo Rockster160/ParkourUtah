@@ -22,7 +22,7 @@ class EventController < ApplicationController
     iterate.times do |each_week|
       dates << date_time + (each_week.weeks)
     end
-    params[:event][:token] = DateTime.zone.now.to_i if iterate > 1
+    params[:event][:token] = Time.now.to_i if iterate > 1
     dates.each do |date|
       params[:event][:date] = date
       Event.create(event_params)
@@ -55,7 +55,7 @@ class EventController < ApplicationController
     hour = time[:meridiam] == "AM" ? time[:hour].to_i : time[:hour].to_i + 12
     min = time[:minute].to_i
 
-    DateTime.zone.new(year, month, day, hour, min)
+    DateTime.new(year, month, day, hour, min)
   end
 
   def event_params
