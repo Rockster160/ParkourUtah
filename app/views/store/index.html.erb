@@ -6,7 +6,8 @@
     <%= image_tag(item.display.url(:thumb)) %>
     <%= number_to_currency(item.cost) %><br/>
     <%= item.category %><br/>
-    <%= link_to "Edit Item", edit_item_path(item.id) if user_signed_in? && current_user.is_admin? %>
+    <%= link_to "Add to Cart", add_to_cart_path(item.id) %>
+    <%= link_to "Edit Item", edit_item_path(item.id), remote: true if user_signed_in? && current_user.is_admin? %>
   </div>
 <% end %>
 <%= link_to "Add new item", add_item_path if user_signed_in? && current_user.is_admin? %>

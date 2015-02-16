@@ -23,6 +23,10 @@ class StoreController < ApplicationController
     redirect_to store_path
   end
 
+  def add_to_cart
+    
+  end
+
   private
 
   def item_params
