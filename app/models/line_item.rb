@@ -7,6 +7,7 @@ class LineItem < ActiveRecord::Base
   #   t.text     "description"
   #   t.float    "cost"
   #   t.string   "title"
+  #   t.string   "category"
   #   t.datetime "created_at",           null: false
   #   t.datetime "updated_at",           null: false
   # end

@@ -58,3 +58,13 @@ Event.create(
   location_instructions: Faker::Lorem.sentence,
   class_name: "special"
 )
+
+15.times do |t|
+  LineItem.create(
+    display: Faker::Avatar.image,
+    title: Faker::Commerce.product_name,
+    description: Faker::Lorem.paragraph,
+    cost: (rand(25000).to_f/100).round(2),
+    category: ["Other", "Shoes", "Shirts", "Stuff"].sample
+  )
+end

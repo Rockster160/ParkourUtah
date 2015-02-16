@@ -24,7 +24,6 @@ class StoreController < ApplicationController
   end
 
   def add_to_cart
-    
   end
 
   private
