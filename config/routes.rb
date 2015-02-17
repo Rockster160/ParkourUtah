@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   get 'calendar/index' => 'calendar#index', as: 'calendar'
   get 'calendar/day/:date' => 'calendar#day', as: 'calendar_day'
   get 'calendar/draw' => 'calendar#draw', as: 'calendar_draw'
-  
+
   get 'schedule/:location' => 'calendar#show', as: 'calendar_show'
 
   get 'events/show/:id' => 'event#show', as: 'event'
@@ -25,4 +25,5 @@ Rails.application.routes.draw do
   post '/store/create' => 'store#create'
 
   get '/cart/add/:id' => 'store#add_to_cart', as: 'add_to_cart'
+  get '/cart/show/:id' => 'store#show', as: 'show_cart'
 end

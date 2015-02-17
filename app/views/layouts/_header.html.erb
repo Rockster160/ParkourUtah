@@ -11,11 +11,25 @@
     <div class="navbar-collapse collapse pull-right" id="navbar">
       <ul class="nav navbar-nav">
         <% if user_signed_in? %>
-          <li><%= link_to "Sign Out", destroy_user_session_path, method: :delete %></li>
           <li><a class="scroll-link" href="#join">Contact Us</a></li>
           <li><%= link_to "Store", store_path %></li>
           <li><%= link_to "Schedule", calendar_show_path('all') %></li>
-          <li><%= link_to "Account", edit_user_registration_path %></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+              <span class="caret"></span> Account
+            </a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">
+                Shopping Cart
+              </a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= edit_user_registration_path %>">
+                Edit Account
+              </a></li>
+              <li role="presentation">
+                <%= link_to "Sign Out", destroy_user_session_path, method: :delete, tabindex: "-1", role: "menuitem" %>
+              </li>
+            </ul>
+          </li>
         <% else %>
           <li><a class="scroll-link" href="#join">Contact Us</a></li>
           <li><%= link_to "Store", store_path %></li>
