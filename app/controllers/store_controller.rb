@@ -1,4 +1,5 @@
 class StoreController < ApplicationController
+  before_action :set_cart
   before_action :set_categories, only: [:edit, :new]
 
   def index
@@ -24,6 +25,13 @@ class StoreController < ApplicationController
   end
 
   def add_to_cart
+    orders = current_user.cart.transactions
+    if orders.where(item_id: params[:id]).count > 0
+      orders.first.increment!(:amount)
+    else
+      orders << Transaction.create(item_id: params[:id])
+    end
+    head :ok # Update the Cart?
   end
 
   private
@@ -34,5 +42,9 @@ class StoreController < ApplicationController
 
   def set_categories
     @categories = ["Other", "Shoes", "Shirts", "Stuff"]
+  end
+
+  def set_cart
+    @cart = current_user.cart if user_signed_in?
   end
 end

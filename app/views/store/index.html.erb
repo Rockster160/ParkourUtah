@@ -1,4 +1,5 @@
 <br/>There are <%= @items.count %> items in the store.<br/>
+
 <% @items.each do |item| %>
   <div>
     <%= item.title %><br/>
@@ -10,4 +11,22 @@
     <%= link_to "Edit Item", edit_item_path(item.id) if user_signed_in? && current_user.is_admin? %>
   </div>
 <% end %>
-<%= link_to "Add new item", add_item_path if user_signed_in? && current_user.is_admin? %>
+<% if user_signed_in? %>
+  <div class="shopping-cart-container">
+    <div class="shopping-cart">
+      <% @cart.items.first(5).each do |item| %>
+        <span class="delete-x pull-right">X</span>
+        <div class="shopping-cart-line-item">
+          <div class="shopping-cart-line-item-total"><%= item.title %></div>
+          <div class="shopping-cart-line-item-price"><%= number_to_currency(item.cost) %></div>
+          <div class="shopping-cart-line-item-quantity">
+            <input value="5" size="1" maxlength="2" class="shopping-cart-line-item-quantity-input"></input>
+          </div>
+        </div>
+      <% end %>
+      <br/>
+      <span class="shopping-cart-total">Total: <%= number_to_currency(@cart.price) %></span>
+    </div>
+  </div>
+  <%= link_to "Add new item", add_item_path if current_user.is_admin? %>
+<% end %>

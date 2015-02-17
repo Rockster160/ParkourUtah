@@ -30,6 +30,9 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
 
   has_one :cart
+  has_many :transactions, through: :cart
+
+  after_create :assign_cart
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
@@ -56,5 +59,9 @@ class User < ActiveRecord::Base
 
   def is_admin?
     self.role > 1
+  end
+
+  def assign_cart
+    self.cart = Cart.create
   end
 end
