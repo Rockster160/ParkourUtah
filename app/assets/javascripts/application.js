@@ -20,12 +20,14 @@
 
 
 ready = function() {
-  console.log('Tick.')
   setTimeout(function() {
-    $('.flash-container').slideUp(600);
-    console.log("Time passed.");
+    slideOut($('.flash-container'));
   }, 6000);
 };
+
+slideOut = function(obj) {
+  obj.slideUp(600);
+}
 
 
 $(document).ready(ready);

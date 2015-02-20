@@ -55,9 +55,9 @@ ActiveRecord::Schema.define(version: 20150216175159) do
   create_table "transactions", force: :cascade do |t|
     t.integer  "cart_id"
     t.integer  "item_id"
-    t.integer  "amount"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "amount",     default: 1
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   add_index "transactions", ["cart_id"], name: "index_transactions_on_cart_id", using: :btree

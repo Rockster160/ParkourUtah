@@ -26,8 +26,9 @@ class StoreController < ApplicationController
 
   def add_to_cart
     orders = current_user.cart.transactions
-    if orders.where(item_id: params[:id]).count > 0
-      orders.first.increment!(:amount)
+    item = orders.where(item_id: params[:id]).first
+    if item
+      item.increment!(:amount)
     else
       orders << Transaction.create(item_id: params[:id])
     end
