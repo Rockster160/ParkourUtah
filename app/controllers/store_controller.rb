@@ -6,6 +6,17 @@ class StoreController < ApplicationController
     @items = LineItem.all
   end
 
+  def show_cart
+  end
+
+  def update_cart
+    item = @cart.transactions.where(item_id: params[:item_id]).first
+    item.update(amount: params[:new_amount])
+    respond_to do |format|
+      format.js
+    end
+  end
+
   def new
     @item = LineItem.new
   end
@@ -26,13 +37,17 @@ class StoreController < ApplicationController
 
   def add_to_cart
     orders = current_user.cart.transactions
-    item = orders.where(item_id: params[:id]).first
-    if item
-      item.increment!(:amount)
+    order = orders.where(item_id: params[:id]).first
+    if order
+      order.increment!(:amount)
     else
-      orders << Transaction.create(item_id: params[:id])
+      order = Transaction.create(item_id: params[:id])
+      orders << order
     end
-    head :ok # Update the Cart?
+    flash.now[:notice] = "#{order.item.title} successfully added to cart."
+    respond_to do |format|
+      format.js
+    end
   end
 
   private

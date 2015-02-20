@@ -1,0 +1,7 @@
+$('.shopping-cart-total-holder').html('<%= j number_to_currency(@cart.price) %>')
+$('.shopping-cart-line-item-quantity-input').each(function(){
+  $container = $(this).parents('.shopping-cart-cell');
+  if ($(this).val() == "0" && $($container).is(":visible")) {
+    $container.slideUp(500);
+  }
+});

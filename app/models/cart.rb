@@ -12,8 +12,8 @@ class Cart < ActiveRecord::Base
 
   def price
     cost = 0
-    self.items.each do |item|
-      cost += item.cost
+    self.transactions.each do |order|
+      cost += (order.item.cost * order.amount)
     end
     cost
   end

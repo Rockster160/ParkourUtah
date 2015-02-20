@@ -25,5 +25,6 @@ Rails.application.routes.draw do
   post '/store/create' => 'store#create'
 
   get '/cart/add/:id' => 'store#add_to_cart', as: 'add_to_cart'
-  get '/cart/show/:id' => 'store#show', as: 'show_cart'
+  get '/cart/show' => 'store#show_cart', as: 'show_cart'
+  post '/cart/update' => 'store#update_cart', as: 'update_cart'
 end
