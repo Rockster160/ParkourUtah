@@ -18,3 +18,23 @@
  */
 // @import "font-awesome-sprockets";
 // @import "font-awesome";
+
+.flash {
+  opacity: 0.7;
+  width: 100%;
+  position: fixed;
+  height: 70px;
+  top: 50px;
+  z-index: 10000;
+  text-align: center;
+  padding: 10px;
+  font-size: 2em;
+  &.notice {
+    background: green;
+    border: 5px ridge green;
+  }
+  &.alert {
+    background: red;
+    border: 5px ridge red;
+  }
+}
