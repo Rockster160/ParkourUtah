@@ -9,10 +9,16 @@
 <body>
   <%= render 'layouts/header' %>
   <% if notice %>
-    <p class="flash notice"><%= notice %></p>
+    <div class="flash-container">
+      <div class="flash notice"></div>
+      <span class="flash-text"><%= notice %></span>
+    </div>
   <% end %>
   <% if alert %>
-    <p class ="flash alert"><%= alert %></p>
+    <div class="flash-container">
+      <div class="flash alert"></div>
+      <span class="flash-text"><%= alert %></span>
+    </div>
   <% end %>
   <div class="navbar-offset"></div>
 

@@ -19,16 +19,25 @@
 // @import "font-awesome-sprockets";
 // @import "font-awesome";
 
+.flash-container {
+  text-align: center;
+  position: fixed;
+  z-index: 10000;
+  width: 100%;
+  height: 70px;
+  font-size: 2em;
+  top: 50px;
+}
+
+.flash-text {
+  position: relative;
+  top: -53px;
+  color: black;
+}
+
 .flash {
   opacity: 0.7;
-  width: 100%;
-  position: fixed;
-  height: 70px;
-  top: 50px;
-  z-index: 10000;
-  text-align: center;
-  padding: 10px;
-  font-size: 2em;
+  height: 100%;
   &.notice {
     background: green;
     border: 5px ridge green;
