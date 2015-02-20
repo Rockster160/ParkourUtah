@@ -20,10 +20,20 @@
 
 
 ready = function() {
-  setTimeout(function() {
-    slideOut($('.flash-container'));
+  timeout = setTimeout(function() {
+    killFlashes();
   }, 6000);
 };
+
+killFlashes = function() {
+  if ($('.flash-container').length > 0) {
+    slideOut($('.flash-container'));
+    clearTimeout(timeout);
+    timeout = setTimeout(function() {
+      killFlashes();
+    }, 6000);
+  }
+}
 
 slideOut = function(obj) {
   obj.slideUp(600);
