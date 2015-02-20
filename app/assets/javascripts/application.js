@@ -17,3 +17,16 @@
 //= require twitter/bootstrap
 //= require turbolinks
 //= require_tree .
+
+
+ready = function() {
+  console.log('Tick.')
+  setTimeout(function() {
+    $('.flash-container').slideUp(600);
+    console.log("Time passed.");
+  }, 6000);
+};
+
+
+$(document).ready(ready);
+$(document).on('page:load', ready);
