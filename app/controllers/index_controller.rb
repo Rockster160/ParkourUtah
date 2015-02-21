@@ -2,7 +2,7 @@ class IndexController < ApplicationController
   def index
     @date = params[:date] ? Date.parse(params[:date]) : Date.today
 
-    @mods = User.where("role > ?", 0)
+    @instructors = User.where("role > ?", 0)
 
     all_events = Event.where(nil)
     @events = all_events.group_by { |event| [event.date.month, event.date.day] }

@@ -20,7 +20,7 @@ User.create(
 
 10.times do |t|
   User.create(
-  email: "mod#{t}@email.com",
+  email: "instructor#{t}@email.com",
   first_name: Faker::Name.first_name,
   last_name: Faker::Name.last_name,
   bio: Faker::Lorem.paragraph,
@@ -35,12 +35,12 @@ User.create(
   )
 end
 
-mods = User.where("role > ?", 0).pluck(:first_name)
+instructors = User.where("role > ?", 0).pluck(:first_name)
 
 100.times do |t|
   Event.create(
     date: Faker::Time.between(50.days.ago, 50.days.from_now, :day),
-    host: mods.sample,
+    host: instructors.sample,
     description: Faker::Lorem.paragraph,
     city: cities.sample, # Make expandable for any number of cities- main ones selectable, others in drop-down
     address: Faker::Address.street_address,
@@ -61,7 +61,7 @@ Event.create(
 
 15.times do |t|
   LineItem.create(
-    display: "https://robohash.org/#{mods.sample}?bgset=bg#{(1..9).to_a.sample}&size=300x400",
+    display: "https://robohash.org/#{instructors.sample}?bgset=bg#{(1..9).to_a.sample}&size=300x400",
     title: Faker::Commerce.product_name,
     description: Faker::Lorem.paragraph,
     cost: (rand(25000).to_f/100).round(2),

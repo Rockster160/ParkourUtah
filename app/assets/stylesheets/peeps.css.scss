@@ -1,4 +1,4 @@
-.mods-container {
+.instructors-container {
   text-align: justify;
   -ms-text-justify: distribute-all-lines;
   text-justify: distribute-all-lines;
@@ -25,13 +25,13 @@
   }
 }
 
-.mods-container > .flip-container {
+.instructors-container > .flip-container {
   margin-top: 16px;
   vertical-align: top;
   display: inline-block;
   *display: inline;
 }
-.mods-container:after {
+.instructors-container:after {
   content: '';
   width: 100%;
   display: inline-block;

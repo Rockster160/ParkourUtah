@@ -1,6 +1,6 @@
 class EventController < ApplicationController
   before_action :validate_user, only: [ :create, :new ]
-  # vefore_action :authenticate_mod/admin only: { :create, :delete }
+  # vefore_action :authenticate_instructor/admin only: { :create, :delete }
   # https://github.com/plataformatec/devise#strong-parameters
 
   def show
@@ -12,7 +12,7 @@ class EventController < ApplicationController
     all_events = Event.all.to_a
     @cities = all_events.group_by { |event| event.city }.keys
     @classes = all_events.group_by { |event| event.class_name }.keys
-    @mods = User.where("role > ?", 0)
+    @instructors = User.where("role > ?", 0)
   end
 
   def create

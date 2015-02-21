@@ -1,7 +1,7 @@
 class PeepsController < ApplicationController
 
   def show
-    @mod = User.find(params[:id])
-    redirect_to root_path unless @mod.is_mod?
+    @instructor = User.find(params[:id])
+    redirect_to root_path unless @instructor.is_instructor?
   end
 end

@@ -53,7 +53,7 @@ class User < ActiveRecord::Base
     "#{self.first_name.capitalize} #{self.last_name.capitalize}"
   end
 
-  def is_mod?
+  def is_instructor?
     self.role > 0
   end
 
