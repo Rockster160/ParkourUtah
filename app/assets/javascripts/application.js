@@ -23,6 +23,11 @@ ready = function() {
   timeout = setTimeout(function() {
     killFlashes();
   }, 6000);
+
+  $('body').delegate('.flash', 'click', function() {
+    killFlashes();
+  });
+
 };
 
 killFlashes = function() {
@@ -34,6 +39,7 @@ killFlashes = function() {
     }, 6000);
   }
 }
+
 
 slideOut = function(obj) {
   obj.slideUp(600);
