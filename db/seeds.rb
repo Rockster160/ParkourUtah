@@ -61,7 +61,7 @@ Event.create(
 
 15.times do |t|
   LineItem.create(
-    display: Faker::Avatar.image,
+    display: "https://robohash.org/#{mods.sample}?bgset=bg#{(1..9).to_a.sample}&size=300x400",
     title: Faker::Commerce.product_name,
     description: Faker::Lorem.paragraph,
     cost: (rand(25000).to_f/100).round(2),
