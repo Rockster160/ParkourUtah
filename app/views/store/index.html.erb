@@ -1,7 +1,7 @@
 <br/>There are <%= @items.count %> items in the store.<br/>
 <!-- <div class="row"> -->
 <div class="instructors-container">
-  <% @items.each do |item| %>
+  <% @items.reverse.each do |item| %>
     <div class="flip-container" ontouchstart="this.classList.toggle('hover');">
       <div class="flipper">
         <div class="front" style="background: #FFF url(<%= item.display.url %>);background-size: 100% 100%;">
@@ -10,7 +10,8 @@
           <div class="bio-background">
             <br/>
             <p class="card-bio-text">
-              <strong><%= item.title %></strong><br/><br/>
+              <strong><%= item.title %></strong><br/>
+              <%= number_to_currency(item.cost) %><br/>
               <%= item.description %>
             </p>
             <%= link_to "Add to Cart", add_to_cart_path(item.id), class: "bio-link", remote: true if user_signed_in? %><br/>

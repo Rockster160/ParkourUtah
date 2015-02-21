@@ -59,9 +59,17 @@ Event.create(
   class_name: "special"
 )
 
+def generateToken
+  token = ''
+  (1..10).to_a.sample.times do |t|
+    token += (('a'..'z').to_a + ('A'..'Z').to_a).sample
+  end
+  token
+end
+
 15.times do |t|
   LineItem.create(
-    display: "https://robohash.org/#{instructors.sample}?bgset=bg#{(1..9).to_a.sample}&size=300x400",
+    display: "https://robohash.org/#{generateToken}?set=any&bgset=bg#{[1, 2].sample}",
     title: Faker::Commerce.product_name,
     description: Faker::Lorem.paragraph,
     cost: (rand(25000).to_f/100).round(2),

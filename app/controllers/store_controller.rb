@@ -26,12 +26,20 @@ class StoreController < ApplicationController
   end
 
   def update
-    LineItem.find(params[:id]).update(item_params)
+    if LineItem.find(params[:id]).update(item_params)
+      flash[:notice] = "Item successfully updated."
+    else
+      flash[:alert] = "There was an error updating the item."
+    end
     redirect_to store_path
   end
 
   def create
-    LineItem.create(item_params)
+    if LineItem.create(item_params)
+      flash[:notice] = "Item successfully created."
+    else
+      flash[:alert] = "There was an error creating the item."
+    end
     redirect_to store_path
   end
 
