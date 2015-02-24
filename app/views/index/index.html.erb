@@ -20,56 +20,15 @@
 <div id="about" class="blurb">
   <div class="container">
     <div class="row">
-      <div class="col-md-7">
-        <h1>Who we are</h1>
-        <p class="lead">We are Parkour Utah and we like to jump over stuff!</p>
-      </div>
-      <div class="col-md-5">
-        <h1 class="pull-right"><%= icon('male', '', class: 'fa-3x') %> <%= icon('long-arrow-right', '', class: 'fa-3x') %> <%= icon('random', '', class: 'fa-3x') %></h1>
-      </div>
+      <h1>Who we are</h1>
+      <p class="lead">We are Parkour Utah and we like to jump over stuff!</p>
+    </div>
+    <div class="row">
+      <%= render 'index/video_carousel' %>
     </div>
   </div>
 </div>
-
-<div class="featurette" id="media">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12 text-center">
-        <h1>Videos</h1>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-2 col-md-offset-2 text-center">
-        <div class="featurette-item">
-          <%= icon('rocket') %>
-          <h4>Rocket</h4>
-          <p>We'll get you up and going with our great classes!</p>
-        </div>
-      </div>
-      <div class="col-md-2 text-center">
-        <div class="featurette-item">
-          <%= icon('magnet') %>
-          <h4>Magnet</h4>
-          <p>Become a chick magnet.</p>
-        </div>
-      </div>
-      <div class="col-md-2 text-center">
-        <div class="featurette-item">
-          <%= icon('shield') %>
-          <h4>Shield</h4>
-          <p>We practice safety first!</p>
-        </div>
-      </div>
-      <div class="col-md-2 text-center">
-        <div class="featurette-item">
-          <%= icon('pencil') %>
-          <h4>Pencil</h4>
-          <p>We don't use these at all!</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<%= render 'index/modal_placeholders' %>
 
 <div class="callout-container">
   <div class="callout" id="peeps">
