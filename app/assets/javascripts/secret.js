@@ -6,34 +6,35 @@ var ready = function() {
     $('.secret-input-btn').click(function(e) {
       e.preventDefault();
       var $value = $(this).html();
-      var old_value = $('.secret-input-field').val();
+      append_to_field($value);
+    });
+
+    $('.no-zoom').bind('touchstart', function(e) {
+      e.preventDefault();
+    });
+    $('.no-zoom').bind('touchend', function(e) {
+      e.preventDefault();
+      var $value = $(this).html();
+      append_to_field($value);
+    })
+
+    function append_to_field($value) {
+      var field_value = $('.secret-input-field').val();
+      if (field_value.length == 9 && $value != "&lt;") { $value = ""; }
+      var old_value = field_value;
+      console.log('pressed')
+
       if ($value == "&lt;") {
-        var new_value = old_value.substring(0, old_value.length - 1);
+        var lose = 1
+        if (field_value.length == 6) { lose = 2; }
+        var new_value = old_value.substring(0, old_value.length - lose);
       } else {
-        var new_value = $('.secret-input-field').val() + $value;
+        var add = ""
+        if (field_value.length == 4) { add = "-"; }
+        var new_value = field_value + add + $value;
       };
       $('.secret-input-field').val(new_value);
-
-      (function($) {
-        var IS_IOS = /iphone|ipad/i.test(navigator.userAgent);
-        $.fn.nodoubletapzoom = function() {
-          if (IS_IOS)
-            $(this).bind('touchstart', function preventZoom(e) {
-              var t2 = e.timeStamp
-              , t1 = $(this).data('lastTouch') || t2
-              , dt = t2 - t1
-              , fingers = e.originalEvent.touches.length;
-              $(this).data('lastTouch', t2);
-              if (!dt || dt > 500 || fingers > 1) return; // not double-tap
-
-                e.preventDefault(); // double tap - prevent the zoom
-                // also synthesize click events we just swallowed up
-                $(this).trigger('click').trigger('click');
-              });
-            };
-          })(jQuery);
-    });
-    $('.no-zoom').nodoubletapzoom();
+    }
   }
 }
 
