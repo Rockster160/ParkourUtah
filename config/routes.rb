@@ -1,9 +1,12 @@
 Rails.application.routes.draw do
 
+  root 'index#index'
+  get '/secret' => 'peeps#secret'
+  patch '/secrets' => 'peeps#secret_submit'
+
   devise_for :users do
     get '/users/sign_out' => 'devise/sessions#destroy'
   end
-  root 'index#index'
 
   get 'calendar/index' => 'calendar#index', as: 'calendar'
   get 'calendar/day/:date' => 'calendar#day', as: 'calendar_day'
