@@ -148,7 +148,6 @@ end
 
 15.times do |t|
   LineItem.create(
-    display: "https://robohash.org/#{generateToken}?set=any&bgset=bg#{[1, 2].sample}",
     title: Faker::Commerce.product_name,
     description: Faker::Lorem.paragraph,
     cost: (rand(25000).to_f/100).round(2),
