@@ -1,9 +1,29 @@
 <%= form_for @item, url: {action: "create"} do |f| %>
-  <%= f.text_field :title, placeholder: 'Title', required: true %><br/>
-  <%= f.number_field :cost, placeholder: 'Cost', required: true %><br/>
-  <%= f.text_area :description, placeholder: 'Description', required: true %><br/>
-  <%= f.select :category, @categories %>
-  <%= f.file_field :display, placeholder: 'Display', required: true %><br/>
-  <br/>
+<table>
+  <tr>
+    <td>Title</td>
+    <td><%= f.text_field :title, placeholder: 'Green Parachute Pants', required: true %></td>
+  </tr>
+  <tr>
+    <td>Cost</td>
+    <td><%= f.number_field :cost, placeholder: '3000.99', required: true %></td>
+  </tr>
+  <tr>
+    <td>Sizes, comma separated</td>
+    <td><%= f.text_field :size, placeholder: 'S, M, L / 38.5, 39, 43', required: true %></td>
+  </tr>
+  <tr>
+    <td>Description</td>
+    <td><%= f.text_area :description, placeholder: 'Marvelous skills sewn with godly thread.', required: true %></td>
+  </tr>
+  <tr>
+    <td>Shoes, Shirts, etc.</td>
+    <td><%= f.select :category, @categories %></td>
+  </tr>
+  <tr>
+    <td>Display</td>
+    <td><%= f.file_field :display, required: true %></td>
+  </tr>
+</table>
   <%= submit_tag "√", class: "btn btn-success" %>
 <% end %>

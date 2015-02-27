@@ -10,6 +10,7 @@ class LineItem < ActiveRecord::Base
   #   t.string   "category"
   #   t.datetime "created_at",           null: false
   #   t.datetime "updated_at",           null: false
+  #   t.string   "size"
   # end
 
   has_attached_file :display,
