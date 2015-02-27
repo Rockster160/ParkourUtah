@@ -13,8 +13,10 @@ class LineItem < ActiveRecord::Base
   # end
 
   has_attached_file :display,
-    :styles => { :medium => "300x300>", :thumb => "100x100#" },
-    :default_url => "/images/missing.png",
-    :convert_options => { :all => '-background white -flatten +matte' }
+    styles: { :medium => "300x300>", :thumb => "100x100#" },
+    default_url: "/images/missing.png",
+    storage: :s3,
+    bucket: ENV['PKUT_S3_BUCKET_NAME'],
+    convert_options: { :all => '-background white -flatten +matte' }
   validates_attachment_content_type :display, :content_type => /\Aimage\/.*\Z/
 end

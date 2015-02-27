@@ -40,6 +40,11 @@ GEM
     autoprefixer-rails (5.0.0.3)
       execjs
       json
+    aws-sdk (1.59.0)
+      aws-sdk-v1 (= 1.59.0)
+    aws-sdk-v1 (1.59.0)
+      json (~> 1.4)
+      nokogiri (>= 1.4.4)
     bcrypt (3.1.10)
     better_errors (2.0.0)
       coderay (>= 1.0.0)
@@ -219,6 +224,7 @@ PLATFORMS
 
 DEPENDENCIES
   autoprefixer-rails
+  aws-sdk (< 2.0)
   better_errors
   byebug
   coffee-rails (~> 4.1.0)

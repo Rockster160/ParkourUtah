@@ -23,6 +23,8 @@ gem 'rails_12factor', group: :production
 gem 'devise'
 gem 'jquery-ui-rails'
 gem "paperclip", "~> 4.2"
+gem 'aws-sdk', '< 2.0'
+# gem 'aws-sdk-v1'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
