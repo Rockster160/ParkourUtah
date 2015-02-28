@@ -22,11 +22,17 @@
 }
 
 $default: steelblue;
-$jam: rgb(0, 0, 255);
-$beginner: rgb(255, 255, 0);
-$intermediate: rgb(255, 0, 0);
-$tricking: rgb(255, 0, 255);
-$conditioning: rgb(255, 125, 0);
+$sandy: rgb(0, 0, 255);
+$provo: rgb(255, 255, 0);
+$salt-lake-city: rgb(255, 0, 0);
+$vernal: rgb(255, 0, 255);
+$draper: rgb(255, 125, 0);
+$orem: rgb(0, 255, 66);
+// $jam: rgb(0, 0, 255);
+// $beginner: rgb(255, 255, 0);
+// $intermediate: rgb(255, 0, 0);
+// $tricking: rgb(255, 0, 255);
+// $conditioning: rgb(255, 125, 0);
 $special: rgb(0, 255, 66);
 
 .calendar-event {
@@ -37,25 +43,29 @@ $special: rgb(0, 255, 66);
   color: black;
   background: lighten($default, 25%);
   &:hover { background: $default; }
-  &.jam {
-    background: lighten($jam, 25%);
-    &:hover { background: $jam; }
+  &.sandy {
+    background: lighten($sandy, 25%);
+    &:hover { background: $sandy; }
   }
-  &.beginner {
-    background: lighten($beginner, 25%);
-    &:hover { background: $beginner; }
+  &.provo {
+    background: lighten($provo, 25%);
+    &:hover { background: $provo; }
   }
-  &.intermediate {
-    background: lighten($intermediate, 25%);
-    &:hover { background: $intermediate; }
+  &.salt-lake-city {
+    background: lighten($salt-lake-city, 25%);
+    &:hover { background: $salt-lake-city; }
   }
-  &.tricking {
-    background: lighten($tricking, 25%);
-    &:hover { background: $tricking; }
+  &.vernal {
+    background: lighten($vernal, 25%);
+    &:hover { background: $vernal; }
   }
-  &.conditioning {
-    background: lighten($conditioning, 25%);
-    &:hover { background: $conditioning; }
+  &.draper {
+    background: lighten($draper, 25%);
+    &:hover { background: $draper; }
+  }
+  &.orem {
+    background: lighten($orem, 25%);
+    &:hover { background: $orem; }
   }
   &.special {
     background: lighten($special, 25%);
