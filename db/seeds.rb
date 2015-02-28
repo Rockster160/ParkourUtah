@@ -20,18 +20,18 @@ User.create(
 
 10.times do |t|
   User.create(
-  email: "instructor#{t}@email.com",
-  first_name: Faker::Name.first_name,
-  last_name: Faker::Name.last_name,
-  bio: Faker::Lorem.paragraph,
-  password: "password",
-  role: 1
+    email: "instructor#{t}@email.com",
+    first_name: Faker::Name.first_name,
+    last_name: Faker::Name.last_name,
+    bio: Faker::Lorem.paragraph,
+    password: "password",
+    role: 1
   )
   User.create(
-  email: "dummy#{t}@email.com",
-  first_name: Faker::Name.first_name,
-  last_name: Faker::Name.last_name,
-  password: "password",
+    email: "dummy#{t}@email.com",
+    first_name: Faker::Name.first_name,
+    last_name: Faker::Name.last_name,
+    password: "password",
   )
 end
 
@@ -158,7 +158,7 @@ end
   LineItem.create(
     title: Faker::Commerce.product_name,
     description: Faker::Lorem.paragraph,
-    cost: (rand(25000).to_f/100).round(2),
+    cost: rand(25000),
     category: ["Other", "Shoes", "Shirts", "Stuff"].sample
   )
 end

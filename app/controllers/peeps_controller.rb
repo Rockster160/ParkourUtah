@@ -7,15 +7,17 @@ class PeepsController < ApplicationController
   end
 
   def secret
-    @user = User.first
+    # @user = User.first
   end
 
   def secret_submit
-    if User.first.update(first_name: params[:user][:first_name])
-      flash[:notice] = "Success!"
-    else
-      flash[:alert] = "Failure..."
-    end
+    id, pin = params[:pin].split('-')
+    flash[:notice] = "User: #{id}, PIN: #{pin}"
+    # if User.first.update(first_name: params[:user][:first_name])
+    #   flash[:notice] = "Success! "
+    # else
+    #   flash[:alert] = "Failure..."
+    # end
     redirect_to root_path
   end
 end

@@ -3,7 +3,7 @@ class CreateLineItems < ActiveRecord::Migration
     create_table :line_items do |t|
       t.attachment :display
       t.text :description
-      t.float :cost
+      t.integer :cost_in_pennies
       t.string :title
       t.string :category
 

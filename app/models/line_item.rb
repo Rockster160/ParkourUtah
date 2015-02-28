@@ -5,7 +5,7 @@ class LineItem < ActiveRecord::Base
   #   t.integer  "display_file_size"
   #   t.datetime "display_updated_at"
   #   t.text     "description"
-  #   t.float    "cost"
+  #   t.integer   "cost_in_pennies"
   #   t.string   "title"
   #   t.string   "category"
   #   t.datetime "created_at",           null: false
