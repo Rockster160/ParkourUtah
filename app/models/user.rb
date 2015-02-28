@@ -24,6 +24,7 @@ class User < ActiveRecord::Base
   #   t.integer  "avatar_2_file_size"
   #   t.datetime "avatar_2_updated_at"
   #   t.text     "bio"
+  #   t.integer  "auth_net_id"
   # end
 
   # Include default devise modules. Others available are:
