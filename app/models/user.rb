@@ -33,7 +33,7 @@ class User < ActiveRecord::Base
   has_one :cart
   has_many :transactions, through: :cart
 
-  after_create :assign_cart
+  after_create :create_AuthNet_profile, :assign_cart
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
@@ -64,6 +64,55 @@ class User < ActiveRecord::Base
 
   def is_admin?
     self.role > 1
+  end
+
+  def get_AuthNet_token
+    transaction = generate_AuthNet_transaction
+    xml = "<?xml version='1.0' encoding='utf-8'?>
+    <getHostedProfilePageRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
+    <merchantAuthentication>
+    <name>34H962KteRF</name>
+    <transactionKey>92wavU3h45xZW88P</transactionKey>
+    </merchantAuthentication>
+    <customerProfileId>31560296</customerProfileId>
+    </getHostedProfilePageRequest>"
+
+    uri = URI('https://apitest.authorize.net/xml/v1/request.api')
+    req = Net::HTTP::Post.new(uri.path)
+    # req.
+
+    Net::HTTP.start(uri.hostname, uri.port) do |http|
+      res = http.request(xml)
+    end
+    # #{self.auth_net_id}
+    # ENV['PKUT_AUTHNET_LOGIN'],
+    # ENV['PKUT_AUTHNET_TRANS_KEY'],
+    # https://api.authorize.net/xml/v1/request.api
+    binding.pry
+    # puts res.body
+
+    response = transaction.create_hosted_page_token(self.auth_net_id)
+  end
+
+  def create_AuthNet_profile
+    transaction = generate_AuthNet_transaction
+    profile = AuthorizeNet::CIM::CustomerProfile.new(
+      :email => self.email,
+      :id => self.id
+    )
+    response = transaction.create_profile(profile)
+    self.auth_net_id = response.profile_id
+    self.save
+  end
+
+  def generate_AuthNet_transaction
+    AuthorizeNet::CIM::Transaction.new(
+      # ENV['PKUT_AUTHNET_LOGIN'],
+      # ENV['PKUT_AUTHNET_TRANS_KEY'],
+      '34H962KteRF',
+      '92wavU3h45xZW88P',
+      gateway: :sandbox
+    )
   end
 
   def assign_cart

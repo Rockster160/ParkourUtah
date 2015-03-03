@@ -1,3 +1,10 @@
+GIT
+  remote: git@github.com:Fivell/authorize-net.git
+  revision: 92a9dd56e47c09f6ebc8028818fbb42de6da2ab7
+  specs:
+    authorize-net (1.5.2)
+      nokogiri (~> 1.4)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -225,6 +232,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  authorize-net!
   authorizenet
   autoprefixer-rails
   aws-sdk (< 2.0)

@@ -25,6 +25,7 @@ gem 'jquery-ui-rails'
 gem "paperclip", "~> 4.2"
 gem 'aws-sdk', '< 2.0'
 gem 'authorizenet'
+gem 'authorize-net', :git => "git@github.com:Fivell/authorize-net.git"#, :branch => "2-3-stable"
 # gem 'aws-sdk-v1'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
