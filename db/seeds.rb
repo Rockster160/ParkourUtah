@@ -110,6 +110,18 @@ instructors = User.where("role > ?", 0).pluck(:first_name)
     location_instructions: '',
     class_name: 'fundamentals'
   )
+  # Tuesday
+  Event.create(
+    date: DateTime.new(2015, 1, 6, 16, 30) + (t.weeks),
+    host: 'Ryan Sannar',
+    description: 'Our weekly Saratoga Springs fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for and hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
+    Ryan Sannar, via text or call 801-669-7743.',
+    city: 'Saratoga Springs',
+    token: 7,
+    address: 'Harvest Hills Park, 2104 North Providence Drive',
+    location_instructions: '',
+    class_name: 'fundamentals'
+  )
   # Wednesday
   Event.create(
     date: DateTime.new(2015, 1, 7, 16, 30) + (t.weeks),
@@ -117,7 +129,7 @@ instructors = User.where("role > ?", 0).pluck(:first_name)
     description: 'Our first bi-weekly Sandy fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for and hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Ryan Sannar, via text or call 801-669-7743.',
     city: 'Sandy',
-    token: 7,
+    token: 8,
     address: '1700 Siesta Drive',
     location_instructions: '',
     class_name: 'fundamentals'
@@ -129,7 +141,7 @@ instructors = User.where("role > ?", 0).pluck(:first_name)
     description: 'Our first bi-weekly Vernal fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for and hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Marcos Jones, via text or call 435-612-0532.',
     city: 'Vernal',
-    token: 8,
+    token: 9,
     address: 'Ashley Valley Community Park',
     location_instructions: '',
     class_name: 'fundamentals'
@@ -158,7 +170,7 @@ end
   LineItem.create(
     title: Faker::Commerce.product_name,
     description: Faker::Lorem.paragraph,
-    cost: rand(25000),
+    cost_in_pennies: rand(25000),
     category: ["Other", "Shoes", "Shirts", "Stuff"].sample
   )
 end

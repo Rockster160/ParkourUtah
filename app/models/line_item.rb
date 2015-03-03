@@ -20,4 +20,8 @@ class LineItem < ActiveRecord::Base
     :bucket => ENV['PKUT_S3_BUCKET_NAME'],
     :convert_options => { :all => '-background white -flatten +matte' }
   validates_attachment_content_type :display, :content_type => /\Aimage\/.*\Z/
+
+  def cost
+    self.cost_in_pennies.to_f / 100
+  end
 end
