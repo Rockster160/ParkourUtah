@@ -16,124 +16,130 @@
       <a href="#join" class="btn btn-default btn-lg scroll-link">Join us</a>
     </div>
   </div>
-</div>
-
-<div id="about" class="blurb">
-  <div class="container">
-    <div class="row">
-      <h1>Who we are</h1>
-      <p class="lead">We are Parkour Utah and we like to jump over stuff!</p>
-    </div>
-    <div class="row">
-      <%= render 'index/video_carousel' %>
-    </div>
+  <div class="laoding-image">
+    Loading, please wait...
   </div>
 </div>
-<%= render 'index/modal_placeholders' %>
 
-<div class="callout-background">
-  <div class="callout-container" id="peeps">
-    <div class="callout">
-        <div class="col-md-12 text-center"><h2>Meet our people</h2></div>
-        <div class="col-md-12 text-center">&nbsp;</div>
-        <div class="row">
-          <div class="col-lg-8 col-lg-offset-2 instructors-container">
-            <% @instructors.each do |instructor| %>
-              <div class="flip-container" ontouchstart="this.classList.toggle('hover');">
-                <div class="flipper">
-                  <div class="front" style="background: #FFF url(<%= instructor.avatar.url %>);background-size: 100% 100%;">
-                  </div>
-                  <div class="back" style="background: #FFF url(<%= instructor.avatar_2.url %>);background-size: 100% 100%;">
-                    <div class="bio-background">
-                      <br/>
-                      <p class="card-bio-text">
-                        <strong><%= instructor.full_name %></strong><br/><br/>
-                        <%= instructor.bio %>
-                      </p>
-                      <%= link_to "See More...",  peep_show_path(instructor.id), class: "bio-link" %>
+<div class="loading-container" style="display:none">
+
+  <div id="about" class="blurb">
+    <div class="container">
+      <div class="row">
+        <h1>Who we are</h1>
+        <p class="lead">We are Parkour Utah and we like to jump over stuff!</p>
+      </div>
+      <div class="row">
+        <%= render 'index/video_carousel' %>
+      </div>
+    </div>
+  </div>
+  <%= render 'index/modal_placeholders' %>
+
+  <div class="callout-background">
+    <div class="callout-container" id="peeps">
+      <div class="callout">
+          <div class="col-md-12 text-center"><h2>Meet our people</h2></div>
+          <div class="col-md-12 text-center">&nbsp;</div>
+          <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 instructors-container">
+              <% @instructors.each do |instructor| %>
+                <div class="flip-container" ontouchstart="this.classList.toggle('hover');">
+                  <div class="flipper">
+                    <div class="front" style="background: #FFF url(<%= instructor.avatar.url %>);background-size: 100% 100%;">
+                    </div>
+                    <div class="back" style="background: #FFF url(<%= instructor.avatar_2.url %>);background-size: 100% 100%;">
+                      <div class="bio-background">
+                        <br/>
+                        <p class="card-bio-text">
+                          <strong><%= instructor.full_name %></strong><br/><br/>
+                          <%= instructor.bio %>
+                        </p>
+                        <%= link_to "See More...",  peep_show_path(instructor.id), class: "bio-link" %>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            <% end %>
+              <% end %>
+            </div>
           </div>
-        </div>
-      <!-- </div> -->
-    </div>
-  </div>
-</div>
-
-<div class="gallery" id="schedule">
-
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3 text-center">
-      <h2>Locations</h2>
-      <br>
-    </div>
-  </div>
-
-  <div class="container well well-lg">
-    <div class="row">
-      <% @cities.each do |city| %>
-        <div class="col-sm-3 col-xs-6">
-          <div class="list-group">
-            <%= link_to city, calendar_show_path(city), class: 'list-group-item' %>
-          </div>
-        </div>
-      <% end %>
-      </div>
-    </div>
-
-</div>
-
-<div class="blurb bright" id="join">
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3 text-center">
-      <h3>Join Us!</h3>
-      <br>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-4 col-sm-offset-2">
-      <div class="panel panel-default">
-        <div class="panel-heading text-center"><h2><%= icon('chevron-left', '', class: '') %> Confused? Call us.</h2></div>
-        <div class="panel-body text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra varius quam sit amet vulputate.
-          Quisque mauris augue, molestie tincidunt condimentum vitae, gravida a libero. Aenean sit amet felis
-          dolor, in sagittis nisi. Sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan.
-          Aliquam in felis si.
-          <div class="row">&nbsp;</div>
-          <button class="btn btn-lg btn-primary btn-block">Contact</button>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-4">
-      <div class="panel panel-default">
-        <div class="panel-heading text-center"><h2>Make an account <%= icon('chevron-right', '', class: '') %></h2></div>
-        <div class="panel-body text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra varius quam sit amet vulputate.
-          Quisque mauris augue, molestie tincidunt condimentum vitae, gravida a libero. Aenean sit amet felis
-          dolor, in sagittis nisi. Sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan.
-          Aliquam in felis si.
-          <div class="row">&nbsp;</div>
-          <button class="btn btn-lg btn-primary btn-block">Sign Up</button>
-        </div>
+        <!-- </div> -->
       </div>
     </div>
   </div>
-</div>
 
-<footer class="footer-index">
-  <div class="container">
+  <div class="gallery" id="schedule">
+
     <div class="row">
       <div class="col-md-6 col-md-offset-3 text-center">
-        <ul class="list-inline">
-          <li><%= icon('facebook', '', class: 'fa-2x') %></li>
-          <li><%= icon('twitter', '', class: 'fa-2x') %></li>
-          <li><%= icon('google-plus', '', class: 'fa-2x') %></li>
-          <li><%= icon('instagram', '', class: 'fa-2x') %></li>
-        </ul>
-        <hr>
-        <br>ParkourUtah © <%= Time.now.year %></p>
+        <h2>Locations</h2>
+        <br>
+      </div>
+    </div>
+
+    <div class="container well well-lg">
+      <div class="row">
+        <% @cities.each do |city| %>
+          <div class="col-sm-3 col-xs-6">
+            <div class="list-group">
+              <%= link_to city, calendar_show_path(city), class: 'list-group-item' %>
+            </div>
+          </div>
+        <% end %>
+        </div>
+      </div>
+
+  </div>
+
+  <div class="blurb bright" id="join">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3 text-center">
+        <h3>Join Us!</h3>
+        <br>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4 col-sm-offset-2">
+        <div class="panel panel-default">
+          <div class="panel-heading text-center"><h2><%= icon('chevron-left', '', class: '') %> Confused? Call us.</h2></div>
+          <div class="panel-body text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra varius quam sit amet vulputate.
+            Quisque mauris augue, molestie tincidunt condimentum vitae, gravida a libero. Aenean sit amet felis
+            dolor, in sagittis nisi. Sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan.
+            Aliquam in felis si.
+            <div class="row">&nbsp;</div>
+            <button class="btn btn-lg btn-primary btn-block">Contact</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="panel panel-default">
+          <div class="panel-heading text-center"><h2>Make an account <%= icon('chevron-right', '', class: '') %></h2></div>
+          <div class="panel-body text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra varius quam sit amet vulputate.
+            Quisque mauris augue, molestie tincidunt condimentum vitae, gravida a libero. Aenean sit amet felis
+            dolor, in sagittis nisi. Sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan.
+            Aliquam in felis si.
+            <div class="row">&nbsp;</div>
+            <button class="btn btn-lg btn-primary btn-block">Sign Up</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</footer>
+
+  <footer class="footer-index">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3 text-center">
+          <ul class="list-inline">
+            <li><%= icon('facebook', '', class: 'fa-2x') %></li>
+            <li><%= icon('twitter', '', class: 'fa-2x') %></li>
+            <li><%= icon('google-plus', '', class: 'fa-2x') %></li>
+            <li><%= icon('instagram', '', class: 'fa-2x') %></li>
+          </ul>
+          <hr>
+          <br>ParkourUtah © <%= Time.now.year %></p>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>

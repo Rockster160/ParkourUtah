@@ -19,5 +19,11 @@ var ready = function() {
   }
 };
 
+var all_loaded = function () {
+  alert('All is loaded!');
+  console.log('All is loaded!');
+  ready();
+}
+
 $(document).ready(ready);
-$(document).on('page:load', ready);
+$(document).on('page:load', all_loaded);

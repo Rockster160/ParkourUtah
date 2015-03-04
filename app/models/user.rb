@@ -30,6 +30,9 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
 
+  API_LOGIN = '34H962KteRF'.freeze # ENV['PKUT_AUTHNET_LOGIN']
+  TRANSACTION_KEY = '92wavU3h45xZW88P'.freeze # ENV['PKUT_AUTHNET_TRANS_KEY']
+
   has_one :cart
   has_many :transactions, through: :cart
 
@@ -71,27 +74,22 @@ class User < ActiveRecord::Base
     xml = "<?xml version='1.0' encoding='utf-8'?>
     <getHostedProfilePageRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
     <merchantAuthentication>
-    <name>34H962KteRF</name>
-    <transactionKey>92wavU3h45xZW88P</transactionKey>
+    <name>#{API_LOGIN}</name>
+    <transactionKey>#{TRANSACTION_KEY}</transactionKey>
     </merchantAuthentication>
-    <customerProfileId>31560296</customerProfileId>
+    <customerProfileId>#{self.auth_net_id}</customerProfileId>
+    <hostedProfileSettings>
+    <setting>
+    <settingName>hostedProfileValidationMode</settingName>
+    <settingValue>testMode</settingValue>
+    </setting>
+    </hostedProfileSettings>
     </getHostedProfilePageRequest>"
 
     uri = URI('https://apitest.authorize.net/xml/v1/request.api')
     req = Net::HTTP::Post.new(uri.path)
-    # req.
-
-    Net::HTTP.start(uri.hostname, uri.port) do |http|
-      res = http.request(xml)
-    end
-    # #{self.auth_net_id}
-    # ENV['PKUT_AUTHNET_LOGIN'],
-    # ENV['PKUT_AUTHNET_TRANS_KEY'],
-    # https://api.authorize.net/xml/v1/request.api
-    binding.pry
-    # puts res.body
-
-    response = transaction.create_hosted_page_token(self.auth_net_id)
+    res = HTTParty.post(uri, body: xml, headers: { 'Content-Type' => 'application/xml' })
+    token = Hash.from_xml(res.body)["getHostedProfilePageResponse"]["token"]
   end
 
   def create_AuthNet_profile
@@ -105,12 +103,22 @@ class User < ActiveRecord::Base
     self.save
   end
 
+  def delete_AuthNet_profile
+    xml = '<?xml version="1.0" encoding="utf-8"?>
+    <deleteCustomerProfileRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">
+    <merchantAuthentication>
+    <name>YourUserLogin</name>
+    <transactionKey>YourTranKey</transactionKey>
+    </merchantAuthentication>
+    <customerProfileId>10000</customerProfileId>
+    </deleteCustomerProfileRequest>'
+  end
+
   def generate_AuthNet_transaction
     AuthorizeNet::CIM::Transaction.new(
-      # ENV['PKUT_AUTHNET_LOGIN'],
-      # ENV['PKUT_AUTHNET_TRANS_KEY'],
-      '34H962KteRF',
-      '92wavU3h45xZW88P',
+      API_LOGIN,
+      TRANSACTION_KEY,
+      # gateway: :live
       gateway: :sandbox
     )
   end
