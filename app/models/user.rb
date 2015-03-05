@@ -25,6 +25,8 @@ class User < ActiveRecord::Base
   #   t.datetime "avatar_2_updated_at"
   #   t.text     "bio"
   #   t.integer  "auth_net_id"
+  #   t.integer  "payment_id"
+  #   t.integer  "class_pass"
   # end
 
   # Include default devise modules. Others available are:
@@ -71,24 +73,23 @@ class User < ActiveRecord::Base
 
   def get_AuthNet_token
     transaction = generate_AuthNet_transaction
-    xml = "<?xml version='1.0' encoding='utf-8'?>
-    <getHostedProfilePageRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
-    <merchantAuthentication>
-    <name>#{API_LOGIN}</name>
-    <transactionKey>#{TRANSACTION_KEY}</transactionKey>
-    </merchantAuthentication>
-    <customerProfileId>#{self.auth_net_id}</customerProfileId>
-    <hostedProfileSettings>
-    <setting>
-    <settingName>hostedProfileValidationMode</settingName>
-    <settingValue>testMode</settingValue>
-    </setting>
-    </hostedProfileSettings>
-    </getHostedProfilePageRequest>"
+    xml = "<customerProfileId>#{self.auth_net_id}</customerProfileId>
+          <hostedProfileSettings>
+          <setting>
+          <settingName>hostedProfileValidationMode</settingName>
+          <settingValue>testMode</settingValue>
+          </setting>
+          <setting>
+          <settingName>hostedProfileReturnUrl</settingName>
+          <settingValue>http://lvh.me:7545/users/edit</settingValue>
+          </setting>
+          <setting>
+          <settingName>hostedProfileReturnUrlText</settingName>
+          <settingValue>Back to Parkour Utah</settingValue>
+          </setting>
+          </hostedProfileSettings>"
+    res = auth_net_xml_request('getHostedProfilePageRequest', xml)
 
-    uri = URI('https://apitest.authorize.net/xml/v1/request.api')
-    req = Net::HTTP::Post.new(uri.path)
-    res = HTTParty.post(uri, body: xml, headers: { 'Content-Type' => 'application/xml' })
     token = Hash.from_xml(res.body)["getHostedProfilePageResponse"]["token"]
   end
 
@@ -103,15 +104,78 @@ class User < ActiveRecord::Base
     self.save
   end
 
-  def delete_AuthNet_profile
-    xml = '<?xml version="1.0" encoding="utf-8"?>
-    <deleteCustomerProfileRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">
+  def get_payment_id
+    return payment_id if self.payment_id
+
+    xml = "<customerProfileId>#{self.auth_net_id}</customerProfileId>"
+    res = auth_net_xml_request('getCustomerProfileRequest', xml)
+
+    self.payment_id = Hash.from_xml(res.body)["getCustomerProfileResponse"]["profile"]["paymentProfiles"]["customerPaymentProfileId"]
+    self.save
+
+    self.payment_id
+  end
+
+  def charge_class
+    if self.class_pass > 0
+      self.class_pass -= 1
+      self.save
+    else
+      charge =
+      "<lineItems>
+      <itemId>CLASS</itemId>
+      <name>Intermediate</name>
+      <description>Charged for class</description>
+      <quantity>1</quantity>
+      <unitPrice>15</unitPrice>
+      </lineItems>"
+      charge_account(15, charge)
+    end
+  end
+
+  def buy_shopping_cart
+    items = ""
+    line_items.each do |trans|
+      item = trans.item
+      items <<
+      "<lineItems>
+      <itemId>#{item.id}</itemId>
+      <name>#{item.title}</name>
+      <description>#{item.description}</description>
+      <quantity>#{trans.amount}</quantity>
+      <unitPrice>#{item.cost}</unitPrice>
+      </lineItems>"
+    end
+  end
+
+  def charge_account(cost, line_items)
+    xml =
+    "<transaction>
+    <profileTransAuthCapture>
+    <amount>#{cost}</amount>
+    #{line_items}
+    <customerProfileId>#{self.auth_net_id}</customerProfileId>
+    <customerPaymentProfileId>#{self.get_payment_id}</customerPaymentProfileId>
+    </profileTransAuthCapture>
+    </transaction>"
+
+    auth_net_xml_request('createCustomerProfileTransactionRequest', xml)
+  end
+
+  def auth_net_xml_request(title, mini_xml)
+    xml =
+    "<?xml version='1.0' encoding='utf-8'?>
+    <#{title} xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
     <merchantAuthentication>
-    <name>YourUserLogin</name>
-    <transactionKey>YourTranKey</transactionKey>
+    <name>#{API_LOGIN}</name>
+    <transactionKey>#{TRANSACTION_KEY}</transactionKey>
     </merchantAuthentication>
-    <customerProfileId>10000</customerProfileId>
-    </deleteCustomerProfileRequest>'
+    #{mini_xml}
+    </#{title}>"
+
+    uri = URI('https://apitest.authorize.net/xml/v1/request.api')
+    req = Net::HTTP::Post.new(uri.path)
+    HTTParty.post(uri, body: xml, headers: { 'Content-Type' => 'application/xml' })
   end
 
   def generate_AuthNet_transaction

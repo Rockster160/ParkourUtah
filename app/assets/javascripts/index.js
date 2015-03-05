@@ -16,14 +16,13 @@ var ready = function() {
         top: $('.header-container').height()
       }
     });
+
   }
 };
 
-var all_loaded = function () {
-  alert('All is loaded!');
-  console.log('All is loaded!');
-  ready();
-}
+$('.delayed-load').ready(function() {
+  $('.delayed-load').css('display', 'block');
+});
 
 $(document).ready(ready);
-$(document).on('page:load', all_loaded);
+$(document).on('page:load', ready);

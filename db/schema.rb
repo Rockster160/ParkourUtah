@@ -89,6 +89,8 @@ ActiveRecord::Schema.define(version: 20150228055317) do
     t.datetime "avatar_2_updated_at"
     t.text     "bio"
     t.integer  "auth_net_id"
+    t.integer  "payment_id"
+    t.integer  "class_pass",             default: 0
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
