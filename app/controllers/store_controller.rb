@@ -17,6 +17,18 @@ class StoreController < ApplicationController
     end
   end
 
+  def purchase
+    if current_user.buy_shopping_cart == "Ok"
+      current_user.cart = Cart.create
+      flash[:notice] = "Cart successfully purchased"
+      redirect_to root_path
+    else
+      # This should check for various errors and report accurately.
+      flash[:alert] = "There was a problem with your request."
+      redirect_to show_cart_path
+    end
+  end
+
   def new
     @item = LineItem.new
   end
@@ -44,6 +56,7 @@ class StoreController < ApplicationController
   end
 
   def add_to_cart
+    # User.last.update(class_pass: User.last.class_pass + 5)
     orders = current_user.cart.transactions
     order = orders.where(item_id: params[:id]).first
     if order
