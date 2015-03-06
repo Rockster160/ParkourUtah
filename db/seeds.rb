@@ -42,7 +42,7 @@ instructors = User.where("role > ?", 0).pluck(:first_name)
   Event.create(
     date: DateTime.new(2015, 1, 1, 16, 30) + (t.weeks),
     host: 'Scott May',
-    description: 'Our weekly Provo fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for and hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
+    description: 'Our weekly Provo fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Scott May, via text or call 435-549-0303.',
     city: 'Provo',
     token: 1,
@@ -54,7 +54,7 @@ instructors = User.where("role > ?", 0).pluck(:first_name)
   Event.create(
     date: DateTime.new(2015, 1, 1, 16, 30) + (t.weeks),
     host: 'Justin Spencer',
-    description: 'Our weekly Liberty Park fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for and hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
+    description: 'Our weekly Liberty Park fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Justin Spencer, via text or call 801-580-9274.',
     city: 'Salt Lake City',
     token: 2,
@@ -66,7 +66,7 @@ instructors = User.where("role > ?", 0).pluck(:first_name)
   Event.create(
     date: DateTime.new(2015, 1, 2, 16, 30) + (t.weeks),
     host: 'Ryan Sannar',
-    description: 'Our second bi-weekly Sandy fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for and hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
+    description: 'Our second bi-weekly Sandy fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Ryan Sannar, via text or call 801-669-7743.',
     city: 'Sandy',
     token: 3,
@@ -78,7 +78,7 @@ instructors = User.where("role > ?", 0).pluck(:first_name)
   Event.create(
     date: DateTime.new(2015, 1, 3, 16) + (t.weeks),
     host: 'Marcos Jones',
-    description: 'Our second bi-weekly Vernal fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for and hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
+    description: 'Our second bi-weekly Vernal fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Marcos Jones, via text or call 435-612-0532.',
     city: 'Vernal',
     token: 4,
@@ -90,7 +90,7 @@ instructors = User.where("role > ?", 0).pluck(:first_name)
   Event.create(
     date: DateTime.new(2015, 1, 5, 16, 30) + (t.weeks),
     host: 'Justin Spencer',
-    description: 'Our weekly Draper fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for and hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
+    description: 'Our weekly Draper fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Justin Spencer, via text or call 801-580-9274.',
     city: 'Draper',
     token: 5,
@@ -102,7 +102,7 @@ instructors = User.where("role > ?", 0).pluck(:first_name)
   Event.create(
     date: DateTime.new(2015, 1, 6, 16, 30) + (t.weeks),
     host: 'Ryan Sannar',
-    description: 'Our weekly Orem fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for and hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
+    description: 'Our weekly Orem fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Ryan Sannar, via text or call 801-669-7743.',
     city: 'Orem',
     token: 6,
@@ -114,7 +114,7 @@ instructors = User.where("role > ?", 0).pluck(:first_name)
   Event.create(
     date: DateTime.new(2015, 1, 6, 16, 30) + (t.weeks),
     host: 'Ryan Sannar',
-    description: 'Our weekly Saratoga Springs fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for and hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
+    description: 'Our weekly Saratoga Springs fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Ryan Sannar, via text or call 801-669-7743.',
     city: 'Saratoga Springs',
     token: 7,
@@ -126,7 +126,7 @@ instructors = User.where("role > ?", 0).pluck(:first_name)
   Event.create(
     date: DateTime.new(2015, 1, 7, 16, 30) + (t.weeks),
     host: 'Ryan Sannar',
-    description: 'Our first bi-weekly Sandy fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for and hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
+    description: 'Our first bi-weekly Sandy fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Ryan Sannar, via text or call 801-669-7743.',
     city: 'Sandy',
     token: 8,
@@ -138,7 +138,7 @@ instructors = User.where("role > ?", 0).pluck(:first_name)
   Event.create(
     date: DateTime.new(2015, 1, 7, 16, 30) + (t.weeks),
     host: 'Marcos Jones',
-    description: 'Our first bi-weekly Vernal fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for and hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
+    description: 'Our first bi-weekly Vernal fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Marcos Jones, via text or call 435-612-0532.',
     city: 'Vernal',
     token: 9,
