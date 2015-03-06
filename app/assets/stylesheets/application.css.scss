@@ -19,14 +19,19 @@
 // @import "font-awesome-sprockets";
 // @import "font-awesome";
 
+.flash-holder {
+  width: 100%;
+}
+
 .flash-container {
   text-align: center;
   position: fixed;
   z-index: 10000;
-  width: 100%;
+  width: 50%;
   height: 70px;
   font-size: 2em;
-  top: 50px;
+  left: 25%;
+  top: 0;
 }
 
 .flash-text {
@@ -37,6 +42,7 @@
 
 .flash {
   opacity: 0.7;
+  padding-top: 15px;
   height: 100%;
   &.notice {
     background: green;
