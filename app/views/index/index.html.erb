@@ -30,13 +30,13 @@
 </div>
 <%= render 'index/modal_placeholders' %>
 
-<div class="callout-background delayed-load">
+<div class="callout-background">
   <div class="callout-container" id="peeps">
     <div class="callout">
       <div class="col-md-12 text-center"><h2>Meet our people</h2></div>
       <div class="col-md-12 text-center">&nbsp;</div>
       <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 instructors-container">
+        <div class="col-lg-10 col-lg-offset-1 instructors-container">
           <% @instructors.each do |instructor| %>
             <div class="flip-container" ontouchstart="this.classList.toggle('hover');">
               <div class="flipper">
@@ -49,7 +49,6 @@
                       <strong><%= instructor.full_name %></strong><br/><br/>
                       <%= instructor.bio %>
                     </p>
-                    <%= link_to "See More...",  peep_show_path(instructor.id), class: "bio-link" %>
                   </div>
                 </div>
               </div>

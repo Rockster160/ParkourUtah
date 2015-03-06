@@ -2,19 +2,12 @@
   table-layout: fixed;
 }
 
-.calendar-date-link a {
+.calendar-date-link {
   color: black;
-  float: left;
   border: solid 2px black;
   width: 24px;
   height: 24px;
   background: white;
-  &:hover {
-    text-decoration: none;
-    background: #EEE;
-    border-color: #AAA;
-    color: black;
-  }
 }
 
 .tooltip {
