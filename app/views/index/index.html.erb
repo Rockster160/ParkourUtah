@@ -1,17 +1,16 @@
   <div class="video-bg">
-    <video autoplay loop muted poster="<%= asset_path('concrete-small.png') %>" id="bgvid">
+    <video autoplay loop muted id="bgvid">
       <source src="<%= asset_path('//s3-us-west-2.amazonaws.com/pkut-default/pkut-bg-video.mov') %>" type="video/mp4">
     </video>
   </div>
 <div class="header-container" id="home">
   <div class="header vert">
-    <a href="#" class="btn btn-default call-to-arms">Get Started</a>
     <div class="container">
       <%= image_tag('//s3-us-west-2.amazonaws.com/pkut-default/PKUT-full-color.png', class: 'img-responsive pkut-main center-block') %>
       <div>&nbsp;</div>
       <a href="#about" class="btn btn-default btn-lg scroll-link">About Us</a>
-      <a href="#media" class="btn btn-default btn-lg scroll-link">Videos</a>
       <a href="#peeps" class="btn btn-default btn-lg scroll-link">Our people</a>
+      <a href="#" class="btn btn-default call-to-arms">Get Started</a>
       <a href="#schedule" class="btn btn-default btn-lg scroll-link">Locations</a>
       <a href="#join" class="btn btn-default btn-lg scroll-link">Join us</a>
     </div>
