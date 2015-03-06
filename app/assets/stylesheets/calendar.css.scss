@@ -10,8 +10,28 @@
   background: white;
 }
 
-.tooltip {
+.calendar-tooltip {
+  display: none;
   text-align: center;
+  position: absolute;
+  margin: -20px 0 0 -20px;
+  background: rgb(236, 247, 255);
+  border: 2px solid rgb(22, 78, 177);
+  padding: 10px;
+  border-radius: 10px;
+  width: 300px;
+  height: auto;
+  &:hover { cursor: default; }
+}
+
+.calendar-event {
+  margin-left: -40px;
+  overflow: hidden;
+  list-style-type: none;
+  text-decoration: none;
+  color: black;
+  & a { color: black; }
+  &:hover { cursor: pointer; }
 }
 
 $default: steelblue;
@@ -21,19 +41,10 @@ $salt-lake-city: rgb(255, 0, 0);
 $vernal: rgb(255, 0, 255);
 $draper: rgb(255, 125, 0);
 $orem: rgb(0, 255, 66);
-// $jam: rgb(0, 0, 255);
-// $beginner: rgb(255, 255, 0);
-// $intermediate: rgb(255, 0, 0);
-// $tricking: rgb(255, 0, 255);
-// $conditioning: rgb(255, 125, 0);
 $special: rgb(0, 255, 66);
+// $color: rgb(162, 97, 255);
 
-.calendar-event {
-  margin-left: -40px;
-  overflow: hidden;
-  list-style-type: none;
-  text-decoration: none;
-  color: black;
+.event-color {
   background: lighten($default, 25%);
   &:hover { background: $default; }
   &.sandy {
@@ -64,11 +75,7 @@ $special: rgb(0, 255, 66);
     background: lighten($special, 25%);
     &:hover { background: $special; }
   }
-  & a { color: black; }
-  &:hover { cursor: pointer; }
 }
-
-.tooltip > title { color: green; }
 
 .today a {
   background: black;

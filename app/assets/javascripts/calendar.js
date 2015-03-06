@@ -28,6 +28,14 @@ var ready = function () {
     }
   }
 
+  $('.calendar-container').delegate('.calendar-event', 'click', function() {
+    $('.calendar-tooltip').hide();
+    $(this).children('.calendar-tooltip').show()
+  });
+  $('.calendar-container').delegate('.calendar-tooltip', 'mouseleave', function() {
+    $('.calendar-tooltip').hide();
+  });
+
   $('.back-month, .forward-month').click(function(e) {
     e.preventDefault();
     set_date = $(this).attr('href');
