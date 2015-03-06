@@ -28,6 +28,11 @@ var ready = function () {
     }
   }
 
+  $('.cities-container').delegate('.calendar-legend', 'click', function() {
+    city = $(this).attr("href");
+    $('.select-dropbox').select2("val", city);
+    update();
+  });
   $('.calendar-container').delegate('.calendar-event', 'click', function() {
     $('.calendar-tooltip').hide();
     $(this).children('.calendar-tooltip').show()
@@ -51,16 +56,14 @@ loadJS = function() {
   var url = window.location.pathname.split("/");
   var city = unescape(url[url.length - 1]);
 
-  $('li').click(function() {
-    var $event_details = $(this).attr('href');
-    if ($event_details) {
-      window.location.href = $event_details;
-    }
-  });
+  // $('li').click(function() {
+  //   var $event_details = $(this).attr('href');
+  //   if ($event_details) {
+  //     window.location.href = $event_details;
+  //   }
+  // });
 
-  $('.select-dropbox').select2({
-
-  })
+  $('.select-dropbox').select2()
   .select2("val", city)
   .on('change', function(e) {
     update();
