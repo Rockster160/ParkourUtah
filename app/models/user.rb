@@ -91,7 +91,7 @@ class User < ActiveRecord::Base
     </hostedProfileSettings>"
     res = auth_net_xml_request('getHostedProfilePageRequest', xml)
 
-    token = Hash.from_xml(res.body)["getHostedProfilePageResponse"]["token"]
+    token = Hash.from_xml(res.body)["getHostedProfilePageResponse"]["token"] unless res == 0000
   end
 
   def create_AuthNet_profile
@@ -111,7 +111,7 @@ class User < ActiveRecord::Base
     xml = "<customerProfileId>#{self.auth_net_id}</customerProfileId>"
     res = auth_net_xml_request('getCustomerProfileRequest', xml)
 
-    self.payment_id = Hash.from_xml(res.body)["getCustomerProfileResponse"]["profile"]["paymentProfiles"]["customerPaymentProfileId"]
+    self.payment_id = Hash.from_xml(res.body)["getCustomerProfileResponse"]["profile"]["paymentProfiles"]["customerPaymentProfileId"] unless res == 0000
     self.save
 
     self.payment_id
@@ -163,7 +163,7 @@ class User < ActiveRecord::Base
     </transaction>"
 
     res = auth_net_xml_request('createCustomerProfileTransactionRequest', xml)
-    Hash.from_xml(res.body)["createCustomerProfileTransactionResponse"]["messages"]["resultCode"]
+    Hash.from_xml(res.body)["createCustomerProfileTransactionResponse"]["messages"]["resultCode"] unless res == 0000
   end
 
   def auth_net_xml_request(title, mini_xml)
@@ -179,7 +179,13 @@ class User < ActiveRecord::Base
 
     uri = URI('https://apitest.authorize.net/xml/v1/request.api')
     req = Net::HTTP::Post.new(uri.path)
-    HTTParty.post(uri, body: xml, headers: { 'Content-Type' => 'application/xml' })
+    begin
+      HTTParty.post(uri, body: xml, headers: { 'Content-Type' => 'application/xml' })
+    rescue Errno::ECONNREFUSED
+      0000
+    rescue Errno::ETIMEDOUT
+      0000
+    end
   end
 
   def generate_AuthNet_transaction

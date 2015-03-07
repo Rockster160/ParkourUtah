@@ -49,9 +49,9 @@
   </div>
 <% end %>
 <form method="post" action="https://test.authorize.net/profile/manage">
-<input type="hidden" name="token"
+<input class="authnet-token" type="hidden" name="token"
 value="<%= resource.get_AuthNet_token %>"/>
-<input type="submit" value="Manage my payment and shipping information"/>
+<input class="authnet-btn" type="submit" value="Manage my payment and shipping information"/>
 </form>
 Waivers:<br/>
 First little boy - Waiver active until Feb 24, 2016, Pin: 1234 <a href="#">Edit</a><br/>

@@ -7,7 +7,7 @@ class PeepsController < ApplicationController
   end
 
   def dashboard
-    if current_user #&& !(current_user.is_instructor?)
+    if current_user && !(current_user.is_instructor?)
       flash[:alert] = "You are not authorized to view this page."
       redirect_to root_path
     end
