@@ -40,9 +40,9 @@
           <% @instructors.each do |instructor| %>
             <div class="flip-container" ontouchstart="this.classList.toggle('hover');">
               <div class="flipper">
-                <div class="front" style="background: #FFF url(<%= instructor.avatar.url %>);background-size: 100% 100%;">
+                <div class="front" style="background: #FFF url(<%#= instructor.avatar.url %>);background-size: 100% 100%;">
                 </div>
-                <div class="back" style="background: #FFF url(<%= instructor.avatar_2.url %>);background-size: 100% 100%;">
+                <div class="back" style="background: #FFF url(<%#= instructor.avatar_2.url %>);background-size: 100% 100%;">
                   <div class="bio-background">
                     <br/>
                     <p class="card-bio-text">
