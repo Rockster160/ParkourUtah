@@ -1,0 +1,99 @@
+
+.flash-holder {
+  width: 100%;
+}
+
+.flash-container {
+  text-align: center;
+  position: fixed;
+  z-index: 10000;
+  width: 50%;
+  height: 70px;
+  font-size: 2em;
+  left: 25%;
+  top: 0;
+}
+
+.flash-text {
+  position: relative;
+  top: -53px;
+  color: black;
+}
+
+.flash {
+  opacity: 0.7;
+  padding-top: 15px;
+  height: 100%;
+  &.notice {
+    background: green;
+    border: 5px ridge green;
+  }
+  &.alert {
+    background: red;
+    border: 5px ridge red;
+  }
+}
+
+.full-site-container {
+  min-height: 100%;
+  min-width: 100%;
+  z-index: -50;
+  background: image-url('//s3-us-west-2.amazonaws.com/pkut-default/carbon-fiber-gray.jpg');
+  background-attachment: fixed;
+  background: cover;
+  overflow: auto;
+  display: block;
+}
+
+.central-container {
+  text-align: center;
+  margin: 0 auto;
+  overflow: auto;
+  max-width: 400px;
+}
+
+.fancy-box {
+  // background: rgb(236, 247, 255);
+  background-image: image-url("concrete-small.png");
+  color: white;
+  border: 2px solid red;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  .fancy-textbox {
+    margin: 10px 0;
+    width: 300px;
+    height: 40px;
+    font-size: 2em;
+    border-radius: 20px;
+    padding-left: 20px;
+    &:focus { outline: none; }
+  }
+  .fancy-textarea {
+    width: 350px;
+    margin: 20px 0;
+    max-width: 350px;
+    font-size: 1.3em;
+    padding: 20px;
+    border-radius: 20px;
+    &:focus { outline: none; }
+  }
+  .fancy-btn {
+    transition: 0.3s;
+    background: rgba(236, 160, 80, 0.3);
+    width: 200px;
+    font-family: 'Voltaire';
+    border: 2px solid red;
+    border-radius: 20px;
+    padding: 10px;
+    margin: 0 auto;
+    color: red;
+    &:focus { outline: none; }
+    &:hover {
+      text-decoration: none;
+      color: red;
+      cursor: pointer;
+      background: rgba(236, 160, 80, 0.8);
+    }
+  }
+}
