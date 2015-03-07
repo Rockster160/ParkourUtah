@@ -13,18 +13,20 @@
   height: 70px;
   font-size: 2em;
   left: 25%;
-  top: 0;
+  top: 50px;
 }
-
 .flash-text {
-  position: relative;
-  top: -53px;
+  width: 100%;
+  top: 15px;
+  left: 0;
+  position: absolute;
   color: black;
 }
-
 .flash {
   opacity: 0.7;
+  position: relative;
   padding-top: 15px;
+  border-radius: 10px;
   height: 100%;
   &.notice {
     background: green;
@@ -59,7 +61,6 @@
 }
 
 .fancy-box {
-  // background: rgb(236, 247, 255);
   background-image: image-url("concrete-small.png");
   color: white;
   border: 1px solid red;

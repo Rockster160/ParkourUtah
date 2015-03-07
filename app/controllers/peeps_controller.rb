@@ -6,6 +6,13 @@ class PeepsController < ApplicationController
     redirect_to root_path unless @instructor.is_instructor?
   end
 
+  def dashboard
+    if current_user #&& !(current_user.is_instructor?)
+      flash[:alert] = "You are not authorized to view this page."
+      redirect_to root_path
+    end
+  end
+
   def secret
     # @user = User.first
   end
