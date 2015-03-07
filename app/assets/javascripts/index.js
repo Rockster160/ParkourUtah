@@ -18,6 +18,13 @@ var ready = function() {
       }
     });
 
+  } else {
+    $('body').scrollspy({ target: '#navbar' });
+    $('.navbar-fixed-top').affix({
+      offset: {
+        top: 0
+      }
+    });
   }
 };
 
