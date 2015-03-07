@@ -40,7 +40,6 @@ killFlashes = function() {
   }
 }
 
-
 slideOut = function(obj) {
   obj.slideUp(600);
 }

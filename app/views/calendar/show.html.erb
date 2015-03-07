@@ -9,14 +9,14 @@
         <% end %>
       </div>
     </div>
-    <div class="row">
-      <div class="well controls col-md-8 col-md-offset-2 col-xs-12">
-        <select class="select-dropbox class-name-search col-xs-4" multiple="multiple" placeholder="All Events(Default)">
+    <div class="row calendar-controls-container">
+      <div class="calendar-controls col-md-8 col-md-offset-2 col-xs-12">
+        <select class="select-dropbox class-name-search col-sm-4 col-sm-offset-0 col-xs-6 col-xs-offset-3" multiple="multiple" placeholder="All Events(Default)">
           <% @classes.each do |class_name| %>
             <option value="<%= class_name %>"><%= class_name.capitalize %></option>
           <% end %>
         </select>
-        <span class="col-xs-4">
+        <span class="col-sm-4 col-sm-offset-0 col-xs-6 col-xs-offset-3">
           <%= link_to calendar_draw_path(date: @date - 1.month), class: "btn btn-default back-month" do %>
             <%= icon('chevron-left', '', class: '') %>
           <% end %>
@@ -25,7 +25,7 @@
             <%= icon('chevron-right', '', class: '') %>
           <% end %>
         </span>
-        <select class="select-dropbox city-name-search col-xs-4" multiple="multiple" placeholder="All Cities(Default)">
+        <select class="select-dropbox city-name-search col-sm-4 col-sm-offset-0 col-xs-6 col-xs-offset-3" multiple="multiple" placeholder="All Cities(Default)">
           <% @cities.each do |city| %>
             <option value="<%= city %>"><%= city.capitalize %></option>
           <% end %>

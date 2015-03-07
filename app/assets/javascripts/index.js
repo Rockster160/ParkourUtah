@@ -1,6 +1,7 @@
 var ready = function() {
 
   if (window.location.pathname == "/") {
+    $('.full-site-container').css('background','none');
     /* smooth scrolling for scroll to top */
     $('.scroll-link').click(function(e){
       e.preventDefault();

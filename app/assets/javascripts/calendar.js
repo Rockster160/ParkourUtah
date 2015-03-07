@@ -56,13 +56,6 @@ loadJS = function() {
   var url = window.location.pathname.split("/");
   var city = unescape(url[url.length - 1]);
 
-  // $('li').click(function() {
-  //   var $event_details = $(this).attr('href');
-  //   if ($event_details) {
-  //     window.location.href = $event_details;
-  //   }
-  // });
-
   $('.select-dropbox').select2()
   .select2("val", city)
   .on('change', function(e) {
