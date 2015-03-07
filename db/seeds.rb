@@ -18,7 +18,7 @@ User.create(
   role: 2
 )
 
-10.times do |t|
+6.times do |t|
   User.create(
     email: "instructor#{t}@email.com",
     first_name: Faker::Name.first_name,
