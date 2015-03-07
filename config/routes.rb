@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
 
   root 'index#index'
-  
+
   get '/secret' => 'peeps#secret'
   patch '/secrets' => 'peeps#secret_submit'
 
@@ -22,16 +22,17 @@ Rails.application.routes.draw do
 
   # get 'peeps/show/:id' => 'peeps#show', as: 'peep_show'
 
-  get '/store' => 'index#coming_soon'
-  get '/store/new' => 'index#coming_soon'
-  get '/store/edit/:id' => 'index#coming_soon'
-  patch '/store/update/:id' => 'index#coming_soon'
-  post '/store/create' => 'index#coming_soon'
-  # get '/store' => 'store#index', as: 'store'
-  # get '/store/new' => 'store#new', as: 'add_item'
-  # get '/store/edit/:id' => 'store#edit', as: 'edit_item'
-  # patch '/store/update/:id' => 'store#update'
-  # post '/store/create' => 'store#create'
+  # get '/store' => 'index#coming_soon'
+  # get '/store/new' => 'index#coming_soon'
+  # get '/store/edit/:id' => 'index#coming_soon'
+  # patch '/store/update/:id' => 'index#coming_soon'
+  # post '/store/create' => 'index#coming_soon'
+
+  get '/store' => 'store#index', as: 'store'
+  get '/store/new' => 'store#new', as: 'add_item'
+  get '/store/edit/:id' => 'store#edit', as: 'edit_item'
+  patch '/store/update/:id' => 'store#update'
+  post '/store/create' => 'store#create'
 
   get '/cart/add/:id' => 'store#add_to_cart', as: 'add_to_cart'
   get '/cart/show' => 'store#show_cart', as: 'show_cart'
