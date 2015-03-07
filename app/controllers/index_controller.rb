@@ -11,7 +11,8 @@ class IndexController < ApplicationController
 
     @selected_cities = params[:cities] ? params[:cities] : @cities
     @selected_classes = params[:classes] ? params[:classes] : @classes
+  end
 
-    flash[:notice] = "Notice!"
+  def coming_soon
   end
 end

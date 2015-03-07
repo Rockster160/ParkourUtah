@@ -1,3 +1,24 @@
+.calendar-container {
+  background: white;
+  border-radius: 0 0 20px 20px;
+}
+
+.calendar-controls {
+  height: 100px;
+  background: #eee;
+  padding-top: 34px;
+  border-radius: 20px 20px 0 0;
+}
+
+@media (max-width: 780px) {
+  .calendar-controls {
+    height: 120px;
+    background: #eee;
+    padding-top: 10px;
+    border-radius: 20px 20px 0 0;
+  }
+}
+
 .calendar {
   table-layout: fixed;
 }
@@ -46,6 +67,7 @@ $default: steelblue;
 $sandy: rgb(0, 0, 255);
 $provo: rgb(255, 255, 0);
 $salt-lake-city: rgb(255, 0, 0);
+$saratoga-springs: rgb(162, 97, 255);
 $vernal: rgb(255, 0, 255);
 $draper: rgb(255, 125, 0);
 $orem: rgb(0, 255, 66);
@@ -53,36 +75,44 @@ $special: rgb(0, 255, 66);
 // $color: rgb(162, 97, 255);
 
 .event-color {
-  background: lighten($default, 25%);
+  background: lighten($default, 20%);
   &:hover { background: $default; }
   &.sandy {
-    background: lighten($sandy, 25%);
+    background: lighten($sandy, 20%);
     &:hover { background: $sandy; }
   }
   &.provo {
-    background: lighten($provo, 25%);
+    background: lighten($provo, 20%);
     &:hover { background: $provo; }
   }
   &.salt-lake-city {
-    background: lighten($salt-lake-city, 25%);
+    background: lighten($salt-lake-city, 20%);
     &:hover { background: $salt-lake-city; }
   }
+  &.saratoga-springs {
+    background: lighten($saratoga-springs, 20%);
+    &:hover { background: $saratoga-springs; }
+  }
   &.vernal {
-    background: lighten($vernal, 25%);
+    background: lighten($vernal, 20%);
     &:hover { background: $vernal; }
   }
   &.draper {
-    background: lighten($draper, 25%);
+    background: lighten($draper, 20%);
     &:hover { background: $draper; }
   }
   &.orem {
-    background: lighten($orem, 25%);
+    background: lighten($orem, 20%);
     &:hover { background: $orem; }
   }
   &.special {
-    background: lighten($special, 25%);
+    background: lighten($special, 20%);
     &:hover { background: $special; }
   }
+}
+
+.day-cell {
+  height: 9.52381vw; //(((width / 12)*8 columns) / 7 days a week) = 9.523809523809524
 }
 
 .today a {
@@ -92,9 +122,4 @@ $special: rgb(0, 255, 66);
 
 .not-month {
   background: #eee;
-}
-
-.day-cell {
-  height: 9.52381vw; //(((width / 12)*8 columns) / 7 days a week) = 9.523809523809524
-  // overflow: hidden; Doesn't work?
 }
