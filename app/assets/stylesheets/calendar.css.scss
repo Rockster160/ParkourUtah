@@ -38,6 +38,7 @@
 }
 
 .calendar-legend {
+  padding: 5px 0;
   &:hover {
     cursor: pointer;
     background: rgba(255, 0, 0, 0.2);
@@ -88,38 +89,38 @@ $special: rgb(0, 255, 66);
 // $color: rgb(162, 97, 255);
 
 .event-color {
-  background: lighten($default, 20%);
+  background: lighten($default, 25%);
   &:hover { background: $default; }
   &.sandy {
-    background: lighten($sandy, 20%);
+    background: lighten($sandy, 25%);
     &:hover { background: $sandy; }
   }
   &.provo {
-    background: lighten($provo, 20%);
+    background: lighten($provo, 25%);
     &:hover { background: $provo; }
   }
   &.salt-lake-city {
-    background: lighten($salt-lake-city, 20%);
+    background: lighten($salt-lake-city, 25%);
     &:hover { background: $salt-lake-city; }
   }
   &.saratoga-springs {
-    background: lighten($saratoga-springs, 20%);
+    background: lighten($saratoga-springs, 25%);
     &:hover { background: $saratoga-springs; }
   }
   &.vernal {
-    background: lighten($vernal, 20%);
+    background: lighten($vernal, 25%);
     &:hover { background: $vernal; }
   }
   &.draper {
-    background: lighten($draper, 20%);
+    background: lighten($draper, 25%);
     &:hover { background: $draper; }
   }
   &.orem {
-    background: lighten($orem, 20%);
+    background: lighten($orem, 25%);
     &:hover { background: $orem; }
   }
   &.special {
-    background: lighten($special, 20%);
+    background: lighten($special, 25%);
     &:hover { background: $special; }
   }
 }
