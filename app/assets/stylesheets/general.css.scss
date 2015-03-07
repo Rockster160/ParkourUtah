@@ -3,6 +3,8 @@
   width: 100%;
 }
 
+.hover-btn:hover { cursor: pointer; }
+
 .flash-container {
   text-align: center;
   position: fixed;
@@ -56,7 +58,7 @@
   // background: rgb(236, 247, 255);
   background-image: image-url("concrete-small.png");
   color: white;
-  border: 2px solid red;
+  border: 1px solid red;
   padding: 10px;
   border-radius: 10px;
   text-align: center;
