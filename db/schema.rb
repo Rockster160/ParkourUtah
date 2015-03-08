@@ -11,10 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150228055317) do
+ActiveRecord::Schema.define(version: 20150308064718) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "attendances", force: :cascade do |t|
+    t.integer  "dependent_id"
+    t.integer  "instructor_id"
+    t.integer  "event_id"
+    t.string   "location"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "attendances", ["dependent_id"], name: "index_attendances_on_dependent_id", using: :btree
+  add_index "attendances", ["event_id"], name: "index_attendances_on_event_id", using: :btree
+  add_index "attendances", ["instructor_id"], name: "index_attendances_on_instructor_id", using: :btree
 
   create_table "carts", force: :cascade do |t|
     t.integer  "user_id"
@@ -23,6 +36,20 @@ ActiveRecord::Schema.define(version: 20150228055317) do
   end
 
   add_index "carts", ["user_id"], name: "index_carts_on_user_id", using: :btree
+
+  create_table "dependents", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "athlete_id"
+    t.integer  "athlete_pin"
+    t.string   "athlete_photo_file_name"
+    t.string   "athlete_photo_content_type"
+    t.integer  "athlete_photo_file_size"
+    t.datetime "athlete_photo_updated_at"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "dependents", ["user_id"], name: "index_dependents_on_user_id", using: :btree
 
   create_table "events", force: :cascade do |t|
     t.datetime "date"
@@ -91,10 +118,21 @@ ActiveRecord::Schema.define(version: 20150228055317) do
     t.integer  "auth_net_id"
     t.integer  "payment_id"
     t.integer  "class_pass",             default: 0
+    t.integer  "phone_number"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+
+  create_table "waivers", force: :cascade do |t|
+    t.integer  "dependent_id"
+    t.boolean  "signed"
+    t.integer  "emergency_contact"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "waivers", ["dependent_id"], name: "index_waivers_on_dependent_id", using: :btree
 
   add_foreign_key "carts", "users"
   add_foreign_key "transactions", "carts"

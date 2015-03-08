@@ -1,0 +1,25 @@
+class Dependent < ActiveRecord::Base
+  # create_table "dependents", force: :cascade do |t|
+  #   t.integer  "user_id"
+  #   t.integer  "athlete_id"
+  #   t.integer  "athlete_pin"
+  #   t.string   "athlete_photo_file_name"
+  #   t.string   "athlete_photo_content_type"
+  #   t.integer  "athlete_photo_file_size"
+  #   t.datetime "athlete_photo_updated_at"
+  #   t.datetime "created_at",                 null: false
+  #   t.datetime "updated_at",                 null: false
+  # end
+
+  # after_create :generate_pin - After waiver is signed
+
+  belongs_to :user
+  has_one :waiver
+  has_many :attendences
+
+  private
+
+  def generate_pin
+    ((0...9999).to_a - User.all.map { |user| user.special_id }).sample
+  end
+end

@@ -13,7 +13,9 @@ class Event < ActiveRecord::Base
   #   t.datetime "created_at",            null: false
   #   t.datetime "updated_at",            null: false
   # end
-  
+
+  has_many :attendences
+
   def host_by_id
     User.find(host)
   end

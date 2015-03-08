@@ -27,20 +27,19 @@ class User < ActiveRecord::Base
   #   t.integer  "auth_net_id"
   #   t.integer  "payment_id"
   #   t.integer  "class_pass"
+  #   t.integer  "phone_number"
   # end
-
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
 
   API_LOGIN = '34H962KteRF'.freeze # ENV['PKUT_AUTHNET_LOGIN']
   TRANSACTION_KEY = '92wavU3h45xZW88P'.freeze # ENV['PKUT_AUTHNET_TRANS_KEY']
 
   has_one :cart
+  has_many :dependents
   has_many :transactions, through: :cart
 
   after_create :create_AuthNet_profile, :assign_cart
 
-  devise :database_authenticatable, :registerable,
+  devise :database_authenticatable, :registerable, :confirmable,
          :recoverable, :rememberable, :trackable, :validatable
 
   has_attached_file :avatar,
@@ -200,4 +199,11 @@ class User < ActiveRecord::Base
   def assign_cart
     self.cart = Cart.create
   end
+
+  protected
+
+  def confirmation_required?
+    false
+  end
+  
 end
