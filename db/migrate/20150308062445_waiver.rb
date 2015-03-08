@@ -3,7 +3,6 @@ class Waiver < ActiveRecord::Migration
     create_table :waivers do |t|
       t.belongs_to :dependent, index: true
       t.boolean :signed
-      t.integer :emergency_contact
 
       t.timestamps null: false
     end

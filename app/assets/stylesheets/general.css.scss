@@ -56,7 +56,7 @@
   max-width: 400px;
 }
 
-.text-center { margin-left: 90px; }
+.fileform-center { margin-left: 90px; }
 
 .form-offset {
   margin-top: 50px;
@@ -111,5 +111,9 @@
       cursor: pointer;
       background: rgba(236, 160, 80, 0.8);
     }
+  }
+  .pin-entry {
+    letter-spacing: 40px;
+    padding-left: 50px; 
   }
 }

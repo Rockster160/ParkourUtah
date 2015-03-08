@@ -1,21 +1,20 @@
-class PeepsController < ApplicationController
+class DependentsController < ApplicationController
   layout 'application', except: [:secret]
 
-  def show
-    @instructor = User.find(params[:id])
-    redirect_to root_path unless @instructor.is_instructor?
+  def new
+    @dependent = Dependent.new
   end
 
-  def return
-    current_user.get_payment_id
+  def create
+    current_user.dependents.create(dependent_params)
+    flash[:notice] = "Success! Now fill out a waiver to get an Athlete ID."
     redirect_to edit_user_registration_path
   end
 
-  def dashboard
-    if current_user && !(current_user.is_instructor?)
-      flash[:alert] = "You are not authorized to view this page."
-      redirect_to root_path
-    end
+  def waiver
+  end
+
+  def show
   end
 
   def secret
@@ -32,4 +31,11 @@ class PeepsController < ApplicationController
     # end
     redirect_to root_path
   end
+
+  private
+
+  def dependent_params
+    params.require(:dependent).permit(:full_name, :emergency_contact, :athlete_pin, :user_id)
+  end
+
 end

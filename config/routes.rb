@@ -5,6 +5,10 @@ Rails.application.routes.draw do
   get '/secret' => 'peeps#secret'
   patch '/secrets' => 'peeps#secret_submit'
 
+  get '/athletes/new' => 'dependents#new', as: 'new_athlete'
+  post '/athletes/create' => 'dependents#create'
+  post '/waiver' => 'dependents#waiver', as: 'sign_waiver'
+
   devise_for :users do
     get '/users/sign_out' => 'devise/sessions#destroy'
   end
@@ -22,6 +26,7 @@ Rails.application.routes.draw do
 
   # get 'peeps/show/:id' => 'peeps#show', as: 'peep_show'
   get '/dashboard' => 'peeps#dashboard', as: 'dashboard'
+  get '/peeps/return' => 'peeps#return'
 
   # get '/store' => 'index#coming_soon'
   # get '/store/new' => 'index#coming_soon'

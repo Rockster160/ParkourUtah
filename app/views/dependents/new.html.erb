@@ -1,0 +1,14 @@
+<div class="fancy-box central-container form-offset">
+  <%= form_for @dependent, url: {action: 'create'} do |f| %>
+    <h2>New Athlete</h2>
+    <h4>Please fill out ALL of the following information.</h4>
+    <br/><h5>The Athlete's full name:</h5>
+    <%= f.text_field :full_name, placeholder: 'Sam Smith', class: 'fancy-textbox', required: true %>
+    <br/><h5>Emergency contact:</h5>
+    <%= f.text_field :emergency_contact, placeholder: '(801) 123-4567', class: 'restrictNumeric formatPhoneNumber fancy-textbox' %>
+    <h5>Athlete Access Pin:</h5>
+    <h6>Used as a password when your student attends class.</h6><br/>
+    <%= f.number_field :athlete_pin, class: 'restrictNumeric fancy-textbox pin-entry formatPin', inputmode: 'numeric', pattern: '[0-9]*' %>
+    <%= f.submit "Submit", class: 'fancy-btn athleteVerify' %>
+  <% end %>
+</div>

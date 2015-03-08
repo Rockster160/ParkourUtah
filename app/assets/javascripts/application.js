@@ -27,7 +27,6 @@ ready = function() {
   $('body').delegate('.flash', 'click', function() {
     killFlashes();
   });
-
 };
 
 killFlashes = function() {
@@ -44,6 +43,11 @@ slideOut = function(obj) {
   obj.slideUp(600);
 }
 
+showError = function(msg) {
+  killFlashes();
+  $('.flash-holder').append('<div class="flash-container"><div class="flash alert"></div><span class="flash-text">' +
+  msg + '</span></div>');
+}
 
 $(document).ready(ready);
 $(document).on('page:load', ready);

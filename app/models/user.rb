@@ -82,7 +82,7 @@ class User < ActiveRecord::Base
     </setting>
     <setting>
     <settingName>hostedProfileReturnUrl</settingName>
-    <settingValue>http://lvh.me:7545/users/edit</settingValue>
+    <settingValue>http://lvh.me:7545/peeps/return</settingValue>
     </setting>
     <setting>
     <settingName>hostedProfileReturnUrlText</settingName>
@@ -92,6 +92,10 @@ class User < ActiveRecord::Base
     res = auth_net_xml_request('getHostedProfilePageRequest', xml)
 
     token = Hash.from_xml(res.body)["getHostedProfilePageResponse"]["token"] unless res == 0000
+  end
+
+  def has_auth_net_billing
+
   end
 
   def create_AuthNet_profile

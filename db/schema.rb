@@ -39,6 +39,8 @@ ActiveRecord::Schema.define(version: 20150308072142) do
 
   create_table "dependents", force: :cascade do |t|
     t.integer  "user_id"
+    t.string   "full_name"
+    t.integer  "emergency_contact"
     t.integer  "athlete_id"
     t.integer  "athlete_pin"
     t.string   "athlete_photo_file_name"
@@ -131,9 +133,8 @@ ActiveRecord::Schema.define(version: 20150308072142) do
   create_table "waivers", force: :cascade do |t|
     t.integer  "dependent_id"
     t.boolean  "signed"
-    t.integer  "emergency_contact"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
   add_index "waivers", ["dependent_id"], name: "index_waivers_on_dependent_id", using: :btree

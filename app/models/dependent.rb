@@ -1,5 +1,7 @@
 class Dependent < ActiveRecord::Base
   # create_table "dependents", force: :cascade do |t|
+  #   t.string   "full_name"
+  #   t.integer  "emergency_contact"
   #   t.integer  "user_id"
   #   t.integer  "athlete_id"
   #   t.integer  "athlete_pin"
@@ -16,6 +18,11 @@ class Dependent < ActiveRecord::Base
   belongs_to :user
   has_one :waiver
   has_many :attendences
+
+  def signed_waiver?
+    return false unless self.waiver
+    self.waiver.is_signed?
+  end
 
   private
 

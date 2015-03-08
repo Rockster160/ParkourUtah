@@ -22,7 +22,6 @@ var ready = function() {
       var field_value = $('.secret-input-field').val();
       if (field_value.length == 9 && $value != "&lt;") { $value = ""; }
       var old_value = field_value;
-      console.log('pressed')
 
       if ($value == "&lt;") {
         var lose = 1
