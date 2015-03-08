@@ -1,3 +1,4 @@
+<div class="fancy-box central-container form-offset">
 <h2>Edit <%= resource_name.to_s.humanize %></h2>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
@@ -5,7 +6,7 @@
 
   <div class="field">
     <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true %>
+    <%= f.email_field :email, autofocus: true, class: 'fancy-textbox' %>
   </div>
 
   <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
@@ -15,47 +16,51 @@
   <% if current_user.is_instructor? %>
     <div class="field">
       <%= f.label 'Serious Face' %> <i></i><br />
-      <%= f.file_field :avatar %>
+      <%= f.file_field :avatar, class: 'text-center' %>
     </div>
 
     <div class="field">
       <%= f.label 'Silly Face' %> <i></i><br />
-      <%= f.file_field :avatar_2 %>
+      <%= f.file_field :avatar_2, class: 'text-center' %>
     </div>
 
     <div class="field">
       <%= f.label :bio %> <i></i><br />
-      <%= f.text_area :bio %>
+      <%= f.text_area :bio, class: 'fancy-textarea' %>
     </div>
   <% end %>
 
   <div class="field">
-    <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
-    <%= f.password_field :password, autocomplete: "off" %>
+    <%= f.label :password %> <i><br/>(leave blank if you don't want to change it)</i><br />
+    <%= f.password_field :password, autocomplete: "off", class: 'fancy-textbox' %>
   </div>
 
   <div class="field">
     <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "off" %>
+    <%= f.password_field :password_confirmation, autocomplete: "off", class: 'fancy-textbox' %>
   </div>
 
   <div class="field">
-    <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
-    <%= f.password_field :current_password, autocomplete: "off" %>
+    <%= f.label :current_password %> <i><br/>(we need your current password to confirm your changes)</i><br />
+    <%= f.password_field :current_password, autocomplete: "off", class: 'fancy-textbox' %>
   </div>
 
   <div class="actions">
-    <%= f.submit "Update" %>
+    <h3><%= f.submit "Update", class: 'fancy-btn' %></h3>
   </div>
 <% end %>
 <form method="post" action="https://test.authorize.net/profile/manage">
 <input class="authnet-token" type="hidden" name="token"
-value="<%= resource.get_AuthNet_token %>"/>
-<input class="authnet-btn" type="submit" value="Manage my payment and shipping information"/>
+value="<%#= resource.get_AuthNet_token %>"/>
+<input class="authnet-btn fancy-btn" type="submit" value="Manage my payment information"/>
 </form>
-Waivers:<br/>
-First little boy - Waiver active until Feb 24, 2016, Pin: 1234 <a href="#">Edit</a><br/>
-Little Girl - <a href="#">Must have waiver signed before attending class</a>, Pin: ----<br/>
-Another Girl - Waiver active until Oct 16, 2015, Pin: 1144 <a href="#">Edit</a><br/>
+<div class="waivers">
+<h3>Waivers:</h3>
+<h3>First little boy</h3>Waiver valid until Feb 24, 2016<br/>Athlete ID: 1234<br/><a href="#">Change Pin</a><br/><br/>
+<h3>Little Girl</h3><a href="#">Must have waiver signed before attending class<br/></a> Athlete ID: ----<br/><br/>
+<h3>Another Girl</h3>Waiver valid until Oct 16, 2015<br/>Athlete ID: 1144<br/><a href="#">Change Pin</a><br/><br/>
+<br/><h5><a href="#">Add a new Athlete.</a></h5>
+</div>
 
 <%= link_to "Back", :back %>
+</div>
