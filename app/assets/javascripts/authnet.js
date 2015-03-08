@@ -5,7 +5,9 @@ var ready = function() {
   }
 
   $('.authnet-btn').click(function(e) {
-    e.preventDefault();
+    if ($(this).hasClass('disabled')) {
+      e.preventDefault();
+    }
   })
 }
 

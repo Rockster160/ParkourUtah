@@ -71,6 +71,7 @@ class User < ActiveRecord::Base
   end
 
   def get_AuthNet_token
+    return 0000 unless create_AuthNet_profile
     transaction = generate_AuthNet_transaction
     xml =
     "<customerProfileId>#{self.auth_net_id}</customerProfileId>
@@ -94,6 +95,7 @@ class User < ActiveRecord::Base
   end
 
   def create_AuthNet_profile
+    return true if self.auth_net_id
     transaction = generate_AuthNet_transaction
     profile = AuthorizeNet::CIM::CustomerProfile.new(
       :email => self.email,
@@ -104,7 +106,15 @@ class User < ActiveRecord::Base
     self.save
   end
 
+  def delete_all_AuthNet
+    User.all.each do |user|
+      xml = "<customerProfileId>#{user.auth_net_id}</customerProfileId>"
+      res = auth_net_xml_request('deleteCustomerProfileRequest', xml)
+    end
+  end
+
   def get_payment_id
+    return 0000 unless create_AuthNet_profile
     return payment_id if self.payment_id
 
     xml = "<customerProfileId>#{self.auth_net_id}</customerProfileId>"
@@ -117,6 +127,7 @@ class User < ActiveRecord::Base
   end
 
   def charge_class
+    return 0000 unless create_AuthNet_profile
     if self.class_pass > 0
       self.update(class_pass: self.class_pass - 1)
       self.save
@@ -134,6 +145,7 @@ class User < ActiveRecord::Base
   end
 
   def buy_shopping_cart
+    return 0000 unless create_AuthNet_profile
     order = self.cart.transactions
     items = ""
     order.each do |trans|
@@ -205,5 +217,5 @@ class User < ActiveRecord::Base
   def confirmation_required?
     false
   end
-  
+
 end
