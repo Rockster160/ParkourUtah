@@ -9,6 +9,7 @@ class Waiver < ActiveRecord::Base
   # end
 
   belongs_to :dependent
+  validate :has_matching_name_as_athlete
 
   def exp_date
     (self.created_at + 1.year - 1.day).strftime('%B %-d, %Y')
@@ -16,5 +17,11 @@ class Waiver < ActiveRecord::Base
 
   def is_active?
     true unless Date.today > self.exp_date
+  end
+
+  def has_matching_name_as_athlete
+    unless Dependent.find(self.dependent_id).full_name == self.signed_for
+      errors.add(:signed_for, "Athlete name must match the one listed.")
+    end
   end
 end

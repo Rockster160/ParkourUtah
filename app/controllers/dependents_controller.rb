@@ -16,14 +16,13 @@ class DependentsController < ApplicationController
   end
 
   def sign_waiver
-    waiver = Waiver.create(waiver_params)
-    if waiver
-      waiver.dependent_id = params[:dependent_id]
+    waiver = Waiver.new(waiver_params.merge(dependent_id: params[:dependent_id]))
+    if waiver.valid?
+      wavier.save
       Dependent.find(params[:dependent_id]).generate_pin
-      waiver.save
       flash[:notice] = "Waiver has been filled out. See you in class!"
     else
-      flash[:alert] = "There was an error creating your waiver."
+      flash[:alert] = waiver.errors.messages.values.first.first
     end
     redirect_to edit_user_registration_path
   end
@@ -39,7 +38,7 @@ class DependentsController < ApplicationController
   end
 
   def waiver_params
-    params.require(:waiver).permit(:signed, :athlete_id)
+    params.require(:waiver).permit(:signed, :athlete_id, :signed_for, :signed_by)
   end
 
 end
