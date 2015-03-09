@@ -31,7 +31,7 @@ ready = function() {
 
 killFlashes = function() {
   if ($('.flash-container').length > 0) {
-    // slideOut($('.flash-container'));
+    slideOut($('.flash-container'));
     clearTimeout(timeout);
     timeout = setTimeout(function() {
       killFlashes();
