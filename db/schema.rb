@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(version: 20150308072142) do
   create_table "dependents", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "full_name"
-    t.integer  "emergency_contact"
+    t.string   "emergency_contact"
     t.integer  "athlete_id"
     t.integer  "athlete_pin"
     t.string   "athlete_photo_file_name"
@@ -120,7 +120,7 @@ ActiveRecord::Schema.define(version: 20150308072142) do
     t.integer  "auth_net_id"
     t.integer  "payment_id"
     t.integer  "class_pass",             default: 0
-    t.integer  "phone_number"
+    t.string   "phone_number"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
@@ -133,6 +133,8 @@ ActiveRecord::Schema.define(version: 20150308072142) do
   create_table "waivers", force: :cascade do |t|
     t.integer  "dependent_id"
     t.boolean  "signed"
+    t.string   "signed_for"
+    t.string   "signed_by"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end

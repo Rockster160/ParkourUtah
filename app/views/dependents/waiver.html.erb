@@ -1,0 +1,23 @@
+<div class="fancy-box central-container form-offset">
+  <%= form_for @waiver, url: {action: 'sign_waiver', dependent_id: params[:athlete_id]} do |f| %>
+    <h2>New Waiver</h2>
+    <h4>Please fill out ALL of the following information.</h4>
+    <br/><h4>This waiver of liability is being created for:</h4>
+    <%= f.text_field :signed_for, placeholder: 'Sam Smith', class: 'fancy-textbox', required: true %>
+    <br/>
+    <br/>
+    <%= link_to 'Review Waiver - available for download', '#', class: 'fancy-btn' %>
+    <br/>
+    <br/>
+    <span class="double">
+      <%= f.check_box :signed, required: true, class: 'styled' %>
+    </span>
+    <%= f.label :signed, 'By checking this box, I hereby waive the liability leading back to Parkour Utah for the athlete listed above.' %>
+    <br/>
+    <h5>By entering my name below, I certify that I have read and understand, to the best of my knowledge, all of the terms listed in the document available for download above.</h5>
+    <h5>I also certify that I understand that this is a legal document, and an electronic signature has the same legal effect and can be enforced in the same way as a written signature.</h5>
+    <h5>By the creation of this document, I authorize, as a legal guardian of the athlete listed above, for the athlete to take part in any class, competition, or event hosted by or under the name of Parkour Utah.</h5>
+    <%= f.text_field :signed_by, placeholder: 'Signed By', class: 'fancy-textbox e-sig', required: true %>
+    <%= f.submit "Submit", class: 'fancy-btn waiverVerify' %>
+  <% end %>
+</div>

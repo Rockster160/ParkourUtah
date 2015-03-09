@@ -114,6 +114,15 @@
   }
   .pin-entry {
     letter-spacing: 40px;
-    padding-left: 50px; 
+    padding-left: 50px;
   }
+  a {
+    color: white;
+    text-decoration: underline;
+  }
+}
+
+.double {
+  zoom: 2;
+  transform: scale(2);
 }

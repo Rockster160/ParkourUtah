@@ -1,80 +1,78 @@
 <div class="fancy-box central-container form-offset">
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+  <h2>Edit <%= resource_name.to_s.humanize %></h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= devise_error_messages! %>
-
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, class: 'fancy-textbox' %>
-  </div>
-
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
-
-  <% if current_user.is_instructor? %>
-    <div class="field">
-      <%= f.label 'Serious Face' %> <i></i><br />
-      <%= f.file_field :avatar, class: 'fileform-center' %>
-    </div>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+    <%= devise_error_messages! %>
 
     <div class="field">
-      <%= f.label 'Silly Face' %> <i></i><br />
-      <%= f.file_field :avatar_2, class: 'fileform-center' %>
+      <%= f.label :email %><br />
+      <%= f.email_field :email, autofocus: true, class: 'fancy-textbox' %>
     </div>
 
-    <div class="field">
-      <%= f.label :bio %> <i></i><br />
-      <%= f.text_area :bio, class: 'fancy-textarea' %>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= f.label :password %> <i><br/>(leave blank if you don't want to change it)</i><br />
-    <%= f.password_field :password, autocomplete: "off", class: 'fancy-textbox' %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "off", class: 'fancy-textbox' %>
-  </div>
-
-  <div class="field">
-    <%= f.label :current_password %> <i><br/>(we need your current password to confirm your changes)</i><br />
-    <%= f.password_field :current_password, autocomplete: "off", class: 'fancy-textbox' %>
-  </div>
-
-  <div class="actions">
-    <h3><%= f.submit "Update", class: 'fancy-btn' %></h3>
-  </div>
-<% end %>
-<form method="post" action="https://test.authorize.net/profile/manage">
-<input class="authnet-token" type="hidden" name="token"
-value="<%= resource.get_AuthNet_token %>"/>
-<input class="authnet-btn fancy-btn" type="submit" value="Manage my payment information"/>
-</form>
-<div class="waivers">
-<% if current_user.payment_id %>
-  <h3>Waivers:</h3>
-  <% current_user.dependents.each do |athlete| %>
-    <h3>First little boy</h3>
-    <% if athlete.signed_waiver? %>
-      Waiver valid until <%= waiver.created_at + 1.year %>
-    <% else %>
-      <%= link_to "Must have waiver signed before attending class.", sign_waiver_path %></br>
+    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+      <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
     <% end %>
-    <br/>Athlete ID: 1234<br/><a href="#">Change Pin</a><br/><br/>
-  <% end %>
-  <h3>First little boy</h3>Waiver valid until Feb 24, 2016<br/>Athlete ID: 1234<br/><a href="#">Change Pin</a><br/><br/>
-  <h3>Little Girl</h3><a href="#">Must have waiver signed before attending class<br/></a> Athlete ID: ----<br/><br/>
-  <h3>Another Girl</h3>Waiver valid until Oct 16, 2015<br/>Athlete ID: 1144<br/><a href="#">Change Pin</a><br/><br/>
-  <br/><h5><%= link_to "Add a new Athlete", new_athlete_path %></h5>
-<% else %>
-  <h2>We do not store any of your sensitive information, so you will be redirected to a third party.</h2>
-  <h3>You must first fill out your payment information before creating Athlete Profiles.</h3>
-<% end %>
-</div>
 
-<%= link_to "Back", :back %>
+    <% if current_user.is_instructor? %>
+      <div class="field">
+        <%= f.label 'Serious Face' %> <i></i><br />
+        <%= f.file_field :avatar, class: 'fileform-center' %>
+      </div>
+
+      <div class="field">
+        <%= f.label 'Silly Face' %> <i></i><br />
+        <%= f.file_field :avatar_2, class: 'fileform-center' %>
+      </div>
+
+      <div class="field">
+        <%= f.label :bio %> <i></i><br />
+        <%= f.text_area :bio, class: 'fancy-textarea' %>
+      </div>
+    <% end %>
+
+    <div class="field">
+      <%= f.label :password %> <i><br/>(leave blank if you don't want to change it)</i><br />
+      <%= f.password_field :password, autocomplete: "off", class: 'fancy-textbox' %>
+    </div>
+
+    <div class="field">
+      <%= f.label :password_confirmation %><br />
+      <%= f.password_field :password_confirmation, autocomplete: "off", class: 'fancy-textbox' %>
+    </div>
+
+    <div class="field">
+      <%= f.label :current_password %> <i><br/>(we need your current password to confirm your changes)</i><br />
+      <%= f.password_field :current_password, autocomplete: "off", class: 'fancy-textbox' %>
+    </div>
+
+    <div class="actions">
+      <h3><%= f.submit "Update", class: 'fancy-btn' %></h3>
+    </div>
+  <% end %>
+  <form method="post" action="https://test.authorize.net/profile/manage">
+  <input class="authnet-token" type="hidden" name="token"
+  value="<%= resource.get_AuthNet_token %>"/>
+  <input class="authnet-btn fancy-btn" type="submit" value="Manage my payment information"/>
+  </form>
+  <div class="waivers">
+    <% if current_user.payment_id %>
+      <h3>Waivers:</h3>
+      <% current_user.dependents.each do |athlete| %>
+        <h3><%= athlete.full_name %></h3>
+        <% if athlete.signed_waiver? %>
+          Waiver valid until <%= athlete.waiver.exp_date %><br/>
+          Athlete ID: <%= athlete.padded_pin %><br/>
+          <a href="#">Change Pin</a><br/><br/>
+        <% else %>
+          <%= link_to "Must have waiver signed before attending class.", sign_waiver_path(athlete.id) %></br>
+        <% end %>
+      <% end %>
+      <br/><h5><%= link_to "Add a new Athlete", new_athlete_path %></h5>
+    <% else %>
+      <h2>We do not store any of your sensitive information, so you will be redirected to a third party.</h2>
+      <h3>You must first fill out your payment information before creating Athlete Profiles.</h3>
+    <% end %>
+  </div>
+
+  <%= link_to "Back", :back %>
 </div>

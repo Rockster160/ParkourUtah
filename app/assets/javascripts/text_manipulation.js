@@ -36,6 +36,10 @@ var ready = function() {
       e.preventDefault();
     }
   });
+
+  $('.waiverVerify').click(function() {
+    showError('Verify that all fields are completed and accepted.')
+  });
 };
 
 $(document).ready(ready);

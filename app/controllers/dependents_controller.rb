@@ -12,30 +12,34 @@ class DependentsController < ApplicationController
   end
 
   def waiver
+    @waiver = Waiver.new
+  end
+
+  def sign_waiver
+    waiver = Waiver.create(waiver_params)
+    if waiver
+      waiver.dependent_id = params[:dependent_id]
+      Dependent.find(params[:dependent_id]).generate_pin
+      waiver.save
+      flash[:notice] = "Waiver has been filled out. See you in class!"
+    else
+      flash[:alert] = "There was an error creating your waiver."
+    end
+    redirect_to edit_user_registration_path
   end
 
   def show
   end
 
-  def secret
-    # @user = User.first
-  end
-
-  def secret_submit
-    id, pin = params[:pin].split('-')
-    flash[:notice] = "User: #{id}, PIN: #{pin}"
-    # if User.first.update(first_name: params[:user][:first_name])
-    #   flash[:notice] = "Success! "
-    # else
-    #   flash[:alert] = "Failure..."
-    # end
-    redirect_to root_path
-  end
-
   private
 
   def dependent_params
+    params[:dependent][:emergency_contact] = params[:dependent][:emergency_contact].split('').map {|x| x[/\d+/]}.compact.join('')
     params.require(:dependent).permit(:full_name, :emergency_contact, :athlete_pin, :user_id)
+  end
+
+  def waiver_params
+    params.require(:waiver).permit(:signed, :athlete_id)
   end
 
 end

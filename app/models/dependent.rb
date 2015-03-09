@@ -21,12 +21,21 @@ class Dependent < ActiveRecord::Base
 
   def signed_waiver?
     return false unless self.waiver
-    self.waiver.is_signed?
+    self.waiver.signed?
+  end
+
+  def padded_pin
+    str = ""
+    (4 - self.athlete_id.to_s.length).times {|zero| str << "0"}
+    str << self.athlete_id.to_s
+    str
+  end
+
+  def generate_pin
+    self.athlete_id = ((0...9999).to_a - Dependent.all.map { |user| user.athlete_id }).sample
+    self.save
   end
 
   private
 
-  def generate_pin
-    ((0...9999).to_a - User.all.map { |user| user.special_id }).sample
-  end
 end

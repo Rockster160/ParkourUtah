@@ -7,7 +7,8 @@ Rails.application.routes.draw do
 
   get '/athletes/new' => 'dependents#new', as: 'new_athlete'
   post '/athletes/create' => 'dependents#create'
-  post '/waiver' => 'dependents#waiver', as: 'sign_waiver'
+  get '/waiver/:athlete_id' => 'dependents#waiver', as: 'sign_waiver'
+  post '/waiver/sign' => 'dependents#sign_waiver'
 
   devise_for :users do
     get '/users/sign_out' => 'devise/sessions#destroy'
@@ -44,4 +45,5 @@ Rails.application.routes.draw do
   get '/cart/show' => 'store#show_cart', as: 'show_cart'
   post '/cart/update' => 'store#update_cart', as: 'update_cart'
   post '/cart/purchase' => 'store#purchase', as: 'purchase'
+
 end
