@@ -26,6 +26,8 @@ gem "paperclip", "~> 4.2"
 gem 'aws-sdk', '< 2.0'
 gem 'authorizenet'
 gem 'httparty'
+gem 'sidekiq'
+gem 'googlevoiceapi'
 # gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
