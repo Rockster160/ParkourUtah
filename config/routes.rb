@@ -2,8 +2,10 @@ Rails.application.routes.draw do
 
   root 'index#index'
 
-  get '/secret' => 'peeps#secret'
-  patch '/secrets' => 'peeps#secret_submit'
+  get '/athlete' => 'peeps#pin_user', as: 'enter_pin'
+  get '/pin' => 'peeps#show_user'
+  get '/password' => 'peeps#pin_password'
+  patch '/charge_class' => 'peeps#charge_class'
 
   get '/athletes/new' => 'dependents#new', as: 'new_athlete'
   post '/athletes/create' => 'dependents#create'

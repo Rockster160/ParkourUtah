@@ -1,0 +1,5 @@
+<%= form_tag({controller: "peeps", action: "pin_password"}, method: "get") do |f| %>
+  <%= text_field_tag :athlete_id, @athlete.athlete_id, required: true, readonly: true %>
+  <%= submit_tag "X", class: "" %>
+  <%= submit_tag "√", class: "" %>
+<% end %>

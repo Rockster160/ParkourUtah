@@ -18,8 +18,36 @@ class PeepsController < ApplicationController
     end
   end
 
-  def secret
+  def pin_user
     # @user = User.first
+  end
+
+  def show_user
+    create_athlete
+    unless @athlete
+      flash[:alert] = "User not found."
+      redirect_to :back
+    end
+  end
+
+  def pin_password
+    create_athlete
+    unless params["commit"] == "√"
+      redirect_to enter_pin_path
+    end
+  end
+
+  def charge_class
+    create_athlete
+    if params[:pin].to_i == @athlete.athlete_pin
+      @user = User.find(@athlete.user_id)
+      @user.charge_class
+      flash[:notice] = "Success!"
+      redirect_to enter_pin_path
+    else
+      flash[:alert] = "Invalid Pin. Try again."
+      redirect_to :back
+    end
   end
 
   def secret_submit
@@ -31,5 +59,11 @@ class PeepsController < ApplicationController
     #   flash[:alert] = "Failure..."
     # end
     redirect_to root_path
+  end
+
+  private
+
+  def create_athlete
+    @athlete = Dependent.where("athlete_id = ?", params[:athlete_id]).first
   end
 end
