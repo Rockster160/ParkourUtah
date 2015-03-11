@@ -4,7 +4,7 @@
 
 <div class="col-md-12 calendar-partial">
   <%= calendar @date do |date| %>
-  <div class="row calendar-date-link"><%= date.day %></div>
+  <div class="row calendar-date-link date"><%= date.day %></div>
   <div class="row">
     <% if @events[[date.year, date.month, date.day]] %>
     <ul>

@@ -129,7 +129,7 @@ $special: rgb(0, 255, 66);
   height: 9.52381vw; //(((width / 12)*8 columns) / 7 days a week) = 9.523809523809524
 }
 
-.today a {
+.today .date {
   background: black;
   color: white;
 }

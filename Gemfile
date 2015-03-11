@@ -29,6 +29,7 @@ gem 'httparty'
 gem 'sidekiq'
 gem 'googlevoiceapi'
 gem 'whenever', require: false
+gem 'sinatra', '~> 1.3', require: nil
 # gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library

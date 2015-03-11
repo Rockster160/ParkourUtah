@@ -48,4 +48,7 @@ Rails.application.routes.draw do
   post '/cart/update' => 'store#update_cart', as: 'update_cart'
   post '/cart/purchase' => 'store#purchase', as: 'purchase'
 
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
+
 end

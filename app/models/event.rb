@@ -21,6 +21,6 @@ class Event < ActiveRecord::Base
   end
 
   def send_text
-    ::SmsMailerWorker.perform_async('Ping!', ['3852599640'])
+    ::SmsMailerWorker.perform_async(Time.now.to_s, ['3852599640'])
   end
 end
