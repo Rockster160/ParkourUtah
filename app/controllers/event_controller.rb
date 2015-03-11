@@ -45,6 +45,7 @@ class EventController < ApplicationController
   end
 
   def send_text
+    flash[:notice] = "Happened!"
     ::SMSMailerWorker.perform_async('Ping!', ['3852599640'])
   end
 
