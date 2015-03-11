@@ -1,4 +1,4 @@
-class SMSMailerWorker
+class SmsMailerWorker
   include Sidekiq::Worker
   # ::SMSMailerWorker.perform_async('It worked!', ['3852599640'])
 

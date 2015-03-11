@@ -44,11 +44,6 @@ class EventController < ApplicationController
     redirect_to calendar_show_path("all")
   end
 
-  def send_text
-    flash[:notice] = "Happened!"
-    ::SMSMailerWorker.perform_async('Ping!', ['3852599640'])
-  end
-
   private
 
   def convertToRailsTime(date, time)

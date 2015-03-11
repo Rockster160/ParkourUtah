@@ -1,3 +1,3 @@
 every 1.minute do
-  runner ""
+  runner "Event.first.send_text"
 end

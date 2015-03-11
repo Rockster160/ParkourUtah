@@ -19,4 +19,8 @@ class Event < ActiveRecord::Base
   def host_by_id
     User.find(host)
   end
+
+  def send_text
+    ::SmsMailerWorker.perform_async('Ping!', ['3852599640'])
+  end
 end
