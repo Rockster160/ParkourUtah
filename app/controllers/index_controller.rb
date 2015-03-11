@@ -11,8 +11,6 @@ class IndexController < ApplicationController
 
     @selected_cities = params[:cities] ? params[:cities] : @cities
     @selected_classes = params[:classes] ? params[:classes] : @classes
-
-    ::SmsMailerWorker.perform_async('It worked!', ['3852599640'])
   end
 
   def coming_soon

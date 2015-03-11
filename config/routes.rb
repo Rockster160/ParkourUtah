@@ -28,7 +28,7 @@ Rails.application.routes.draw do
   delete 'events/destroy' => 'event#destroy', as: 'destroy_event'
 
   # get 'peeps/show/:id' => 'peeps#show', as: 'peep_show'
-  get '/dashboard' => 'peeps#dashboard', as: 'dashboard'
+  # get '/dashboard' => 'peeps#dashboard', as: 'dashboard'
   get '/peeps/return' => 'peeps#return'
 
   # get '/store' => 'index#coming_soon'

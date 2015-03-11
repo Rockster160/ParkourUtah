@@ -28,6 +28,7 @@ gem 'authorizenet'
 gem 'httparty'
 gem 'sidekiq'
 gem 'googlevoiceapi'
+gem 'whenever'
 # gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library

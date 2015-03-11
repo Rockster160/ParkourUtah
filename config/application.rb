@@ -22,7 +22,7 @@ module ParkourUtah
     config.assets.precompile += ['', '']
     config.serve_static_assets = true
     config.assets.initialize_on_precompile false
-    # config.autoload_paths += %W(#{config.root}/app/workers)
+    config.autoload_paths += %W(#{config.root}/app/workers)
     config.eager_load_paths += %W(#{config.root}/app/workers)
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
