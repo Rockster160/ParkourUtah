@@ -49,6 +49,8 @@ Rails.application.routes.draw do
   post '/cart/purchase' => 'store#purchase', as: 'purchase'
 
   require 'sidekiq/web'
-  mount Sidekiq::Web => '/sidekiq'
+  authenticate :user, lambda { |u| u.is_admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
 
 end
