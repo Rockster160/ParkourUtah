@@ -13,8 +13,6 @@ class Dependent < ActiveRecord::Base
   #   t.datetime "updated_at",                 null: false
   # end
 
-  # after_create :generate_pin - After waiver is signed
-
   belongs_to :user
   has_one :waiver
   has_many :attendences
@@ -26,7 +24,7 @@ class Dependent < ActiveRecord::Base
 
   def padded_pin
     str = ""
-    (4 - self.athlete_id.to_s.length).times {|zero| str << "0"}
+    (4 - self.athlete_id.to_s.length).times {str << "0"}
     str << self.athlete_id.to_s
     str
   end
