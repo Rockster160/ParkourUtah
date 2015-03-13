@@ -18,7 +18,14 @@
             <%= event.date.strftime('%l:%M %p') %><br/>
             <br/>
             <%= event.description %><br/><br/>
-            Instructor: <%= event.host %>
+            Instructor: <%= event.host %><br/>
+            <%= link_to 'Subscribe to this Event', subscribe_path(id: event.id), class: "calendar-link" %><br/>
+            <% if current_user && current_user.is_instructor? %>
+              </br>
+              <%= link_to 'Destroy Event', destroy_event_path(id: event.id), method: :delete, class: "calendar-link", data: {confirm: "Are you sure?"} %><br/>
+              <%= link_to 'Destroy all future occurrences', destroy_event_path(future: "all", id: event.id), method: :delete, class: "calendar-link",
+              data:{confirm: "Are you sure? This will delete this and all future events tied to this one."} if event.token %>
+            <% end %>
           </div>
           <span class="event-click-handler"><%= event.class_name.capitalize %></span>
         </li>

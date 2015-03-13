@@ -22,7 +22,7 @@ class EventController < ApplicationController
     iterate.times do |each_week|
       dates << date_time + (each_week.weeks)
     end
-    params[:event][:token] = Time.now.to_i if iterate > 1
+    params[:event][:token] = Time.now.to_i
     dates.each do |date|
       params[:event][:date] = date
       Event.create(event_params)
@@ -42,6 +42,9 @@ class EventController < ApplicationController
       Event.find(params[:id]).destroy
     end
     redirect_to calendar_show_path("all")
+  end
+
+  def subscribe
   end
 
   private
