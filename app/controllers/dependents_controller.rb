@@ -18,7 +18,7 @@ class DependentsController < ApplicationController
   def sign_waiver
     waiver = Waiver.new(waiver_params.merge(dependent_id: params[:dependent_id]))
     if waiver.valid?
-      wavier.save
+      waiver.save
       Dependent.find(params[:dependent_id]).generate_pin
       flash[:notice] = "Waiver has been filled out. See you in class!"
     else

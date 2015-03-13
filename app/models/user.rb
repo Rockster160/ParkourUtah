@@ -111,7 +111,7 @@ class User < ActiveRecord::Base
   end
 
   def delete_all_AuthNet
-    (31682048..31682062).to_a.each do |user|
+    (31778074..31778088).to_a.each do |user|
       xml = "<customerProfileId>#{user}</customerProfileId>"
       res = auth_net_xml_request('deleteCustomerProfileRequest', xml)
     end
