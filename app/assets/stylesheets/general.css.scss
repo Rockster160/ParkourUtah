@@ -53,7 +53,9 @@
   text-align: center;
   margin: 0 auto;
   overflow: auto;
-  max-width: 400px;
+  width: 50%;
+  min-width: 400px;
+  max-width: 900px;
 }
 
 .fileform-center { margin-left: 90px; }
@@ -67,7 +69,7 @@
   background-image: image-url("concrete-small.png");
   color: white;
   border: 1px solid red;
-  padding: 10px;
+  padding: 20px 10px 50px 10px;
   border-radius: 10px;
   text-align: center;
   .fancy-textbox {
@@ -93,6 +95,7 @@
   .fancy-btn {
     transition: 0.3s;
     background: rgba(236, 160, 80, 0.3);
+    text-decoration: none;
     width: 200px;
     font-family: 'Voltaire';
     border: 2px solid red;
@@ -116,7 +119,7 @@
     letter-spacing: 40px;
     padding-left: 50px;
   }
-  a {
+  .fancy-link {
     color: white;
     text-decoration: underline;
   }

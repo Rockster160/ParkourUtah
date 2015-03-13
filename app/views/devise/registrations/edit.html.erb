@@ -62,17 +62,17 @@
         <% if athlete.signed_waiver? %>
           Waiver valid until <%= athlete.waiver.exp_date %><br/>
           Athlete ID: <%= athlete.padded_pin %><br/>
-          <a href="#">Change Pin</a><br/><br/>
+          <a href="#" class="fancy-link">Change Pin</a><br/><br/>
         <% else %>
-          <%= link_to "Must have waiver signed before attending class.", sign_waiver_path(athlete.id) %></br>
+          <%= link_to "Must have waiver signed before attending class.", sign_waiver_path(athlete.id), class: 'fancy-link' %></br>
         <% end %>
       <% end %>
-      <br/><h5><%= link_to "Add a new Athlete", new_athlete_path %></h5>
+      <br/><h5><%= link_to "Add a new Athlete", new_athlete_path, class: 'fancy-link' %></h5>
     <% else %>
       <h2>We do not store any of your sensitive information, so you will be redirected to a third party.</h2>
       <h3>You must first fill out your payment information before creating Athlete Profiles.</h3>
     <% end %>
   </div>
 
-  <%= link_to "Back", :back %>
+  <%= link_to "Back", :back, class: 'fancy-link' %>
 </div>
