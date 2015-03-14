@@ -31,11 +31,13 @@ class User < ActiveRecord::Base
   #   t.integer  "instructor_position"
   # end
 
-  # API_LOGIN = '34H962KteRF'.freeze
-  # TRANSACTION_KEY = '92wavU3h45xZW88P'.freeze
-  # SWITCH_DB
-  API_LOGIN = ENV['PKUT_AUTHNET_LOGIN'].freeze
-  TRANSACTION_KEY = ENV['PKUT_AUTHNET_TRANS_KEY'].freeze
+  if ENV["RAILS_ENV"] == "production"
+    API_LOGIN = ENV['PKUT_AUTHNET_LOGIN'].freeze
+    TRANSACTION_KEY = ENV['PKUT_AUTHNET_TRANS_KEY'].freeze
+  else
+    API_LOGIN = '34H962KteRF'.freeze
+    TRANSACTION_KEY = '92wavU3h45xZW88P'.freeze
+  end
 
   has_one :cart
   has_many :dependents
@@ -99,7 +101,6 @@ class User < ActiveRecord::Base
   end
 
   def has_auth_net_billing
-
   end
 
   def create_AuthNet_profile
@@ -188,9 +189,11 @@ class User < ActiveRecord::Base
     #{mini_xml}
     </#{title}>"
 
-    uri = URI('https://apitest.authorize.net/xml/v1/request.api')
-    # SWITCH_DB
-    uri = URI('https://api.authorize.net/xml/v1/request.api')
+    if ENV["RAILS_ENV"] == "production"
+      uri = URI('https://api.authorize.net/xml/v1/request.api')
+    else
+      uri = URI('https://apitest.authorize.net/xml/v1/request.api')
+    end
     req = Net::HTTP::Post.new(uri.path)
     begin
       HTTParty.post(uri, body: xml, headers: { 'Content-Type' => 'application/xml' })
@@ -202,12 +205,11 @@ class User < ActiveRecord::Base
   end
 
   def generate_AuthNet_transaction
+    gateway_env = ENV["RAILS_ENV"] == "production" ? :live : :sandbox
     AuthorizeNet::CIM::Transaction.new(
       API_LOGIN,
       TRANSACTION_KEY,
-      gateway: :live
-      # SWITCH_DB
-      # gateway: :sandbox
+      gateway: gateway_env
     )
   end
 
