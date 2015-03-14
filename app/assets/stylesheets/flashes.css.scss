@@ -1,0 +1,33 @@
+.flash-holder {
+  // width: 100%;
+}
+
+.flash-container {
+  text-align: center;
+  position: fixed;
+  z-index: 10000;
+  width: 100%;
+  min-height: 70px;
+  font-size: 2em;
+  left: 25%;
+  top: 50px;
+}
+.flash-text {
+  top: 15px;
+  left: 0;
+  color: black;
+}
+.flash {
+  padding-top: 15px;
+  border-radius: 10px;
+  width: 50%;
+  min-height: 100%;
+  &.notice {
+    background: rgba(60, 225, 60, 0.7);
+    border: 5px ridge green;
+  }
+  &.alert {
+    background: rgba(255, 0, 0, 0.7);
+    border: 5px ridge red;
+  }
+}

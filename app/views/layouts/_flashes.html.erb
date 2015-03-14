@@ -1,14 +1,16 @@
 <div class="flash-holder">
   <% if alert %>
   <div class="flash-container">
-    <div class="flash alert"></div>
-    <span class="flash-text"><%= alert %></span>
+    <div class="flash alert">
+      <span class="flash-text"><%= alert %></span>
+    </div>
   </div>
   <% end %>
   <% if notice %>
   <div class="flash-container">
-    <div class="flash notice"></div>
-    <span class="flash-text"><%= notice %></span>
+    <div class="flash notice">
+      <span class="flash-text"><%= notice %></span>
+    </div>
   </div>
   <% end %>
 </div>

@@ -1,46 +1,8 @@
-
-.flash-holder {
-  width: 100%;
-}
-
 .media-links {
   color: white;
 }
 
 .hover-btn:hover { cursor: pointer; }
-
-.flash-container {
-  text-align: center;
-  position: fixed;
-  z-index: 10000;
-  min-width: 50%;
-  height: 70px;
-  font-size: 2em;
-  left: 25%;
-  top: 50px;
-}
-.flash-text {
-  width: 100%;
-  top: 15px;
-  left: 0;
-  position: absolute;
-  color: black;
-}
-.flash {
-  opacity: 0.7;
-  position: relative;
-  padding-top: 15px;
-  border-radius: 10px;
-  height: 100%;
-  &.notice {
-    background: green;
-    border: 5px ridge green;
-  }
-  &.alert {
-    background: red;
-    border: 5px ridge red;
-  }
-}
 
 .full-site-container {
   min-height: 100%;
