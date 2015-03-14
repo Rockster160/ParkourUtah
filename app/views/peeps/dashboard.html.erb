@@ -1,13 +1,14 @@
 <% if current_user && current_user.is_instructor? %>
   <div class="fancy-box central-container form-offset">
     <h2>Dashboard</h2><br/>
-    <h4><%= link_to "Add New Event", add_event_path, class: 'fancy-btn' %></h4><br/><br/>
     <h2>Begin a Class</h2><br/>
     <% @classes.each do |event| %>
       <h4><%= link_to "#{event.class_name.capitalize} - #{event.city}", begin_class_path(event.id), class: 'fancy-btn' %></h4><br/><br/>
     <% end %>
+    <!-- 1on1 class  -->
     <% if current_user.is_admin? %>
       <h2>Admin Abilities</h2><br/>
+      <h4><%= link_to "Add New Event", add_event_path, class: 'fancy-btn' %></h4><br/><br/>
       <h4><%= link_to "Promote User to Instructor", add_event_path, class: 'fancy-btn' %></h4><br/><br/>
       <h4><%= link_to "Demote Instructor to User", add_event_path, class: 'fancy-btn' %></h4><br/><br/>
     <% end %>
