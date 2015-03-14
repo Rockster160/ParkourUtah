@@ -49,7 +49,9 @@
       <h3><%= f.submit "Update", class: 'fancy-btn' %></h3>
     </div>
   <% end %>
-  <form method="post" action="https://test.authorize.net/profile/manage">
+  <!-- <form method="post" action="https://test.authorize.net/profile/manage"> -->
+  <!-- SWITCH_DB -->
+  <form method="post" action="https://secure.authorize.net/profile/manage">
   <input class="authnet-token" type="hidden" name="token"
   value="<%= resource.get_AuthNet_token %>"/>
   <input class="authnet-btn fancy-btn" type="submit" value="Manage my payment information"/>

@@ -78,14 +78,22 @@
 }
 
 $default: steelblue;
-$sandy: rgb(0, 0, 255);
-$provo: rgb(255, 255, 0);
 $salt-lake-city: rgb(255, 0, 0);
-$saratoga-springs: rgb(162, 97, 255);
+$provo: rgb(255, 255, 0);
 $vernal: rgb(255, 0, 255);
 $draper: rgb(255, 125, 0);
-$orem: rgb(0, 255, 66);
+$ogden: rgb(255, 60, 60);
+
+$orem: rgb(0, 255, 0);
+$springville: rgb(60, 120, 60);
 $special: rgb(0, 255, 66);
+
+$sandy: rgb(0, 0, 255);
+$south-jordan: rgb(0, 160, 255);
+$saratoga-springs: rgb(162, 97, 255);
+$herriman: rgb(160, 0, 220);
+
+
 // $color: rgb(162, 97, 255);
 
 .event-color {
@@ -99,6 +107,18 @@ $special: rgb(0, 255, 66);
     background: lighten($provo, 25%);
     &:hover { background: $provo; }
   }
+  &.ogden {
+    background: lighten($ogden, 25%);
+    &:hover { background: $ogden; }
+  }
+  &.springville {
+    background: lighten($springville, 25%);
+    &:hover { background: $springville; }
+  }
+  &.south-jordan {
+    background: lighten($south-jordan, 25%);
+    &:hover { background: $south-jordan; }
+  }
   &.salt-lake-city {
     background: lighten($salt-lake-city, 25%);
     &:hover { background: $salt-lake-city; }
@@ -110,6 +130,10 @@ $special: rgb(0, 255, 66);
   &.vernal {
     background: lighten($vernal, 25%);
     &:hover { background: $vernal; }
+  }
+  &.herriman {
+    background: lighten($herriman, 25%);
+    &:hover { background: $herriman; }
   }
   &.draper {
     background: lighten($draper, 25%);
