@@ -37,6 +37,17 @@ end
 
 instructors = User.where("role > ?", 0).pluck(:first_name)
 
+Event.create(
+  date: DateTime.new(1990),
+  host: 'Expert',
+  description: 'This is the expert class. It is by invite only.',
+  city: 'Provo',
+  token: 0,
+  address: 'To be specific',
+  location_instructions: '',
+  class_name: 'Test'
+)
+
 50.times do |t|
   # Thursday
   Event.create(
