@@ -11,6 +11,23 @@ class DependentsController < ApplicationController
     redirect_to edit_user_registration_path
   end
 
+  def update
+    pin = params[:athlete_pin]
+    confirm = params[:confirm_athlete_pin]
+    if pin == confirm
+      if Dependent.find(params[:athlete_id]).update(athlete_pin: pin)
+        flash[:notice] = "Pin successfully updated."
+        redirect_to edit_user_registration_path
+      else
+        flash[:alert] = "There was an error saving your pin."
+        redirect_to :back
+      end
+    else
+      flash[:alert] = "The pins did not match. No changes were made."
+      redirect_to :back
+    end
+  end
+
   def waiver
     @waiver = Waiver.new
   end

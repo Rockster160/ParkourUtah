@@ -57,12 +57,13 @@
   <div class="waivers">
     <% if current_user.payment_id %>
       <h3>Waivers:</h3>
-      <% current_user.dependents.each do |athlete| %>
+      <% current_user.dependents.each_with_index do |athlete, pos| %>
         <h3><%= athlete.full_name %></h3>
         <% if athlete.signed_waiver? %>
           Waiver valid until <%= athlete.waiver.exp_date %><br/>
           Athlete ID: <%= athlete.padded_pin %><br/>
-          <a href="#" class="fancy-link">Change Pin</a><br/><br/>
+          <a alt="..." data-toggle="modal" data-target="#modal_<%= pos %>" class="fancy-link">Change Pin</a><br/><br/>
+          <%= render partial: 'pin_change_modal', locals: {athlete: athlete, pos: pos} %>
         <% else %>
           <%= link_to "Must have waiver signed before attending class.", sign_waiver_path(athlete.id), class: 'fancy-link' %></br>
         <% end %>

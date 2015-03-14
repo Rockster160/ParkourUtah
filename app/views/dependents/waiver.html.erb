@@ -18,6 +18,7 @@
     <h5>I also certify that I understand that this is a legal document, and an electronic signature has the same legal effect and can be enforced in the same way as a written signature.</h5>
     <h5>By the creation of this document, I authorize, as a legal guardian of the athlete listed above, for the athlete to take part in any class, competition, or event hosted by or under the name of Parkour Utah.</h5>
     <%= f.text_field :signed_by, placeholder: 'Signed By', class: 'fancy-textbox e-sig', required: true %>
+    <br/>
     <%= f.submit "Submit", class: 'fancy-btn waiverVerify' %>
   <% end %>
 </div>

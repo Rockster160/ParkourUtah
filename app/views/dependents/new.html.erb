@@ -9,6 +9,7 @@
     <h5>Athlete Access Pin:</h5>
     <h6>Used as a password when your student attends class.</h6><br/>
     <%= f.number_field :athlete_pin, class: 'restrictNumeric fancy-textbox pin-entry formatPin', inputmode: 'numeric', pattern: '[0-9]*' %>
+    <br/>
     <%= f.submit "Submit", class: 'fancy-btn athleteVerify' %>
   <% end %>
 </div>

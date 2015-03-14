@@ -1,7 +1,17 @@
-<div class="modal fade" id="modal_contact" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal_<%= pos %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="central-container fancy-box">
-      Enter a new pin for <%= athlete.name %>
+      <%= form_tag "/athletes/update/#{athlete.id}" do %>
+        <h3>Enter a new pin for <%= athlete.full_name %></h3>
+        <br/>
+        <br/>
+        <%= number_field_tag :athlete_pin, '', class: 'restrictNumeric fancy-textbox pin-entry formatPin', inputmode: 'numeric', pattern: '[0-9]*' %>
+        <br/>
+        <br/>
+        <%= number_field_tag :confirm_athlete_pin, '', class: 'restrictNumeric fancy-textbox pin-entry formatPin', inputmode: 'numeric', pattern: '[0-9]*' %>
+        <br/>
+        <%= submit_tag "Submit", class: 'fancy-btn athleteVerify' %>
+      <% end %>
     </div>
   </div>
 </div>

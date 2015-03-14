@@ -1,9 +1,8 @@
-<%= form_tag({controller: "peeps", action: "pin_password"}, method: "get") do |f| %>
-  <%= text_field_tag :athlete_id, @athlete.athlete_id, required: true, readonly: true %>
+<%= form_tag({controller: "peeps", action: "pin_password", id: params[:id]}, method: "get") do |f| %>
   <%= submit_tag "X", class: "" %>
+  <%= submit_tag "√", class: "" %>
   <% if @athlete.athlete_photo_file_size %>
-    <%= image_tag('//s3-us-west-2.amazonaws.com/pkut-default/.png') %>
-    <%= submit_tag "√", class: "" %>
+    <%= image_tag("//s3-us-west-2.amazonaws.com/pkut-default/#{@athlete.athlete_photo_file_name}.png") %>
   <% else %>
     <%= file_field_tag 'athlete_photo', accept: 'image/*', capture: 'camera' %>
   <% end %>

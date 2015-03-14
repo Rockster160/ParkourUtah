@@ -12,14 +12,14 @@ class PeepsController < ApplicationController
   end
 
   def dashboard
-    if current_user && !(current_user.is_instructor?)
+    unless current_user && current_user.is_instructor?
       flash[:alert] = "You are not authorized to view this page."
       redirect_to root_path
     end
+    @classes = Event.all.select { |event| event.date.today? }
   end
 
   def pin_user
-    # @user = User.first
   end
 
   def show_user
@@ -33,7 +33,7 @@ class PeepsController < ApplicationController
   def pin_password
     create_athlete
     unless params["commit"] == "√"
-      redirect_to enter_pin_path
+      redirect_to begin_class_path
     end
   end
 
@@ -43,7 +43,7 @@ class PeepsController < ApplicationController
       @user = User.find(@athlete.user_id)
       @user.charge_class
       flash[:notice] = "Success!"
-      redirect_to enter_pin_path
+      redirect_to begin_class_path
     else
       flash[:alert] = "Invalid Pin. Try again."
       redirect_to :back

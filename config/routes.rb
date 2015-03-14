@@ -2,13 +2,14 @@ Rails.application.routes.draw do
 
   root 'index#index'
 
-  get '/athlete' => 'peeps#pin_user', as: 'enter_pin'
-  get '/pin' => 'peeps#show_user'
-  get '/password' => 'peeps#pin_password'
-  patch '/charge_class' => 'peeps#charge_class'
+  get '/class/:id' => 'peeps#pin_user', as: 'begin_class'
+  get '/pin/:id' => 'peeps#show_user'
+  get '/password/:id' => 'peeps#pin_password'
+  patch '/charge_class/:id' => 'peeps#charge_class'
 
   get '/athletes/new' => 'dependents#new', as: 'new_athlete'
   post '/athletes/create' => 'dependents#create'
+  post '/athletes/update/:athlete_id' => 'dependents#update'
   get '/waiver/:athlete_id' => 'dependents#waiver', as: 'sign_waiver'
   post '/waiver/sign' => 'dependents#sign_waiver'
 

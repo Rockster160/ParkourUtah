@@ -19,6 +19,11 @@
               <span class="caret"></span> Account
             </a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+              <% if current_user.is_instructor? %>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= dashboard_path %>">
+                  Dashboard
+                </a></li>
+              <% end %>
               <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= show_cart_path %>">
                 Shopping Cart
               </a></li>

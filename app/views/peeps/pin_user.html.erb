@@ -1,5 +1,5 @@
 <div class="secret-field">
-  <%= form_tag({controller: "peeps", action: "show_user"}, method: "get") do |f| %>
+  <%= form_tag({controller: "peeps", action: "show_user", id: params[:id]}, method: "get") do |f| %>
     <%= text_field_tag :athlete_id, nil, class: 'secret-input-field', required: true, readonly: true %><br/>
     <div class="secret-btn-container col-xs-4"><a href="#" class="secret-input-btn no-zoom secret-field-btn">1</a></div>
     <div class="secret-btn-container col-xs-4"><a href="#" class="secret-input-btn no-zoom secret-field-btn">2</a></div>
