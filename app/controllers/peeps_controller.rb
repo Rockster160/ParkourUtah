@@ -52,7 +52,7 @@ class PeepsController < ApplicationController
 
   def secret_submit
     id, pin = params[:pin].split('-')
-    flash[:notice] = "User: #{id}, PIN: #{pin}"
+    # flash[:notice] = "User: #{id}, PIN: #{pin}"
     # if User.first.update(first_name: params[:user][:first_name])
     #   flash[:notice] = "Success! "
     # else

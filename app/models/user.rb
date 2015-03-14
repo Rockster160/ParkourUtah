@@ -31,8 +31,11 @@ class User < ActiveRecord::Base
   #   t.integer  "instructor_position"
   # end
 
-  API_LOGIN = '34H962KteRF'.freeze # ENV['PKUT_AUTHNET_LOGIN']
-  TRANSACTION_KEY = '92wavU3h45xZW88P'.freeze # ENV['PKUT_AUTHNET_TRANS_KEY']
+  # API_LOGIN = '34H962KteRF'.freeze
+  # TRANSACTION_KEY = '92wavU3h45xZW88P'.freeze
+  # SWITCH_DB
+  API_LOGIN = ENV['PKUT_AUTHNET_LOGIN'].freeze
+  TRANSACTION_KEY = ENV['PKUT_AUTHNET_TRANS_KEY'].freeze
 
   has_one :cart
   has_many :dependents
@@ -131,21 +134,13 @@ class User < ActiveRecord::Base
     self.payment_id
   end
 
-  def charge_class
+  def charge_class(price)
     return 0000 unless create_AuthNet_profile
-    if self.credits > 0
-      self.update(credits: self.credits - 1)
+    if self.credits >= price
+      self.update(credits: self.credits - price)
       self.save
     else
-      charge =
-      "<lineItems>
-      <itemId>CLASS</itemId>
-      <name>Intermediate</name>
-      <description>Charged for class</description>
-      <quantity>1</quantity>
-      <unitPrice>15</unitPrice>
-      </lineItems>"
-      charge_account(15, charge)
+      # Not enough credits!
     end
   end
 
@@ -194,6 +189,8 @@ class User < ActiveRecord::Base
     </#{title}>"
 
     uri = URI('https://apitest.authorize.net/xml/v1/request.api')
+    # SWITCH_DB
+    uri = URI('https://api.authorize.net/xml/v1/request.api')
     req = Net::HTTP::Post.new(uri.path)
     begin
       HTTParty.post(uri, body: xml, headers: { 'Content-Type' => 'application/xml' })
@@ -208,8 +205,9 @@ class User < ActiveRecord::Base
     AuthorizeNet::CIM::Transaction.new(
       API_LOGIN,
       TRANSACTION_KEY,
-      # gateway: :live
-      gateway: :sandbox
+      gateway: :live
+      # SWITCH_DB
+      # gateway: :sandbox
     )
   end
 

@@ -67,7 +67,7 @@ class EventController < ApplicationController
   end
 
   def validate_user
-    unless user_signed_in? && current_user.role > 0
+    unless user_signed_in? && current_user.role > 1
       flash[:error] = "You are not permitted to create Events."
       redirect_to root_path
     end
