@@ -17,6 +17,11 @@ var ready = function() {
         top: $('.header-container').height()
       }
     });
+    $('.callout-container').ready(function() {
+      $('.callout-background').append(
+        $('.callout-container').css('visibility', 'visible').show()
+      );
+    });
 
   } else {
     $('body').scrollspy({ target: '#navbar' });

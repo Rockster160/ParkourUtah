@@ -31,33 +31,6 @@
 <%= render 'index/modal_placeholders' %>
 
 <div class="callout-background">
-  <div class="callout-container" id="peeps">
-    <div class="callout">
-      <div class="col-md-12 text-center"><h2>Meet our people</h2></div>
-      <div class="col-md-12 text-center">&nbsp;</div>
-      <div class="row">
-        <div class="col-lg-10 col-lg-offset-1 instructors-container">
-          <% @instructors.each do |instructor| %>
-            <div class="flip-container" ontouchstart="this.classList.toggle('hover');">
-              <div class="flipper">
-                <div class="front" style="background: #FFF url(<%= instructor.avatar.url %>);background-size: 100% 100%;">
-                </div>
-                <div class="back" style="background: #FFF url(<%= instructor.avatar_2.url %>);background-size: 100% 100%;">
-                  <div class="bio-background">
-                    <br/>
-                    <p class="card-bio-text">
-                      <strong><%= instructor.full_name %></strong><br/><br/>
-                      <%= instructor.bio %>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 
 <div class="gallery" id="schedule">
@@ -111,3 +84,32 @@
     </div>
   </div>
 </footer>
+
+
+<div class="callout-container" id="peeps" style="visibility: hidden;display: none;">
+  <div class="callout">
+    <div class="col-md-12 text-center"><h2>Meet our people</h2></div>
+    <div class="col-md-12 text-center">&nbsp;</div>
+    <div class="row">
+      <div class="col-lg-10 col-lg-offset-1 instructors-container">
+        <% @instructors.each do |instructor| %>
+          <div class="flip-container" ontouchstart="this.classList.toggle('hover');">
+            <div class="flipper">
+              <div class="front" style="background: #FFF url(<%= instructor.avatar.url %>);background-size: 100% 100%;">
+              </div>
+              <div class="back" style="background: #FFF url(<%= instructor.avatar_2.url %>);background-size: 100% 100%;">
+                <div class="bio-background">
+                  <br/>
+                  <p class="card-bio-text">
+                    <strong><%= instructor.full_name %></strong><br/><br/>
+                    <%= instructor.bio %>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
