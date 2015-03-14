@@ -48,7 +48,7 @@ Event.create(
     description: 'Our weekly Draper fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Justin Spencer, via text or call 801-580-9274.',
     city: 'Draper',
-    token: 5,
+    token: 1,
     address: '944 East Vestry Road',
     location_instructions: 'Draper Amphitheater',
     class_name: 'fundamentals'
@@ -60,7 +60,7 @@ Event.create(
     description: 'Our weekly South Jordan fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Justin Spencer, via text or call 801-580-9274.',
     city: 'South Jordan',
-    token: 5,
+    token: 2,
     address: '10996 River Front Pkwy',
     location_instructions: 'South Jordan South Pavilion Park',
     class_name: 'fundamentals'
@@ -73,7 +73,7 @@ Event.create(
     description: 'Our weekly Orem fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Ryan Sannar, via text or call 801-669-7743.',
     city: 'Orem',
-    token: 6,
+    token: 3,
     address: '600 South State Street, Orem',
     location_instructions: 'Orem Scera Park',
     class_name: 'fundamentals'
@@ -85,7 +85,7 @@ Event.create(
     description: 'Our weekly Saratoga Springs fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Ryan Sannar, via text or call 801-669-7743.',
     city: 'Saratoga Springs',
-    token: 7,
+    token: 4,
     address: 'Harvest Hills Park, 2104 North Providence Drive',
     location_instructions: 'Saratoga Springs Harvest Hills Park',
     class_name: 'fundamentals'
@@ -97,7 +97,7 @@ Event.create(
     description: 'Our weekly West Jordan fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Justin Spencer, via text or call 801-580-9274.',
     city: 'Saratoga Springs',
-    token: 7,
+    token: 5,
     address: 'Veteran\'s Memorial Park',
     location_instructions: 'West Jordan Veteran\'s Memorial Park',
     class_name: 'fundamentals'
@@ -110,7 +110,7 @@ Event.create(
     description: 'Our first bi-weekly Sandy fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Ryan Sannar, via text or call 801-669-7743.',
     city: 'Sandy',
-    token: 8,
+    token: 6,
     address: '1700 Siesta Drive',
     location_instructions: '',
     class_name: 'fundamentals'
@@ -122,7 +122,7 @@ Event.create(
     description: 'Our first bi-weekly Vernal fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Marcos Jones, via text or call 435-612-0532.',
     city: 'Vernal',
-    token: 9,
+    token: 7,
     address: 'Ashley Valley Community Park',
     location_instructions: '',
     class_name: 'fundamentals'
@@ -147,7 +147,7 @@ Event.create(
     description: 'Our weekly Provo fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Scott May, via text or call 435-549-0303.',
     city: 'Provo',
-    token: 1,
+    token: 9,
     address: 'Kiwanis Park Tennis Courts, 8200 North 1100 East',
     location_instructions: '',
     class_name: 'fundamentals'
@@ -159,7 +159,7 @@ Event.create(
     description: 'Our weekly Liberty Park fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Justin Spencer, via text or call 801-580-9274.',
     city: 'Salt Lake City',
-    token: 2,
+    token: 10,
     address: 'Liberty Park, 600 East 900 South',
     location_instructions: '',
     class_name: 'fundamentals'
@@ -171,7 +171,7 @@ Event.create(
     description: 'Our weekly Herriman fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Justin Spencer, via text or call 801-580-9274.',
     city: 'Herriman',
-    token: 2,
+    token: 12,
     address: '13850 W Rosecrest Rd Herriman, UT',
     location_instructions: 'Herriman Rosecrest Park',
     class_name: 'fundamentals'
@@ -197,7 +197,7 @@ Event.create(
     description: 'Our weekly Ogden fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Zeter Raimondo, via text or call 801-620-0672.',
     city: 'Ogden',
-    token: 4,
+    token: 13,
     address: 'City Hall Park, Ogden, UT 84401',
     location_instructions: 'Ogden City Hall',
     class_name: 'fundamentals'
@@ -209,30 +209,22 @@ Event.create(
     description: 'Our weekly Springville fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
     Tony Mungiguerra, via text or call 818-442-4404.',
     city: 'Springville',
-    token: 4,
+    token: 14,
     address: '110 S Main St Springville, UT',
     location_instructions: 'Outside Springville Civic Center',
     class_name: 'fundamentals'
   )
 end
 
-Event.create(
-  date: Faker::Time.between(Time.zone.now, 25.days.from_now, :day),
-  host: 2,
-  description: "Bring your punch card and have a great time jumping on the huge Air Mat! We'll be going over advanced movements, so bring your A-Game!",
-  city: "Draper",
-  address: "12500 South 1300 East",
-  location_instructions: Faker::Lorem.sentence,
-  class_name: "special"
-)
-
-def generateToken
-  token = ''
-  (1..10).to_a.sample.times do |t|
-    token += (('a'..'z').to_a + ('A'..'Z').to_a).sample
-  end
-  token
-end
+# Event.create(
+#   date: Faker::Time.between(Time.zone.now, 25.days.from_now, :day),
+#   host: 15,
+#   description: "Bring your punch card and have a great time jumping on the huge Air Mat! We'll be going over advanced movements, so bring your A-Game!",
+#   city: "Draper",
+#   address: "12500 South 1300 East",
+#   location_instructions: Faker::Lorem.sentence,
+#   class_name: "special"
+# )
 
 15.times do |t|
   LineItem.create(
