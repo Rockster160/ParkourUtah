@@ -17,6 +17,14 @@ class Dependent < ActiveRecord::Base
   has_one :waiver
   has_many :attendences
 
+  has_attached_file :athlete_photo,
+               :styles => { :medium => "300x400>", :thumb => "100x100#" },
+               storage: :s3,
+               bucket: ENV['PKUT_S3_BUCKET_NAME'],
+              #  :default_url => "/images/missing.png",
+               :convert_options => { :all => '-background white -flatten +matte' }
+  validates_attachment_content_type :athlete_photo, :content_type => /\Aimage\/.*\Z/
+
   def signed_waiver?
     return false unless self.waiver
     self.waiver.signed?
