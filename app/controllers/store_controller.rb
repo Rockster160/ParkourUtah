@@ -56,7 +56,7 @@ class StoreController < ApplicationController
   end
 
   def add_to_cart
-    # User.last.update(class_pass: User.last.class_pass + 5)
+    # User.last.update(credits: User.last.credits + 5)
     orders = current_user.cart.transactions
     order = orders.where(item_id: params[:id]).first
     if order

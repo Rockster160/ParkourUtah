@@ -26,8 +26,9 @@ class User < ActiveRecord::Base
   #   t.text     "bio"
   #   t.integer  "auth_net_id"
   #   t.integer  "payment_id"
-  #   t.integer  "class_pass"
+  #   t.integer  "credits"
   #   t.integer  "phone_number"
+  #   t.integer  "instructor_position"
   # end
 
   API_LOGIN = '34H962KteRF'.freeze # ENV['PKUT_AUTHNET_LOGIN']
@@ -132,8 +133,8 @@ class User < ActiveRecord::Base
 
   def charge_class
     return 0000 unless create_AuthNet_profile
-    if self.class_pass > 0
-      self.update(class_pass: self.class_pass - 1)
+    if self.credits > 0
+      self.update(credits: self.credits - 1)
       self.save
     else
       charge =
