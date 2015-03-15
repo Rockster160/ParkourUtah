@@ -29,8 +29,8 @@ instructor_firsts.each_with_index do |name, pos|
   )
   print ". "
 end
-puts "Users complete."
-
+puts "\nUsers complete."
+puts "Creating Events..."
 Event.create(
   date: DateTime.new(1990),
   host: 'Expert',
@@ -41,7 +41,7 @@ Event.create(
   location_instructions: '',
   class_name: 'Test'
 )
-
+puts "Created 1on1 event."
 50.times do |t|
   # Monday
   Event.create(
@@ -55,6 +55,7 @@ Event.create(
     location_instructions: 'Draper Amphitheater',
     class_name: 'fundamentals'
   )
+  print "."
   # Monday
   Event.create(
     date: DateTime.new(2015, 1, 5, 17, 30) + (t.weeks),
@@ -67,6 +68,7 @@ Event.create(
     location_instructions: 'South Jordan South Pavilion Park',
     class_name: 'fundamentals'
   )
+  print "."
 
   # Tuesday
   Event.create(
@@ -80,6 +82,7 @@ Event.create(
     location_instructions: 'Orem Scera Park',
     class_name: 'fundamentals'
   )
+  print "."
   # Tuesday
   Event.create(
     date: DateTime.new(2015, 1, 6, 16, 30) + (t.weeks),
@@ -92,6 +95,7 @@ Event.create(
     location_instructions: 'Saratoga Springs Harvest Hills Park',
     class_name: 'fundamentals'
   )
+  print "."
   # Tuesday
   Event.create(
     date: DateTime.new(2015, 1, 6, 17, 30) + (t.weeks),
@@ -104,6 +108,7 @@ Event.create(
     location_instructions: 'West Jordan Veteran\'s Memorial Park',
     class_name: 'fundamentals'
   )
+  print "."
 
   # Wednesday
   Event.create(
@@ -117,6 +122,7 @@ Event.create(
     location_instructions: '',
     class_name: 'fundamentals'
   )
+  print "."
   # Wednesday
   Event.create(
     date: DateTime.new(2015, 1, 7, 16, 30) + (t.weeks),
@@ -129,6 +135,7 @@ Event.create(
     location_instructions: '',
     class_name: 'fundamentals'
   )
+  print "."
   # Wednesday
   Event.create(
     date: DateTime.new(2015, 1, 7, 17, 30) + (t.weeks),
@@ -141,6 +148,7 @@ Event.create(
     location_instructions: 'Taylorsville Valley Regional Park',
     class_name: 'fundamentals'
   )
+  print "."
 
   # Thursday
   Event.create(
@@ -154,6 +162,7 @@ Event.create(
     location_instructions: '',
     class_name: 'fundamentals'
   )
+  print "."
   # Thursday
   Event.create(
     date: DateTime.new(2015, 1, 1, 16, 30) + (t.weeks),
@@ -166,6 +175,7 @@ Event.create(
     location_instructions: '',
     class_name: 'fundamentals'
   )
+  print "."
   # Thursday
   Event.create(
     date: DateTime.new(2015, 1, 1, 17, 30) + (t.weeks),
@@ -178,6 +188,7 @@ Event.create(
     location_instructions: 'Herriman Rosecrest Park',
     class_name: 'fundamentals'
   )
+  print "."
 
   # Friday
   # Event.create(
@@ -204,6 +215,7 @@ Event.create(
     location_instructions: 'Ogden City Hall',
     class_name: 'fundamentals'
   )
+  print "."
   # Saturday
   Event.create(
     date: DateTime.new(2015, 1, 3, 11, 00) + (t.weeks),
@@ -216,8 +228,9 @@ Event.create(
     location_instructions: 'Outside Springville Civic Center',
     class_name: 'fundamentals'
   )
+  print "."
 end
-
+puts "\nCompleted all events."
 # Event.create(
 #   date: Faker::Time.between(Time.zone.now, 25.days.from_now, :day),
 #   host: 15,
@@ -227,7 +240,7 @@ end
 #   location_instructions: Faker::Lorem.sentence,
 #   class_name: "special"
 # )
-
+puts "Creating Store items."
 15.times do |t|
   LineItem.create(
     title: Faker::Commerce.product_name,
@@ -235,4 +248,7 @@ end
     cost_in_pennies: rand(25000),
     category: ["Other", "Shoes", "Shirts", "Stuff"].sample
   )
+  print "."
 end
+puts "\nCompleted Store items."
+puts "Seeding Complete."
