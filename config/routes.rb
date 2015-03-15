@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
   root 'index#index'
+  post '/contact' => 'index#contact'
 
   get '/class/:id' => 'peeps#pin_user', as: 'begin_class'
   get '/pin/:id' => 'peeps#show_user'
