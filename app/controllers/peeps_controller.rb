@@ -16,7 +16,7 @@ class PeepsController < ApplicationController
       flash[:alert] = "You are not authorized to view this page."
       redirect_to root_path
     end
-    @classes = Event.all.select { |event| event.date.today? }
+    @classes = Event.all.select {|event| event.date.to_date == Time.now.to_date }
   end
 
   def pin_user
