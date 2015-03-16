@@ -17,11 +17,8 @@ class IndexController < ApplicationController
   end
 
   def contact
-    if ContactMailer.help_mail(params).deliver_now
-      flash[:notice] = "Thanks! We'll have somebody get in contact with you shortly."
-    else
-      flash[:alert] = "There was an error processing your request. Please try again later."
-    end
+    flash[:notice] = "Thanks! We'll have somebody get in contact with you shortly."
+    ::ContactMailerWorker.perform_async(params)
     redirect_to root_path
   end
 end
