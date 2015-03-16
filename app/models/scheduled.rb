@@ -27,8 +27,10 @@ class Scheduled < ActiveRecord::Base
 
     (0..6).each do |day|
       classes = {}
-      instructors = {}
+      daily_payment = {}
       Event.select {|e| e.date.to_date == Time.now.to_date - day}.each do |event|
+        instructors = {}
+        class_payment = {}
         event.attendances.each do |a|
           instructor = User.find(a.instructor_id)
           instructors[instructor.full_name] ||= {}
@@ -39,10 +41,15 @@ class Scheduled < ActiveRecord::Base
           instructors[instructor.full_name]["students"] << "#{athlete.full_name} - #{a.type_of_charge}"
           instructors[instructor.full_name]["pay"] += instructor.payment_multiplier
 
-          payment[instructor.full_name] ||= 0
-          payment[instructor.full_name] += instructor.payment_multiplier
+          class_payment[instructor.full_name] ||= 0
+          class_payment[instructor.full_name] += instructor.payment_multiplier
         end
         classes["#{event.class_name.capitalize} - #{event.city}"] = instructors
+        class_payment.each do |instructor, pay|
+          payment[instructor] ||= 0
+          binding.pry if instructor == "Stephen Lanteri"
+          payment[instructor] += (pay < 15 ? 15 : pay)
+        end
       end
       weekly_summary[(Time.now.to_date - day).strftime("%A - %B %-d, %Y")] = classes
     end
