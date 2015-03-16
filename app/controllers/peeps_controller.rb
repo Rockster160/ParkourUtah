@@ -24,41 +24,49 @@ class PeepsController < ApplicationController
 
   def show_user
     create_athlete
-    unless @athlete
-      flash[:alert] = "User not found."
-      redirect_to :back
+    if @athlete
+      if Attendance.where(dependent_id: @athlete.athlete_id, event_id: params[:id]).count > 0
+        redirect_to :back, alert: "Athlete already attending class."
+      end
+    else
+      redirect_to :back, alert: "Athlete not found."
     end
   end
 
   def pin_password
-    create_athlete
     unless params["commit"] == "√"
-      redirect_to begin_class_path
-    end
-  end
-
-  def charge_class
-    create_athlete
-    if params[:pin].to_i == @athlete.athlete_pin
-      @user = User.find(@athlete.user_id)
-      @user.charge_class
-      flash[:notice] = "Success!"
+      flash[:alert] = "Pin rejected. Please try again."
       redirect_to begin_class_path
     else
-      flash[:alert] = "Invalid Pin. Try again."
-      redirect_to :back
+      create_athlete
     end
   end
 
-  def secret_submit
-    id, pin = params[:pin].split('-')
-    # flash[:notice] = "User: #{id}, PIN: #{pin}"
-    # if User.first.update(first_name: params[:user][:first_name])
-    #   flash[:notice] = "Success! "
-    # else
-    #   flash[:alert] = "Failure..."
-    # end
-    redirect_to root_path
+  def validate_pin
+    create_athlete
+    pin = params[:pin].to_i
+    if pin == @athlete.athlete_pin
+      charge_class(15, "Credits")
+    elsif pin == 7545
+      charge_class(0, "Cash")
+    else
+      redirect_to :back, alert: "Invalid Pin. Try again."
+    end
+  end
+
+  def charge_class(charge, charge_type)
+    @user = User.find(@athlete.user_id)
+    if @user.charge_credits(charge)
+      Attendance.create(
+        dependent_id: @athlete.athlete_id,
+        instructor_id: current_user.id,
+        event_id: params[:id],
+        type_of_charge: charge_type
+      )
+      redirect_to begin_class_path, notice: "Success!"
+    else
+      redirect_to begin_class_path, alert: "Sorry, there are not enough credits in your account."
+    end
   end
 
   private

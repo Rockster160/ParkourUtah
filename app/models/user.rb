@@ -135,13 +135,13 @@ class User < ActiveRecord::Base
     self.payment_id
   end
 
-  def charge_class(price)
-    return 0000 unless create_AuthNet_profile
+  def charge_credits(price)
     if self.credits >= price
       self.update(credits: self.credits - price)
       self.save
+      return true
     else
-      # Not enough credits!
+      return false
     end
   end
 

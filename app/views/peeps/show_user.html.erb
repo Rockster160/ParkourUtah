@@ -1,6 +1,7 @@
 <%= form_tag({controller: "peeps", action: "pin_password", id: params[:id]}, method: "get") do |f| %>
   <%= submit_tag "X", class: "" %>
   <%= submit_tag "√", class: "" %>
+  <%= hidden_field_tag :athlete_id, @athlete.athlete_id %>
   <% if @athlete.athlete_photo_file_size %>
     <%= image_tag("//s3-us-west-2.amazonaws.com/pkut-default/#{@athlete.athlete_photo_file_name}.png") %>
   <% else %>

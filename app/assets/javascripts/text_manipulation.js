@@ -11,6 +11,7 @@ var ready = function() {
   $('.formatPhoneNumber').keypress(function(e) {
     var value = $(this).val();
     var add = "";
+    // TODO This should sanitize the input and re-input the special characters.
     if (value.length == 0) { add = "(" }
     if (value.length == 4) { add = ") " }
     if (value.length == 9) { add = "-" }
@@ -31,7 +32,7 @@ var ready = function() {
       showError('Please input a valid pin.');
       e.preventDefault();
     }
-    if ($('.formatPhoneNumber').val().length != 14) {
+    if ($('#dependent_emergency_contact').val().length != 14) {
       showError('Please input a valid phone number.');
       e.preventDefault();
     }

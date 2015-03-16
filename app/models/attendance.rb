@@ -4,8 +4,10 @@ class Attendance < ActiveRecord::Base
   #   t.integer  "instructor_id"
   #   t.integer  "event_id"
   #   t.string   "location"
+  #   t.string   "type_of_charge"
   #   t.datetime "created_at",    null: false
   #   t.datetime "updated_at",    null: false
+  #   t.boolean  "sent",          default: false
   # end
 
   belongs_to :dependent
