@@ -26,10 +26,12 @@ class PeepsController < ApplicationController
     create_athlete
     if @athlete
       if Attendance.where(dependent_id: @athlete.athlete_id, event_id: params[:id]).count > 0
-        redirect_to :back, alert: "Athlete already attending class."
+        redirect_to :back
+         "Athlete already attending class."
       end
     else
-      redirect_to :back, alert: "Athlete not found."
+      redirect_to :back
+       "Athlete not found."
     end
   end
 
@@ -50,7 +52,8 @@ class PeepsController < ApplicationController
     elsif pin == 7545
       charge_class(0, "Cash")
     else
-      redirect_to :back, alert: "Invalid Pin. Try again."
+      flash[:alert] = "Invalid Pin. Try again."
+      redirect_to :back
     end
   end
 
@@ -63,9 +66,11 @@ class PeepsController < ApplicationController
         event_id: params[:id],
         type_of_charge: charge_type
       )
-      redirect_to begin_class_path, notice: "Success!"
+      flash[:notice] = "Success!"
+      redirect_to begin_class_path
     else
-      redirect_to begin_class_path, alert: "Sorry, there are not enough credits in your account."
+      flash[:alert] = "Sorry, there are not enough credits in your account."
+      redirect_to begin_class_path
     end
   end
 

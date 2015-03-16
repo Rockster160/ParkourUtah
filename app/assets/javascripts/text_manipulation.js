@@ -29,17 +29,18 @@ var ready = function() {
 
   $('.athleteVerify').click(function(e) {
     if ($('.formatPin').val().length != 4) {
-      showError('Please input a valid pin.');
       e.preventDefault();
+      showError('Please input a valid pin.');
     }
     if ($('#dependent_emergency_contact').val().length != 14) {
-      showError('Please input a valid phone number.');
       e.preventDefault();
+      showError('Please input a valid phone number.');
     }
   });
 
-  $('.waiverVerify').click(function() {
-    showError('Verify that all fields are completed and accepted.')
+  $('.waiverVerify').click(function(e) {
+    // e.preventDefault();
+    // showError('Verify that all fields are completed and accepted.');
   });
 };
 

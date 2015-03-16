@@ -45,8 +45,8 @@ slideOut = function(obj) {
 
 showError = function(msg) {
   killFlashes();
-  $('.flash-holder').append('<div class="flash-container"><div class="flash alert"></div><span class="flash-text">' +
-  msg + '</span></div>');
+  $('.flash-holder').append('<div class="flash-container"><div class="flash alert"><span class="flash-text">' +
+  msg + '</span></div></div>');
 }
 
 $(document).ready(ready);
