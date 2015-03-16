@@ -52,7 +52,6 @@ class Scheduled < ActiveRecord::Base
     ::WeeklySummaryMailerWorker.perform_async(summary)
   end
 
-  #TODO Remove me
   def self.attend_random_classes
     instructors = User.all.select { |u| u.is_instructor? }
     events = Event.all.select {|e| e.date.to_date == Time.now.to_date }
@@ -64,6 +63,7 @@ class Scheduled < ActiveRecord::Base
           event_id: events.sample.id,
           type_of_charge: (rand(3) == 0 ? "Cash" : "Credits")
         )
+        puts "#{d.full_name} attended class!"
       end
     end
   end
