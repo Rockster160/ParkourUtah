@@ -29,6 +29,7 @@ class User < ActiveRecord::Base
   #   t.integer  "credits"
   #   t.integer  "phone_number"
   #   t.integer  "instructor_position"
+  #   t.integer  "payment_multiplier",    default: 3
   # end
 
   if ENV["RAILS_ENV"] == "production"
