@@ -1,9 +1,11 @@
-class ClassSummaryMailer < ApplicationMailer
+class SummaryMailer < ApplicationMailer
 
-  def summary_mail(params)
-    @date = Time.now.strftime("%B %-d, %Y")
-    @classes = params
-    mail(to: "rocco11nicholls@gmail.com", subject: "Class summary for #{@date}")
+  def summary_mail(summary)
+    @summary = summary[0]
+    @payment = summary[1]
+    range = summary.first.keys
+    dates = range.length == 1 ? "for #{range.first}." : "from #{range.first} to #{range.last}."
+    mail(to: "rocco11nicholls@gmail.com", subject: "Class summary #{dates}")
   end
 end
 

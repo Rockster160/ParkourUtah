@@ -1,34 +1,17 @@
 class Scheduled < ActiveRecord::Base
 
-  def self.send_text
+  def self.send_text(num)
     ::SmsMailerWorker.perform_async("Class tonight!", ['3852599640'])
   end
 
-  def self.send_summary
-    classes = {}
-    instructors = {}
-    Event.select {|e| e.date.to_date == Time.now.to_date}.each do |event|
-
-      event.attendances.each do |a|
-        instructor = User.find(a.instructor_id).full_name
-        instructors[instructor] ||= []
-        athlete = Dependent.where(athlete_id: a.dependent_id).first
-        instructors[instructor] << "#{athlete.full_name} - #{a.type_of_charge}"
-      end
-
-      classes["#{event.class_name.capitalize} - #{event.city}"] = instructors
-    end
-    ::AttendanceMailerWorker.perform_async(classes)
-  end
-
-  def self.send_weekly_summary
-    weekly_summary = {}
+  def self.send_summary(days)
+    summary = {}
     payment = {}
 
-    (0..6).each do |day|
+    (0..(days - 1)).each do |day|
       classes = {}
       daily_payment = {}
-      Event.select {|e| e.date.to_date == Time.now.to_date - day}.each do |event|
+      Event.select {|e| e.date.to_date == (Time.now - day.days).to_date}.each do |event|
         instructors = {}
         class_payment = {}
         event.attendances.each do |a|
@@ -40,23 +23,21 @@ class Scheduled < ActiveRecord::Base
           athlete = Dependent.where(athlete_id: a.dependent_id).first
           instructors[instructor.full_name]["students"] << "#{athlete.full_name} - #{a.type_of_charge}"
           instructors[instructor.full_name]["pay"] += instructor.payment_multiplier
-
-          class_payment[instructor.full_name] ||= 0
-          class_payment[instructor.full_name] += instructor.payment_multiplier
         end
-        classes["#{event.class_name.capitalize} - #{event.city}"] = instructors
-        class_payment.each do |instructor, pay|
-          payment[instructor] ||= 0
-          binding.pry if instructor == "Stephen Lanteri"
-          payment[instructor] += (pay < 15 ? 15 : pay)
+        instructors.each do |instructor|
+          pay = instructor[1]["pay"] < 15 ? 15 : instructor[1]["pay"]
+          instructor[1]["pay"] = pay
+          payment[instructor[0]] ||= 0
+          payment[instructor[0]] += pay
         end
+        summary["#{(Time.now - day.days).to_date.strftime("%A %B %-d, %Y")}"] ||= {}
+        summary["#{(Time.now - day.days).to_date.strftime("%A %B %-d, %Y")}"]["#{event.class_name.capitalize} - #{event.city} - #{event.date.strftime('%l:%M%p')}"] = instructors
       end
-      weekly_summary[(Time.now.to_date - day).strftime("%A - %B %-d, %Y")] = classes
     end
 
-    summary = [weekly_summary, payment]
+    total_summary = [summary, payment]
 
-    ::WeeklySummaryMailerWorker.perform_async(summary)
+    ::SummaryMailerWorker.perform_async(total_summary)
   end
 
   def self.attend_random_classes
