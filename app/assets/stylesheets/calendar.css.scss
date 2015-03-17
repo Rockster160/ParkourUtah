@@ -53,11 +53,20 @@
   width: 20px;
 }
 
+.close-tooltip {
+  position: absolute;
+  right: 15px;
+  text-shadow: 0 0 2px blue;
+  &:hover { cursor: pointer; }
+}
+
 .calendar-tooltip {
   display: none;
   text-align: center;
   position: absolute;
-  margin: -20px 0 0 -20px;
+  top: 0;
+  left: 50%;
+  margin: -20px 0 0 -150px;
   background: rgb(236, 247, 255);
   border: 2px solid rgb(22, 78, 177);
   padding: 10px;

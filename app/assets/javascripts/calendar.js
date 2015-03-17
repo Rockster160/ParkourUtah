@@ -37,7 +37,7 @@ var ready = function () {
     $('.calendar-tooltip').hide();
     $(this).children('.calendar-tooltip').show()
   });
-  $('.calendar-container').delegate('.calendar-tooltip', 'mouseleave', function() {
+  $('.calendar-container').delegate('.close-tooltip', 'mousedown', function() {
     $('.calendar-tooltip').hide();
   });
 

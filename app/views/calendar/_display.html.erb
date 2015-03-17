@@ -12,6 +12,7 @@
         <% if event.class_name == "special" || (@selected_classes.include?(event.class_name) && @selected_cities.include?(event.city))  %>
         <li class="event-color calendar-event <%= event.city.parameterize %>">
           <div class="calendar-tooltip">
+            <span class="close-tooltip">X</span>
             <h4><%= event.class_name.capitalize %></h4><br/>
             <%= event.address %><br/>
             <%= event.city %><br/>

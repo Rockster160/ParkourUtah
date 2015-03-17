@@ -4,15 +4,20 @@
 
 .hover-btn:hover { cursor: pointer; }
 
-.full-site-container {
-  min-height: 100%;
-  min-width: 100%;
-  z-index: -50;
+body {
   background: image-url('//s3-us-west-2.amazonaws.com/pkut-default/carbon-fiber-gray.jpg');
   background-attachment: fixed;
   background: cover;
   overflow: auto;
   display: block;
+}
+
+.full-site-container {
+  min-height: 100%;
+  width: 100%;
+  margin: 0 auto;
+  max-width: 1200px;
+  z-index: -50;
 }
 
 .central-container {
