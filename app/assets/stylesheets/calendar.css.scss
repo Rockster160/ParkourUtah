@@ -159,7 +159,7 @@ $herriman: rgb(160, 0, 220);
 }
 
 .day-cell {
-  height: 9.52381vw; //(((width / 12)*8 columns) / 7 days a week) = 9.523809523809524
+  height: 9.52381%; //(((width / 12)*8 columns) / 7 days a week) = 9.523809523809524
 }
 
 .today .date {

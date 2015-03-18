@@ -24,11 +24,16 @@ var ready = function() {
     });
 
   } else {
+    
     $('body').scrollspy({ target: '#navbar' });
     $('.navbar-fixed-top').affix({
       offset: {
-        top: 0
+        top: -1
       }
+    });
+    $('.full-site-container').css({
+      "margin": "0 auto",
+      "max-width": "1200px"
     });
   }
 };
