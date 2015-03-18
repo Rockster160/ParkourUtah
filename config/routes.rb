@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   get '/class/:id' => 'peeps#pin_user', as: 'begin_class'
   get '/pin/:id' => 'peeps#show_user'
-  get '/password/:id' => 'peeps#pin_password'
+  put '/password/:id' => 'peeps#pin_password'
   patch '/charge_class/:id' => 'peeps#validate_pin'
 
   get '/athletes/new' => 'dependents#new', as: 'new_athlete'

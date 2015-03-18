@@ -17,7 +17,7 @@ var ready = function() {
       e.preventDefault();
       var $value = $(this).html();
       append_to_field($value);
-    })
+    });
 
     function append_to_field($value) {
       var field_value = $('.secret-input-field').val();
@@ -37,6 +37,19 @@ var ready = function() {
       $('.secret-input-field').val(new_value);
     }
   }
+
+  $('.upload-image-icon').click(function() {
+    $('.upload-image-btn').click();
+  });
+  $('.upload-image-btn').change(function(e) {
+    if ($(this).val() == "") {
+      $('.upload-image-icon').html("Click here to take a photo");
+      $('.upload-image-icon').css("font-size", "2em");
+    } else {
+      $('.upload-image-icon').html("√");
+      $('.upload-image-icon').css("font-size", "5em");
+    };
+  });
 }
 
 $(document).ready(ready);

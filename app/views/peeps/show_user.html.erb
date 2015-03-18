@@ -1,10 +1,13 @@
-<%= form_tag({controller: "peeps", action: "pin_password", id: params[:id]}, method: "get") do |f| %>
-  <%= submit_tag "X", class: "" %>
-  <%= submit_tag "√", class: "" %>
+<%= form_for @athlete, url: {controller: "peeps", action: "pin_password", id: params[:id]}, html: {multipart: true}, method: :put do %>
+  <%= submit_tag "X", class: "reject-athlete-pin btn btn-danger" %>
+  <%= submit_tag "√", class: "accept-athlete-pin btn btn-success" %>
   <%= hidden_field_tag :athlete_id, @athlete.athlete_id %>
-  <% if @athlete.athlete_photo_file_size %>
-    <%= image_tag("//s3-us-west-2.amazonaws.com/pkut-default/#{@athlete.athlete_photo_file_name}.png") %>
-  <% else %>
-    <%= file_field_tag 'athlete_photo', accept: 'image/*', capture: 'camera' %>
-  <% end %>
+  <div class="fancy-box central-container">
+    <% if @athlete.athlete_photo_file_size %>
+      <%= image_tag("#{@athlete.athlete_photo.url}", width: "300", class: 'athlete-image') %>
+    <% else %>
+      <%= file_field_tag 'athlete_photo', accept: 'image/*', capture: 'camera', class: 'hidden upload-image-btn' %>
+      <div class="upload-image-icon">Click here to take a photo</div>
+    <% end %>
+  </div>
 <% end %>
