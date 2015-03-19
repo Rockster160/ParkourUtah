@@ -40,6 +40,10 @@ var ready = function () {
   $('.calendar-container').delegate('.close-tooltip', 'mousedown', function() {
     $('.calendar-tooltip').hide();
   });
+  $('body').keyup(function(e) {
+    // esc = 27, space = 32, enter = 13
+    $('.calendar-tooltip').hide();
+  });
 
   $('.back-month, .forward-month').click(function(e) {
     e.preventDefault();

@@ -45,6 +45,20 @@ class EventController < ApplicationController
   end
 
   def subscribe
+    if current_user.phone_number_is_valid?
+      Subscription.create(user_id: current_user.id, event_id: params[:id])
+      redirect_to :back, notice: "You have successfully subscribed to this event."
+    else
+      redirect_to edit_user_registration_path, alert: "You must have an associated phone number to subscribe to events."
+    end
+  end
+
+  def unsubscribe
+    if Subscription.where(user_id: current_user.id, event_id: params[:id]).first.destroy
+      redirect_to :back, notice: "You have successfully unsubscribed from this event."
+    else
+      redirect_to :back, alert: "There was an error. Try again later."
+    end
   end
 
   private

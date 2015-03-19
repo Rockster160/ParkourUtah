@@ -15,6 +15,7 @@ class Event < ActiveRecord::Base
   # end
 
   has_many :attendances
+  has_many :subscriptions
 
   def host_by_id
     User.find(host)

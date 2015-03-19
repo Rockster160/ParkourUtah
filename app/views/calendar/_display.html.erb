@@ -20,7 +20,13 @@
             <br/>
             <%= event.description %><br/><br/>
             Instructor: <%= event.host %><br/>
-            <%= link_to 'Subscribe to this Event', subscribe_path(id: event.id), class: "calendar-link" %><br/>
+            <% if current_user %>
+              <% unless current_user.subscribed?(event.token) %>
+                <%= link_to 'Subscribe to this Event', subscribe_path(id: event.token), class: "calendar-link", method: :post %><br/>
+              <% else %>
+                <%= link_to 'Unsubscribe from this Event', unsubscribe_path(id: event.token), class: "calendar-link", method: :delete %><br/>
+              <% end %>
+            <% end %>
             <% if current_user && current_user.is_instructor? %>
               </br>
               <%= link_to 'Destroy Event', destroy_event_path(id: event.id), method: :delete, class: "calendar-link", data: {confirm: "Are you sure?"} %><br/>

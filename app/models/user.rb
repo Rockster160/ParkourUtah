@@ -43,6 +43,7 @@ class User < ActiveRecord::Base
   has_one :cart
   has_many :dependents
   has_many :transactions, through: :cart
+  has_many :subscriptions
 
   after_create :create_AuthNet_profile, :assign_cart
   before_save :format_phone_number
@@ -66,6 +67,8 @@ class User < ActiveRecord::Base
                     :convert_options => { :all => '-background white -flatten +matte' }
   validates_attachment_content_type :avatar_2, :content_type => /\Aimage\/.*\Z/
 
+  validate :valid_phone_number
+
   def full_name
     "#{self.first_name.capitalize} #{self.last_name.capitalize}"
   end
@@ -76,6 +79,10 @@ class User < ActiveRecord::Base
 
   def is_admin?
     self.role > 1
+  end
+
+  def subscribed?(event)
+    Subscription.where(user_id: self.id, event_id: event).count > 0
   end
 
   def get_AuthNet_token
@@ -219,7 +226,19 @@ class User < ActiveRecord::Base
     self.cart = Cart.create
   end
 
+  def phone_number_is_valid?
+    phone = self.phone_number.gsub(/[^\d]/, '')
+    (phone.length == 10)
+  end
+
+
   protected
+
+  def valid_phone_number
+    unless self.phone_number_is_valid? || self.phone_number.gsub(/[^\d]/, '').length == 0
+      errors.add(:phone_number, "must be a valid phone number.")
+    end
+  end
 
   def confirmation_required?
     false

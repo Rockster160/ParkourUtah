@@ -45,7 +45,7 @@ var ready = function() {
 
 var formatPhone = function(field) {
   var value = field.val().replace( /\D+/g, '');
-  if (value.length >= 0) {
+  if (value.length > 0) {
     value = "("  + value
   }
   if (value.length > 4) {

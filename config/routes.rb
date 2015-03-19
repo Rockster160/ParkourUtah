@@ -26,7 +26,8 @@ Rails.application.routes.draw do
   get 'events/new' => 'event#new', as: 'add_event'
   post 'events/create' => 'event#create'
   delete 'events/destroy' => 'event#destroy', as: 'destroy_event'
-  delete 'events/subscribe/:id' => 'event#subscribe', as: 'subscribe'
+  post 'events/subscribe/:id' => 'event#subscribe', as: 'subscribe'
+  delete 'events/unsubscribe/:id' => 'event#unsubscribe', as: 'unsubscribe'
 
   get '/dashboard' => 'peeps#dashboard', as: 'dashboard'
   get '/peeps/return' => 'peeps#return'
