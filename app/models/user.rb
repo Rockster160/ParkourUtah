@@ -227,6 +227,7 @@ class User < ActiveRecord::Base
   end
 
   def phone_number_is_valid?
+    return false unless self.phone_number
     phone = self.phone_number.gsub(/[^\d]/, '')
     (phone.length == 10)
   end
@@ -235,6 +236,7 @@ class User < ActiveRecord::Base
   protected
 
   def valid_phone_number
+    return false unless self.phone_number
     unless self.phone_number_is_valid? || self.phone_number.gsub(/[^\d]/, '').length == 0
       errors.add(:phone_number, "must be a valid phone number.")
     end
