@@ -13,22 +13,10 @@
       <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
     <% end %>
 
-    <% if current_user.is_instructor? %>
-      <div class="field">
-        <%= f.label 'Serious Face' %> <i></i><br />
-        <%= f.file_field :avatar, class: 'fileform-center' %>
-      </div>
-
-      <div class="field">
-        <%= f.label 'Silly Face' %> <i></i><br />
-        <%= f.file_field :avatar_2, class: 'fileform-center' %>
-      </div>
-
-      <div class="field">
-        <%= f.label :bio %> <i></i><br />
-        <%= f.text_area :bio, class: 'fancy-textarea' %>
-      </div>
-    <% end %>
+    <div class="field">
+      <%= f.label :phone_number %> <i><br/>Only used to update you on classes that you have subscribed to.</i><br />
+      <%= f.text_field :phone_number, autocomplete: "off", class: 'fancy-textbox restrictNumeric formatPhoneNumber' %>
+    </div>
 
     <div class="field">
       <%= f.label :password %> <i><br/>(leave blank if you don't want to change it)</i><br />
@@ -66,7 +54,8 @@
         <% if athlete.signed_waiver? %>
           Waiver valid until <%= athlete.waiver.exp_date %><br/>
           Athlete ID: <%= athlete.padded_pin %><br/>
-          <a alt="..." data-toggle="modal" data-target="#modal_<%= pos %>" class="fancy-link">Change Pin</a><br/><br/>
+          Athlete PIN: ****<br/>
+          <a alt="..." data-toggle="modal" data-target="#modal_<%= pos %>" class="fancy-link">Reset Pin</a><br/><br/>
           <%= render partial: 'pin_change_modal', locals: {athlete: athlete, pos: pos} %>
         <% else %>
           <%= link_to "Must have waiver signed before attending class.", sign_waiver_path(athlete.id), class: 'fancy-link' %></br>

@@ -45,6 +45,7 @@ class User < ActiveRecord::Base
   has_many :transactions, through: :cart
 
   after_create :create_AuthNet_profile, :assign_cart
+  before_save :format_phone_number
 
   devise :database_authenticatable, :registerable, :confirmable,
          :recoverable, :rememberable, :trackable, :validatable
@@ -222,6 +223,10 @@ class User < ActiveRecord::Base
 
   def confirmation_required?
     false
+  end
+
+  def format_phone_number
+    self.phone_number = phone_number.gsub(/[^0-9]/, "") if attribute_present?("phone_number")
   end
 
 end
