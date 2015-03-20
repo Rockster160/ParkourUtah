@@ -38,6 +38,8 @@ Rails.application.routes.draw do
   patch '/store/update/:id' => 'index#coming_soon'
   post '/store/create' => 'index#coming_soon'
 
+  get '/comingsoon' => 'index#coming_soon', as: 'coming_soon'
+
   # get '/store' => 'store#index', as: 'store'
   # get '/store/new' => 'store#new', as: 'add_item'
   # get '/store/edit/:id' => 'store#edit', as: 'edit_item'

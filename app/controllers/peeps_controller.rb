@@ -23,15 +23,19 @@ class PeepsController < ApplicationController
   end
 
   def show_user
-    create_athlete
-    if @athlete
-      if Attendance.where(dependent_id: @athlete.athlete_id, event_id: params[:id]).count > 0
-        redirect_to :back
-         "Athlete already attending class."
-      end
+    if params[:athlete_id] == "0000"
+      redirect_to dashboard_path
     else
-      redirect_to :back
-       "Athlete not found."
+      create_athlete
+      if @athlete
+        if Attendance.where(dependent_id: @athlete.athlete_id, event_id: params[:id]).count > 0
+          redirect_to :back
+           "Athlete already attending class."
+        end
+      else
+        redirect_to :back
+         "Athlete not found."
+      end
     end
   end
 

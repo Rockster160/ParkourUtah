@@ -48,7 +48,7 @@ var formatPhone = function(field) {
   if (value.length > 0) {
     value = "("  + value
   }
-  if (value.length > 4) {
+  if (value.length >= 4) {
     value = value.substr(0, 4) + ") "  + value.substr(4)
   }
   if (value.length > 9) {
