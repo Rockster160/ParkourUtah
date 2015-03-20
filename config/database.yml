@@ -12,6 +12,7 @@ default: &default
 development:
   <<: *default
   user: parkour_utah
+  password: ENV["PKUT_DB_PASSWORD"]
   database: parkour_utah_development
 
 # Warning: The database defined as "test" will be erased and
@@ -20,9 +21,11 @@ development:
 test:
   <<: *default
   user: parkour_utah
+  password: ENV["PKUT_DB_PASSWORD"]
   database: parkour_utah_test
 
 production:
   <<: *default
   user: parkour_utah
+  password: ENV["PKUT_DB_PASSWORD"]
   database: parkour_utah_production
