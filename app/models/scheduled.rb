@@ -10,6 +10,10 @@ class Scheduled < ActiveRecord::Base
     end
   end
 
+  def self.send_test_text
+    ::SmsMailerWorker.perform_async("This is a test from Heroku - Parkour Utah!", '8019317892')
+  end
+
   def self.send_summary(days)
     summary = {}
     payment = {}
