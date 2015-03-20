@@ -31,6 +31,7 @@ gem 'googlevoiceapi'
 gem 'whenever', require: false
 gem 'sinatra', '~> 1.3', require: nil
 gem 'twilio-ruby'
+gem 'puma'
 # gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
