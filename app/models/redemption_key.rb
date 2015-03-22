@@ -1,6 +1,7 @@
 class RedemptionKey < ActiveRecord::Base
   # t.string :key
   # t.string :redemption
+  # t.boolean :redeemed
 
   after_create :generate_key
 
@@ -13,5 +14,13 @@ class RedemptionKey < ActiveRecord::Base
     if RedemptionKey.all.where(key: key).count == 0
       self.update(key: key)
     end
+  end
+
+  def self.keys_created
+    self.count
+  end
+
+  def self.keys_redeemed
+    self.select { |key| key.redeemed }.count
   end
 end

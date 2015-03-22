@@ -77,9 +77,11 @@ class Scheduled < ActiveRecord::Base
   def self.seed
     update_users
     # reset_subscriptions
-    reset_classes
+    # reset_classes
     reset_store
   end
+
+  private
 
   def update_users
   end
@@ -111,11 +113,28 @@ class Scheduled < ActiveRecord::Base
     puts "\nLine Items removed"
     puts "Adding new line items"
       LineItem.create(
-        title: Faker::Commerce.product_name,
+        title: "Class Admission",
+        description: "Purchasing this item will add credits to your account that are good for 1 class for 1 student. Students must have a Waiver filled out before attending class.",
+        cost_in_pennies: 1200,
+        category: "Class"
+      )
+      LineItem.create(
+        title: "Expert Class Tryout",
+        description: "Expert Tryouts are by invite ONLY. Purchasing this item will add credits to your account that are good for 1 tryout for 1 student. Instructors will set up a time and day with the student in order to schedule a 1 on 1 tryout.",
+        cost_in_pennies: 3500,
+        category: "Class"
+      )
+      LineItem.create(
+        title: "Scout Package",
         hidden: true,
-        description: Faker::Lorem.paragraph,
-        cost_in_pennies: rand(25000),
-        category: ["Other", "Shoes", "Shirts", "Stuff"].sample
+        cost_in_pennies: 2000,
+        category: "Class"
+      )
+      LineItem.create(
+        title: "Trial Class",
+        hidden: true,
+        cost_in_pennies: 0,
+        category: "Class"
       )
     puts "\nStore reset complete."
   end
