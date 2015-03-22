@@ -11,7 +11,13 @@ class Transaction < ActiveRecord::Base
   belongs_to :cart
   belongs_to :user
 
+  before_save :verify_amount_is_not_nil
+
   def item
     LineItem.find(self.item_id)
+  end
+
+  def verify_amount_is_not_nil
+    self.amount ||= 0
   end
 end

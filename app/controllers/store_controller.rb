@@ -49,14 +49,15 @@ class StoreController < ApplicationController
 
   def update_cart
     orders = @cart.transactions
-    order = orders.where(item_id: params[:id]).first
+    order = orders.where(item_id: params[:item_id]).first
     if params[:new_amount]
+      params[:new_amount] ||= 0
       order.update(amount: params[:new_amount])
     else
       if order
         order.increment!(:amount)
       else
-        order = Transaction.create(item_id: params[:id])
+        order = Transaction.create(item_id: params[:item_id])
         orders << order
         @order = order
       end

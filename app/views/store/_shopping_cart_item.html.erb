@@ -4,7 +4,7 @@
     <div class="shopping-cart-line-item-total"><%= order.item.title %></div>
     <div class="shopping-cart-line-item-price"><%= number_to_currency(order.item.cost) %></div>
     <div class="shopping-cart-line-item-quantity">
-      <input value="<%= order.amount %>" id="<%= order.item.id %>" size="1" maxlength="2" class="shopping-cart-line-item-quantity-input"></input>
+      <input value="<%= order.amount %>" id="<%= order.item.id %>" size="1" maxlength="2" class="shopping-cart-line-item-quantity-input value-selector-<%= order.item_id %>"></input>
     </div>
   </div>
 </div>
