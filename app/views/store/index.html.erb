@@ -1,6 +1,6 @@
-<%= link_to "Add new item", add_item_path if user_signed_in? && current_user.is_admin? %>
-<div class="row">
-  <div class="col-xs-3">
+<div class="row shopping-container">
+  <div class="col-xs-3 cart-container">
+    <%= render partial: 'cart' %>
   </div>
   <div class="instructors-container col-xs-9">
     <% @items.reverse.each do |item| %>
@@ -15,9 +15,9 @@
                 <strong><%= item.title %></strong><br/>
                 <%= number_to_currency(item.cost) %><br/>
                 <%= item.description %>
+                <%= link_to "Add to Cart", update_cart_path(item.id), class: "bio-link", remote: true, method: :post if user_signed_in? %><br/>
+                <%= link_to "Edit Item", edit_item_path(item.id) if user_signed_in? && current_user.is_admin? %>
               </p>
-              <%= link_to "Add to Cart", add_to_cart_path(item.id), class: "bio-link", remote: true if user_signed_in? %><br/>
-              <%= link_to "Edit Item", edit_item_path(item.id) if user_signed_in? && current_user.is_admin? %>
             </div>
           </div>
         </div>

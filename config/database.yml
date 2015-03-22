@@ -11,8 +11,8 @@ default: &default
 
 development:
   <<: *default
-  user: parkour_utah
-  password: <%= ENV["PKUT_DB_PASSWORD"] %>
+  # user: parkour_utah
+  # password: <%= ENV["PKUT_DB_PASSWORD"] %>
   database: parkour_utah_development
 
 # Warning: The database defined as "test" will be erased and
@@ -20,8 +20,8 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  user: parkour_utah
-  password: <%= ENV["PKUT_DB_PASSWORD"] %>
+  # user: parkour_utah
+  # password: <%= ENV["PKUT_DB_PASSWORD"] %>
   database: parkour_utah_test
 
 production:

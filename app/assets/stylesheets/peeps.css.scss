@@ -6,6 +6,7 @@
 }
 
 .card-bio-text {
+  position: relative;
   font-size: 1em;
   overflow: hidden;
   height: 95%;
@@ -16,6 +17,10 @@
 }
 
 .bio-link {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  margin-left: -45px;
   text-decoration: none;
   color: black;
   font-weight: bold;

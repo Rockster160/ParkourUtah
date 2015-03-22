@@ -1,5 +1,10 @@
+.shopping-container {
+  min-width: 1000px;
+}
+
 .shopping-cart-container {
-  height: 350px;
+  // position: relative;
+  // float: left;
 }
 
 .shopping-cart {
@@ -7,11 +12,14 @@
   border: 1px solid black;
   border-radius: 10px;
   position: fixed;
-  width: 250px;
-  height: 300px;
+  min-width: 250px;
+  // width: 250px;
+  // height: 300px;
+  width: 22%;
+  height: 90%;
   background: #ccc;
   top: 55px;
-  right: 4px;
+  left: 4px;
 }
 
 .delete-x {

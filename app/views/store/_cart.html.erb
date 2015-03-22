@@ -1,18 +1,12 @@
 <div class="shopping-cart-container">
   <div class="shopping-cart">
-    <% @cart.transactions.where("amount > ?", 0).each do |order| %>
-      <div class="shopping-cart-cell">
-        <span class="delete-x pull-right" id="<%= order.item.id %>">X</span>
-        <div class="shopping-cart-line-item">
-          <div class="shopping-cart-line-item-total"><%= order.item.title %></div>
-          <div class="shopping-cart-line-item-price"><%= number_to_currency(order.item.cost) %></div>
-          <div class="shopping-cart-line-item-quantity">
-            <input value="<%= order.amount %>" id="<%= order.item.id %>" size="1" maxlength="2" class="shopping-cart-line-item-quantity-input"></input>
-          </div>
-        </div>
-      </div>
-    <% end %>
+    <div class="orders-placeholder">
+      <% @cart.transactions.where("amount > ?", 0).each do |order| %>
+        <%= render partial: 'shopping_cart_item', locals: {order: order} %>
+      <% end %>
+    </div>
     <br/>
     <span class="shopping-cart-total">Total: <span class="shopping-cart-total-holder"><%= number_to_currency(@cart.price) %></span></span>
+    <%= link_to "Purchase Cart", purchase_path, method: :post, data: {confirm: "Are you sure? \nThis will charge your account #{number_to_currency(@cart.price)}."} %>
   </div>
 </div>

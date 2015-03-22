@@ -9,14 +9,6 @@ class StoreController < ApplicationController
   def show_cart
   end
 
-  def update_cart
-    item = @cart.transactions.where(item_id: params[:item_id]).first
-    item.update(amount: params[:new_amount])
-    respond_to do |format|
-      format.js
-    end
-  end
-
   def purchase
     if current_user.buy_shopping_cart == "Ok"
       current_user.cart = Cart.create
@@ -55,17 +47,21 @@ class StoreController < ApplicationController
     redirect_to store_path
   end
 
-  def add_to_cart
-    # User.last.update(credits: User.last.credits + 5)
-    orders = current_user.cart.transactions
+  def update_cart
+    orders = @cart.transactions
     order = orders.where(item_id: params[:id]).first
-    if order
-      order.increment!(:amount)
+    if params[:new_amount]
+      order.update(amount: params[:new_amount])
     else
-      order = Transaction.create(item_id: params[:id])
-      orders << order
+      if order
+        order.increment!(:amount)
+      else
+        order = Transaction.create(item_id: params[:id])
+        orders << order
+        @order = order
+      end
+      flash.now[:notice] = "#{order.item.title} successfully added to cart."
     end
-    flash.now[:notice] = "#{order.item.title} successfully added to cart."
     respond_to do |format|
       format.js
     end
@@ -78,7 +74,7 @@ class StoreController < ApplicationController
   end
 
   def set_categories
-    @categories = ["Other", "Shoes", "Shirts", "Stuff"]
+    @categories = ["Other", "Shoes", "Shirts", "Classes", "Stuff"]
   end
 
   def set_cart

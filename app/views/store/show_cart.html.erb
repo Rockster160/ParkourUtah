@@ -1,6 +1,0 @@
-Shop
-<div class="cart-container">
-  <%= render 'cart' %>
-</div>
-
-<%= link_to "Purchase Cart", purchase_path, method: :post, data: {confirm: "Are you sure? \nThis will charge your account #{number_to_currency(@cart.price)}."} %>

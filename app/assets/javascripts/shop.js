@@ -18,8 +18,7 @@ var ready = function() {
 };
 
 sendUpdatedAmount = function(item_id, new_amount) {
-  $.post('/cart/update', {item_id: item_id, new_amount: new_amount}, function() {
-  })
+  $.post('/cart/update', {item_id: item_id, new_amount: new_amount});
 }
 
 $(document).ready(ready);
