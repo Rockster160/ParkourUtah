@@ -102,6 +102,9 @@
                   <br/>
                   <p class="card-bio-text">
                     <strong class="instructor-name"><%= instructor.full_name %></strong><br/>
+                    <% unless instructor.nickname.nil? %>
+                      AKA "<%= instructor.nickname %>"</br>
+                    <% end %>
                     <%= instructor.title %><br/>
                     <%= instructor.stats %><br/><br/>
                     <%= instructor.bio %>

@@ -11,7 +11,11 @@ class Scheduled < ActiveRecord::Base
   end
 
   def self.send_test_text
-    ::SmsMailerWorker.perform_async("This is a test from Heroku - Parkour Utah!", '8019317892')
+    if Rails.env == "production"
+      ::SmsMailerWorker.perform_async("This is a test from Parkour Utah in Production!", '3852599640')
+    else
+      ::SmsMailerWorker.perform_async("This is a test from Parkour Utah!", '3852599640')
+    end
   end
 
   def self.send_summary(days)
@@ -25,7 +29,7 @@ class Scheduled < ActiveRecord::Base
         instructors = {}
         class_payment = {}
         event.attendances.each do |a|
-          instructor = User.find(a.instructor_id)
+          instructor = User.find(a.user_id)
           instructors[instructor.full_name] ||= {}
           instructors[instructor.full_name]["students"] ||= []
           instructors[instructor.full_name]["pay"] ||= 0
@@ -50,18 +54,22 @@ class Scheduled < ActiveRecord::Base
     ::SummaryMailerWorker.perform_async(total_summary)
   end
 
-  def self.attend_random_classes
+  def self.attend_random_classes(days=1)
     instructors = User.all.select { |u| u.is_instructor? }
-    events = Event.all.select {|e| e.date.to_date == Time.now.to_date }
-    Dependent.all.each do |d|
-      unless rand(3) == 0
-        Attendance.create(
-          dependent_id: d.athlete_id,
-          instructor_id: instructors.sample.id,
-          event_id: events.sample.id,
-          type_of_charge: (rand(3) == 0 ? "Cash" : "Credits")
-        )
-        puts "#{d.full_name} attended class!"
+    days.times do |day|
+      events = Event.all.select {|e| e.date.to_date == (Time.now - day.days).to_date }
+      if events.any?
+        Dependent.all.each do |d|
+          unless rand(3) == 0
+            Attendance.create(
+              dependent_id: d.athlete_id,
+              user_id: instructors.sample.id,
+              event_id: events.sample.id,
+              type_of_charge: (rand(3) == 0 ? "Cash" : "Credits")
+            )
+            puts "#{d.full_name} attended class!"
+          end
+        end
       end
     end
   end

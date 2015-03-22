@@ -11,14 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150320151749) do
+ActiveRecord::Schema.define(version: 20150322172055) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "attendances", force: :cascade do |t|
     t.integer  "dependent_id"
-    t.integer  "instructor_id"
+    t.integer  "user_id"
     t.integer  "event_id"
     t.string   "location"
     t.datetime "created_at",                     null: false
@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 20150320151749) do
 
   add_index "attendances", ["dependent_id"], name: "index_attendances_on_dependent_id", using: :btree
   add_index "attendances", ["event_id"], name: "index_attendances_on_event_id", using: :btree
-  add_index "attendances", ["instructor_id"], name: "index_attendances_on_instructor_id", using: :btree
+  add_index "attendances", ["user_id"], name: "index_attendances_on_user_id", using: :btree
 
   create_table "carts", force: :cascade do |t|
     t.integer  "user_id"
@@ -145,6 +145,7 @@ ActiveRecord::Schema.define(version: 20150320151749) do
     t.integer  "payment_multiplier",     default: 3
     t.string   "stats"
     t.string   "title"
+    t.string   "nickname"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

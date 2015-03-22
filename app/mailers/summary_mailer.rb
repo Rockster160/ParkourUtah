@@ -4,7 +4,7 @@ class SummaryMailer < ApplicationMailer
     @summary = summary[0]
     @payment = summary[1]
     range = summary.first.keys
-    dates = range.length == 1 ? "for #{range.first}." : "from #{range.first} to #{range.last}."
+    dates = range.length == 1 ? "for #{range.first}." : "from #{range.last} to #{range.first}."
     mail(to: "rocco11nicholls@gmail.com", subject: "Class summary #{dates}")
   end
 end

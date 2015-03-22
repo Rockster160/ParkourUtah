@@ -77,8 +77,12 @@ class User < ActiveRecord::Base
     self.role > 0
   end
 
-  def is_admin?
+  def is_mod?
     self.role > 1
+  end
+
+  def is_admin?
+    self.role > 2
   end
 
   def subscribed?(event)
@@ -125,9 +129,10 @@ class User < ActiveRecord::Base
   end
 
   def delete_all_AuthNet
-    (31778074..31778088).to_a.each do |user|
+    ((31812545..31812568).to_a + [31851211]).each do |user|
       xml = "<customerProfileId>#{user}</customerProfileId>"
       res = auth_net_xml_request('deleteCustomerProfileRequest', xml)
+      print "."
     end
   end
 

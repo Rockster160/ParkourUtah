@@ -9,19 +9,20 @@ cities = %w[ Sandy Draper Salt\ Lake\ City Lehi Orem Provo Murray Holladay South
 classes = %w[ beginner intermediate conditioning jam tricking ]
 
 instructor_firsts = %w( Justin Ryan Brianna Rocco Aaron Jadon Tony William Marcos Stephen Zeter )
+instructor_nicks = ["Captain Awesome", "", "", "Zoro", "", "JD", "", "Scott", "Shrimpy", "", ""]
 instructor_lasts = %w( Spencer Sannar Midas Nicholls Cornia Erwin Mungiguerra May Jones Lanteri Raimondo )
 bios = [
-  "After painfully discovering that he had gotten fat, Justin had come to the knowledge he needed to do something extreme to keep up with his five active boys. Four years ago Justin began his Parkour experience. Having several businesses he decided to create structure to the Utah Parkour scene. With the help of others it has grown and is what it is today. What you may not know about Justin is that he loves to fly airplanes, and practice Yoga. Obviously not at the same time.",
-  "Passion, Desire, and commitment to the sport of Parkour are what describes Ryan. After 10 years of doing Parkour and introducing countless others to the sport, Ryan loves helping others learn and perfect Parkour. Running dive rolls are Ryan's signature move. With all his experience with martial arts and Parkour, Ryan has been able to choreograph many fight scenes for film and theater. For extra credit Ryan enjoys making unique dishes in the kitchen. Ryan's favorite meal is anything with extra garlic.",
-  "Amazing is an understatement when it comes to describing Bri. She has truly been a fundamental element in getting Parkourutah where it is. She has worked tirelessly to make sure all questions are answered and all things are in there place. Although you may not see her often, she is still there working to make sure that classes and events happen. Bri may shock you when you discover she not only is the mother of a beautiful daughter, she also knows how to juggle chainsaws while riding a unicorn.",
-  "Rocco is a long time Parkour enthusiast and excited about ParkourUtah.com. This site is his creation. Having suffered an injury related to parkour, he has never lost his love for the sport. What would surprise all people is that he is from South Africa and loves riding motorcycles. But those aren’t the surprises, somehow over the years he got a nickname of Zorro. We will let your mind wander about how that all came to be. ",
-  "Aaron is an all around good guy. He has lots of skills behind the camera, and behind the computer to make us all look better than we really are. He loves his job doing this kind of work. He has a unique trait or two. Many kids have mistaken him to be Peter Parker from Spiderman. He openly admits he is a nerd, never caught a fish, plays fat-man football, and used to be a ballroom dancer. Despite all these things, he still can cook on a 15 inch grill in the backyard where he can reinstate his manhood. ",
+  "After painfully discovering that he had gotten fat, Justin had come to the realization that he needed to do something extreme to keep up with his five active boys. Four years ago Justin began his Parkour experience. Having several businesses, he decided to create structure to the Utah Parkour scene. With the help of others it has grown into what it is today. What you may not know about Justin is that he loves to fly airplanes and practice Yoga. Obviously not at the same time.",
+  "Passion, Desire, and commitment to the sport of Parkour are what describes Ryan. After 10 years of doing Parkour and introducing countless others to the sport, Ryan has found a love for helping others learn and perfect Parkour. Running dive rolls are Ryan's signature move. With all his experience with martial arts and Parkour, Ryan has been able to choreograph many fight scenes for film and theater. For extra credit Ryan enjoys making unique dishes in the kitchen. Ryan's favorite meal is anything with extra garlic.",
+  "Amazing is an understatement when it comes to describing Bri. She has truly been a fundamental element in getting ParkourUtah to where it is today. She has worked tirelessly to make sure all questions are answered and all things are in their place. Although you may not see her often, she is always in the background working to make sure that classes and events happen. Bri may shock you when you discover she not only is the mother of a beautiful daughter, she also knows how to juggle chainsaws while riding a unicorn.",
+  "Rocco is a long time Parkour and FreeRunning enthusiast and excited about ParkourUtah.com. This site is his creation. Having suffered an injury related to FreeRunning in the past, he has never lost his love for the sport. What may catch you off guard is that he is from South Africa and loves riding motorcycles. But those aren’t the surprises, somehow over the years he got the nickname Zoro. We will let your mind wander about how that all came to be.",
+  "Aaron is an all around good guy. He has lots of skills behind the camera and behind the computer to make us all look better than we really are. He loves his job doing this kind of work. Many kids have mistaken him to be Peter Parker from Spiderman. He openly admits he is a nerd, never caught a fish, plays fat-man football, and used to be a ballroom dancer. Despite all these things, he still can cook on a 15 inch grill in the backyard where he can reinstate his manhood.",
   "",
-  "Tony has been an instructor for parkour for a great length of time. He finds himself as a “in between” Parkour and Freerunning style. If you really want to debate that there is a difference. His opinion, is that all moves are an equally awesome expression of movement. Tony has a distinct eye for fashion and loves to express himself through style and appearance. Don’t ask him to cook for you though, he recently dropped out of culinary school. ",
-  "Scott is a passionate and committed parkour instructor. His love for the sport started in 2011 and has focused on Flow with a heavy emphasis on precision. His favorite move is a Russian front flip. Scott has a unique interest, he has a deep love for 50’s-70’s Folk Music. Don’t be surprised to hear singing while he is bouncing of the walls.",
-  "For obvious reasons you can see how “Shrimpy” got his name. Don’t let his size deceive you, every move from Marcos is huge. He loves to be fluid in his movements, and large on his jumps. Favorite moves includes the Dash and Italian Job. What will surprise you is that Marcos has been playing the piano since he was 5 and can play music by ear.",
-  "Doing Parkour for three years and being Adapt certified, Parkour is life for Stephen. He is a big believer in the purist style of Parkour and loves the speed vault. Don’t let his height scare you. He is a little kid inside and is a great instructor. In fact the kid is very much alive inside of him, he still loves 90’s dance music and isn’t afraid to roll with the windows down to technotronic. Pump up the Jam!!  ",
-  "Zeter loves parkour more than most. Parkour is like air for him. He has been at it for 6 years and loves everything about it. He loves flow/spin style of Parkour. His favorites are Rail Balance and Lazy Vaults. If you asked him what the craziest thing he has ever done was, he would have to think about it for a while. If there is something crazy to do, he has most likely done it. If he hasn’t, he will make sure to go out of his way to do it."
+  "Tony has been an instructor for Parkour for a great length of time. He finds himself as an \"in between\" Parkour and FreeRunning style. If you really want to debate that there is a difference; his opinion:  all moves are an equally awesome expression of movement. Tony has a distinct eye for fashion and loves to express himself through style and appearance. Don’t ask him to cook for you though, he recently dropped out of culinary school.",
+  "Scott is a passionate and committed Parkour instructor. His love for the sport started in 2011 and has focused on Flow with a heavy emphasis on precision. His favorite move is a Russian front flip. Scott has a unique interest- he has a deep love for 50’s-70’s Folk Music. Don’t be surprised to hear singing while he is bouncing of the walls.",
+  "For obvious reasons you can see how \"Shrimpy\" got his name. Don’t let his size deceive you, every move from Marcos is huge. He loves to be fluid in his movements and large on his jumps. Favorite moves include the Dash vault and Italian Job. What will surprise you is that Marcos has been playing the piano since he was 5 and can play music by ear.",
+  "Doing Parkour for three years and being Adapt certified, Parkour is life for Stephen. He is a big believer in the purist style of Parkour and loves the speed vault. Don’t let his height scare you. He is a little kid inside and is a great instructor. In fact, the kid is very much alive inside of him. He still loves 90’s dance music and isn’t afraid to roll with the windows down to technotronic. Pump up the Jam!!",
+  "Zeter loves Parkour more than most. Parkour is like air for him. He has been at it for 6 years and loves everything about it. He loves the flow and spin styles of Parkour. His favorites are Rail Balance and Lazy Vaults. If you asked him what the craziest thing he has ever done was, he would have to think about it for a while. If there is something crazy to do, he has most likely done it. If he hasn’t, he will make sure to go out of his way to get it done."
 ]
 stats = [
   "5'10\" 190 lbs",
@@ -50,15 +51,15 @@ titles = [
   "Instructor"
 ]
 
-puts "Creating users..."
+puts "Creating users"
 instructor_firsts.each_with_index do |name, pos|
   User.create(
-    email: "#{name}@parkourutah.com",
+    email: "#{name}@ParkourUtah.com",
     first_name: "#{name.capitalize}",
     last_name: "#{instructor_lasts[pos].capitalize}",
     bio: "#{bios[pos]}",
     stats: "#{stats[pos]}",
-    titles: "#{titles[pos]}",
+    title: "#{titles[pos]}",
     avatar: "https://s3-us-west-2.amazonaws.com/pkut-default/#{name.capitalize}#{instructor_lasts[pos].capitalize}.jpg",
     avatar_2: "https://s3-us-west-2.amazonaws.com/pkut-default/#{name.capitalize}#{instructor_lasts[pos].capitalize}BW.jpg",
     # avatar: File.new("/Users/rocconicholls/Downloads/Serious/#{name.capitalize}#{instructor_lasts[pos].capitalize}.jpg"),
@@ -67,10 +68,32 @@ instructor_firsts.each_with_index do |name, pos|
     password: "#{name}pkfr4lf",
     role: 1
   )
+  User.last.update(nickname: "#{instructor_nicks[pos]}") if instructor_nicks[pos].length > 0
   print ". "
 end
-puts "\nUsers complete."
-puts "Creating Events..."
+puts "\nUsers complete"
+if Rails.env == "development"
+  puts "Creating Athletes"
+  50.times do |athlete|
+    athlete = RandomuserLocal.generate
+    dependent = Dependent.create(
+      user_id: User.all.sample.id,
+      full_name: "#{athlete[:name][:first].capitalize} #{athlete[:name][:last].capitalize}",
+      emergency_contact: athlete[:phone].gsub(/[^0-9]/, ''),
+    )
+    waiver = Waiver.create(
+      dependent_id: dependent.id,
+      signed: true,
+      signed_for: dependent.full_name,
+      signed_by: "Rocco"
+    )
+    dependent.generate_pin
+    dependent.update(athlete_pin: "1234")
+    print "."
+  end
+  puts "\nAthletes complete"
+end
+puts "Creating Events"
 Event.create(
   date: DateTime.new(1990),
   host: 'Expert',
@@ -297,7 +320,7 @@ puts "Created 1on1 event."
   )
   print "."
 end
-puts "\nCompleted all events."
+puts "\nCompleted all events"
 # Event.create(
 #   date: Faker::Time.between(Time.zone.now, 25.days.from_now, :day),
 #   host: 1
@@ -308,7 +331,7 @@ puts "\nCompleted all events."
 #   location_instructions: Faker::Lorem.sentence,
 #   class_name: "special"
 # )
-puts "Creating Store items."
+puts "Creating Store items"
 15.times do |t|
   LineItem.create(
     title: Faker::Commerce.product_name,
@@ -318,5 +341,5 @@ puts "Creating Store items."
   )
   print "."
 end
-puts "\nCompleted Store items."
-puts "Seeding Complete."
+puts "\nCompleted Store items"
+puts "Seeding Complete"
