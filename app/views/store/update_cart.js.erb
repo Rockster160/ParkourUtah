@@ -7,13 +7,11 @@ $('.shopping-cart-total-holder').html('<%= j number_to_currency(@cart.price) %>'
 <% end %>
 $('.shopping-cart-line-item-quantity-input').each(function(){
   var $container = $(this).parents('.shopping-cart-cell');
-  if ($(this).val() == "0" && $($container).is(":visible")) {
-    $container.slideUp(500);
-  }
-  if ($(this).val() != "0" && !($($container).is(":visible"))) {
-    $container.slideDown(500);
+  if ($(this).val() == "0" || $(this).val() == "" || $(this).val() == 0) {
+    $container.slideUp(500, function() { $(this).remove() });
   }
 });
 <% if @order %>
-  $('.orders-placeholder').append('<%= j render partial: "shopping_cart_item", locals: {order: @order} %>');
+  $('.orders-placeholder').append('<div class="hidden-holder" style="display:none;"><%= j render partial: "shopping_cart_item", locals: {order: @order} %></div>');
+  $('.hidden-holder:last').slideDown(500);
 <% end %>

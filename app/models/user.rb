@@ -132,7 +132,7 @@ class User < ActiveRecord::Base
     ((31812545..31812568).to_a + [31851211]).each do |user|
       xml = "<customerProfileId>#{user}</customerProfileId>"
       res = auth_net_xml_request('deleteCustomerProfileRequest', xml)
-      print "."
+      print "\e[32m.\e[0m"
     end
   end
 

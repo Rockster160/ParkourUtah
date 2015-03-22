@@ -3,22 +3,28 @@ class StoreController < ApplicationController
   before_action :set_categories, only: [:edit, :new]
 
   def index
-    @items = LineItem.all
+    @items = LineItem.select { |item| !(item.hidden) }.sort_by { |order| order.item_order }.reverse
   end
 
   def show_cart
   end
 
   def purchase
-    if current_user.buy_shopping_cart == "Ok"
-      current_user.cart = Cart.create
+    current_user.cart.transactions.each do |item|
+      line_item = LineItem.find(item.item_id)
+      if line_item.category == "Class"
+        current_user.update(credits: (current_user.credits + (item.amount * line_item.cost)))
+      end
+    end
+    # if current_user.buy_shopping_cart == "Ok"
+    #   current_user.cart = Cart.create
       flash[:notice] = "Cart successfully purchased"
       redirect_to root_path
-    else
-      # This should check for various errors and report accurately.
-      flash[:alert] = "There was a problem with your request."
-      redirect_to show_cart_path
-    end
+    # else
+    #   # This should check for various errors and report accurately.
+    #   flash[:alert] = "There was a problem with your request."
+    #   redirect_to show_cart_path
+    # end
   end
 
   def new
@@ -51,8 +57,12 @@ class StoreController < ApplicationController
     orders = @cart.transactions
     order = orders.where(item_id: params[:item_id]).first
     if params[:new_amount]
-      params[:new_amount] ||= 0
-      order.update(amount: params[:new_amount])
+      params[:new_amount] ||= "0"
+      if params[:new_amount].to_i <= 0
+        order.destroy!
+      else
+        order.update(amount: params[:new_amount])
+      end
     else
       if order
         order.increment!(:amount)

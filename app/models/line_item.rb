@@ -11,6 +11,7 @@ class LineItem < ActiveRecord::Base
   #   t.datetime "created_at",           null: false
   #   t.datetime "updated_at",           null: false
   #   t.string   "size"
+  #   t.integer  "item_order"
   # end
 
   has_attached_file :display,

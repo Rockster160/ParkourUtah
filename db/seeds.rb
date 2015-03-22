@@ -69,7 +69,7 @@ instructor_firsts.each_with_index do |name, pos|
     role: 1
   )
   User.last.update(nickname: "#{instructor_nicks[pos]}") if instructor_nicks[pos].length > 0
-  print ". "
+  print "\e[32m. \e[0m"
 end
 puts "\nUsers complete"
 if Rails.env == "development"
@@ -89,7 +89,7 @@ if Rails.env == "development"
     )
     dependent.generate_pin
     dependent.update(athlete_pin: "1234")
-    print "."
+    print "\e[32m.\e[0m"
   end
   puts "\nAthletes complete"
 end
@@ -119,7 +119,7 @@ puts "Created 1on1 event."
     location_instructions: 'Draper Amphitheater',
     class_name: 'fundamentals'
   )
-  print "."
+  print "\e[32m.\e[0m"
   # Monday
   Event.create(
     date: DateTime.new(2015, 1, 5, 17, 30) + (t.weeks),
@@ -133,7 +133,7 @@ puts "Created 1on1 event."
     location_instructions: 'South Jordan South Pavilion Park',
     class_name: 'fundamentals'
   )
-  print "."
+  print "\e[32m.\e[0m"
 
   # Tuesday
   Event.create(
@@ -148,7 +148,7 @@ puts "Created 1on1 event."
     location_instructions: 'Orem Scera Park',
     class_name: 'fundamentals'
   )
-  print "."
+  print "\e[32m.\e[0m"
   # Tuesday
   Event.create(
     date: DateTime.new(2015, 1, 6, 16, 30) + (t.weeks),
@@ -162,7 +162,7 @@ puts "Created 1on1 event."
     location_instructions: 'Saratoga Springs Harvest Hills Park',
     class_name: 'fundamentals'
   )
-  print "."
+  print "\e[32m.\e[0m"
   # Tuesday
   Event.create(
     date: DateTime.new(2015, 1, 6, 17, 30) + (t.weeks),
@@ -176,7 +176,7 @@ puts "Created 1on1 event."
     location_instructions: 'West Jordan Veteran\'s Memorial Park',
     class_name: 'fundamentals'
   )
-  print "."
+  print "\e[32m.\e[0m"
 
   # Wednesday
   Event.create(
@@ -191,7 +191,7 @@ puts "Created 1on1 event."
     location_instructions: '',
     class_name: 'fundamentals'
   )
-  print "."
+  print "\e[32m.\e[0m"
   # Wednesday
   Event.create(
     date: DateTime.new(2015, 1, 7, 16, 30) + (t.weeks),
@@ -205,7 +205,7 @@ puts "Created 1on1 event."
     location_instructions: '',
     class_name: 'fundamentals'
   )
-  print "."
+  print "\e[32m.\e[0m"
   # Wednesday
   Event.create(
     date: DateTime.new(2015, 1, 7, 17, 30) + (t.weeks),
@@ -219,7 +219,7 @@ puts "Created 1on1 event."
     location_instructions: 'Taylorsville Valley Regional Park',
     class_name: 'fundamentals'
   )
-  print "."
+  print "\e[32m.\e[0m"
 
   # Thursday
   Event.create(
@@ -234,7 +234,7 @@ puts "Created 1on1 event."
     location_instructions: '',
     class_name: 'fundamentals'
   )
-  print "."
+  print "\e[32m.\e[0m"
   # Thursday
   Event.create(
     date: DateTime.new(2015, 1, 1, 16, 30) + (t.weeks),
@@ -248,7 +248,7 @@ puts "Created 1on1 event."
     location_instructions: '',
     class_name: 'fundamentals'
   )
-  print "."
+  print "\e[32m.\e[0m"
   # Thursday
   Event.create(
     date: DateTime.new(2015, 1, 1, 17, 30) + (t.weeks),
@@ -262,7 +262,7 @@ puts "Created 1on1 event."
     location_instructions: 'Herriman Rosecrest Park',
     class_name: 'fundamentals'
   )
-  print "."
+  print "\e[32m.\e[0m"
 
   # Friday
   # Event.create(
@@ -291,7 +291,7 @@ puts "Created 1on1 event."
     location_instructions: 'Ogden City Hall',
     class_name: 'fundamentals'
   )
-  print "."
+  print "\e[32m.\e[0m"
   # Saturday
   Event.create(
     date: DateTime.new(2015, 1, 3, 11, 00) + (t.weeks),
@@ -318,7 +318,7 @@ puts "Created 1on1 event."
     location_instructions: 'Ashley Valley Community Park',
     class_name: 'fundamentals'
   )
-  print "."
+  print "\e[32m.\e[0m"
 end
 puts "\nCompleted all events"
 # Event.create(
@@ -339,7 +339,7 @@ puts "Creating Store items"
     cost_in_pennies: rand(25000),
     category: ["Other", "Shoes", "Shirts", "Stuff"].sample
   )
-  print "."
+  print "\e[32m.\e[0m"
 end
 puts "\nCompleted Store items"
 puts "Seeding Complete"
