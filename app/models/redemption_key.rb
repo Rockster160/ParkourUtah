@@ -11,6 +11,8 @@ class RedemptionKey < ActiveRecord::Base
     case item.redemption
     when "free_class" then LineItem.find_by_title("Trial Class")
     when "scout_package" then LineItem.find_by_title("Scout Package")
+    when "business_card" then LineItem.find_by_title("Trial Class")
+    when "KSL" then LineItem.find_by_title("Trial Class")
     end
   end
 
