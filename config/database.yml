@@ -26,7 +26,7 @@ test:
 
 production:
   <<: *default
-  user: parkour_utah
+  username: parkour_utah
   password: <%= ENV["PKUT_DB_PASSWORD"] %>
   database: parkour_utah_production
   pool: 5
