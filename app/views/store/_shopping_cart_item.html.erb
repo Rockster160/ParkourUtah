@@ -4,7 +4,11 @@
     <div class="shopping-cart-line-item-total"><%= order.item.title %></div>
     <div class="shopping-cart-line-item-price"><%= number_to_currency(order.item.cost) %></div>
     <div class="shopping-cart-line-item-quantity">
-      <input value="<%= order.amount %>" id="<%= order.item.id %>" size="1" maxlength="2" class="shopping-cart-line-item-quantity-input value-selector-<%= order.item_id %>"></input>
+      <% if order.redeemed_token.length > 0 %>
+        <input value="<%= order.amount %>" id="<%= order.item.id %>" disabled="disabled" size="1" maxlength="2" class="shopping-cart-line-item-quantity-input value-selector-<%= order.item_id %>"></input>
+      <% else %>
+        <input value="<%= order.amount %>" id="<%= order.item.id %>" size="1" maxlength="2" class="shopping-cart-line-item-quantity-input value-selector-<%= order.item_id %>"></input>
+      <% end %>
     </div>
   </div>
 </div>

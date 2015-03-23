@@ -1,6 +1,7 @@
 class StoreController < ApplicationController
   before_action :set_cart
   before_action :set_categories, only: [:edit, :new]
+  before_action :validate_admin, only: [:generate_keys, :email_keys]
 
   def index
     @items = LineItem.select { |item| !(item.hidden) }.sort_by { |order| order.item_order }.reverse
@@ -28,11 +29,6 @@ class StoreController < ApplicationController
   end
 
   def generate_keys
-    unless current_user && current_user.is_admin?
-      redirect_to root_path, alert: "You do not have permission to access this page."
-    else
-
-    end
   end
 
   def email_keys
@@ -97,7 +93,7 @@ class StoreController < ApplicationController
 
   def redeem
     item = RedemptionKey.lookup(params[:redemption_key])
-    if item && @cart.transactions.map { |items| items.item_id }.exclude?(item.id)
+    if item && @cart.transactions.map { |items| items.redeemed_token }.exclude?(params[:redemption_key])
       @cart.transactions << @order = Transaction.create(item_id: item.id, redeemed_token: params[:redemption_key])
     else
       @order = nil
@@ -120,5 +116,11 @@ class StoreController < ApplicationController
 
   def set_cart
     @cart = current_user.cart if user_signed_in?
+  end
+
+  def validate_admin
+    unless current_user && current_user.is_admin?
+      redirect_to root_path, alert: "You do not have permission to access this page."
+    end
   end
 end
