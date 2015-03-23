@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   get '/athletes/new' => 'dependents#new', as: 'new_athlete'
   post '/athletes/create' => 'dependents#create'
   post '/athletes/update/:athlete_id' => 'dependents#update'
+
   get '/waiver/:athlete_id' => 'dependents#waiver', as: 'sign_waiver'
   post '/waiver/sign' => 'dependents#sign_waiver'
 
@@ -40,6 +41,9 @@ Rails.application.routes.draw do
   get '/store/edit/:id' => 'store#edit', as: 'edit_item'
   patch '/store/update/:id' => 'store#update'
   post '/store/create' => 'store#create'
+
+  get '/store/admin/generate_keys' => 'store#generate_keys', as: 'generate_keys'
+  post '/store/admin/generate_keys' => 'store#email_keys'
 
   post '/cart/update' => 'store#update_cart', as: 'update_cart'
   post '/cart/purchase' => 'store#purchase', as: 'purchase'

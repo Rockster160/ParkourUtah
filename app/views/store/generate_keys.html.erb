@@ -1,0 +1,16 @@
+<% if current_user && current_user.is_admin? %>
+  <div class="fancy-box central-container form-offset">
+    <%= form_tag do %>
+    <h2>Generate Keys</h2><br/>
+    Type of Key: <br/>
+    <select name="key_type">
+      <option value="free_class">Trial Class Keys</option>
+      <option value="scout_package">Scout Package Keys</option>
+    </select><br/><br/>
+    How many keys?<br/>
+    <%= number_field :how_many, '', step: 1, class: 'fancy-textbox restrictNumeric' %><br/><br/>
+
+    <h4><%= submit_tag "Generate!", class: 'fancy-btn' %></h4>
+    <% end %>
+  </div>
+<% end %>

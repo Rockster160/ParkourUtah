@@ -8,6 +8,7 @@
     <h4><%= link_to "1 on 1", begin_class_path(1), class: 'fancy-btn' %></h4><br/><br/>
     <% if current_user.is_admin? %>
       <h2>Admin Abilities</h2><br/>
+      <h4><%= link_to "Generate Keys", generate_keys_path, class: 'fancy-btn' %></h4><br/><br/>
       <h4><%= link_to "Add New Event", add_event_path, class: 'fancy-btn' %></h4><br/><br/>
       <h4><%= link_to "Add New Item", add_item_path, class: 'fancy-btn' %></h4><br/><br/>
       <h4><%= link_to "Promote User to Instructor", coming_soon_path, class: 'fancy-btn' %></h4><br/><br/>

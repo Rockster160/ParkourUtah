@@ -27,6 +27,22 @@ class StoreController < ApplicationController
     end
   end
 
+  def generate_keys
+    unless current_user && current_user.is_admin?
+      redirect_to root_path, alert: "You do not have permission to access this page."
+    else
+
+    end
+  end
+
+  def email_keys
+    keys = params[:how_many].first.to_i.times do
+      RedemptionKey.create(redemption: params[:key_type])
+    end
+    ::KeyGenMailerWorker.perform_async(keys)
+    redirect_to :back, notice: "Got it! An email will be sent to you shortly containing the requested keys."
+  end
+
   def new
     @item = LineItem.new
   end
