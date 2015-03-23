@@ -160,6 +160,7 @@ class User < ActiveRecord::Base
   end
 
   def buy_shopping_cart
+    return "Ok" if self.cart.price <= 0
     return 0000 unless create_AuthNet_profile
     order = self.cart.transactions
     items = ""

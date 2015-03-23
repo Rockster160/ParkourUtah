@@ -10,21 +10,21 @@ class StoreController < ApplicationController
   end
 
   def purchase
-    current_user.cart.transactions.each do |item|
-      line_item = LineItem.find(item.item_id)
-      if line_item.category == "Class"
-        current_user.update(credits: (current_user.credits + (item.amount * line_item.cost)))
+    if current_user.buy_shopping_cart == "Ok"
+      current_user.cart.transactions.each do |item|
+        line_item = LineItem.find(item.item_id)
+        if RedemptionKey.redeem(item.redeemed_token)
+          current_user.update(credits: (current_user.credits + (item.amount * line_item.credits)))
+        end
       end
-    end
-    # if current_user.buy_shopping_cart == "Ok"
-    #   current_user.cart = Cart.create
+      current_user.cart = Cart.create
       flash[:notice] = "Cart successfully purchased"
       redirect_to root_path
-    # else
-    #   # This should check for various errors and report accurately.
-    #   flash[:alert] = "There was a problem with your request."
-    #   redirect_to show_cart_path
-    # end
+    else
+      # This should check for various errors and report accurately.
+      flash[:alert] = "There was a problem with your request."
+      redirect_to store_path
+    end
   end
 
   def new
@@ -73,6 +73,19 @@ class StoreController < ApplicationController
       end
       flash.now[:notice] = "#{order.item.title} successfully added to cart."
     end
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def redeem
+    item = RedemptionKey.lookup(params[:redemption_key])
+    if item && @cart.transactions.map { |items| items.item_id }.exclude?(item.id)
+      @cart.transactions << @order = Transaction.create(item_id: item.id, redeemed_token: params[:redemption_key])
+    else
+      @order = nil
+    end
+
     respond_to do |format|
       format.js
     end

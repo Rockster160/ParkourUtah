@@ -6,6 +6,10 @@
       <% end %>
     </div>
     <br/>
+    <%= form_tag '', remote: true do %>
+      <%= text_field_tag :redemption_key, '', class: 'redemption-key-container', autocomplete: "off" %>
+      <%= submit_tag "Submit" %>
+    <% end %>
     <span class="shopping-cart-total">Total: <span class="shopping-cart-total-holder"><%= number_to_currency(@cart.price) %></span></span>
     <%= link_to "Purchase Cart", purchase_path, method: :post, data: {confirm: "Are you sure? \nThis will charge your account #{number_to_currency(@cart.price)}."} %>
   </div>

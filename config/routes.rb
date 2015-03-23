@@ -32,22 +32,15 @@ Rails.application.routes.draw do
   get '/dashboard' => 'peeps#dashboard', as: 'dashboard'
   get '/peeps/return' => 'peeps#return'
 
-  # get '/store' => 'index#coming_soon'
-  # get '/store/new' => 'index#coming_soon'
-  # get '/store/edit/:id' => 'index#coming_soon'
-  # patch '/store/update/:id' => 'index#coming_soon'
-  # post '/store/create' => 'index#coming_soon'
-
   get '/comingsoon' => 'index#coming_soon', as: 'coming_soon'
 
   get '/store' => 'store#index', as: 'store'
+  post '/store' => 'store#redeem'
   get '/store/new' => 'store#new', as: 'add_item'
   get '/store/edit/:id' => 'store#edit', as: 'edit_item'
   patch '/store/update/:id' => 'store#update'
   post '/store/create' => 'store#create'
 
-  # get '/cart/add/:id' => 'store#add_to_cart', as: 'add_to_cart'
-  # get '/cart/show' => 'store#show_cart', as: 'show_cart'
   post '/cart/update' => 'store#update_cart', as: 'update_cart'
   post '/cart/purchase' => 'store#purchase', as: 'purchase'
 

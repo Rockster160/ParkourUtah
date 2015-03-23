@@ -52,7 +52,7 @@ class PeepsController < ApplicationController
     create_athlete
     pin = params[:pin].to_i
     if pin == @athlete.athlete_pin
-      charge_class(15, "Credits")
+      charge_class(12, "Credits")
     elsif pin == 7545
       charge_class(0, "Cash")
     else

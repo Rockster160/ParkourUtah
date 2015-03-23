@@ -1,0 +1,5 @@
+<% if @order %>
+  $('.redemption-key-container').val('');
+  $('.orders-placeholder').append('<div class="hidden-holder" style="display:none;"><%= j render partial: "shopping_cart_item", locals: {order: @order} %></div>');
+  $('.hidden-holder:last').slideDown(500);
+<% end %>
