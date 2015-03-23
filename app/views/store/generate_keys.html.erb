@@ -1,6 +1,6 @@
 <% if current_user && current_user.is_admin? %>
   <div class="fancy-box central-container form-offset">
-    <%= form_tag do %>
+    <%= form_tag '/store/admin/generate_keys' do %>
     <h2>Generate Keys</h2><br/>
     Type of Key: <br/>
     <select name="key_type">

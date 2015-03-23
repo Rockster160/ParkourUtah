@@ -6,7 +6,7 @@
       <% end %>
     </div>
     <br/>
-    <%= form_tag '', remote: true do %>
+    <%= form_tag '/store/redeem', remote: true do %>
       <%= text_field_tag :redemption_key, '', class: 'redemption-key-container', autocomplete: "off" %>
       <%= submit_tag "Submit" %>
     <% end %>
