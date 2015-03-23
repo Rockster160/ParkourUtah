@@ -29,3 +29,5 @@ production:
   user: parkour_utah
   password: <%= ENV["PKUT_DB_PASSWORD"] %>
   database: parkour_utah_production
+  pool: 5
+  host: localhost
