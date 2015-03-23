@@ -1,5 +1,5 @@
-every 1.day, at: '2:00 pm' do
-  runner "Scheduled.send_text"
+every 1.day, at: '1:00 pm' do
+  runner "Scheduled.send_class_text"
 end
 
 every 1.day, at: "9:10 pm" do
