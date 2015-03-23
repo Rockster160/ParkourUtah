@@ -36,10 +36,11 @@ class StoreController < ApplicationController
   end
 
   def email_keys
-    keys = params[:how_many].first.to_i.times do
-      RedemptionKey.create(redemption: params[:key_type])
+    keys = []
+    params[:how_many].first.to_i.times do
+      keys << RedemptionKey.create(redemption: params[:key_type]).key
     end
-    ::KeyGenMailerWorker.perform_async(keys)
+    ::KeyGenMailerWorker.perform_async(keys, params[:key_type])
     redirect_to :back, notice: "Got it! An email will be sent to you shortly containing the requested keys."
   end
 

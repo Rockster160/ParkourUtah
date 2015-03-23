@@ -1,8 +1,8 @@
 class KeyGenMailerWorker
   include Sidekiq::Worker
 
-  def perform(keys)
-    KeyGenMailer.key_gen_mail(keys).deliver_now
+  def perform(keys, topic)
+    KeyGenMailer.key_gen_mail(keys, topic).deliver_now
   end
 
 end
