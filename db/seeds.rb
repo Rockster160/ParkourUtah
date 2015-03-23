@@ -332,14 +332,47 @@ puts "\nCompleted all events"
 #   class_name: "special"
 # )
 puts "Creating Store items"
-15.times do |t|
-  LineItem.create(
-    title: Faker::Commerce.product_name,
-    description: Faker::Lorem.paragraph,
-    cost_in_pennies: rand(25000),
-    category: ["Other", "Shoes", "Shirts", "Stuff"].sample
-  )
-  print "\e[32m.\e[0m"
-end
+LineItem.create(
+  title: "Class Admission",
+  description: "Purchasing this item will add credits to your account that are good for 1 class for 1 student. Students must have a Waiver filled out before attending class.",
+  cost_in_pennies: 1200,
+  item_order: 1,
+  credits: 12,
+  category: "Class"
+)
+print "\e[32m.\e[0m"
+LineItem.create(
+  title: "Expert Class Tryout",
+  description: "Expert Tryouts are by invite ONLY. Purchasing this item will add credits to your account that are good for 1 tryout for 1 student. Instructors will set up a time and day with the student in order to schedule a 1 on 1 tryout.",
+  cost_in_pennies: 3500,
+  item_order: 2,
+  credits: 35,
+  category: "Class"
+)
+print "\e[32m.\e[0m"
+LineItem.create(
+  title: "Scout Package",
+  hidden: true,
+  cost_in_pennies: 2000,
+  credits: 48,
+  category: "Class"
+)
+print "\e[32m.\e[0m"
+LineItem.create(
+  title: "Trial Class",
+  hidden: true,
+  cost_in_pennies: 0,
+  credits: 12,
+  category: "Class"
+)
+# 15.times do |t|
+#   LineItem.create(
+#     title: Faker::Commerce.product_name,
+#     description: Faker::Lorem.paragraph,
+#     cost_in_pennies: rand(25000),
+#     category: ["Other", "Shoes", "Shirts", "Stuff"].sample
+#   )
+#   print "\e[32m.\e[0m"
+# end
 puts "\nCompleted Store items"
 puts "Seeding Complete"
