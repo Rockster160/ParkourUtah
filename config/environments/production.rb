@@ -35,8 +35,9 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_deliveries = true
 
+  Paperclip.options.merge!(:command_path => "/usr/bin")
   config.serve_static_files = ENV['RAILS_SERVE_STATIC_FILES'].present?
-  config.action_mailer.default_url_options   = { :host => 'parkourutah.herokuapp.com' }
+  config.action_mailer.default_url_options   = { :host => '45.55.180.23' }
   config.paperclip_defaults = {
     :storage => :s3,
     :s3_credentials => {
