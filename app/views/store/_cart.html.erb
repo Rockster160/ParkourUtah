@@ -7,7 +7,7 @@
     </div>
     <br/>
     <%= form_tag '/store/redeem', remote: true do %>
-      <%= text_field_tag :redemption_key, '', class: 'redemption-key-container', autocomplete: "off" %>
+      <%= text_field_tag :redemption_key, '', placeholder: 'Redemption Key', class: 'redemption-key-container', autocomplete: "off" %>
       <%= submit_tag "Submit" %>
     <% end %>
     <span class="shopping-cart-total">Total: <span class="shopping-cart-total-holder"><%= number_to_currency(@cart.price) %></span></span>

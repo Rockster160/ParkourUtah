@@ -1,5 +1,4 @@
 class PeepsController < ApplicationController
-  layout 'application', except: [:secret]
 
   def show
     @instructor = User.find(params[:id])

@@ -18,6 +18,11 @@
 //= require turbolinks
 //= require_tree .
 
+$(function () {
+  $('body')
+    .on('touchstart.dropdown.data-api', '.dropdown-menu', function (e) { e.stopPropagation() })
+});
+
 
 ready = function() {
   timeout = setTimeout(function() {
