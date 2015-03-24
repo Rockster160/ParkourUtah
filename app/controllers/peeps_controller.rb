@@ -29,12 +29,10 @@ class PeepsController < ApplicationController
       create_athlete
       if @athlete
         if Attendance.where(dependent_id: @athlete.athlete_id, event_id: params[:id]).count > 0
-          redirect_to :back
-           "Athlete already attending class."
+          redirect_to :back, alert: "Athlete already attending class."
         end
       else
-        redirect_to :back
-         "Athlete not found."
+        redirect_to :back, alert: "Athlete not found."
       end
     end
   end
@@ -44,6 +42,9 @@ class PeepsController < ApplicationController
       flash[:alert] = "Pin rejected. Please try again."
       redirect_to begin_class_path
     else
+      if params[:athlete_photo]
+        Dependent.where(athlete_id: params[:athlete_id]).first.update(athlete_photo: params[:athlete_photo])
+      end
       create_athlete
     end
   end
@@ -66,7 +67,7 @@ class PeepsController < ApplicationController
     if @user.charge_credits(charge)
       Attendance.create(
         dependent_id: @athlete.athlete_id,
-        instructor_id: current_user.id,
+        user_id: current_user.id,
         event_id: params[:id],
         type_of_charge: charge_type
       )

@@ -22,9 +22,8 @@ body {
   text-align: center;
   margin: 0 auto;
   overflow: auto;
-  width: 50%;
-  min-width: 400px;
-  max-width: 900px;
+  width: 400px;
+  max-width: 95%;
 }
 
 .fileform-center { margin-left: 90px; }
@@ -45,6 +44,7 @@ body {
   .fancy-textbox {
     margin: 10px 0;
     width: 300px;
+    max-width: 85%;
     height: 40px;
     font-size: 2em;
     color: black;
@@ -55,7 +55,7 @@ body {
   .fancy-textarea {
     width: 350px;
     margin: 20px 0;
-    max-width: 350px;
+    max-width: 95%;
     font-size: 1.3em;
     color: black;
     padding: 20px;

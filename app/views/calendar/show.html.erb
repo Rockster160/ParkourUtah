@@ -1,44 +1,44 @@
 <div class="row">
-  <div class="text-center">
-    <div class="row">
-      <div class="col-md-8 col-md-offset-2 cities-container fancy-box">
-        <% @cities.each do |city| %>
-          <div href="<%= city %>" class="col-xs-3 calendar-legend">
-            <i class="calendar-legend-blip event-color <%= city.parameterize %>">&nbsp;</i>
-            <span class="pull-left"><%= city.capitalize %></span>
-          </div>
-        <% end %>
+  <div class="col-md-8 col-md-offset-2 cities-container fancy-box">
+    <% @cities.each do |city| %>
+      <div href="<%= city %>" class="col-xs-3 calendar-legend">
+        <i class="calendar-legend-blip event-color <%= city.parameterize %>">&nbsp;</i>
+        <span class="calendar-legend-text pull-left"><%= city.capitalize %></span>
       </div>
-    </div>
-    <div class="row calendar-controls-container">
-      <div class="calendar-controls col-md-8 col-md-offset-2 col-xs-12">
-        <select class="select-dropbox class-name-search col-sm-4 col-sm-offset-0 col-xs-6 col-xs-offset-3" multiple="multiple" placeholder="All Events(Default)">
-          <% @classes.each do |class_name| %>
-            <option value="<%= class_name %>"><%= class_name.capitalize %></option>
-          <% end %>
-        </select>
-        <span class="col-sm-4 col-sm-offset-0 col-xs-6 col-xs-offset-3">
-          <%= link_to calendar_draw_path(date: @date - 1.month), class: "btn btn-default back-month" do %>
-            <%= icon('chevron-left', '', class: '') %>
-          <% end %>
-          <span class="date-holder"><%= "#{@date.strftime("%B")} #{@date.year}" %></span>
-          <%= link_to calendar_draw_path(date: @date + 1.month), class: "btn btn-default forward-month" do %>
-            <%= icon('chevron-right', '', class: '') %>
-          <% end %>
-        </span>
-        <select class="select-dropbox city-name-search col-sm-4 col-sm-offset-0 col-xs-6 col-xs-offset-3" multiple="multiple" placeholder="All Cities(Default)">
-          <% @cities.each do |city| %>
-            <option value="<%= city %>"><%= city.capitalize %></option>
-          <% end %>
-        </select>
-      </div>
-    </div>
+    <% end %>
   </div>
 </div>
 <div class="row">
-  <div class="col-md-8 col-md-offset-2 text-center calendar-container">
-    <div class="row">
-      <%= render('display') %>
+  <div class="full-calendar-container">
+    <div class="text-center">
+      <div class="row calendar-controls-container">
+        <div class="calendar-controls col-md-8 col-md-offset-2 col-xs-12">
+          <select class="select-dropbox class-name-search col-sm-4 col-sm-offset-0 col-xs-6 col-xs-offset-3" multiple="multiple" placeholder="All Events(Default)">
+            <% @classes.each do |class_name| %>
+              <option value="<%= class_name %>"><%= class_name.capitalize %></option>
+            <% end %>
+          </select>
+          <span class="col-sm-4 col-sm-offset-0 col-xs-6 col-xs-offset-3">
+            <%= link_to calendar_draw_path(date: @date - 1.month), class: "btn btn-default back-month" do %>
+              <%= icon('chevron-left', '', class: '') %>
+            <% end %>
+            <span class="date-holder"><%= "#{@date.strftime("%B")} #{@date.year}" %></span>
+            <%= link_to calendar_draw_path(date: @date + 1.month), class: "btn btn-default forward-month" do %>
+              <%= icon('chevron-right', '', class: '') %>
+            <% end %>
+          </span>
+          <select class="select-dropbox city-name-search col-sm-4 col-sm-offset-0 col-xs-6 col-xs-offset-3" multiple="multiple" placeholder="All Cities(Default)">
+            <% @cities.each do |city| %>
+              <option value="<%= city %>"><%= city.capitalize %></option>
+            <% end %>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8 col-md-offset-2 text-center calendar-container">
+      <div class="row">
+        <%= render('display') %>
+      </div>
     </div>
   </div>
 </div>

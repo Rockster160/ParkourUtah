@@ -10,6 +10,14 @@
   border-radius: 20px 20px 0 0;
 }
 
+.calendar-controls-container {
+}
+
+.full-calendar-container {
+  top: 285px;
+  position: absolute;
+}
+
 @media (max-width: 780px) {
   .calendar-controls {
     min-height: 120px;
@@ -35,10 +43,13 @@
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 20px;
+  position: absolute;
 }
 
 .calendar-legend {
   padding: 5px 0;
+  margin-bottom: 10px;
+  position: relative;
   &:hover {
     cursor: pointer;
     background: rgba(255, 0, 0, 0.2);

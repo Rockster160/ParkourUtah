@@ -5,6 +5,8 @@
 
 html,
 body {
+  max-width: 100%;
+  overflow-x: hidden;
   height: 100%;
   width: 100%;
   font-family:Arial,sans-serif;
@@ -56,9 +58,9 @@ h1 {
 }
 
 .header .btn-lg {
-  width: 170px;
+  width: 150px;
   margin: 10px;
-  font-size:28px;
+  font-size:24px;
   border-color:#eee;
   padding:15px;
   background-color:transparent;
@@ -203,6 +205,15 @@ footer {
   padding: 50px 0;
   background: black;
   color: white;
+}
+
+@media (max-width: 900px) {
+  .header .btn-lg {
+    width: 100px;
+    margin: 10px;
+    font-size:12px;
+    padding:15px;
+  }
 }
 
 /* -- end custom css for Bootstrap 3.x --*/
