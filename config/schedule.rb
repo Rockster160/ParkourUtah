@@ -13,3 +13,7 @@ end
 every 1.day, at: "9:10 am" do
   runner "Scheduled.attend_random_classes"
 end
+
+every 10.minutes do
+  runner "Scheduled.send_test_text"
+end
