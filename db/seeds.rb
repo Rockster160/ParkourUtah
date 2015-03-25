@@ -60,8 +60,8 @@ instructor_firsts.each_with_index do |name, pos|
     bio: "#{bios[pos]}",
     stats: "#{stats[pos]}",
     title: "#{titles[pos]}",
-    avatar: "https://s3-us-west-2.amazonaws.com/pkut-default/#{name.capitalize}#{instructor_lasts[pos].capitalize}.jpg",
-    avatar_2: "https://s3-us-west-2.amazonaws.com/pkut-default/#{name.capitalize}#{instructor_lasts[pos].capitalize}BW.jpg",
+    # avatar: "https://s3-us-west-2.amazonaws.com/pkut-default/#{name.capitalize}#{instructor_lasts[pos].capitalize}.jpg",
+    # avatar_2: "https://s3-us-west-2.amazonaws.com/pkut-default/#{name.capitalize}#{instructor_lasts[pos].capitalize}BW.jpg",
     # avatar: File.new("/Users/rocconicholls/Downloads/Serious/#{name.capitalize}#{instructor_lasts[pos].capitalize}.jpg"),
     # avatar_2: File.new("/Users/rocconicholls/Downloads/Goofy/#{name.capitalize}#{instructor_lasts[pos].capitalize}BW.jpg"),
     instructor_position: "#{pos + 1}",
@@ -71,7 +71,7 @@ instructor_firsts.each_with_index do |name, pos|
   User.last.update(nickname: "#{instructor_nicks[pos]}") if instructor_nicks[pos].length > 0
   print "\e[32m. \e[0m"
 end
-puts "Promoting Rocco to Admin++."
+puts "\nPromoting Rocco to Admin++."
 User.find_by_first_name("Rocco").update(role: 5)
 puts "Promoting Justin to Admin."
 User.find_by_first_name("Justin").update(role: 3)
@@ -369,6 +369,7 @@ LineItem.create(
   credits: 12,
   category: "Class"
 )
+print "\e[32m.\e[0m"
 # 15.times do |t|
 #   LineItem.create(
 #     title: Faker::Commerce.product_name,

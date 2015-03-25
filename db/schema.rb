@@ -109,7 +109,7 @@ ActiveRecord::Schema.define(version: 20150323015142) do
     t.integer  "amount",         default: 1
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
-    t.string   "redeemed_token", default: ""
+    t.string   "redeemed_token"
   end
 
   add_index "transactions", ["cart_id"], name: "index_transactions_on_cart_id", using: :btree

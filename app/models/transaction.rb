@@ -19,5 +19,6 @@ class Transaction < ActiveRecord::Base
 
   def verify_amount_is_not_nil
     self.amount ||= 0
+    self.redeemed_token ||= ""
   end
 end
