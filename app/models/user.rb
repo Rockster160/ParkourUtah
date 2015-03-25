@@ -92,6 +92,11 @@ class User < ActiveRecord::Base
   def get_AuthNet_token
     return 0000 unless create_AuthNet_profile
     transaction = generate_AuthNet_transaction
+    return_url = if ENV["RAILS_ENV"] == "production"
+      "http://lvh.me:7545"
+    else
+      "http:45.55.180.23" #FIXME
+    end
     xml =
     "<customerProfileId>#{self.auth_net_id}</customerProfileId>
     <hostedProfileSettings>
@@ -101,7 +106,7 @@ class User < ActiveRecord::Base
     </setting>
     <setting>
     <settingName>hostedProfileReturnUrl</settingName>
-    <settingValue>http://lvh.me:7545/peeps/return</settingValue>
+    <settingValue>#{return_url}/peeps/return</settingValue>
     </setting>
     <setting>
     <settingName>hostedProfileReturnUrlText</settingName>
