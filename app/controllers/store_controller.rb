@@ -11,20 +11,22 @@ class StoreController < ApplicationController
   end
 
   def purchase
-    if current_user.buy_shopping_cart == "Ok"
-      current_user.cart.transactions.each do |item|
-        line_item = LineItem.find(item.item_id)
-        if RedemptionKey.redeem(item.redeemed_token)
-          current_user.update(credits: (current_user.credits + (item.amount * line_item.credits)))
+    unless current_user.payment_id == nil
+      if current_user.buy_shopping_cart == "Ok"
+        current_user.cart.transactions.each do |item|
+          line_item = LineItem.find(item.item_id)
+          if RedemptionKey.redeem(item.redeemed_token)
+            current_user.update(credits: (current_user.credits + (item.amount * line_item.credits)))
+          end
         end
+        current_user.cart = Cart.create
+        redirect_to root_path, notice: "Cart successfully purchased"
+      else
+        # This should check for various errors and report accurately.
+        redirect_to store_path, alert: "There was a problem with your request."
       end
-      current_user.cart = Cart.create
-      flash[:notice] = "Cart successfully purchased"
-      redirect_to root_path
     else
-      # This should check for various errors and report accurately.
-      flash[:alert] = "There was a problem with your request."
-      redirect_to store_path
+      redirect_to edit_user_registration_path, alert: "Please fill out your billing information before you purchase any items."
     end
   end
 

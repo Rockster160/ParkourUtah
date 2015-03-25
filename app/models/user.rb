@@ -93,7 +93,7 @@ class User < ActiveRecord::Base
     return 0000 unless create_AuthNet_profile
     transaction = generate_AuthNet_transaction
     return_url = if ENV["RAILS_ENV"] == "production"
-      "http://lvh.me:7545"
+      "http://localhost:7545"
     else
       "http:45.55.180.23" #FIXME
     end
@@ -134,10 +134,10 @@ class User < ActiveRecord::Base
   end
 
   def delete_all_AuthNet
-    ((31812545..31812568).to_a + [31851211]).each do |user|
+    ((31931699..31931710).to_a + []).each do |user|
       xml = "<customerProfileId>#{user}</customerProfileId>"
       res = auth_net_xml_request('deleteCustomerProfileRequest', xml)
-      print "\e[32m.\e[0m"
+      print "\e[31m.\e[0m"
     end
   end
 

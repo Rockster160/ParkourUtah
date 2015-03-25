@@ -70,7 +70,7 @@ class PeepsController < ApplicationController
         event_id: params[:id],
         type_of_charge: charge_type
       )
-      flash[:notice] = "Success!"
+      flash[:notice] = "Success! Welcome to class."
       redirect_to begin_class_path
     else
       flash[:alert] = "Sorry, there are not enough credits in your account."

@@ -38,8 +38,13 @@ class Dependent < ActiveRecord::Base
   end
 
   def generate_pin
+    self.sign_up_credits
     self.athlete_id = ((0...9999).to_a - Dependent.all.map { |user| user.athlete_id }).sample
     self.save
+  end
+
+  def sign_up_credits
+    self.user.update(credits: 12)
   end
 
   private
