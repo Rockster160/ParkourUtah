@@ -128,9 +128,6 @@ class Scheduled < ActiveRecord::Base
   end
 
   def self.update_store
-    Transaction.all.each do |l|
-      l.redeemed_token ||= ""
-    end
   end
 
 end
