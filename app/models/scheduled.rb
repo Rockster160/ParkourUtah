@@ -81,21 +81,6 @@ class Scheduled < ActiveRecord::Base
   end
 
   def self.update_users
-    User.find_by_first_name("Justin").update(bio:
-      "After painfully discovering that he had gotten fat, Justin came to the realization that he needed to do something extreme to keep up with his five active boys. Four years ago Justin began his Parkour experience. Having several businesses, he decided to create structure to the Utah Parkour scene. With the help of others it has grown into what it is today. What you may not know about Justin is that he loves to fly airplanes and practice Yoga. Obviously not at the same time."
-    )
-    User.find_by_first_name("Rocco").update(bio:
-      "Rocco is a long time Parkour and FreeRunning enthusiast and excited about ParkourUtah.com. This site is his creation. Having suffered an injury related to FreeRunning in the past, he has never lost his love for the sport. What may catch you off-guard is that he is from South Africa and loves riding motorcycles. But those aren’t the surprises, somehow over the years he got the nickname Zoro. With one R. We will let your mind wander about how that all came to be."
-    )
-    User.find_by_first_name("Jadon").update(bio:
-      "JD is intense! His movement is profound. Having no indoor training available he contributes his ability to \"go big\" on having to develop a no fear attitude. He loves to perfect his moves and focus on flow and control. With 6 years of Parkour, it is his passion and love. 360° dives, 360° fronts, and one-handed push gainers are his favorite moves. Ask JD to sign his name with both hands... He is ambidextrous!"
-    )
-    User.find_by_first_name("William").update(bio:
-      "Scott is a passionate and committed Parkour instructor. His love for the sport started in 2011 and has focused on Flow with a heavy emphasis on precision. His favorite move is a Russian front flip. Scott has a unique interest- he has a deep love for 50’s-70’s Folk Music. Don’t be surprised to hear singing while he is bouncing off the walls."
-    )
-    User.find_by_first_name("Stephen").update(bio:
-      "Doing Parkour for three years and being A.D.A.P.T. certified, Parkour is life for Stephen. He is a big believer in the purist style of Parkour and loves the speed vault. Don’t let his height scare you. He is a little kid inside, and a great instructor. In fact, the kid is very much alive inside of him. He still loves 90’s dance music and isn’t afraid to roll with the windows down to technotronic. Pump up the Jam!!"
-    )
   end
 
   def self.reset_classes
@@ -140,6 +125,12 @@ class Scheduled < ActiveRecord::Base
   end
 
   def self.create_store
+  end
+
+  def self.update_store
+    Transaction.all.each do |l|
+      l.redeemed_token ||= ""
+    end
   end
 
 end

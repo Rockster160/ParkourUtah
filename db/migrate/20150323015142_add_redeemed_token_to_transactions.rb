@@ -1,5 +1,5 @@
 class AddRedeemedTokenToTransactions < ActiveRecord::Migration
   def change
-    add_column :transactions, :redeemed_token, :string
+    add_column :transactions, :redeemed_token, :string, default: ""
   end
 end
