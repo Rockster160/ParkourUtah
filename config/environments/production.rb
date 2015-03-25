@@ -37,7 +37,7 @@ Rails.application.configure do
 
   Paperclip.options.merge!(:command_path => "/usr/bin")
   config.serve_static_files = ENV['RAILS_SERVE_STATIC_FILES'].present?
-  config.action_mailer.default_url_options   = { :host => '45.55.180.23' }
+  config.action_mailer.default_url_options   = { :host => 'parkourutah.com' }
   config.paperclip_defaults = {
     :storage => :s3,
     :s3_credentials => {

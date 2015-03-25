@@ -7,14 +7,16 @@ var ready = function() {
       e.preventDefault();
       $href = e.target.hash
       $('body,html').animate({scrollTop:$($href).offset().top},500);
+      console.log($($href).offset().top);
     });
     /* Remove buffer for Navbar. */
     $('.navbar-offset').hide();
     /* highlight the top nav as scrolling occurs */
     $('body').scrollspy({ target: '#navbar' });
+    console.log($('.header-container').height());
     $('.navbar-fixed-top').affix({
       offset: {
-        top: $('.header-container').height()
+        top: -5
       }
     });
     $('.callout-container').ready(function() {
@@ -28,7 +30,7 @@ var ready = function() {
     $('body').scrollspy({ target: '#navbar' });
     $('.navbar-fixed-top').affix({
       offset: {
-        top: -1
+        top: -10
       }
     });
     $('.full-site-container').css({
@@ -41,6 +43,8 @@ var ready = function() {
 $('.delayed-load').ready(function() {
   $('.delayed-load').css('display', 'block');
 });
+
+
 
 $(document).ready(ready);
 $(document).on('page:load', ready);

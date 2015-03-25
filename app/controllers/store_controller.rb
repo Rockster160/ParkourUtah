@@ -115,7 +115,14 @@ class StoreController < ApplicationController
   end
 
   def set_cart
+    validate_user # Temporary until session carts are fixed....
     @cart = current_user.cart if user_signed_in?
+  end
+
+  def validate_user
+    unless current_user && current_user.is_admin?
+      redirect_to new_user_session_path, alert: "Store is currently only available to signed in users. Sorry!"
+    end
   end
 
   def validate_admin
