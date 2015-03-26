@@ -11,8 +11,6 @@ var ready = function() {
     /* Remove buffer for Navbar. */
     $('.navbar-offset').hide();
     /* highlight the top nav as scrolling occurs */
-    $('body').scrollspy({ target: '#navbar' });
-
     $('body').scroll(function() {
       if (inViewport($('.header-container'))) {
         if ($('.navbar-fixed-top').hasClass('affix')) {
@@ -24,12 +22,12 @@ var ready = function() {
         }
       }
     })
-    $('.navbar-fixed-top').removeClass('affix');
     $('.callout-container').ready(function() {
       $('.callout-background').append(
         $('.callout-container').css('visibility', 'visible').show()
       );
     });
+    $('.navbar-fixed-top').removeClass('affix');
 
   } else {
 
