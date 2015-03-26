@@ -86,6 +86,12 @@ class Scheduled < ActiveRecord::Base
   end
 
   def self.update_users
+    User.all.select { |u| u.is_instructor? }.each do |user|
+      user.update(
+        avatar: "https://s3-us-west-2.amazonaws.com/pkut-default/#{user.first_name.capitalize}#{user.last_name.capitalize}.jpg",
+        avatar_2: "https://s3-us-west-2.amazonaws.com/pkut-default/#{user.first_name.capitalize}#{user.last_name.capitalize}BW.jpg",
+      )
+    end
   end
 
   def self.reset_classes

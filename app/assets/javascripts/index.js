@@ -24,6 +24,7 @@ var ready = function() {
         }
       }
     })
+    $('.navbar-fixed-top').removeClass('affix');
     $('.callout-container').ready(function() {
       $('.callout-background').append(
         $('.callout-container').css('visibility', 'visible').show()
