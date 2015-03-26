@@ -25,20 +25,23 @@ class Scheduled < ActiveRecord::Base
     payment = {}
 
     (0..(days - 1)).each do |day|
-      classes = {}
-      daily_payment = {}
       Event.select {|e| e.date.to_date == (Time.now - day.days).to_date}.each do |event|
         instructors = {}
-        class_payment = {}
-        event.attendances.each do |a|
-          instructor = User.find(a.user_id)
-          instructors[instructor.full_name] ||= {}
-          instructors[instructor.full_name]["students"] ||= []
-          instructors[instructor.full_name]["pay"] ||= 0
+        unless event.attendances.count == 0
+          event.attendances.each do |a|
+            instructor = User.find(a.user_id)
+            instructors[instructor.full_name] ||= {}
+            instructors[instructor.full_name]["students"] ||= []
+            instructors[instructor.full_name]["pay"] ||= 0
 
-          athlete = Dependent.where(athlete_id: a.dependent_id).first
-          instructors[instructor.full_name]["students"] << "#{athlete.full_name} - #{a.type_of_charge}"
-          instructors[instructor.full_name]["pay"] += instructor.payment_multiplier
+            athlete = Dependent.where(athlete_id: a.dependent_id).first
+            instructors[instructor.full_name]["students"] << "#{athlete.full_name} - #{a.type_of_charge}"
+            instructors[instructor.full_name]["pay"] += instructor.payment_multiplier
+          end
+        else
+          instructors[event.host] ||= {}
+          instructors[event.host]["students"] = ["None"]
+          instructors[event.host]["pay"] = 15
         end
         instructors.each do |instructor|
           pay = instructor[1]["pay"] < 15 ? 15 : instructor[1]["pay"]
