@@ -1,7 +1,6 @@
 class Scheduled < ActiveRecord::Base
 
   def self.send_class_text
-        binding.pry
     Subscription.all.each do |subscriber|
       Event.where(token: subscriber.event.token).select { |e| e.date.to_date == Time.now.to_date }.each do |event|
         num = subscriber.user.phone_number
