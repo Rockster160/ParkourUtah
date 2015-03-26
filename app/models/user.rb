@@ -86,7 +86,7 @@ class User < ActiveRecord::Base
   end
 
   def subscribed?(event)
-    Subscription.where(user_id: self.id, event_id: event).count > 0
+    Subscription.where(user_id: self.id, event_id: event.id).count > 0
   end
 
   def get_AuthNet_token

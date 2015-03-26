@@ -56,8 +56,7 @@ class PeepsController < ApplicationController
     elsif pin == 7545
       charge_class(0, "Cash")
     else
-      flash[:alert] = "Invalid Pin. Try again."
-      redirect_to :back
+      redirect_to :back, alert: "Invalid Pin. Try again."
     end
   end
 

@@ -1,11 +1,14 @@
 class Scheduled < ActiveRecord::Base
 
   def self.send_class_text
+        binding.pry
     Subscription.all.each do |subscriber|
-      Event.where(token: subscriber.event_id).select { |e| e.date.to_date == Time.now.to_date }.each do |event|
-        num = User.find(subscriber.user_id).phone_number
-        msg = "Hope to see you at our #{event.city} #{event.class_name.capitalize} class today at#{event.date.strftime('%l:%M')}!"
-        ::SmsMailerWorker.perform_async(msg, num)
+      Event.where(token: subscriber.event.token).select { |e| e.date.to_date == Time.now.to_date }.each do |event|
+        num = subscriber.user.phone_number
+        unless num == ""
+          msg = "Hope to see you at our #{event.city} #{event.class_name.capitalize} class today at#{event.date.strftime('%l:%M')}!"
+          ::SmsMailerWorker.perform_async(msg, num)
+        end
       end
     end
   end

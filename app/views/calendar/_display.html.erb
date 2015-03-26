@@ -21,10 +21,10 @@
             <%= event.description %><br/><br/>
             Instructor: <%= event.host %><br/>
             <% if current_user %>
-              <% unless current_user.subscribed?(event.token) %>
-                <%= link_to 'Subscribe to this Event', subscribe_path(id: event.token), class: "calendar-link", method: :post %><br/>
+              <% unless current_user.subscribed?(event) %>
+                <%= link_to 'Subscribe to this Event', subscribe_path(id: event.id), class: "calendar-link", method: :post %><br/>
               <% else %>
-                <%= link_to 'Unsubscribe from this Event', unsubscribe_path(id: event.token), class: "calendar-link", method: :delete %><br/>
+                <%= link_to 'Unsubscribe from this Event', unsubscribe_path(id: event.id), class: "calendar-link", method: :delete %><br/>
               <% end %>
             <% end %>
             <% if current_user && current_user.is_instructor? %>

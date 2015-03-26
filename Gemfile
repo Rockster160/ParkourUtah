@@ -12,6 +12,7 @@ gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.1.0'
 gem 'faker'
+
 gem 'randomuser-local-rails', require: 'randomuser_local'
 
 gem "therubyracer"
@@ -28,7 +29,6 @@ gem 'aws-sdk', '< 2.0'
 gem 'authorizenet'
 gem 'httparty'
 gem 'sidekiq'
-gem 'googlevoiceapi'
 gem 'whenever', require: false
 gem 'sinatra', '~> 1.3', require: nil
 gem 'twilio-ruby'
