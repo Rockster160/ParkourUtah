@@ -31,3 +31,8 @@
     border: 5px ridge red;
   }
 }
+
+@media (max-width: 900px) {
+  .flash { width: 100%; }
+  .flash-container { left: 0; }
+}

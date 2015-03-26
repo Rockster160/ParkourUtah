@@ -3,6 +3,7 @@
   <%= submit_tag "√", class: "accept-athlete-pin btn btn-success" %>
   <%= hidden_field_tag :athlete_id, @athlete.athlete_id %>
   <div class="fancy-box central-container">
+    <h3><%= @athlete.full_name %></h3>
     <% if @athlete.athlete_photo_file_size %>
       <%= image_tag("#{@athlete.athlete_photo.url}", width: "300", class: 'athlete-image') %>
     <% else %>

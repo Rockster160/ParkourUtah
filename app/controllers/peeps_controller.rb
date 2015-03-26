@@ -1,9 +1,5 @@
 class PeepsController < ApplicationController
-
-  def show
-    @instructor = User.find(params[:id])
-    redirect_to root_path unless @instructor.is_instructor?
-  end
+  before_action :validate_instructor
 
   def return
     current_user.get_payment_id
@@ -11,10 +7,6 @@ class PeepsController < ApplicationController
   end
 
   def dashboard
-    unless current_user && current_user.is_instructor?
-      flash[:alert] = "You are not authorized to view this page."
-      redirect_to root_path
-    end
     @classes = Event.all.select {|event| event.date.to_date == Time.now.to_date }
   end
 
@@ -56,7 +48,7 @@ class PeepsController < ApplicationController
     elsif pin == 7545
       charge_class(0, "Cash")
     else
-      redirect_to :back, alert: "Invalid Pin. Try again."
+      redirect_to begin_class_path, alert: "Invalid Pin. Try again."
     end
   end
 
@@ -81,5 +73,11 @@ class PeepsController < ApplicationController
 
   def create_athlete
     @athlete = Dependent.where("athlete_id = ?", params[:athlete_id]).first
+  end
+
+  def validate_instructor
+    unless current_user && current_user.is_instructor?
+      redirect_to new_user_session_path, alert: "You must be an Instructor to view this page."
+    end
   end
 end
