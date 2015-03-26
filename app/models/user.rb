@@ -52,7 +52,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   has_attached_file :avatar,
-                    :styles => { :medium => "300x300>", :thumb => "100x100#" },
+                    :styles => { :medium => "300x400>", :thumb => "120x160" },
                     storage: :s3,
                     bucket: ENV['PKUT_S3_BUCKET_NAME'],
                     :default_url => "/images/missing.png",
@@ -60,7 +60,7 @@ class User < ActiveRecord::Base
   validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
 
   has_attached_file :avatar_2,
-                    :styles => { :medium => "300x300>", :thumb => "100x100#" },
+                    :styles => { :medium => "300x400>", :thumb => "120x160" },
                     storage: :s3,
                     bucket: ENV['PKUT_S3_BUCKET_NAME'],
                     :default_url => "/images/missing.png",
