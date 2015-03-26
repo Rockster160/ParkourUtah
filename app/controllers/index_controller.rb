@@ -22,4 +22,7 @@ class IndexController < ApplicationController
     ::ContactMailerWorker.perform_async(params)
     redirect_to root_path
   end
+
+  def contact_page
+  end
 end

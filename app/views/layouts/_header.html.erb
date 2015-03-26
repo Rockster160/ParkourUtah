@@ -1,53 +1,92 @@
-<div class="navbar navbar-fixed-top" data-spy="affix">
-  <div class="container">
-    <div class="navbar-header">
-      <a href="/" class="navbar-brand">PARKOURUTAH</a>
-      <a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
-    </div>
-    <div class="navbar-collapse collapse pull-right" id="nvbar">
-      <ul class="nav navbar-nav">
-        <% if user_signed_in? %>
-          <li><a alt="..." class="hover-btn" data-toggle="modal" data-target="#modal_contact">Contact Us</a></li>
-          <li><%= link_to "Store", store_path %></li>
-          <li><%= link_to "Schedule", calendar_show_path('all') %></li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-              <span class="caret"></span> Account
-            </a>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-              <% if current_user.is_instructor? %>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= dashboard_path %>">
-                  Dashboard
+<div class="desktop-header hidden-xs">
+  <div class="navbar navbar-fixed-top" data-spy="affix">
+    <div class="container">
+      <div class="navbar-header">
+        <a href="/" class="navbar-brand">PARKOURUTAH</a>
+      </div>
+      <div class="pull-right" id="navbar">
+        <ul class="nav navbar-nav">
+          <% if user_signed_in? %>
+            <li><a alt="..." class="hover-btn" data-toggle="modal" data-target="#modal_contact">Contact Us</a></li>
+            <li><%= link_to "Store", store_path %></li>
+            <li><%= link_to "Schedule", calendar_show_path('all') %></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                <span class="caret"></span> Account
+              </a>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                <% if current_user.is_instructor? %>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= dashboard_path %>">
+                    Dashboard
+                  </a></li>
+                <% end %>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= store_path %>">
+                  Shopping Cart
                 </a></li>
-              <% end %>
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= store_path %>">
-                Shopping Cart
-              </a></li>
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= edit_user_registration_path %>">
-                Edit Account
-              </a></li>
-              <li role="presentation">
-                <%= link_to "Sign Out", destroy_user_session_path, method: :delete, tabindex: "-1", role: "menuitem" %>
-              </li>
-            </ul>
-          </li>
-        <% else %>
-          <li><a alt="..." class="hover-btn" data-toggle="modal" data-target="#modal_contact">Contact Us</a></li>
-          <li><%= link_to "Store", store_path %></li>
-          <li><%= link_to "Schedule", calendar_show_path('all') %></li>
-          <li><%= link_to "Sign In", new_user_session_path %></li>
-        <% end %>
-      </ul>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= edit_user_registration_path %>">
+                  Edit Account
+                </a></li>
+                <li role="presentation">
+                  <%= link_to "Sign Out", destroy_user_session_path, method: :delete, tabindex: "-1", role: "menuitem" %>
+                </li>
+              </ul>
+            </li>
+          <% else %>
+            <li><a alt="..." class="hover-btn" data-toggle="modal" data-target="#modal_contact">Contact Us</a></li>
+            <li><%= link_to "Store", store_path %></li>
+            <li><%= link_to "Schedule", calendar_show_path('all') %></li>
+            <li><%= link_to "Sign In", new_user_session_path %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modal_contact" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <%= render partial: 'index/contact_us' %>
     </div>
   </div>
 </div>
 
-<div class="modal fade" id="modal_contact" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <%= render partial: 'index/contact_us' %>
+<div class="mobile-header visible-xs">
+  <div class="navbar navbar-fixed-top" data-spy="affix">
+    <div class="container">
+      <a href="/" class="navbar-brand">PARKOURUTAH</a>
+      <div class="nav-collapse pull-right" id="navbar">
+        <a href="#" class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+          <%= icon('bars', '', class: 'fa-lg nav-icon') %>
+        </a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+          <li class="dropdown">
+            <% if user_signed_in? %>
+              <li><%= link_to "Contact Us", contact_page_path %></li>
+              <li><%= link_to "Store", store_path %></li>
+              <li><%= link_to "Schedule", calendar_show_path('all') %></li>
+                  <hr>
+                  <% if current_user.is_instructor? %>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= dashboard_path %>">
+                      Dashboard
+                    </a></li>
+                  <% end %>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= store_path %>">
+                    Shopping Cart
+                  </a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= edit_user_registration_path %>">
+                    Edit Account
+                  </a></li>
+                  <li role="presentation">
+                    <%= link_to "Sign Out", destroy_user_session_path, method: :delete, tabindex: "-1", role: "menuitem" %>
+                  </li>
+            <% else %>
+              <li><a alt="..." class="hover-btn" data-toggle="modal" data-target="#modal_contact">Contact Us</a></li>
+              <li><%= link_to "Store", store_path %></li>
+              <li><%= link_to "Schedule", calendar_show_path('all') %></li>
+              <li><%= link_to "Sign In", new_user_session_path %></li>
+            <% end %>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>
