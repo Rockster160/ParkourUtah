@@ -93,9 +93,9 @@ class User < ActiveRecord::Base
     return 0000 unless create_AuthNet_profile
     transaction = generate_AuthNet_transaction
     return_url = if ENV["RAILS_ENV"] == "production"
-      "http://localhost:7545"
+      "http:45.55.180.23"
     else
-      "http:45.55.180.23" #FIXME
+      "http://localhost:7545"
     end
     xml =
     "<customerProfileId>#{self.auth_net_id}</customerProfileId>
