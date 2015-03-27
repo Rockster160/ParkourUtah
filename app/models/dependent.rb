@@ -39,12 +39,12 @@ class Dependent < ActiveRecord::Base
 
   def generate_pin
     self.sign_up_credits
-    self.athlete_id = ((0...9999).to_a - [7545] - Dependent.all.map { |user| user.athlete_id }).sample
+    self.athlete_id = ((0...9999).to_a - [ENV["PKUT_PIN"].to_i] - Dependent.all.map { |user| user.athlete_id }).sample
     self.save
   end
 
   def sign_up_credits
-    self.user.update(credits: 12)
+    self.user.update(credits: ENV["PKUT_PRICE"].to_i)
   end
 
   private

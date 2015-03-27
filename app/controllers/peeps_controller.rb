@@ -44,8 +44,8 @@ class PeepsController < ApplicationController
     create_athlete
     pin = params[:pin].to_i
     if pin == @athlete.athlete_pin
-      charge_class(12, "Credits")
-    elsif pin == 7545
+      charge_class(ENV["PKUT_PRICE"].to_i, "Credits")
+    elsif pin == ENV["PKUT_PIN"].to_i
       charge_class(0, "Cash")
     else
       redirect_to begin_class_path, alert: "Invalid Pin. Try again."

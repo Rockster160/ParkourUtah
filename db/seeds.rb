@@ -339,9 +339,9 @@ puts "Creating Store items"
 LineItem.create(
   title: "Class Admission",
   description: "Purchasing this item will add credits to your account that are good for 1 class for 1 student. Students must have a Waiver filled out before attending class.",
-  cost_in_pennies: 1200,
+  cost_in_pennies: ENV["PKUT_PRICE"].to_i * 100,
   item_order: 1,
-  credits: 12,
+  credits: ENV["PKUT_PRICE"].to_i,
   category: "Class"
 )
 print "\e[32m.\e[0m"
@@ -366,7 +366,7 @@ LineItem.create(
   title: "Trial Class",
   hidden: true,
   cost_in_pennies: 0,
-  credits: 12,
+  credits: ENV["PKUT_PRICE"].to_i,
   category: "Class"
 )
 print "\e[32m.\e[0m"
