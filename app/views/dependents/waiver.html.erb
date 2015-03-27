@@ -12,11 +12,11 @@
     <span class="double">
       <%= f.check_box :signed, required: true, class: 'styled' %>
     </span>
-    <%= f.label :signed, 'By checking this box, I hereby waive the liability leading back to Parkour Utah for the athlete listed above.' %>
+    <%= f.label :signed, 'By checking this box, I hereby agree to waive any liability of Parkour Utah for the athlete listed above.' %>
     <br/>
-    <h5>By entering my name below, I certify that I have read and understand, to the best of my knowledge, all of the terms listed in the document available for download above.</h5>
-    <h5>I also certify that I understand that this is a legal document, and an electronic signature has the same legal effect and can be enforced in the same way as a written signature.</h5>
-    <h5>By the creation of this document, I authorize, as a legal guardian of the athlete listed above, for the athlete to take part in any class, competition, or event hosted by or under the name of Parkour Utah.</h5>
+    <h5>By entering my name below, I certify that I have downloaded, read and understand all of the terms and provisions in the liability waiver document available for download above.</h5>
+    <h5>I also certify that I understand that the above document that I have downloaded and read is a legal document, and it is my understanding that an electronic signature has the same effect and can be enforced in the same way as a written signature, as stated in Utah Code 46-4-201.</h5>
+    <h5>By signing this document, I am waiving any liability claims against Parkour Utah for myself, and, if the athlete listed above is a minor, I certify that I am the parent and/or guardian of that athlete, and I am waiving any liability claims against Parkour Utah on behalf of the minor listed as the athlete above.</h5>
     <%= f.text_field :signed_by, placeholder: 'Signed By', class: 'fancy-textbox e-sig', required: true %>
     <br/>
     <%= f.submit "Submit", class: 'fancy-btn waiverVerify' %>
