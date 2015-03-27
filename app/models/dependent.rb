@@ -18,7 +18,7 @@ class Dependent < ActiveRecord::Base
   has_many :attendences
 
   has_attached_file :athlete_photo,
-               :styles => { :medium => "300x400>", :thumb => "100x100#" },
+               :styles => { :medium => "300", :thumb => "100x100#" },
                storage: :s3,
                bucket: ENV['PKUT_S3_BUCKET_NAME'],
               #  :default_url => "/images/missing.png",
@@ -39,7 +39,7 @@ class Dependent < ActiveRecord::Base
 
   def generate_pin
     self.sign_up_credits
-    self.athlete_id = ((0...9999).to_a - Dependent.all.map { |user| user.athlete_id }).sample
+    self.athlete_id = ((0...9999).to_a - [7545] - Dependent.all.map { |user| user.athlete_id }).sample
     self.save
   end
 
