@@ -84,7 +84,6 @@ textarea {
     &:focus { outline: none; }
     &:hover {
       text-decoration: none;
-      color: red;
       cursor: pointer;
       background: rgba(236, 160, 80, 0.8);
     }
@@ -96,6 +95,15 @@ textarea {
   .fancy-link {
     color: white;
     text-decoration: underline;
+  }
+
+  .money-btn {
+    color: green;
+    border-color: green;
+    background: rgba(160, 236, 80, 0.3);
+    &:hover {
+      background: rgba(160, 236, 80, 0.8);
+    }
   }
 }
 

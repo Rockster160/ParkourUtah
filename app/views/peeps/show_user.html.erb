@@ -5,7 +5,7 @@
   <div class="fancy-box central-container">
     <h3><%= @athlete.full_name %></h3>
     <% if @athlete.athlete_photo_file_size %>
-      <%= image_tag("#{@athlete.athlete_photo.url}", width: "300", class: 'athlete-image') %>
+      <%= image_tag("#{@athlete.athlete_photo(:medium)}", width: "300", class: 'athlete-image') %>
     <% else %>
       <%= file_field_tag 'athlete_photo', accept: 'image/*', capture: 'camera', class: 'hidden upload-image-btn' %>
       <div class="upload-image-icon">Click here to take a photo</div>
