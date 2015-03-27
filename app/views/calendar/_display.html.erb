@@ -1,45 +1,44 @@
-<%= javascript_tag do %>
-  window.set_date = '<%= @date %>'
-<% end %>
-
-<div class="col-md-12 calendar-partial">
-  <%= calendar @date do |date| %>
-  <div class="row calendar-date-link date"><%= date.day %></div>
-  <div class="row">
-    <% if @events[[date.year, date.month, date.day]] %>
-    <ul>
-      <% @events[[date.year, date.month, date.day]].sort_by { |event| event[:date] }.each do |event| %>
-        <% if event.class_name == "special" || (@selected_classes.include?(event.class_name) && @selected_cities.include?(event.city))  %>
-        <li class="event-color calendar-event <%= event.city.parameterize %>">
-          <div class="calendar-tooltip">
-            <span class="close-tooltip">X</span>
-            <h4><%= event.class_name.capitalize %></h4><br/>
-            <%= event.address %><br/>
-            <%= event.city %><br/>
-            <%= event.date.strftime('%l:%M %p') %><br/>
-            <br/>
-            <%= event.description %><br/><br/>
-            Instructor: <%= event.host %><br/>
-            <% if current_user %>
-              <% unless current_user.subscribed?(event) %>
-                <%= link_to 'Subscribe to this Event', subscribe_path(id: event.id), class: "calendar-link", method: :post %><br/>
-              <% else %>
-                <%= link_to 'Unsubscribe from this Event', unsubscribe_path(id: event.id), class: "calendar-link", method: :delete %><br/>
-              <% end %>
+<div class="row">
+  <div class="col-md-12 calendar-partial">
+    <%= mobile_calendar(@date) do |date| %>
+      <div class="row calendar-date-link date"><%= date.day %></div>
+      <div class="row">
+        <% if @events[[date.year, date.month, date.day]] %>
+        <ul>
+          <% @events[[date.year, date.month, date.day]].sort_by { |event| event[:date] }.each do |event| %>
+            <% if event.class_name == "special" || (@selected_classes.include?(event.class_name) && @selected_cities.include?(event.city))  %>
+            <li class="event-color calendar-event <%= event.city.parameterize %>">
+              <div class="calendar-tooltip">
+                <span class="close-tooltip">X</span>
+                <h4><%= event.class_name.capitalize %></h4><br/>
+                <%= event.address %><br/>
+                <%= event.city %><br/>
+                <%= event.date.strftime('%l:%M %p') %><br/>
+                <br/>
+                <%= event.description %><br/><br/>
+                Instructor: <%= event.host %><br/>
+                <% if current_user %>
+                  <% unless current_user.subscribed?(event) %>
+                    <%= link_to 'Subscribe to this Event', subscribe_path(id: event.id), class: "calendar-link", method: :post %><br/>
+                  <% else %>
+                    <%= link_to 'Unsubscribe from this Event', unsubscribe_path(id: event.id), class: "calendar-link", method: :delete %><br/>
+                  <% end %>
+                <% end %>
+                <% if current_user && current_user.is_instructor? %>
+                  </br>
+                  <%= link_to 'Destroy Event', destroy_event_path(id: event.id), method: :delete, class: "calendar-link", data: {confirm: "Are you sure?"} %><br/>
+                  <%= link_to 'Destroy all future occurrences', destroy_event_path(future: "all", id: event.id), method: :delete, class: "calendar-link",
+                  data:{confirm: "Are you sure? This will delete this and all future events tied to this one."} if event.token %>
+                <% end %>
+              </div>
+              <span class="event-click-handler visible-xs"><%= event.class_name.split('').first.capitalize %></span>
+              <span class="event-click-handler hidden-xs"><%= event.class_name.capitalize %></span>
+            </li>
             <% end %>
-            <% if current_user && current_user.is_instructor? %>
-              </br>
-              <%= link_to 'Destroy Event', destroy_event_path(id: event.id), method: :delete, class: "calendar-link", data: {confirm: "Are you sure?"} %><br/>
-              <%= link_to 'Destroy all future occurrences', destroy_event_path(future: "all", id: event.id), method: :delete, class: "calendar-link",
-              data:{confirm: "Are you sure? This will delete this and all future events tied to this one."} if event.token %>
-            <% end %>
-          </div>
-          <span class="event-click-handler"><%= event.class_name.capitalize %></span>
-        </li>
+          <% end %>
+        </ul>
         <% end %>
-      <% end %>
-    </ul>
-    <% end %>
-  </div>
+      </div>
   <% end %>
+  </div>
 </div>
