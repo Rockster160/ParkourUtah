@@ -1,5 +1,5 @@
 class MobileCalendar < Struct.new(:view, :date, :callback)
-  HEADER = %w[Sun Mon Tues Wed Thu Fri Sat]
+  HEADER = %w[Sun Mon Tue Wed Thu Fri Sat]
   START_DAY = :sunday
 
   delegate :content_tag, to: :view

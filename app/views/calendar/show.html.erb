@@ -3,16 +3,29 @@
 <% end %>
 
 <div class="row">
-  <div class="col-md-8 col-md-offset-2 cities-container fancy-box">
-    <% @cities.each do |city| %>
-      <div href="<%= city %>" class="col-xs-3 calendar-legend hidden-xs">
-        <i class="calendar-legend-blip event-color <%= city.parameterize %>">&nbsp;</i>
-        <span class="calendar-legend-text pull-left"><%= city.capitalize %></span>
+  <div class="col-xs-8 col-xs-offset-2 cities-container fancy-box">
+    <div class="hidden-xs">
+      <% @cities.each do |city| %>
+        <div href="<%= city %>" class="col-xs-3 calendar-legend">
+          <i class="calendar-legend-blip event-color <%= city.parameterize %>">&nbsp;</i>
+          <span class="calendar-legend-text pull-left"><%= city.capitalize %></span>
+        </div>
+      <% end %>
+    </div>
+    <div class="tooltip-container">
+      <div class="visible-xs open-tooltip">
+        <div class="show-tooltip">
+          <span class="close-tooltip">X</span>
+          <% @cities.each do |city| %>
+            <div href="<%= city %>" class="col-xs-8 col-xs-offset-1 calendar-legend">
+              <i class="calendar-legend-blip event-color <%= city.parameterize %>">&nbsp;</i>
+              <span class="calendar-legend-text pull-left"><%= city.capitalize %></span>
+            </div>
+          <% end %>
+        </div>
+        <h4 class="fancy-btn">Show Legend</h4>
       </div>
-      <div href="<%= city %>" class="col-xs-3 calendar-legend visible-xs">
-        <span class="calendar-legend-text pull-left event-color <%= city.parameterize %>"><%= city.capitalize %></span>
-      </div>
-    <% end %>
+    </div>
   </div>
 </div>
 <div class="row">
@@ -42,7 +55,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-8 col-md-offset-2 col-xs-12 text-center calendar-container">
+    <div class="col-md-8 col-md-offset-2 col-xs-12 text-center tooltip-container calendar-container">
       <%= render partial: 'display' %>
     </div>
   </div>

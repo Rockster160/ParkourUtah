@@ -10,15 +10,6 @@ var ready = function() {
       append_to_field($value);
     });
 
-    $('.no-zoom').bind('touchstart', function(e) {
-      e.preventDefault();
-    });
-    $('.no-zoom').bind('touchend', function(e) {
-      e.preventDefault();
-      var $value = $(this).html();
-      append_to_field($value);
-    });
-
     function append_to_field($value) {
       var field_value = $('.secret-input-field').val();
       if (field_value.length == 4 && $value != "&lt;") { $value = ""; }
@@ -49,6 +40,15 @@ var ready = function() {
       $('.upload-image-icon').html("√");
       $('.upload-image-icon').css("font-size", "5em");
     };
+  });
+  
+  $('.no-zoom').bind('touchstart', function(e) {
+    e.preventDefault();
+  });
+  $('.no-zoom').bind('touchend', function(e) {
+    e.preventDefault();
+    var $value = $(this).html();
+    append_to_field($value);
   });
 }
 
