@@ -33,20 +33,23 @@ class User < ActiveRecord::Base
   # end
 
   if ENV["RAILS_ENV"] == "production"
+    ROOT_PATH = "http://45.55.180.23"
     API_LOGIN = ENV['PKUT_AUTHNET_LOGIN'].freeze
     TRANSACTION_KEY = ENV['PKUT_AUTHNET_TRANS_KEY'].freeze
   else
+    ROOT_PATH = "http://localhost:7545"
     API_LOGIN = '34H962KteRF'.freeze
     TRANSACTION_KEY = '92wavU3h45xZW88P'.freeze
   end
 
-  has_one :cart
-  has_many :dependents
+  has_one :cart, dependent: :destroy
+  has_many :dependents, dependent: :destroy
   has_many :transactions, through: :cart
-  has_many :subscriptions
+  has_many :subscriptions, dependent: :destroy
 
   after_create :create_AuthNet_profile, :assign_cart
   before_save :format_phone_number
+  before_destroy :clear_associations
 
   devise :database_authenticatable, :registerable, :confirmable,
          :recoverable, :rememberable, :trackable, :validatable
@@ -92,11 +95,6 @@ class User < ActiveRecord::Base
   def get_AuthNet_token
     return 0000 unless create_AuthNet_profile
     transaction = generate_AuthNet_transaction
-    return_url = if ENV["RAILS_ENV"] == "production"
-      "http:45.55.180.23"
-    else
-      "http://localhost:7545"
-    end
     xml =
     "<customerProfileId>#{self.auth_net_id}</customerProfileId>
     <hostedProfileSettings>
@@ -106,7 +104,7 @@ class User < ActiveRecord::Base
     </setting>
     <setting>
     <settingName>hostedProfileReturnUrl</settingName>
-    <settingValue>#{return_url}/peeps/return</settingValue>
+    <settingValue>#{ROOT_PATH}/peeps/return</settingValue>
     </setting>
     <setting>
     <settingName>hostedProfileReturnUrlText</settingName>
@@ -243,8 +241,13 @@ class User < ActiveRecord::Base
     (phone.length == 10)
   end
 
-
   protected
+
+  def clear_associations
+    self.cart.destroy
+    xml = "<customerProfileId>#{self.auth_net_id}</customerProfileId>"
+    res = auth_net_xml_request('deleteCustomerProfileRequest', xml)
+  end
 
   def valid_phone_number
     return false unless self.phone_number

@@ -36,8 +36,9 @@ class DependentsController < ApplicationController
     waiver = Waiver.new(waiver_params.merge(dependent_id: params[:dependent_id]))
     if waiver.valid?
       waiver.save
-      Dependent.find(params[:dependent_id]).generate_pin
-      flash[:notice] = "Waiver has been filled out. See you in class!"
+      athlete = Dependent.find(params[:dependent_id])
+      athlete.generate_pin
+      flash[:notice] = "Congratulations! Enjoy a free class for #{athlete.full_name}."
     else
       flash[:alert] = waiver.errors.messages.values.first.first
     end

@@ -8,7 +8,7 @@ class Cart < ActiveRecord::Base
   # add_index "carts", ["user_id"], name: "index_carts_on_user_id", using: :btree
 
   belongs_to :user
-  has_many :transactions
+  has_many :transactions, dependent: :destroy
 
   def price
     cost = 0

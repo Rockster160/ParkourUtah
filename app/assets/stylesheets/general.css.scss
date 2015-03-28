@@ -45,65 +45,65 @@ textarea {
   padding: 20px 10px 50px 10px;
   border-radius: 10px;
   text-align: center;
-  .fancy-textbox {
-    margin: 10px 0;
-    width: 300px;
-    max-width: 85%;
-    height: 40px;
-    font-size: 2em;
-    color: black;
-    border-radius: 20px;
-    padding-left: 20px;
-    &:focus { outline: none; }
+}
+.fancy-textbox {
+  margin: 10px 0;
+  width: 300px;
+  max-width: 85%;
+  height: 40px;
+  font-size: 2em;
+  color: black;
+  border-radius: 20px;
+  padding-left: 20px;
+  &:focus { outline: none; }
+}
+.fancy-textarea {
+  width: 350px;
+  margin: 20px 0;
+  max-width: 95%;
+  font-size: 1.3em;
+  color: black;
+  padding: 20px;
+  border-radius: 20px;
+  &:focus { outline: none; }
+}
+.fancy-btn {
+  transition: 0.3s;
+  background: rgba(236, 160, 80, 0.3);
+  text-decoration: none;
+  width: 200px;
+  font-family: 'Voltaire';
+  border: 2px solid red;
+  border-radius: 20px;
+  padding: 10px;
+  margin: 0 auto;
+  color: red;
+  .disabled {
+    cursor: default;
+    pointer-events: none;
   }
-  .fancy-textarea {
-    width: 350px;
-    margin: 20px 0;
-    max-width: 95%;
-    font-size: 1.3em;
-    color: black;
-    padding: 20px;
-    border-radius: 20px;
-    &:focus { outline: none; }
-  }
-  .fancy-btn {
-    transition: 0.3s;
-    background: rgba(236, 160, 80, 0.3);
+  &:focus { outline: none; }
+  &:hover {
     text-decoration: none;
-    width: 200px;
-    font-family: 'Voltaire';
-    border: 2px solid red;
-    border-radius: 20px;
-    padding: 10px;
-    margin: 0 auto;
-    color: red;
-    .disabled {
-      cursor: default;
-      pointer-events: none;
-    }
-    &:focus { outline: none; }
-    &:hover {
-      text-decoration: none;
-      cursor: pointer;
-      background: rgba(236, 160, 80, 0.8);
-    }
+    cursor: pointer;
+    background: rgba(236, 160, 80, 0.8);
   }
-  .pin-entry {
-    letter-spacing: 40px;
-    padding-left: 50px;
-  }
-  .fancy-link {
-    color: white;
-    text-decoration: underline;
-  }
+}
+.pin-entry {
+  letter-spacing: 40px;
+  padding-left: 50px;
+}
+.fancy-link {
+  color: white;
+  text-decoration: underline;
+}
 
-  .money-btn {
-    color: green;
-    border-color: green;
-    background: rgba(160, 236, 80, 0.3);
-    &:hover {
-      background: rgba(160, 236, 80, 0.8);
-    }
+.money-btn {
+  color: green;
+  border-color: green;
+  background: rgba(160, 236, 80, 0.3);
+  &:hover {
+    background: rgba(160, 236, 80, 0.8);
   }
 }
 

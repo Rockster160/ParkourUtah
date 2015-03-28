@@ -1,5 +1,5 @@
 class PeepsController < ApplicationController
-  before_action :validate_instructor
+  before_action :validate_instructor, except: [:return]
 
   def return
     current_user.get_payment_id
@@ -44,7 +44,7 @@ class PeepsController < ApplicationController
     create_athlete
     pin = params[:pin].to_i
     if pin == @athlete.athlete_pin
-      charge_class(ENV["PKUT_PRICE"].to_i, "Credits")
+      charge_class(ENV["PKUT_CLASS_PRICE"].to_i, "Credits")
     elsif pin == ENV["PKUT_PIN"].to_i
       charge_class(0, "Cash")
     else

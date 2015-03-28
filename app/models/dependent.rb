@@ -44,7 +44,7 @@ class Dependent < ActiveRecord::Base
   end
 
   def sign_up_credits
-    self.user.update(credits: ENV["PKUT_PRICE"].to_i)
+    self.user.update(credits: (self.user.credits + ENV["PKUT_CLASS_PRICE"].to_i))
   end
 
   private

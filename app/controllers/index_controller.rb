@@ -14,6 +14,15 @@ class IndexController < ApplicationController
     @selected_classes = params[:classes] ? params[:classes] : @classes
   end
 
+  def update
+    if current_user.update(phone_number: params[:phone_number])
+      flash[:notice] = "Account creation complete!"
+    else
+      flash[:alert] = "There was an error saving your phone number."
+    end
+    redirect_to edit_user_registration_path
+  end
+
   def coming_soon
   end
 
