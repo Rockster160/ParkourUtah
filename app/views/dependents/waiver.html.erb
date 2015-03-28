@@ -19,6 +19,8 @@
     <h5>By signing this document, I am waiving any liability claims against Parkour Utah for myself, and, if the athlete listed above is a minor, I certify that I am the parent and/or guardian of that athlete, and I am waiving any liability claims against Parkour Utah on behalf of the minor listed as the athlete above.</h5>
     <%= f.text_field :signed_by, placeholder: 'Signed By', class: 'fancy-textbox e-sig', required: true %>
     <br/>
-    <%= f.submit "Submit", class: 'fancy-btn waiverVerify' %>
+    <br/>
+    <h3><a alt="..." data-toggle="modal" data-target="#waiver_modal" class="fancy-btn waiverVerify">Submit</a></h3>
+    <%= render partial: 'reiterate_waiver', locals: {waiver: f} %>
   <% end %>
 </div>
