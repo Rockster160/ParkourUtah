@@ -14,6 +14,14 @@ class IndexController < ApplicationController
     @selected_classes = params[:classes] ? params[:classes] : @classes
   end
 
+  def receive_sms
+    if params["Body"].downcase.split.join == "stop"
+      User.find_by_phone_number(params["From"]).subscriptions.each do |subscription|
+        subscription.destroy
+      end
+    end
+  end
+
   def update
     if current_user.update(phone_number: params[:phone_number])
       flash[:notice] = "Account creation complete!"
