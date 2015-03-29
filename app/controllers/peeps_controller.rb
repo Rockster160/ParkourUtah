@@ -3,6 +3,7 @@ class PeepsController < ApplicationController
 
   def return
     current_user.get_payment_id
+    current_user.get_shipping_id
     redirect_to edit_user_registration_path
   end
 

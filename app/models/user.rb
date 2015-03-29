@@ -30,6 +30,7 @@ class User < ActiveRecord::Base
   #   t.integer  "phone_number"
   #   t.integer  "instructor_position"
   #   t.integer  "payment_multiplier",    default: 3
+  #   t.integer  "shipping_id"
   # end
 
   if ENV["RAILS_ENV"] == "production"
@@ -116,9 +117,6 @@ class User < ActiveRecord::Base
     token = Hash.from_xml(res.body)["getHostedProfilePageResponse"]["token"] unless res == 0000
   end
 
-  def has_auth_net_billing
-  end
-
   def create_AuthNet_profile
     return true if self.auth_net_id
     transaction = generate_AuthNet_transaction
@@ -129,14 +127,6 @@ class User < ActiveRecord::Base
     response = transaction.create_profile(profile)
     self.auth_net_id = response.profile_id
     self.save
-  end
-
-  def delete_all_AuthNet
-    ((31931699..31931710).to_a + []).each do |user|
-      xml = "<customerProfileId>#{user}</customerProfileId>"
-      res = auth_net_xml_request('deleteCustomerProfileRequest', xml)
-      print "\e[31m.\e[0m"
-    end
   end
 
   def get_payment_id
@@ -150,6 +140,24 @@ class User < ActiveRecord::Base
     self.save
 
     self.payment_id
+  end
+
+  def get_shipping_id
+    return 0000 unless create_AuthNet_profile
+    return shipping_id if self.shipping_id
+
+    xml = "<customerProfileId>#{self.auth_net_id}</customerProfileId>"
+    res = auth_net_xml_request('getCustomerProfileRequest', xml)
+
+    unless res == 0000
+      shipping_info = Hash.from_xml(res.body)["getCustomerProfileResponse"]["profile"]["shipToList"]
+      if shipping_info
+        self.shipping_id = shipping_info["customerAddressId"]
+        self.save
+      end
+    end
+
+    self.shipping_id
   end
 
   def charge_credits(price)

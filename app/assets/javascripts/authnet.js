@@ -1,6 +1,6 @@
 var ready = function() {
   if ($('.authnet-token').val() == "") {
-    $('.authnet-btn').val('Sorry, Authorize.Net is not available at this time.');
+    $('.authnet-btn').val('Sorry, Authorize.Net is down.');
     $('.authnet-btn').addClass('disabled');
   }
 
