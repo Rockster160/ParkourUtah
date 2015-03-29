@@ -21,9 +21,10 @@ class StoreController < ApplicationController
         end
         current_user.cart = Cart.create
         redirect_to root_path, notice: "Cart successfully purchased"
-      else
-        # This should check for various errors and report accurately.
+      elsif current_user.buy_shopping_cart == "Ok"
         redirect_to store_path, alert: "There was a problem with your request."
+      else
+        redirect_to store_path, alert: current_user.buy_shopping_cart
       end
     else
       redirect_to edit_user_registration_path, alert: "Please fill out your billing information before you purchase any items."

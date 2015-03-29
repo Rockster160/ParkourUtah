@@ -173,20 +173,24 @@ class User < ActiveRecord::Base
   def buy_shopping_cart
     return "Ok" if self.cart.price <= 0
     return 0000 unless create_AuthNet_profile
-    order = self.cart.transactions
-    items = ""
-    order.each do |trans|
-      item = trans.item
-      items <<
-      "<lineItems>
-      <itemId>#{item.id}</itemId>
-      <name>#{item.title}</name>
-      <description>#{item.description}</description>
-      <quantity>#{trans.amount}</quantity>
-      <unitPrice>#{item.cost}</unitPrice>
-      </lineItems>"
+    if self.get_shipping_id && self.get_payment_id
+      order = self.cart.transactions
+      items = ""
+      order.each do |trans|
+        item = trans.item
+        items <<
+        "<lineItems>
+        <itemId>#{item.id}</itemId>
+        <name>#{item.title}</name>
+        <description>#{item.description}</description>
+        <quantity>#{trans.amount}</quantity>
+        <unitPrice>#{item.cost}</unitPrice>
+        </lineItems>"
+      end
+      charge_account(self.cart.price, items)
+    else
+      return "Please verify that you have added your payment and shipping info to Authorize.Net." 
     end
-    charge_account(self.cart.price, items)
   end
 
   def charge_account(cost, line_items)

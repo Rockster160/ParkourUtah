@@ -1,4 +1,4 @@
-every 1.day, at: '2:00 pm' do
+every 1.hour do
   runner "Scheduled.send_class_text"
 end
 
