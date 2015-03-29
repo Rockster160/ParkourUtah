@@ -5,7 +5,7 @@ class Scheduled < ActiveRecord::Base
       Event.where(token: subscriber.event.token).select { |e| e.date.to_date == Time.now.to_date && e.date.hour == (Time.now + 2.hours).hour }.each do |event|
         num = subscriber.user.phone_number
         unless num == ""
-          msg = "Hope to see you at our #{event.city} #{event.class_name.capitalize} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!\nReply STOP to unsubscribe from all classes."
+          msg = "Hope to see you at our #{event.city} #{event.class_name.capitalize} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!"
           ::SmsMailerWorker.perform_async(msg, num)
         end
       end
