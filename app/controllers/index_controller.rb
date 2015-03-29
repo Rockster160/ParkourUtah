@@ -15,10 +15,12 @@ class IndexController < ApplicationController
   end
 
   def receive_sms
+    number = params["From"]
     if params["Body"].downcase.split.join == "stop"
-      User.find_by_phone_number(params["From"]).subscriptions.each do |subscription|
+      User.find_by_phone_number(number).subscriptions.each do |subscription|
         subscription.destroy
       end
+      ::SmsMailerWorker.perform_async("You have been unsubscribed from all messages from ParkourUtah.", number)
     end
   end
 
