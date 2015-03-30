@@ -30,7 +30,8 @@ Rails.application.configure do
     :user_name            => ENV['PKUT_GMAIL'],
     :password             => ENV['PKUT_GMAIL_PASSWORD'],
     :authentication       => "plain",
-    :enable_starttls_auto => true
+    :enable_starttls_auto => true,
+    :openssl_verify_mode  => 'none'
   }
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_deliveries = true
