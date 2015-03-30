@@ -26,7 +26,6 @@ Rails.application.configure do
   ActionMailer::Base.smtp_settings = {
     :address              => "smtp.gmail.com",
     :port                 => "587",
-    :domain               => "gmail.com",
     :user_name            => ENV['PKUT_GMAIL'],
     :password             => ENV['PKUT_GMAIL_PASSWORD'],
     :authentication       => "plain",
