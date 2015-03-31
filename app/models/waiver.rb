@@ -13,11 +13,11 @@ class Waiver < ActiveRecord::Base
   after_create :signed_false
 
   def exp_date
-    (self.created_at + 1.year - 1.day).strftime('%B %-d, %Y')
+    (self.created_at + 1.year - 1.day)
   end
 
   def expires_soon?
-    (Date.today > (self.exp_date.to_date - 1.week) && self.signed)
+    (Date.today >= (self.exp_date.to_date - 1.week) && self.signed)
   end
 
   def is_active?

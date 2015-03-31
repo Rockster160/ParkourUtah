@@ -83,6 +83,14 @@ class Scheduled < ActiveRecord::Base
     end
   end
 
+  def self.waiver_checks
+    Dependent.select { |a| a.waiver.expires_soon? if a.waiver }.each do |athlete|
+      if athlete.waiver.exp_date.to_date == (Time.now + 1.week).to_date
+        ::ExpiringWaiverMailerWorker.perform_async(athlete.id)
+      end
+    end
+  end
+
   def self.seed
     # self.update_users
     self.reset_classes

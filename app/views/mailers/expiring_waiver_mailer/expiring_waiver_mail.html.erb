@@ -1,0 +1,7 @@
+<h2><%= @athlete.full_name %>, your waiver is about to expire!</h2>
+<br/>
+<p>We would hate for your waiver to be expired next time you come to class. Let's get that taken care of, now!</p>
+<p>All you have to do is visit <%= link_to "this link", sign_waiver_url(@athlete.id) %>, fill out your waiver information once again, and you will be all taken care of!</p>
+<p>Your ID and PIN will not be changed and no other changes will need to be made.</p>
+<br/>
+<p>Thanks! We'll see you in class.</p>
