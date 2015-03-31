@@ -67,6 +67,20 @@ class DependentsController < ApplicationController
   def show
   end
 
+  def forgot_pin_or_id
+    flash[:notice] = "We just sent you an email with instructions on what to do next."
+    athlete_id = params[:athlete_id]
+    ::PinResetMailerWorker.perform_async(athlete_id)
+    redirect_to edit_user_registration_path
+  end
+
+  def reset_pin
+    @athlete = Dependent.find(params[:athlete_id])
+    unless current_user == @athlete.user
+      redirect_to root_path, alert: "Sorry, you must be the parent or guardian of the athlete to do that."
+    end
+  end
+
   private
 
   def dependent_params
