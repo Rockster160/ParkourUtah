@@ -1,4 +1,5 @@
 class ContactMailer < ApplicationMailer
+  default template_path: "mailers/#{self.name.underscore}"
 
   def help_mail(params)
     @name = params["name"]

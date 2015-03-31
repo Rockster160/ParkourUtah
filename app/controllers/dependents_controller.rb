@@ -55,7 +55,8 @@ class DependentsController < ApplicationController
       flash[:notice] = case verb
         when "create"
           athlete.generate_pin
-          "Congratulations! Enjoy a free class for #{athlete.full_name}."
+          ::NewAthleteInfoMailerWorker.perform_async(athlete.id)
+          "Congratulations! Enjoy a free class for #{athlete.full_name}. An email has been sent to you containing the ID and Pin used to attend class."
         when "update" then "#{athlete.full_name}'s waiver has been updated."
         else "Waiver created."
       end

@@ -1,4 +1,5 @@
 class SummaryMailer < ApplicationMailer
+  default template_path: "mailers/#{self.name.underscore}"
 
   def summary_mail(summary)
     @summary = summary[0]
