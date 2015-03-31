@@ -189,7 +189,7 @@ class User < ActiveRecord::Base
       end
       charge_account(self.cart.price, items)
     else
-      return "Please verify that you have added your payment and shipping info to Authorize.Net." 
+      return "Please verify that you have added your payment and shipping info to Authorize.Net."
     end
   end
 
@@ -227,9 +227,7 @@ class User < ActiveRecord::Base
     req = Net::HTTP::Post.new(uri.path)
     begin
       HTTParty.post(uri, body: xml, headers: { 'Content-Type' => 'application/xml' })
-    rescue Errno::ECONNREFUSED
-      0000
-    rescue Errno::ETIMEDOUT
+    rescue
       0000
     end
   end

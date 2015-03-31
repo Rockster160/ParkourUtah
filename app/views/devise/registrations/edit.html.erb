@@ -117,12 +117,9 @@
       <h3>Waivers:</h3>
       <% current_user.dependents.each_with_index do |athlete, pos| %>
         <h3><%= athlete.full_name %></h3>
-        <% if athlete.signed_waiver? %>
+        <% if athlete.signed_waiver? && athlete.waiver.is_active? %>
           Waiver valid until <%= athlete.waiver.exp_date %><br/>
-          Athlete ID: <%= athlete.padded_pin %><br/>
-          Athlete PIN: ****<br/>
-          <a alt="..." data-toggle="modal" data-target="#modal_<%= pos %>" class="fancy-link">Reset Pin</a><br/><br/>
-          <%= render partial: 'pin_change_modal', locals: {athlete: athlete, pos: pos} %>
+          <%= link_to "Forgot PIN/ID?", send_reset_pin_or_id_mail_path(athlete.id), class: 'fancy-link', method: "post" %></br>
         <% else %>
           <%= link_to "Must have waiver signed before attending class.", sign_waiver_path(athlete.id), class: 'fancy-link' %></br>
         <% end %>

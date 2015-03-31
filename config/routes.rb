@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   get '/athletes/new' => 'dependents#new', as: 'new_athlete'
   post '/athletes/create' => 'dependents#create'
   post '/athletes/update/:athlete_id' => 'dependents#update'
+  post '/athletes/forgot/:athlete_id' => 'dependents#forgot_pin_or_id', as: 'send_reset_pin_or_id_mail'
 
   get '/waiver/:athlete_id' => 'dependents#waiver', as: 'sign_waiver'
   post '/waiver/sign' => 'dependents#sign_waiver'

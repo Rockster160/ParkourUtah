@@ -22,6 +22,12 @@ var ready = function() {
     }
   });
 
+  $(".disableEnterSubmit").on("keypress", function (e) {
+    if (e.keyCode == 13) {
+      return false;
+    }
+  });
+
   $('.athleteVerify').click(function(e) {
     if ($('.formatPin').val().length != 4) {
       e.preventDefault();

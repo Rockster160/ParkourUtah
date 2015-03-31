@@ -33,16 +33,35 @@ class DependentsController < ApplicationController
   end
 
   def sign_waiver
-    waiver = Waiver.new(waiver_params.merge(dependent_id: params[:dependent_id]))
-    if waiver.valid?
-      waiver.save
-      athlete = Dependent.find(params[:dependent_id])
-      athlete.generate_pin
-      flash[:notice] = "Congratulations! Enjoy a free class for #{athlete.full_name}."
+    athlete = Dependent.find(params[:dependent_id])
+    old_waiver = athlete.waiver
+    if old_waiver
+      if old_waiver.expires_soon?
+        create_waiver("update")
+      else
+        flash[:alert] = "#{athlete.full_name} already has an active waiver."
+      end
     else
-      flash[:alert] = waiver.errors.messages.values.first.first
+      create_waiver("create")
     end
     redirect_to edit_user_registration_path
+  end
+
+  def create_waiver(verb)
+    new_waiver = Waiver.new(waiver_params.merge(dependent_id: params[:dependent_id]))
+    athlete = Dependent.find(params[:dependent_id])
+    if new_waiver.valid?
+      new_waiver.save
+      flash[:notice] = case verb
+        when "create"
+          athlete.generate_pin
+          "Congratulations! Enjoy a free class for #{athlete.full_name}."
+        when "update" then "#{athlete.full_name}'s waiver has been updated."
+        else "Waiver created."
+      end
+    else
+      flash[:alert] = new_waiver.errors.messages.values.first.first
+    end
   end
 
   def show

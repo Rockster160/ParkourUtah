@@ -14,7 +14,7 @@ class Dependent < ActiveRecord::Base
   # end
 
   belongs_to :user
-  has_one :waiver
+  has_many :waivers
   has_many :attendences
 
   has_attached_file :athlete_photo,
@@ -35,6 +35,10 @@ class Dependent < ActiveRecord::Base
     (4 - self.athlete_id.to_s.length).times {str << "0"}
     str << self.athlete_id.to_s
     str
+  end
+
+  def waiver
+    self.waivers.sort_by(&:id).last
   end
 
   def generate_pin

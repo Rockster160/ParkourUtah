@@ -16,8 +16,12 @@ class Waiver < ActiveRecord::Base
     (self.created_at + 1.year - 1.day).strftime('%B %-d, %Y')
   end
 
+  def expires_soon?
+    (Date.today > (self.exp_date.to_date - 1.week) && self.signed)
+  end
+
   def is_active?
-    true unless Date.today > self.exp_date && self.signed
+    (Date.today < self.exp_date.to_date && self.signed)
   end
 
   def has_matching_name_as_athlete
