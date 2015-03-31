@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   post '/receive_sms' => 'index#receive_sms'
   get '/contact' => 'index#contact_page', as: 'contact_page'
   post '/update' => 'index#update'
+  get '/unsubscribe' => 'index#unsubscribe', as: 'unsubscribe_email'
 
   get '/class/:id' => 'peeps#pin_user', as: 'begin_class'
   get '/pin/:id' => 'peeps#show_user'

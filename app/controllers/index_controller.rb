@@ -44,4 +44,14 @@ class IndexController < ApplicationController
 
   def contact_page
   end
+
+  def unsubscribe
+    if current_user == User.find(params[:id])
+      User.find(params[:id]).update(email_subscription: false)
+      flash[:notice] = "You have been successully unsubscribed."
+    else
+      flash[:alert] = "You must be signed in to unsubscribe."
+    end
+    redirect_to root_path
+  end
 end

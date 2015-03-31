@@ -1,0 +1,5 @@
+<h2>Your account is almost out of credits!</h2>
+<br/>
+<p>You are receiving this email because you are subscribed to ParkourUtah's email subscription. If you would like to unsubscribe, please click <%= link_to "Here.", unsubscribe_email_url(id: @user.id) %></p>
+<h2>Credits remaining: <%= @user.credits %></h2>
+<p><%= link_to "Click Here", store_url %> to add more credits to your account.</p>

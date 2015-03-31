@@ -62,6 +62,9 @@ class PeepsController < ApplicationController
         event_id: params[:id],
         type_of_charge: charge_type
       )
+      if @user.credits < ENV["PKUT_CLASS_PRICE"].to_i && @user.email_subscription
+        ::LowCreditsMailerWorker.perform_async(@user.id)
+      end
       flash[:notice] = "Success! Welcome to class."
       redirect_to begin_class_path
     else
