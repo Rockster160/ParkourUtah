@@ -34,7 +34,7 @@ class User < ActiveRecord::Base
   # end
 
   if ENV["RAILS_ENV"] == "production"
-    ROOT_PATH = "http://45.55.180.23"
+    ROOT_PATH = "http://parkourutah.com"
     API_LOGIN = ENV['PKUT_AUTHNET_LOGIN'].freeze
     TRANSACTION_KEY = ENV['PKUT_AUTHNET_TRANS_KEY'].freeze
   else
