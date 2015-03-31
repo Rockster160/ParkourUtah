@@ -4,6 +4,9 @@ end
 
 every 1.day, at: "9:10 pm" do
   runner "Scheduled.send_summary(1)"
+end
+
+every 1.day, at: "9:30 am" do
   runner "Scheduled.waiver_checks"
 end
 

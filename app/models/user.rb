@@ -49,6 +49,7 @@ class User < ActiveRecord::Base
   has_many :subscriptions, dependent: :destroy
 
   after_create :create_AuthNet_profile, :assign_cart
+  after_update :update_AuthNet_profile
   before_save :format_phone_number
   before_destroy :clear_associations
 
@@ -127,6 +128,18 @@ class User < ActiveRecord::Base
     response = transaction.create_profile(profile)
     self.auth_net_id = response.profile_id
     self.save
+  end
+
+  def update_AuthNet_profile
+    xml =
+    "<profile>
+    <merchantCustomerId>#{self.id}</merchantCustomerId>
+    <email>#{self.email}</email>
+    <customerProfileId>#{self.auth_net_id}</customerProfileId>
+    </profile>"
+
+    res = auth_net_xml_request('updateCustomerProfileRequest', xml)
+    Hash.from_xml(res.body)
   end
 
   def get_payment_id
