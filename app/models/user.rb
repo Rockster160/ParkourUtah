@@ -135,11 +135,19 @@ class User < ActiveRecord::Base
 
     xml = "<customerProfileId>#{self.auth_net_id}</customerProfileId>"
     res = auth_net_xml_request('getCustomerProfileRequest', xml)
+    unless res == 0000
+      paymentProfile = Hash.from_xml(res.body)["getCustomerProfileResponse"]["profile"]["paymentProfiles"]
+      if paymentProfile
+        self.payment_id = paymentProfile["customerPaymentProfileId"]
+        self.save
 
-    self.payment_id = Hash.from_xml(res.body)["getCustomerProfileResponse"]["profile"]["paymentProfiles"]["customerPaymentProfileId"] unless res == 0000
-    self.save
-
-    self.payment_id
+        self.payment_id
+      else
+        return nil
+      end
+    else
+      return 0000
+    end
   end
 
   def get_shipping_id
