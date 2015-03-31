@@ -119,6 +119,10 @@
         <h3><%= athlete.full_name %></h3>
         <% if athlete.signed_waiver? && athlete.waiver.is_active? %>
           Waiver valid until <%= athlete.waiver.exp_date.strftime('%B %-d, %Y') %><br/>
+          <% if athlete.waiver.expires_soon? %>
+            Waiver expires soon!<br/>
+            <%= link_to "Sign a new waiver", sign_waiver_path(athlete.id), class: 'fancy-link' %></br>
+          <% end %>
           <%= link_to "Forgot PIN / ID? Click here to reset.", send_reset_pin_or_id_mail_path(athlete.id), class: 'fancy-link', method: "post" %></br>
         <% else %>
           <%= link_to "Must have waiver signed before attending class.", sign_waiver_path(athlete.id), class: 'fancy-link' %></br>
