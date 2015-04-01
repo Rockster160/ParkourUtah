@@ -39,7 +39,6 @@ var ready = function() {
   };
 
   $(window).scroll(function() {
-    console.log(inViewport($('.header-container')));
     if (inViewport($('.header-container'))) {
       if ($('.navbar-fixed-top').hasClass('affix')) {
         $('.navbar-fixed-top').removeClass('affix');
