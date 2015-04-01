@@ -7,9 +7,10 @@ var ready = function() {
       if (window.mobilecheck) {
         return e
       } else {
-        e.preventDefault();
-        $href = $(e.target.hash).offset().top;
-        $('body,html').animate({scrollTop:$($href)},500);
+        return e
+        // e.preventDefault();
+        // $href = $(e.target.hash).offset().top;
+        // $('body,html').animate({scrollTop:$($href)},500);
       }
     });
     /* Remove buffer for Navbar. */

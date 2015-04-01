@@ -79,15 +79,15 @@ class User < ActiveRecord::Base
   end
 
   def is_instructor?
-    self.role > 0
+    self.role >= 1
   end
 
   def is_mod?
-    self.role > 1
+    self.role >= 2
   end
 
   def is_admin?
-    self.role > 2
+    self.role >= 3
   end
 
   def subscribed?(event)
