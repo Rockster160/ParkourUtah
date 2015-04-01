@@ -1,7 +1,6 @@
 var ready = function() {
 
   if (window.location.pathname == "/") {
-    $('.full-site-container').css('background','none');
     /* smooth scrolling for scroll to top */
     $('.scroll-link').click(function(e){
       if (window.mobilecheck()) {
@@ -34,10 +33,6 @@ var ready = function() {
     if (!($('.navbar-fixed-top').hasClass())) {
       $('.navbar-fixed-top').addClass('affix');
     }
-    $('.full-site-container').css({
-      "margin": "0 auto",
-      "max-width": "1200px"
-    });
   }
 
   window.mobilecheck = function() {
