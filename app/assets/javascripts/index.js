@@ -1,7 +1,7 @@
 var ready = function() {
 
   if (window.location.pathname == "/") {
-    /* smooth scrolling for scroll to top */
+    /* smooth scrolling */
     $('.scroll-link').click(function(e){
       if (window.mobilecheck()) {
         return e
