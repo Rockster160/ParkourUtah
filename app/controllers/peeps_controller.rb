@@ -17,6 +17,8 @@ class PeepsController < ApplicationController
   def show_user
     if params[:athlete_id] == "0000"
       redirect_to dashboard_path
+    elsif params[:athlete_id] == ENV["PKUT_PIN"]
+      redirect_to class_logs_path(params[:id])
     else
       create_athlete
       if @athlete
@@ -71,6 +73,10 @@ class PeepsController < ApplicationController
       flash[:alert] = "Sorry, there are not enough credits in your account."
       redirect_to begin_class_path
     end
+  end
+
+  def class_logs
+    @athletes = Attendance.where(event_id: params[:id]).map { |a| a.athlete }
   end
 
   private

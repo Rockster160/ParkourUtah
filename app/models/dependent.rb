@@ -41,6 +41,22 @@ class Dependent < ActiveRecord::Base
     self.waivers.sort_by(&:id).last
   end
 
+  def emergency_phone
+    format_phone(self.emergency_contact)
+  end
+
+  def guardian_phone
+    format_phone(self.user.phone_number)
+  end
+
+  def format_phone(num)
+    num ||= 0
+    num = num.to_s.split('')
+    number = []
+    10.times { |t| number << (num[t].nil? ? "0" : num[t]) }
+    "(#{number[0..2].join('')}) #{number[3..5].join('')}-#{number[6..9].join('')}"
+  end
+
   def generate_pin
     self.sign_up_credits
     self.athlete_id = ((0...9999).to_a - [ENV["PKUT_PIN"].to_i] - Dependent.all.map { |user| user.athlete_id }).sample
