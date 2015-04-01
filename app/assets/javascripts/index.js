@@ -4,13 +4,13 @@ var ready = function() {
     $('.full-site-container').css('background','none');
     /* smooth scrolling for scroll to top */
     $('.scroll-link').click(function(e){
-      if (window.mobilecheck) {
+      if (window.mobilecheck()) {
         return e
       } else {
         return e
-        // e.preventDefault();
         // $href = $(e.target.hash).offset().top;
         // $('body,html').animate({scrollTop:$($href)},500);
+        // e.preventDefault();
       }
     });
     /* Remove buffer for Navbar. */
@@ -39,12 +39,6 @@ var ready = function() {
       "max-width": "1200px"
     });
   }
-
-  $('.callout-container').ready(function() {
-    $('.callout-background').append(
-      $('.callout-container').css('visibility', 'visible').show()
-    );
-  });
 
   window.mobilecheck = function() {
     var check = false;
