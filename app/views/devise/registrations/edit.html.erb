@@ -39,7 +39,7 @@
             <h3>Lastly, we just need your mobile phone number</h3>
             <h3>(Only used for sending you reminders about classes that you may opt-in to receiving)</h3>
             <%= form_tag "/update", method: "post" do %>
-              <%= text_field_tag :phone_number, '', autocomplete: "off", class: 'fancy-textbox restrictNumeric formatPhoneNumber' %>
+              <%= text_field_tag :phone_number, '', autocomplete: "off", class: 'fancy-textbox restrictNumeric formatPhoneNumber', inputmode: 'numeric', pattern: '[0-9]*' %>
               <h3><%= submit_tag "Update", class: 'fancy-btn' %></h3>
             <% end %>
           <% end %>
@@ -81,7 +81,7 @@
 
     <div class="field">
       <%= f.label :phone_number %> <i><br/>Only used to update you on classes that you have subscribed to.</i><br />
-      <%= f.text_field :phone_number, autocomplete: "off", class: 'fancy-textbox restrictNumeric formatPhoneNumber' %>
+      <%= f.text_field :phone_number, autocomplete: "off", class: 'fancy-textbox restrictNumeric formatPhoneNumber', inputmode: 'numeric', pattern: '[0-9]*' %>
     </div>
 
     <div class="field">

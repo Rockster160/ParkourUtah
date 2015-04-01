@@ -4,7 +4,7 @@
   <%= form_tag "/contact" do %>
     <%= text_field_tag :name, '', class: 'fancy-textbox', placeholder: 'Your Name' %><br/>
     <%= text_field_tag :email, '', class: 'fancy-textbox', placeholder: 'Email' %><br/>
-    <%= text_field_tag :phone, '', class: 'fancy-textbox formatPhoneNumber restrictNumeric', placeholder: 'Phone', required: true %><br/>
+    <%= text_field_tag :phone, '', class: 'fancy-textbox formatPhoneNumber restrictNumeric', placeholder: 'Phone', required: true, inputmode: 'numeric', pattern: '[0-9]*' %><br/>
     <%= text_area_tag :comment, '', class: 'fancy-textarea', placeholder: 'Tell us what you need and when the best time is to contact you.' %>
     <h3><%= submit_tag "SEND", class: "fancy-btn" %></h3>
   <% end %>
