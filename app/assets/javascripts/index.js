@@ -22,11 +22,6 @@ var ready = function() {
         }
       }
     })
-    $('.callout-container').ready(function() {
-      $('.callout-background').append(
-        $('.callout-container').css('visibility', 'visible').show()
-      );
-    });
     $('.navbar-fixed-top').removeClass('affix');
 
   } else {
@@ -39,6 +34,12 @@ var ready = function() {
       "max-width": "1200px"
     });
   }
+  
+  $('.callout-container').ready(function() {
+    $('.callout-background').append(
+      $('.callout-container').css('visibility', 'visible').show()
+    );
+  });
 
   function inViewport($ele) {
     var lBound = $(window).scrollTop(),
