@@ -3,6 +3,6 @@ class KeyGenMailer < ApplicationMailer
 
   def key_gen_mail(keys, topic)
     @keys = keys
-    mail(to: "justin@parkourutah.com", subject: "Requested keys for: #{topic}")
+    mail(to: ENV['PKUT_EMAIL'], subject: "Requested keys for: #{topic}")
   end
 end

@@ -6,6 +6,6 @@ class ContactMailer < ApplicationMailer
     @email = params["email"]
     @phone = params["phone"]
     @body = params["comment"]
-    mail(to: "justin@parkourutah.com", subject: "Request for Contact")
+    mail(to: ENV['PKUT_EMAIL'], subject: "Request for Contact")
   end
 end
