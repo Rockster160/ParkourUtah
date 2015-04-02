@@ -23,7 +23,16 @@ class LineItem < ActiveRecord::Base
     :convert_options => { :all => '-background white -flatten +matte' }
   validates_attachment_content_type :display, :content_type => /\Aimage\/.*\Z/
 
+  before_save :assign_item_position_if_nil
+
   def cost
     self.cost_in_pennies.to_f / 100
+  end
+
+  def assign_item_position_if_nil
+    unless self.item_order
+      self.item_order = (LineItem.all.map { |l| l.item_order }.compact.sort.last + 1)
+      self.save
+    end
   end
 end

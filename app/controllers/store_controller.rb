@@ -2,6 +2,7 @@ class StoreController < ApplicationController
   before_action :set_cart
   before_action :set_categories, only: [:edit, :new]
   before_action :validate_admin, only: [:generate_keys, :email_keys]
+  before_action :publicly_unavailable
 
   def index
     @items = LineItem.select { |item| !(item.hidden) }.sort_by { |order| order.item_order }.reverse
@@ -131,6 +132,12 @@ class StoreController < ApplicationController
   def validate_admin
     unless current_user && current_user.is_admin?
       redirect_to root_path, alert: "You do not have permission to access this page."
+    end
+  end
+
+  def publicly_unavailable
+    unless current_user && current_user.is_admin?
+      redirect_to coming_soon_path
     end
   end
 end

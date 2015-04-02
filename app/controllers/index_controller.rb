@@ -7,7 +7,7 @@ class IndexController < ApplicationController
 
     all_events = Event.where(nil)
     @events = all_events.group_by { |event| [event.date.month, event.date.day] }
-    @cities = all_events.group_by { |event| event.city }.keys
+    @cities = all_events.group_by { |event| event.city }.keys.sort
     @classes = all_events.group_by { |event| event.class_name }.keys
 
     @selected_cities = params[:cities] ? params[:cities] : @cities

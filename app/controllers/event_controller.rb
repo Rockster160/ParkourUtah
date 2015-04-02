@@ -10,8 +10,8 @@ class EventController < ApplicationController
   def new
     @event = Event.new
     all_events = Event.all.to_a
-    @cities = all_events.group_by { |event| event.city }.keys
-    @classes = all_events.group_by { |event| event.class_name }.keys
+    @cities = all_events.group_by { |event| event.city }.keys.sort
+    @classes = all_events.group_by { |event| event.class_name }.keys.sort
     @instructors = User.where("role > ?", 0)
   end
 

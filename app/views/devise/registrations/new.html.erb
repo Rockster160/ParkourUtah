@@ -1,5 +1,5 @@
 <div class="central-container fancy-box form-offset">
-<h2>Sign up</h2>
+<h2>REGISTER</h2>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
   <%= devise_error_messages! %>
@@ -20,7 +20,7 @@
   </div>
 
   <div class="actions">
-    <h3><%= f.submit "SIGN UP", class: 'fancy-btn' %><br /></h3>
+    <h3><%= f.submit "REGISTER", class: 'fancy-btn' %><br /></h3>
     <h3><%= link_to "LOG IN", new_session_path(resource_name), class: 'fancy-btn' %><br /></h3>
   </div>
 <% end %>
