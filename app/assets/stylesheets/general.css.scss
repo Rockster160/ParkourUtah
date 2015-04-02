@@ -1,5 +1,7 @@
 .media-links {
+  transition: 0.3s;
   color: white;
+  &:hover { color: red; }
 }
 
 .hover-btn:hover { cursor: pointer; }
