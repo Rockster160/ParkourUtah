@@ -24,7 +24,6 @@ class User < ActiveRecord::Base
   #   t.integer  "avatar_2_file_size"
   #   t.datetime "avatar_2_updated_at"
   #   t.text     "bio"
-  #   t.integer  "auth_net_id"
   #   t.integer  "payment_id"
   #   t.integer  "credits"
   #   t.integer  "phone_number"
@@ -33,23 +32,12 @@ class User < ActiveRecord::Base
   #   t.integer  "shipping_id"
   # end
 
-  if ENV["RAILS_ENV"] == "production"
-    ROOT_PATH = "http://parkourutah.com"
-    API_LOGIN = ENV['PKUT_AUTHNET_LOGIN'].freeze
-    TRANSACTION_KEY = ENV['PKUT_AUTHNET_TRANS_KEY'].freeze
-  else
-    ROOT_PATH = "http://localhost:7545"
-    API_LOGIN = '34H962KteRF'.freeze
-    TRANSACTION_KEY = '92wavU3h45xZW88P'.freeze
-  end
-
   has_one :cart, dependent: :destroy
   has_many :dependents, dependent: :destroy
   has_many :transactions, through: :cart
   has_many :subscriptions, dependent: :destroy
 
-  after_create :create_AuthNet_profile, :assign_cart
-  after_update :update_AuthNet_profile
+  after_create :assign_cart
   before_save :format_phone_number
   before_destroy :clear_associations
 
@@ -94,93 +82,6 @@ class User < ActiveRecord::Base
     Subscription.where(user_id: self.id, event_id: event.id).count > 0
   end
 
-  def get_AuthNet_token
-    return 0000 unless create_AuthNet_profile
-    transaction = generate_AuthNet_transaction
-    xml =
-    "<customerProfileId>#{self.auth_net_id}</customerProfileId>
-    <hostedProfileSettings>
-    <setting>
-    <settingName>hostedProfileValidationMode</settingName>
-    <settingValue>testMode</settingValue>
-    </setting>
-    <setting>
-    <settingName>hostedProfileReturnUrl</settingName>
-    <settingValue>#{ROOT_PATH}/peeps/return</settingValue>
-    </setting>
-    <setting>
-    <settingName>hostedProfileReturnUrlText</settingName>
-    <settingValue>Back to Parkour Utah</settingValue>
-    </setting>
-    </hostedProfileSettings>"
-    res = auth_net_xml_request('getHostedProfilePageRequest', xml)
-
-    token = Hash.from_xml(res.body)["getHostedProfilePageResponse"]["token"] unless res == 0000
-  end
-
-  def create_AuthNet_profile
-    return true if self.auth_net_id
-    transaction = generate_AuthNet_transaction
-    profile = AuthorizeNet::CIM::CustomerProfile.new(
-      :email => self.email,
-      :id => self.id
-    )
-    response = transaction.create_profile(profile)
-    self.auth_net_id = response.profile_id
-    self.save
-  end
-
-  def update_AuthNet_profile
-    xml =
-    "<profile>
-    <merchantCustomerId>#{self.id}</merchantCustomerId>
-    <email>#{self.email}</email>
-    <customerProfileId>#{self.auth_net_id}</customerProfileId>
-    </profile>"
-
-    res = auth_net_xml_request('updateCustomerProfileRequest', xml)
-    Hash.from_xml(res.body)
-  end
-
-  def get_payment_id
-    return 0000 unless create_AuthNet_profile
-    return payment_id if self.payment_id
-
-    xml = "<customerProfileId>#{self.auth_net_id}</customerProfileId>"
-    res = auth_net_xml_request('getCustomerProfileRequest', xml)
-    unless res == 0000
-      paymentProfile = Hash.from_xml(res.body)["getCustomerProfileResponse"]["profile"]["paymentProfiles"]
-      if paymentProfile
-        self.payment_id = paymentProfile["customerPaymentProfileId"]
-        self.save
-
-        self.payment_id
-      else
-        return nil
-      end
-    else
-      return 0000
-    end
-  end
-
-  def get_shipping_id
-    return 0000 unless create_AuthNet_profile
-    return shipping_id if self.shipping_id
-
-    xml = "<customerProfileId>#{self.auth_net_id}</customerProfileId>"
-    res = auth_net_xml_request('getCustomerProfileRequest', xml)
-
-    unless res == 0000
-      shipping_info = Hash.from_xml(res.body)["getCustomerProfileResponse"]["profile"]["shipToList"]
-      if shipping_info
-        self.shipping_id = shipping_info["customerAddressId"]
-        self.save
-      end
-    end
-
-    self.shipping_id
-  end
-
   def charge_credits(price)
     if self.credits >= price
       self.update(credits: self.credits - price)
@@ -192,74 +93,20 @@ class User < ActiveRecord::Base
   end
 
   def buy_shopping_cart
-    return "Ok" if self.cart.price <= 0
-    return 0000 unless create_AuthNet_profile
-    if self.get_shipping_id && self.get_payment_id
-      order = self.cart.transactions
-      items = ""
-      order.each do |trans|
-        item = trans.item
-        items <<
-        "<lineItems>
-        <itemId>#{item.id}</itemId>
-        <name>#{item.title}</name>
-        <description>#{item.description}</description>
-        <quantity>#{trans.amount}</quantity>
-        <unitPrice>#{item.cost}</unitPrice>
-        </lineItems>"
-      end
-      charge_account(self.cart.price, items)
-    else
-      return "Please verify that you have added your payment and shipping info to Authorize.Net."
+    order = self.cart.transactions
+    items = ""
+    order.each do |trans|
+      item = trans.item
+      items <<
+      "<lineItems>
+      <itemId>#{item.id}</itemId>
+      <name>#{item.title}</name>
+      <description>#{item.description}</description>
+      <quantity>#{trans.amount}</quantity>
+      <unitPrice>#{item.cost}</unitPrice>
+      </lineItems>"
     end
-  end
-
-  def charge_account(cost, line_items)
-    xml =
-    "<transaction>
-    <profileTransAuthCapture>
-    <amount>#{cost}</amount>
-    #{line_items}
-    <customerProfileId>#{self.auth_net_id}</customerProfileId>
-    <customerPaymentProfileId>#{self.get_payment_id}</customerPaymentProfileId>
-    </profileTransAuthCapture>
-    </transaction>"
-
-    res = auth_net_xml_request('createCustomerProfileTransactionRequest', xml)
-    Hash.from_xml(res.body)["createCustomerProfileTransactionResponse"]["messages"]["resultCode"] unless res == 0000
-  end
-
-  def auth_net_xml_request(title, mini_xml)
-    xml =
-    "<?xml version='1.0' encoding='utf-8'?>
-    <#{title} xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
-    <merchantAuthentication>
-    <name>#{API_LOGIN}</name>
-    <transactionKey>#{TRANSACTION_KEY}</transactionKey>
-    </merchantAuthentication>
-    #{mini_xml}
-    </#{title}>"
-
-    if ENV["RAILS_ENV"] == "production"
-      uri = URI('https://api.authorize.net/xml/v1/request.api')
-    else
-      uri = URI('https://apitest.authorize.net/xml/v1/request.api')
-    end
-    req = Net::HTTP::Post.new(uri.path)
-    begin
-      HTTParty.post(uri, body: xml, headers: { 'Content-Type' => 'application/xml' })
-    rescue
-      0000
-    end
-  end
-
-  def generate_AuthNet_transaction
-    gateway_env = ENV["RAILS_ENV"] == "production" ? :live : :sandbox
-    AuthorizeNet::CIM::Transaction.new(
-      API_LOGIN,
-      TRANSACTION_KEY,
-      gateway: gateway_env
-    )
+    # charge_account(self.cart.price, items)
   end
 
   def assign_cart
@@ -276,8 +123,6 @@ class User < ActiveRecord::Base
 
   def clear_associations
     self.cart.destroy
-    xml = "<customerProfileId>#{self.auth_net_id}</customerProfileId>"
-    res = auth_net_xml_request('deleteCustomerProfileRequest', xml)
   end
 
   def valid_phone_number
@@ -285,10 +130,6 @@ class User < ActiveRecord::Base
     unless self.phone_number_is_valid? || self.phone_number.gsub(/[^\d]/, '').length == 0
       errors.add(:phone_number, "must be a valid phone number.")
     end
-  end
-
-  def confirmation_required?
-    false
   end
 
   def format_phone_number

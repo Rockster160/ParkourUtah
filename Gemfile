@@ -26,13 +26,13 @@ gem 'devise'
 gem 'jquery-ui-rails'
 gem "paperclip", "~> 4.2"
 gem 'aws-sdk', '< 2.0'
-gem 'authorizenet'
 gem 'httparty'
 gem 'sidekiq'
 gem 'whenever', require: false
 gem 'sinatra', '~> 1.3', require: nil
 gem 'twilio-ruby'
 gem 'puma'
+gem 'stripe'
 # gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library

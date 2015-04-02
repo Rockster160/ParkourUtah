@@ -11,10 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150331040152) do
+ActiveRecord::Schema.define(version: 20150402231212) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "addresses", force: :cascade do |t|
+    t.string   "line1"
+    t.string   "line2"
+    t.string   "city"
+    t.string   "state"
+    t.string   "zip"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "attendances", force: :cascade do |t|
     t.integer  "dependent_id"
@@ -139,8 +149,6 @@ ActiveRecord::Schema.define(version: 20150331040152) do
     t.integer  "avatar_2_file_size"
     t.datetime "avatar_2_updated_at"
     t.text     "bio"
-    t.integer  "auth_net_id"
-    t.integer  "payment_id"
     t.integer  "credits",                default: 0
     t.string   "phone_number"
     t.string   "confirmation_token"
@@ -151,8 +159,7 @@ ActiveRecord::Schema.define(version: 20150331040152) do
     t.string   "stats"
     t.string   "title"
     t.string   "nickname"
-    t.string   "shipping_id"
-    t.boolean  "email_subscription",     default: true
+    t.boolean  "email_subscription",     default: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
