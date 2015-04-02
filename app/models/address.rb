@@ -1,5 +1,6 @@
 class Address < ActiveRecord::Base
   # create_table "addresses", force: :cascade do |t|
+  #   t.integer  "user_id"
   #   t.string   "line1"
   #   t.string   "line2"
   #   t.string   "city"
@@ -8,6 +9,6 @@ class Address < ActiveRecord::Base
   #   t.datetime "created_at", null: false
   #   t.datetime "updated_at", null: false
   # end
-  
+
   belongs_to :user
 end

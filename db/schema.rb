@@ -17,6 +17,7 @@ ActiveRecord::Schema.define(version: 20150402231212) do
   enable_extension "plpgsql"
 
   create_table "addresses", force: :cascade do |t|
+    t.integer  "user_id"
     t.string   "line1"
     t.string   "line2"
     t.string   "city"
@@ -25,6 +26,8 @@ ActiveRecord::Schema.define(version: 20150402231212) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  add_index "addresses", ["user_id"], name: "index_addresses_on_user_id", using: :btree
 
   create_table "attendances", force: :cascade do |t|
     t.integer  "dependent_id"

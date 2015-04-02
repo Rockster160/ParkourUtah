@@ -33,6 +33,7 @@ class User < ActiveRecord::Base
   # end
 
   has_one :cart, dependent: :destroy
+  has_one :address, dependent: :destroy
   has_many :dependents, dependent: :destroy
   has_many :transactions, through: :cart
   has_many :subscriptions, dependent: :destroy
