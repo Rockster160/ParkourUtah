@@ -117,7 +117,7 @@ class StoreController < ApplicationController
 
     if current_user.cart.price > 0
       Stripe::Charge.create(
-        :amount   => current_user.cart.total_in_dollars,
+        :amount   => current_user.cart.total,
         :currency => "usd",
         :customer => current_user.stripe_id
       )

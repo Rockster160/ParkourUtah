@@ -18,7 +18,7 @@
       <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
               data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
               data-description="A month's subscription"
-              data-amount=<%= current_user.cart.total_in_dollars %>></script>
+              data-amount=0></script>
     <% end %>
   </div>
 </div>
