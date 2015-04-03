@@ -1,0 +1,10 @@
+<div class="fancy-box central-container form-offset">
+  <% @items.each do |item| %>
+    <h3>
+      <% if item.hidden %>
+        &lt;Hidden&gt;
+      <% end %>
+      <%= link_to item.title, edit_item_path(item.id), class: 'fancy-link' %>
+    </h3>
+  <% end %>
+</div>
