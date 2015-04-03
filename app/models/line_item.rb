@@ -26,7 +26,15 @@ class LineItem < ActiveRecord::Base
   before_save :assign_item_position_if_nil
 
   def cost
+    self.cost_in_pennies
+  end
+
+  def cost_in_dollars
     self.cost_in_pennies.to_f / 100
+  end
+
+  def tax
+    self.category == "Class" ? 0 : (self.cost.to_f * 0.0825).round
   end
 
   def assign_item_position_if_nil

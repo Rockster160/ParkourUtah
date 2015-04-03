@@ -90,7 +90,7 @@ class StoreController < ApplicationController
   end
 
   def charge
-    if current_user.cart.price_in_pennies > 0
+    if current_user.cart.price > 0
       unless current_user.stripe_id
         Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
         # Get the credit card details submitted by the form
@@ -115,9 +115,9 @@ class StoreController < ApplicationController
   def purchase_cart
     Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
 
-    if current_user.cart.price_in_pennies > 0
+    if current_user.cart.price > 0
       Stripe::Charge.create(
-        :amount   => current_user.cart.price_in_pennies,
+        :amount   => current_user.cart.total_in_dollars,
         :currency => "usd",
         :customer => current_user.stripe_id
       )

@@ -5,8 +5,11 @@
         <%= render partial: 'shopping_cart_item', locals: {order: order} %>
       <% end %>
     </div>
+    <span class="shopping-cart-total">Sub total: <span class="shopping-cart-price-holder pull-right"><%= number_to_currency(@cart.price_in_dollars) %></span></span><br/>
+    <span class="shopping-cart-total">Taxes: <span class="shopping-cart-taxes-holder pull-right"><%= number_to_currency(@cart.taxes_in_dollars) %></span></span><br/>
+    <span class="shopping-cart-total">Shipping: <span class="shopping-cart-shipping-holder pull-right"><%= number_to_currency(@cart.shipping_in_dollars) %></span></span><br/>
     <br/>
-    <span class="shopping-cart-total">Total: <span class="shopping-cart-total-holder"><%= number_to_currency(@cart.price) %></span></span>
+    <span class="shopping-cart-total">Total: <span class="shopping-cart-total-holder pull-right"><%= number_to_currency(@cart.total_in_dollars) %></span></span>
     <%= form_tag '/store/redeem', remote: true do %>
       <%= text_field_tag :redemption_key, '', placeholder: 'Redemption Key', class: 'redemption-key-container', autocomplete: "off" %>
       <%= submit_tag "Submit" %>
@@ -15,7 +18,7 @@
       <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
               data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
               data-description="A month's subscription"
-              data-amount=<%= current_user.cart.price * 100 %>></script>
+              data-amount=<%= current_user.cart.total_in_dollars %>></script>
     <% end %>
   </div>
 </div>
