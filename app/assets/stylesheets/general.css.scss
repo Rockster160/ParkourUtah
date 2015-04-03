@@ -102,3 +102,13 @@ textarea {
   zoom: 2;
   transform: scale(2);
 }
+
+.close {
+  width: 30px;
+  margin-left: -30px;
+  zoom: 2;
+  color: red;
+  &:hover {
+    color: red;
+  }
+}
