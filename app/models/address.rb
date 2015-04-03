@@ -21,4 +21,8 @@ class Address < ActiveRecord::Base
     self.state ||= ""
     self.zip ||= ""
   end
+
+  def is_valid?
+    self.line1.length > 0
+  end
 end

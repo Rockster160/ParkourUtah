@@ -93,9 +93,7 @@ class StoreController < ApplicationController
     if current_user.cart.price > 0
       unless current_user.stripe_id
         Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
-        # Get the credit card details submitted by the form
         token = params[:stripeToken]
-        # Create a Customer
         customer = Stripe::Customer.create(
           :source => token,
           :description => params[:stripeEmail]
@@ -114,26 +112,30 @@ class StoreController < ApplicationController
 
   def purchase_cart
     Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
-
-    if current_user.cart.price > 0
-      Stripe::Charge.create(
-        :amount   => current_user.cart.total,
-        :currency => "usd",
-        :customer => current_user.stripe_id
-      )
-    end
-
-    #Verify transaction was success
-    current_user.cart.transactions.each do |item|
-      line_item = LineItem.find(item.item_id)
-      if RedemptionKey.redeem(item.redeemed_token)
-        current_user.update(credits: (current_user.credits + (item.amount * line_item.credits)))
+    unless current_user.address.is_valid?
+      flash[:alert] = "Please fill out your shipping information before making an order."
+    else
+      if current_user.cart.price > 0
+        charge = Stripe::Charge.create(
+          :amount   => current_user.cart.total,
+          :currency => "usd",
+          :customer => current_user.stripe_id
+        )
+      end
+      if charge.status == "succeeded"
+        current_user.cart.transactions.each do |item|
+          line_item = LineItem.find(item.item_id)
+          if RedemptionKey.redeem(item.redeemed_token)
+            current_user.update(credits: (current_user.credits + (item.amount * line_item.credits)))
+          end
+        end
+        current_user.cart = Cart.create
+        # TODO Send email to user
+        # TODO send email to Justin, if shipping is necessary.
+        flash[:notice] = "Cart was successfully purchased."
       end
     end
-    current_user.cart = Cart.create
-    # Send email to user
-    # send email to Justin, if shipping is necessary.
-    redirect_to root_path, notice: "Cart successfully purchased"
+    redirect_to edit_user_registration_path
   end
 
   def item_params

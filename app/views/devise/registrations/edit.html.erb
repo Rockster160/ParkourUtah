@@ -13,7 +13,7 @@
       <h3><%= submit_tag "Update", class: 'fancy-btn' %></h3>
     <% end %>
   <% else %>
-    <% unless current_user.address && current_user.address.line1.length > 0 %>
+    <% unless current_user.address && current_user.address.is_valid? %>
       <h3>Account setup progress: 2/5</h3>
       <h3>Next we need a shipping address.</h3>
       <h3>This is for when you buy equipment in the store, we know where to send it!</h3>
