@@ -50,15 +50,10 @@ Rails.application.routes.draw do
   post '/store/redeem' => 'store#redeem'
   get '/store/new' => 'store#new', as: 'add_item'
   get '/store/edit/:id' => 'store#edit', as: 'edit_item'
+  get '/store/index' => 'store#items', as: 'edit_items'
   patch '/store/update/:id' => 'store#update'
   post '/store/create' => 'store#create'
-
-  # get '/store' => 'index#coming_soon', as: 'store'
-  # post '/store/redeem' => 'index#coming_soon'
-  # get '/store/new' => 'index#coming_soon', as: 'add_item'
-  # get '/store/edit/:id' => 'index#coming_soon', as: 'edit_item'
-  # patch '/store/update/:id' => 'index#coming_soon'
-  # post '/store/create' => 'index#coming_soon'
+  delete '/store/item/:id/destroy' => 'store#destroy', as: 'destroy_item'
 
   get '/store/admin/generate_keys' => 'store#generate_keys', as: 'generate_keys'
   post '/store/admin/generate_keys' => 'store#email_keys'

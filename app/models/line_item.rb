@@ -26,6 +26,13 @@ class LineItem < ActiveRecord::Base
   validates_attachment_content_type :display, :content_type => /\Aimage\/.*\Z/
 
   before_save :assign_item_position_if_nil
+  before_destroy :destroy_keys
+
+  def destroy_keys
+    self.redemption_keys.each do |key|
+      key.destroy
+    end
+  end
 
   def cost
     self.cost_in_pennies

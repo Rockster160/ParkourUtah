@@ -15,5 +15,6 @@
     <%= f.file_field :display, placeholder: 'Display' %><br/>
     <br/>
     <%= submit_tag "√", class: "btn btn-success" %>
+    <%= link_to "Destroy", destroy_item_path(@item.id), method: :delete, class: "btn btn-danger" %>
   <% end %>
 </div>

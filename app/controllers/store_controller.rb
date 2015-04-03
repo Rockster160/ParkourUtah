@@ -25,12 +25,21 @@ class StoreController < ApplicationController
     redirect_to dashboard_path, notice: "Got it! An email will be sent to you shortly containing the requested keys."
   end
 
+  def destroy
+    LineItem.find(params[:id]).destroy
+    redirect_to dashboard_path, notice: "Item successfully destroyed."
+  end
+
   def new
     @item = LineItem.new
   end
 
   def edit
     @item = LineItem.find(params[:id])
+  end
+
+  def items
+    @items = LineItem.all
   end
 
   def update
