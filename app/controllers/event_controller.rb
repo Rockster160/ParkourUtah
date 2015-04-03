@@ -30,6 +30,27 @@ class EventController < ApplicationController
     redirect_to calendar_show_path("all")
   end
 
+  def edit
+    @event = Event.find(params[:id])
+  end
+
+  def update
+    event = Event.find(params[:id])
+    hour = params[:time][:meridiam] == "AM" ? params[:time][:hour].to_i : params[:time][:hour].to_i + 12
+    min = params[:time][:minute].to_i
+    token = event.token
+    if params[:all]
+      Event.where(token: token).each do |events|
+        params[:event][:date] = events.date.change({hour: hour, min: min})
+        events.update(event_params)
+      end
+    else
+      params[:event][:date] = event.date.change({hour: hour, min: min})
+      event.update(event_params)
+    end
+    redirect_to calendar_show_path("all")
+  end
+
   def destroy
     if params[:future]
       event = Event.find(params[:id])
