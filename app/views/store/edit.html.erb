@@ -1,12 +1,19 @@
-<%= form_for @item, url: {action: "update", id: @item.id} do |f| %>
-<%= f.text_field :title, placeholder: 'Title', required: true, autocomplete: "off" %><br/>
-<%= f.number_field :cost, placeholder: 'Cost', required: true, autocomplete: "off", step: 0.01 %><br/>
-<%= f.text_area :description, placeholder: 'Description', required: true, autocomplete: "off" %><br/>
-<%= f.select :category, @categories %><br/>
-Type an exact url:<br/>
-<%= f.text_field :display, value: "" %><br/>
-Or upload an image from your computer:<br/>
-<%= f.file_field :display, placeholder: 'Display' %><br/>
-<br/>
-<%= submit_tag "√", class: "btn btn-success" %>
-<% end %>
+<div class="fancy-box central-container form-offset">
+  <%= form_for @item, url: {action: "update", id: @item.id} do |f| %>
+    <%= f.text_field :title, placeholder: 'Title', required: true, autocomplete: "off", class: 'fancy-textbox' %><br/>
+    <%= f.text_field :cost_in_dollars, placeholder: 'Cost', required: true, autocomplete: "off", step: 0.01, class: 'fancy-textbox' %><br/>
+    <%= f.text_area :description, placeholder: 'Description', required: true, autocomplete: "off", class: 'fancy-textarea' %><br/>
+    <%= f.select :category, @categories, class: 'fancy-textbox' %><br/>
+    <div class="field">
+      Hidden? (Hidden items are only purchasable with a redemption key)<br/>
+      <%= f.check_box :hidden %>
+    </div>
+    <div class="field">
+      Credits given to user after purchase (1 class = 12)<br/>
+      <%= f.text_field :credits, class: 'fancy-textbox restrictNumeric' %>
+    </div>
+    <%= f.file_field :display, placeholder: 'Display' %><br/>
+    <br/>
+    <%= submit_tag "√", class: "btn btn-success" %>
+  <% end %>
+</div>
