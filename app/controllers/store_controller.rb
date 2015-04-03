@@ -11,15 +11,18 @@ class StoreController < ApplicationController
   end
 
   def generate_keys
+    @hidden = LineItem.select { |l| l.hidden == true }.sort_by { |s| s.created_at }.reverse
   end
 
   def email_keys
     keys = []
-    params[:how_many].first.to_i.times do
-      keys << RedemptionKey.create(redemption: params[:key_type]).key
+    item = LineItem.find(params[:key_type])
+    while keys.length < params[:how_many].first.to_i
+      keys << item.redemption_keys.create.key
+      keys.compact
     end
-    ::KeyGenMailerWorker.perform_async(keys, params[:key_type])
-    redirect_to :back, notice: "Got it! An email will be sent to you shortly containing the requested keys."
+    ::KeyGenMailerWorker.perform_async(keys, item.title)
+    redirect_to dashboard_path, notice: "Got it! An email will be sent to you shortly containing the requested keys."
   end
 
   def new
@@ -36,7 +39,7 @@ class StoreController < ApplicationController
     else
       flash[:alert] = "There was an error updating the item."
     end
-    redirect_to store_path
+    redirect_to dashboard_path
   end
 
   def create
@@ -45,7 +48,7 @@ class StoreController < ApplicationController
     else
       flash[:alert] = "There was an error creating the item."
     end
-    redirect_to store_path
+    redirect_to dashboard_path
   end
 
   def payment
@@ -77,7 +80,8 @@ class StoreController < ApplicationController
   end
 
   def redeem
-    item = RedemptionKey.lookup(params[:redemption_key])
+    key = RedemptionKey.where(key: params[:redemption_key]).first
+    item = key.item if key.redeemed == false
     if item && @cart.transactions.map { |items| items.redeemed_token }.exclude?(params[:redemption_key])
       @cart.transactions << @order = Transaction.create(item_id: item.id, redeemed_token: params[:redemption_key])
     else
@@ -122,28 +126,31 @@ class StoreController < ApplicationController
           :customer => current_user.stripe_id
         )
       end
-      if charge.status == "succeeded"
-        current_user.cart.transactions.each do |item|
-          line_item = LineItem.find(item.item_id)
-          if RedemptionKey.redeem(item.redeemed_token)
-            current_user.update(credits: (current_user.credits + (item.amount * line_item.credits)))
+      if !(charge) || charge.status == "succeeded"
+        current_user.cart.transactions.each do |order|
+          line_item = LineItem.find(order.item_id)
+          if RedemptionKey.redeem(order.redeemed_token)
+            current_user.update(credits: (current_user.credits + (order.amount * line_item.credits)))
           end
         end
         current_user.cart = Cart.create
         # TODO Send email to user
         # TODO send email to Justin, if shipping is necessary.
         flash[:notice] = "Cart was successfully purchased."
+      else
+        flash[:alert] = "There was an error with your request."
       end
     end
     redirect_to edit_user_registration_path
   end
 
   def item_params
-    params.require(:line_item).permit(:description, :title, :display, :cost, :category)
+    params[:line_item][:cost_in_pennies] = (params[:line_item][:cost].to_i * 100).round.to_s
+    params.require(:line_item).permit(:description, :title, :display, :cost_in_pennies, :category, :hidden, :credits)
   end
 
   def set_categories
-    @categories = ["Other", "Shoes", "Shirts", "Classes", "Stuff"]
+    @categories = ["Class", "Goods"]
   end
 
   def set_cart

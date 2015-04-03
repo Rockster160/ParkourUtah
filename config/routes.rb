@@ -34,6 +34,8 @@ Rails.application.routes.draw do
 
   get 'events/new' => 'event#new', as: 'add_event'
   post 'events/create' => 'event#create'
+  get 'events/edit' => 'event#edit', as: 'edit_event'
+  post 'events/update' => 'event#update'
   delete 'events/destroy' => 'event#destroy', as: 'destroy_event'
   post 'events/subscribe/:id' => 'event#subscribe', as: 'subscribe'
   delete 'events/unsubscribe/:id' => 'event#unsubscribe', as: 'unsubscribe'

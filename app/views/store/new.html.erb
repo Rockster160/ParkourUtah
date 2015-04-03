@@ -1,29 +1,39 @@
+<div class="fancy-box central-container form-offset">
 <%= form_for @item, url: {action: "create"} do |f| %>
 <table>
-  <tr>
-    <td>Title</td>
-    <td><%= f.text_field :title, placeholder: 'Green Parachute Pants', required: true %></td>
-  </tr>
-  <tr>
-    <td>Cost</td>
-    <td><%= f.number_field :cost, placeholder: '3000.99', required: true %></td>
-  </tr>
-  <tr>
-    <td>Sizes, comma separated</td>
-    <td><%= f.text_field :size, placeholder: 'S, M, L / 38.5, 39, 43', required: true %></td>
-  </tr>
-  <tr>
-    <td>Description</td>
-    <td><%= f.text_area :description, placeholder: 'Marvelous skills sewn with godly thread.', required: true %></td>
-  </tr>
-  <tr>
-    <td>Shoes, Shirts, etc.</td>
-    <td><%= f.select :category, @categories %></td>
-  </tr>
-  <tr>
-    <td>Display</td>
-    <td><%= f.file_field :display, required: true %></td>
-  </tr>
+  <div class="field">
+    Title<br/>
+    <%= f.text_field :title, placeholder: 'Green Parachute Pants', required: true, class: 'fancy-textbox' %>
+  </div>
+  <div class="field">
+    Cost<br/>
+    <%= f.number_field :cost, placeholder: '3000.99', required: true, class: 'fancy-textbox' %>
+  </div>
+  <!-- <div class="field">
+    Sizes, comma separated
+    <%#= f.text_field :size, placeholder: 'S, M, L / 38.5, 39, 43', required: true, class: 'fancy-textbox' %>
+  </div> -->
+  <div class="field">
+    Description<br/>
+    <%= f.text_area :description, placeholder: 'Marvelous skills sewn with godly thread.', required: true, class: 'fancy-textarea' %>
+  </div>
+  <div class="field">
+    Class or Physical Item<br/>
+    <%= f.select :category, @categories, class: 'fancy-textbox' %>
+  </div>
+  <div class="field">
+    Hidden? (Hidden items are only purchasable with a redemption key)<br/>
+    <%= f.check_box :hidden %>
+  </div>
+  <div class="field">
+    Credits given to user after purchase (1 class = 12)<br/>
+    <%= f.text_field :credits, class: 'fancy-textbox restrictNumeric' %>
+  </div>
+  <div class="field">
+    Display image<br/>
+    <%= f.file_field :display %>
+  </div>
 </table>
-  <%= submit_tag "√", class: "btn btn-success" %>
+  <%= submit_tag "Submit", class: "btn btn-success" %>
 <% end %>
+</div>

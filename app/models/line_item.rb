@@ -15,6 +15,8 @@ class LineItem < ActiveRecord::Base
   #   t.integer  "credits"
   # end
 
+  has_many :redemption_keys
+
   has_attached_file :display,
     styles: { :medium => "300x300>", :thumb => "100x100#" },
     :default_url => "/images/missing.png",

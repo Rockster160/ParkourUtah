@@ -2,21 +2,12 @@ class RedemptionKey < ActiveRecord::Base
   # t.string :key
   # t.string :redemption
   # t.boolean :redeemed
+  # t.integer :line_item_id
 
   after_create :generate_key
+  belongs_to :line_item
 
-  # RedemptionKey.create(redemption: "free_class")
-
-  def self.lookup(key)
-    item = self.where(key: key).first
-    return nil unless item && !(item.redeemed)
-    case item.redemption
-    when "free_class" then LineItem.find_by_title("Trial Class")
-    when "scout_package" then LineItem.find_by_title("Scout Package")
-    when "business_card" then LineItem.find_by_title("Trial Class")
-    when "KSL" then LineItem.find_by_title("Trial Class")
-    end
-  end
+  # LineItem.find(x).redemption_keys.create
 
   def self.redeem(key)
     item = self.where(key: key).first
@@ -24,10 +15,14 @@ class RedemptionKey < ActiveRecord::Base
       if item.redeemed
         return false
       else
-        item.update(redeemed: true) if key
+        item.update(redeemed: true)
       end
     end
     true
+  end
+
+  def item
+    self.line_item || LineItem.first
   end
 
   def generate_key
@@ -38,6 +33,8 @@ class RedemptionKey < ActiveRecord::Base
     key = 20.times.map {(caps + down + nums).sample}.join('')
     if RedemptionKey.all.where(key: key).count == 0
       self.update(key: key)
+    else
+      self.generate_key
     end
   end
 

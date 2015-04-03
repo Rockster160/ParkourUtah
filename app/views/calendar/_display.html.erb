@@ -26,6 +26,7 @@
                 <% end %>
                 <% if current_user && current_user.is_mod? %>
                   </br>
+                  <%= link_to 'Edit Event', edit_event_path(id: event.id), class: "calendar-link" %><br/>
                   <%= link_to 'Destroy Event', destroy_event_path(id: event.id), method: :delete, class: "calendar-link", data: {confirm: "Are you sure?"} %><br/>
                   <%= link_to 'Destroy all future occurrences', destroy_event_path(future: "all", id: event.id), method: :delete, class: "calendar-link",
                   data:{confirm: "Are you sure? This will delete this and all future events tied to this one."} if event.token %>

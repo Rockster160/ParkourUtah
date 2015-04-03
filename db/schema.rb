@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150403001933) do
+ActiveRecord::Schema.define(version: 20150403192125) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,10 +103,13 @@ ActiveRecord::Schema.define(version: 20150403001933) do
   create_table "redemption_keys", force: :cascade do |t|
     t.string   "key"
     t.string   "redemption"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.boolean  "redeemed",   default: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.boolean  "redeemed",     default: false
+    t.integer  "line_item_id"
   end
+
+  add_index "redemption_keys", ["line_item_id"], name: "index_redemption_keys_on_line_item_id", using: :btree
 
   create_table "subscriptions", force: :cascade do |t|
     t.integer "user_id"
