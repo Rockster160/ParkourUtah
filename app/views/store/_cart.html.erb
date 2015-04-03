@@ -6,11 +6,16 @@
       <% end %>
     </div>
     <br/>
+    <span class="shopping-cart-total">Total: <span class="shopping-cart-total-holder"><%= number_to_currency(@cart.price) %></span></span>
     <%= form_tag '/store/redeem', remote: true do %>
       <%= text_field_tag :redemption_key, '', placeholder: 'Redemption Key', class: 'redemption-key-container', autocomplete: "off" %>
       <%= submit_tag "Submit" %>
     <% end %>
-    <span class="shopping-cart-total">Total: <span class="shopping-cart-total-holder"><%= number_to_currency(@cart.price) %></span></span>
-    <%= link_to "Purchase Cart", purchase_path, method: :post, data: {confirm: "Are you sure? \nThis will charge your account #{number_to_currency(@cart.price)}."} %>
+    <%= form_tag charge_path do %>
+      <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+              data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+              data-description="A month's subscription"
+              data-amount=<%= current_user.cart.price * 100 %>></script>
+    <% end %>
   </div>
 </div>

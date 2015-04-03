@@ -25,11 +25,8 @@ class IndexController < ApplicationController
   end
 
   def update
-    if current_user.update(phone_number: params[:phone_number])
-      flash[:notice] = "Account creation complete!"
-    else
-      flash[:alert] = "There was an error saving your phone number."
-    end
+    update_address
+    update_phone
     redirect_to edit_user_registration_path
   end
 
@@ -54,4 +51,26 @@ class IndexController < ApplicationController
     end
     redirect_to root_path
   end
+
+  private
+
+  def update_phone
+    if params[:phone_number]
+      if current_user.update(phone_number: params[:phone_number])
+        flash[:notice] = "Got it! Thanks!"
+      else
+        flash[:alert] = "There was an error saving your phone number."
+      end
+    end
+  end
+
+  def update_address
+    current_user.address ||= Address.new
+    if current_user.address.update(params.permit(:line1, :line2, :city, :state, :zip))
+      flash[:notice] = "Got it! Thanks!"
+    else
+      flash[:alert] = "There was an error saving your address."
+    end
+  end
+
 end

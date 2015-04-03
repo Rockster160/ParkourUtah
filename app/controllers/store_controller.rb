@@ -2,7 +2,6 @@ class StoreController < ApplicationController
   before_action :set_cart
   before_action :set_categories, only: [:edit, :new]
   before_action :validate_admin, only: [:generate_keys, :email_keys]
-  before_action :publicly_unavailable
 
   def index
     @items = LineItem.select { |item| !(item.hidden) }.sort_by { |order| order.item_order }.reverse
@@ -91,7 +90,6 @@ class StoreController < ApplicationController
   end
 
   def charge
-    # $('.stripe-button').attr('data-amount', "400")
     if current_user.cart.price_in_pennies > 0
       unless current_user.stripe_id
         Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
@@ -103,7 +101,6 @@ class StoreController < ApplicationController
           :description => params[:stripeEmail]
         )
         current_user.update(stripe_id: customer.id)
-
       end
     end
     purchase_cart

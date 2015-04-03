@@ -1,66 +1,45 @@
-<% token = resource.get_AuthNet_token %>
-
 <div class="fancy-box">
-  <% if current_user.payment_id %>
-    <% unless current_user.shipping_id %>
-      <h3>Account setup progress: 1.5/5</h3>
-      <h3>Oops! We need your shipping information too.</h3>
-      <h3>Otherwise we won't know how to give you your stuff!</h3>
-    <% if ENV["RAILS_ENV"] == "production" %>
-      <form method="post" action="https://secure.authorize.net/profile/manage">
-    <% else %>
-      <form method="post" action="https://test.authorize.net/profile/manage">
+  <% unless current_user.phone_number %>
+    <h3>You've successfully signed up!</h3>
+    <h3>Thanks for joining us at PARKOURUTAH!</h3>
+    <h3>Account setup progress: 1/5</h3>
+    <br/>
+    <h3>We need some basic information from you before we get started.</h3>
+    <h3>First, we need a good mobile phone to reach you at.</h3>
+    <h3>We will only use this number to send you reminder texts for classes YOU subscribe to.</h3>
+    <h3>(We don't bug you. Promise!)</h3>
+    <%= form_tag "/update", method: "post" do %>
+      <%= text_field_tag :phone_number, '', autocomplete: "off", class: 'fancy-textbox restrictNumeric formatPhoneNumber', inputmode: 'numeric' %>
+      <h3><%= submit_tag "Update", class: 'fancy-btn' %></h3>
     <% end %>
-        <input class="authnet-token" type="hidden" name="token"
-        value="<%= token %>"/>
-        <h3><input class="authnet-btn fancy-btn money-btn" type="submit" value="Manage Payment Info"/></h3>
-      </form>
+  <% else %>
+    <% unless current_user.address && current_user.address.line1.length > 0 %>
+      <h3>Account setup progress: 2/5</h3>
+      <h3>Next we need a shipping address.</h3>
+      <h3>This is for when you buy equipment in the store, we know where to send it!</h3>
+      <%= render partial: 'store/address_form' %>
     <% else %>
-      <% if current_user.dependents.count == 0 %>
-        <h3>Account setup progress: 2/5</h3>
+      <% unless current_user.dependents.count > 0 %>
+        <h3>Account setup progress: 3/5</h3>
         <h3>Great! Now you can add a new athlete.</h3>
         <h3><%= link_to "Add an Athlete!", new_athlete_path, class: 'fancy-btn' %></h3>
       <% else %>
         <% unsigned = current_user.dependents.select {|d| !(d.signed_waiver?) } %>
-        <% if unsigned.count > 0 %>
+        <% unless unsigned.count == 0 %>
           <% unsigned.each do |athlete| %>
             <% if current_user.dependents.count == 1 %>
-              <h3>Account setup progress: 3/5</h3>
+              <h3>Account setup progress: 4/5</h3>
               <h3>All athletes need a waiver signed.</h3>
               <h3>Please be sure to read through all parts of the waiver.</h3>
             <% end %>
             <h3><%= link_to "Sign waiver for #{athlete.full_name}", sign_waiver_path(athlete.id), class: 'fancy-btn' %></h3>
             <br/>
           <% end %>
-        <% else %>
-          <% unless current_user.phone_number %>
-            <h3>Account setup progress: 4/5</h3>
-            <h3>Your account is almost ready to go!</h3>
-            <h3>Lastly, we just need your mobile phone number</h3>
-            <h3>(Only used for sending you reminders about classes that you may opt-in to receiving)</h3>
-            <%= form_tag "/update", method: "post" do %>
-              <%= text_field_tag :phone_number, '', autocomplete: "off", class: 'fancy-textbox restrictNumeric formatPhoneNumber', inputmode: 'numeric', pattern: '[0-9]*' %>
-              <h3><%= submit_tag "Update", class: 'fancy-btn' %></h3>
-            <% end %>
-          <% end %>
         <% end %>
         <h3>You currently have <%= current_user.credits %> credits.</h3>
         <h3><%= link_to "Add Credits", store_path, class: 'fancy-btn' %></h3>
       <% end %>
     <% end %>
-  <% else %>
-    <h3>You've successfully signed up!</h3>
-    <h3>Thanks for joining us at PARKOURUTAH!</h3>
-    <h3>Account setup progress: 1/5</h3>
-  <% if ENV["RAILS_ENV"] == "production" %>
-    <form method="post" action="https://secure.authorize.net/profile/manage">
-  <% else %>
-    <form method="post" action="https://test.authorize.net/profile/manage">
-  <% end %>
-      <input class="authnet-token" type="hidden" name="token"
-      value="<%= token %>"/>
-      <h3><input class="authnet-btn fancy-btn money-btn" type="submit" value="Manage Payment Info"/></h3>
-    </form>
   <% end %>
 </div>
 
@@ -81,7 +60,7 @@
 
     <div class="field">
       <%= f.label :phone_number %> <i><br/>Only used to update you on classes that you have subscribed to.</i><br />
-      <%= f.text_field :phone_number, autocomplete: "off", class: 'fancy-textbox restrictNumeric formatPhoneNumber', inputmode: 'numeric', pattern: '[0-9]*' %>
+      <%= f.text_field :phone_number, autocomplete: "off", class: 'fancy-textbox restrictNumeric formatPhoneNumber', inputmode: 'numeric' %>
     </div>
 
     <div class="field">
@@ -103,17 +82,9 @@
       <h3><%= f.submit "Update", class: 'fancy-btn' %></h3>
     </div>
   <% end %>
-  <% if ENV["RAILS_ENV"] == "production" %>
-    <form method="post" action="https://secure.authorize.net/profile/manage">
-  <% else %>
-    <form method="post" action="https://test.authorize.net/profile/manage">
-  <% end %>
-  <input class="authnet-token" type="hidden" name="token"
-  value="<%= token %>"/>
-  <h4><input class="authnet-btn fancy-btn money-btn" type="submit" value="Manage Payment Info"/></h4>
-  </form>
+  <!-- Some Button -->
   <div class="waivers">
-    <% if current_user.payment_id %>
+    <% if true %>
       <h3>Waivers:</h3>
       <% current_user.dependents.each_with_index do |athlete, pos| %>
         <h3><%= athlete.full_name %></h3>

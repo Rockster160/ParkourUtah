@@ -1,0 +1,27 @@
+<%= form_tag "/update", method: "post" do %>
+  <p>
+    <%= label_tag :line1, 'Address 1' %><br />
+    <%= text_field_tag :line1, '', placeholder: '123 Example Street', class: 'fancy-textbox' %>
+  </p>
+
+  <p>
+    <%= label_tag :line2, 'Address 2' %><br />
+    <%= text_field_tag :line2, '', placeholder: 'Apt 6789', class: 'fancy-textbox' %>
+  </p>
+
+  <p>
+    <%= label_tag :city %><br />
+    <%= text_field_tag :city, '', placeholder: 'Example Town', class: 'fancy-textbox' %>
+  </p>
+
+  <p>
+    <%= label_tag :state %><br />
+    <%= text_field_tag :state, '', placeholder: 'UT', :size => 2, class: 'fancy-textbox' %>
+  </p>
+
+  <p>
+    <%= label_tag :zip, 'Zip Code' %><br />
+    <%= text_field_tag :zip, '', placeholder: '84321', class: 'fancy-textbox' %>
+  </p>
+  <h3><%= submit_tag 'Submit', class: 'fancy-btn' %><h3>
+<% end %>

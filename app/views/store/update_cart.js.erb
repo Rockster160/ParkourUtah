@@ -1,6 +1,7 @@
 killFlashes();
 $('body').prepend('<%= j render "layouts/flashes" %>');
-$('.shopping-cart-total-holder').html('<%= j number_to_currency(@cart.price) %>')
+$('.shopping-cart-total-holder').html('<%= j number_to_currency(@cart.price) %>');
+$('.stripe-button').attr('data-amount', '<%= j number_to_currency(@cart.price) %>');
 <% @cart.transactions.each do |order| %>
   var amount = "<%= order.amount %>";
   $('.value-selector-<%= order.item_id %>').val(amount);

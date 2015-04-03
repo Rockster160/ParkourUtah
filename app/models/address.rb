@@ -11,4 +11,14 @@ class Address < ActiveRecord::Base
   # end
 
   belongs_to :user
+
+  before_create :make_empty_fields
+
+  def make_empty_fields
+    self.line1 ||= ""
+    self.line2 ||= ""
+    self.city ||= ""
+    self.state ||= ""
+    self.zip ||= ""
+  end
 end
