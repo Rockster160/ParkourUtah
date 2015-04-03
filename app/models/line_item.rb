@@ -29,6 +29,7 @@ class LineItem < ActiveRecord::Base
   before_destroy :destroy_keys
 
   def destroy_keys
+    Transaction.all.select { |t| t.item.id == self.id}.each { |order| order.destroy }
     self.redemption_keys.each do |key|
       key.destroy
     end

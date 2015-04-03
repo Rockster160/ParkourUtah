@@ -125,7 +125,7 @@ class StoreController < ApplicationController
 
   def purchase_cart
     Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
-    unless current_user.address.is_valid?
+    unless current_user.address && current_user.address.is_valid?
       flash[:alert] = "Please fill out your shipping information before making an order."
     else
       if current_user.cart.price > 0
