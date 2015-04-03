@@ -5,6 +5,8 @@ class RedemptionKey < ActiveRecord::Base
 
   after_create :generate_key
 
+  # RedemptionKey.create(redemption: "free_class")
+
   def self.lookup(key)
     item = self.where(key: key).first
     return nil unless item && !(item.redeemed)
@@ -18,12 +20,14 @@ class RedemptionKey < ActiveRecord::Base
 
   def self.redeem(key)
     item = self.where(key: key).first
-    unless item && !(item.redeemed)
-      return false
-    else
-      item.update(redeemed: true) if key
-      return true
+    if item
+      if item.redeemed
+        return false
+      else
+        item.update(redeemed: true) if key
+      end
     end
+    true
   end
 
   def generate_key

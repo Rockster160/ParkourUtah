@@ -83,31 +83,14 @@ class User < ActiveRecord::Base
     Subscription.where(user_id: self.id, event_id: event.id).count > 0
   end
 
-  def charge_credits(price)
-    if self.credits >= price
-      self.update(credits: self.credits - price)
+  def charge_credits(charge)
+    if self.credits >= charge
+      self.update(credits: self.credits - charge)
       self.save
       return true
     else
       return false
     end
-  end
-
-  def buy_shopping_cart
-    order = self.cart.transactions
-    items = ""
-    order.each do |trans|
-      item = trans.item
-      items <<
-      "<lineItems>
-      <itemId>#{item.id}</itemId>
-      <name>#{item.title}</name>
-      <description>#{item.description}</description>
-      <quantity>#{trans.amount}</quantity>
-      <unitPrice>#{item.cost}</unitPrice>
-      </lineItems>"
-    end
-    # charge_account(self.cart.price, items)
   end
 
   def assign_cart
@@ -135,6 +118,10 @@ class User < ActiveRecord::Base
 
   def format_phone_number
     self.phone_number = phone_number.gsub(/[^0-9]/, "") if attribute_present?("phone_number")
+  end
+
+  def confirmation_required?
+    false # Leave this- it bypasses Devise's confirmable
   end
 
 end

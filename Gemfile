@@ -32,7 +32,7 @@ gem 'whenever', require: false
 gem 'sinatra', '~> 1.3', require: nil
 gem 'twilio-ruby'
 gem 'puma'
-gem 'stripe'
+gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 # gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library

@@ -18,6 +18,14 @@ class Cart < ActiveRecord::Base
     cost
   end
 
+  def price_in_pennies
+    cost = 0
+    self.transactions.each do |order|
+      cost += (order.item.cost_in_pennies * order.amount)
+    end
+    cost
+  end
+
   def items
     items = []
     self.transactions.each do |order|

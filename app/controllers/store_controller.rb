@@ -11,27 +11,6 @@ class StoreController < ApplicationController
   def show_cart
   end
 
-  def purchase
-    unless current_user.payment_id == nil
-      if current_user.buy_shopping_cart == "Ok"
-        current_user.cart.transactions.each do |item|
-          line_item = LineItem.find(item.item_id)
-          if RedemptionKey.redeem(item.redeemed_token)
-            current_user.update(credits: (current_user.credits + (item.amount * line_item.credits)))
-          end
-        end
-        current_user.cart = Cart.create
-        redirect_to root_path, notice: "Cart successfully purchased"
-      elsif current_user.buy_shopping_cart == "Ok"
-        redirect_to store_path, alert: "There was a problem with your request."
-      else
-        redirect_to store_path, alert: current_user.buy_shopping_cart
-      end
-    else
-      redirect_to edit_user_registration_path, alert: "Please fill out your billing information before you purchase any items."
-    end
-  end
-
   def generate_keys
   end
 
@@ -68,6 +47,9 @@ class StoreController < ApplicationController
       flash[:alert] = "There was an error creating the item."
     end
     redirect_to store_path
+  end
+
+  def payment
   end
 
   def update_cart
@@ -108,7 +90,54 @@ class StoreController < ApplicationController
     end
   end
 
+  def charge
+    # $('.stripe-button').attr('data-amount', "400")
+    if current_user.cart.price_in_pennies > 0
+      unless current_user.stripe_id
+        Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
+        # Get the credit card details submitted by the form
+        token = params[:stripeToken]
+        # Create a Customer
+        customer = Stripe::Customer.create(
+          :source => token,
+          :description => params[:stripeEmail]
+        )
+        current_user.update(stripe_id: customer.id)
+
+      end
+    end
+    purchase_cart
+
+    rescue Stripe::CardError => e
+      flash[:error] = e.message
+      redirect_to charges_path
+  end
+
   private
+
+  def purchase_cart
+    Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
+
+    if current_user.cart.price_in_pennies > 0
+      Stripe::Charge.create(
+        :amount   => current_user.cart.price_in_pennies,
+        :currency => "usd",
+        :customer => current_user.stripe_id
+      )
+    end
+
+    #Verify transaction was success
+    current_user.cart.transactions.each do |item|
+      line_item = LineItem.find(item.item_id)
+      if RedemptionKey.redeem(item.redeemed_token)
+        current_user.update(credits: (current_user.credits + (item.amount * line_item.credits)))
+      end
+    end
+    current_user.cart = Cart.create
+    # Send email to user
+    # send email to Justin, if shipping is necessary.
+    redirect_to root_path, notice: "Cart successfully purchased"
+  end
 
   def item_params
     params.require(:line_item).permit(:description, :title, :display, :cost, :category)
