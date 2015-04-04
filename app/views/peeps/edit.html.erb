@@ -1,0 +1,31 @@
+<!--
+  order of sort
+  first name
+  last name
+  nickname
+  title
+  amount of pay
+  (Instructor/Mod)
+  Bio ** Show size/max size
+  Front Image
+  Back image
+ -->
+<div class="fancy-box central-container form-offset">
+  <h4><%= link_to "Back to Dashboard", dashboard_path, class: 'fancy-btn' %></h4><br/><br/>
+  <h4>Click and Drag to change Instructor order. Click to edit instructor info.</h4>
+  <table class="sortable" id="instructor-table">
+    <% @instructors.each do |i| %>
+      <tr>
+        <td class="hidden sortable-url"><%= update_peep_position_path(i.id) %></td>
+        <td class="sortable-row">
+          <div class="fancy-btn">
+            <%= link_to edit_peep_path(i.id) do %>
+            <%= icon('arrows', '', class: 'fa-lg pull-left')  %>
+            <%= i.full_name %>
+            <% end %>
+          </div><br/>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+</div>

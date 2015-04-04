@@ -33,6 +33,8 @@ gem 'sinatra', '~> 1.3', require: nil
 gem 'twilio-ruby'
 gem 'puma'
 gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
+gem 'twitter-typeahead-rails'
+gem 'jquery-tablesorter'
 # gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library

@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui
+//= require jquery-tablesorter
 //= require select2
 //= require twitter/bootstrap
 //= require turbolinks

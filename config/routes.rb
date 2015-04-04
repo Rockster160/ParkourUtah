@@ -13,6 +13,12 @@ Rails.application.routes.draw do
   get '/logs/:id' => 'peeps#class_logs', as: 'class_logs'
   put '/password/:id' => 'peeps#pin_password'
   patch '/charge_class/:id' => 'peeps#validate_pin'
+  
+  get '/peeps/edit' => 'peeps#edit', as: 'edit_peeps'
+  get '/peeps/edit_peep/:id' => 'peeps#edit_peep', as: 'edit_peep'
+  get '/peeps/update_position/:id' => 'peeps#edit_peep', as: 'update_peep_position'
+  get '/peeps/update/:id' => 'peeps#update', as: 'update_peep'
+  get '/peeps/promote' => 'peeps#promote', as: 'promotion'
 
   get '/athletes/new' => 'dependents#new', as: 'new_athlete'
   post '/athletes/create' => 'dependents#create'

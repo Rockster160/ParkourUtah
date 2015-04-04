@@ -1,27 +1,27 @@
-<%= form_tag "/update", method: "post" do %>
+<%= form_for current_user.address, url: {action: 'update'}, method: "post" do |f| %>
   <p>
-    <%= label_tag :line1, 'Address 1' %><br />
-    <%= text_field_tag :line1, '', placeholder: '123 Example Street', class: 'fancy-textbox' %>
+    <%= f.label :line1, 'Address 1' %><br />
+    <%= f.text_field :line1, placeholder: '123 Example Street', class: 'fancy-textbox' %>
   </p>
 
   <p>
-    <%= label_tag :line2, 'Address 2' %><br />
-    <%= text_field_tag :line2, '', placeholder: 'Apt 6789', class: 'fancy-textbox' %>
+    <%= f.label :line2, 'Address 2' %><br />
+    <%= f.text_field :line2, placeholder: 'Apt 6789', class: 'fancy-textbox' %>
   </p>
 
   <p>
-    <%= label_tag :city %><br />
-    <%= text_field_tag :city, '', placeholder: 'Example Town', class: 'fancy-textbox' %>
+    <%= f.label :city %><br />
+    <%= f.text_field :city, placeholder: 'Example Town', class: 'fancy-textbox' %>
   </p>
 
   <p>
-    <%= label_tag :state %><br />
-    <%= text_field_tag :state, '', placeholder: 'UT', :size => 2, class: 'fancy-textbox' %>
+    <%= f.label :state %><br />
+    <%= f.text_field :state, placeholder: 'UT', :size => 2, class: 'fancy-textbox' %>
   </p>
 
   <p>
-    <%= label_tag :zip, 'Zip Code' %><br />
-    <%= text_field_tag :zip, '', placeholder: '84321', class: 'fancy-textbox' %>
+    <%= f.label :zip, 'Zip Code' %><br />
+    <%= f.text_field :zip, placeholder: '84321', class: 'fancy-textbox' %>
   </p>
-  <h3><%= submit_tag 'Submit', class: 'fancy-btn' %><h3>
+  <h3><%= submit_tag 'Submit', class: 'fancy-btn' %></h3>
 <% end %>

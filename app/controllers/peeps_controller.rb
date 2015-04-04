@@ -14,6 +14,16 @@ class PeepsController < ApplicationController
   def pin_user
   end
 
+  def edit
+    @instructors = User.all.select { |u| u.is_instructor? }.sort_by { |s| s.instructor_position }
+  end
+
+  def edit_peep
+  end
+
+  def promotion
+  end
+
   def show_user
     if params[:athlete_id] == "0000"
       redirect_to dashboard_path
