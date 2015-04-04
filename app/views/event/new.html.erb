@@ -1,4 +1,5 @@
 <div class="fancy-box central-container form-offset">
+  <h4><%= link_to "Back to Dashboard", dashboard_path, class: 'fancy-btn' %></h4><br/><br/>
   <%= form_for @event, url: {action: "create"} do |f| %>
     <h4>Select a starting date</h4>
     <div class="date-picker"></div><br/>

@@ -1,5 +1,6 @@
 <% if current_user && current_user.is_admin? %>
   <div class="fancy-box central-container form-offset">
+    <h4><%= link_to "Back to Dashboard", dashboard_path, class: 'fancy-btn' %></h4><br/><br/>
     <%= form_tag '/store/admin/generate_keys' do %>
       <h2>Generate Keys</h2><br/>
       Type of Key: <br/>
