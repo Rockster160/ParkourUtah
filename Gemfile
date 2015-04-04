@@ -35,6 +35,7 @@ gem 'puma'
 gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 gem 'twitter-typeahead-rails'
 gem 'jquery-tablesorter'
+gem 'maskedinput-rails'
 # gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library

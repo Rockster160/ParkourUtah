@@ -8,11 +8,15 @@ var ready = function() {
     }
   });
 
-  $('.formatPhoneNumber').keypress(function(e) {
-    formatPhone($(this));
-    if (!(e.which >= 48 && e.which <= 57)) {e.preventDefault()};
-    if ($(this).val().length > 13) { $(this).val($(this).val().substring(0, 13)) }
-  });
+  // $('.formatPhoneNumber').keypress(function(e) {
+  //   formatPhone($(this));
+  //   if (!(e.which >= 48 && e.which <= 57)) {e.preventDefault()};
+  //   if ($(this).val().length > 13) { $(this).val($(this).val().substring(0, 13)) }
+  // });
+
+  $(function() {
+    $('.formatPhoneNumber').mask("(999) 999-9999");
+  })
 
   $('.pin-entry').keypress(function(e) {
     var value = $(this).val();
