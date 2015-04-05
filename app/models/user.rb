@@ -32,8 +32,8 @@ class User < ActiveRecord::Base
   #   t.integer  "shipping_id"
   # end
 
-  has_one :cart, dependent: :destroy
   has_one :address, dependent: :destroy
+  has_many :carts, dependent: :destroy
   has_many :dependents, dependent: :destroy
   has_many :transactions, through: :cart
   has_many :subscriptions, dependent: :destroy
@@ -95,10 +95,10 @@ class User < ActiveRecord::Base
   end
 
   def assign_cart
-    self.cart = Cart.create
+    self.carts.create
   end
 
-  def assign_cart
+  def create_blank_address
     self.address = Address.new
   end
 
@@ -106,6 +106,10 @@ class User < ActiveRecord::Base
     return false unless self.phone_number
     phone = self.phone_number.gsub(/[^\d]/, '')
     (phone.length == 10)
+  end
+
+  def cart
+    self.carts.sort_by { |cart| cart.created_at }.last
   end
 
   protected

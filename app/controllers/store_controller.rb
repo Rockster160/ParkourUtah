@@ -142,9 +142,11 @@ class StoreController < ApplicationController
             current_user.update(credits: (current_user.credits + (order.amount * line_item.credits)))
           end
         end
-        current_user.cart = Cart.create
-        # TODO Send email to user
-        # TODO send email to Justin, if shipping is necessary.
+        # binding.pry
+        ItemsPurchasedMailerWorker.perform_async(current_user.cart.id, current_user.email)
+        ItemsPurchasedMailerWorker.perform_async(current_user.cart.id, "rocco11nicholls@gmail.com")
+        # ItemsPurchasedMailerWorker.perform_async(current_user.cart, "justin@parkourutah.com")
+        current_user.carts.create
         flash[:notice] = "Cart was successfully purchased."
       else
         flash[:alert] = "There was an error with your request."

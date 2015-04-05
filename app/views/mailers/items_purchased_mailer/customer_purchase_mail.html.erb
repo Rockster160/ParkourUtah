@@ -1,0 +1,64 @@
+<h2>Thank you for your purchase from ParkourUtah!</h2>
+<br/>
+<p>If you bought class credits, they have already been added to your account and your athletes are ready to attend class!</p>
+<p>If you bought physical items, your order has been saved and is now in the process of getting put together, packaged, and shipped directly to your home!</p>
+<br/>
+<br/>
+<h3>Shipping information</h3>
+<p><%= @address.line1 %></p>
+<p><%= @address.line2 %></p>
+<p><%= @address.city %></p>
+<p><%= @address.state %></p>
+<p><%= @address.zip %></p>
+<br/>
+<br/>
+<h3>Order information</h3>
+<table>
+  <thead>
+    <tr>
+      <th>
+        Item Name
+      </th>
+      <th>
+        Amount
+      </th>
+      <th>
+        Cost
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @order_items.each do |transaction| %>
+      <tr>
+        <td><%= transaction.item.title %></td>
+        <td><%= transaction.amount %></td>
+        <td><%= number_to_currency(transaction.item.cost_in_dollars) %></td>
+      </tr>
+    <% end %>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><strong>Sub total</strong></td>
+      <td></td>
+      <td><%= number_to_currency(@cart.price_in_dollars) %></td>
+    </tr>
+    <tr>
+      <td><strong>Tax</strong></td>
+      <td></td>
+      <td><%= number_to_currency(@cart.taxes_in_dollars) %></td>
+    </tr>
+    <tr>
+      <td><strong>Shipping</strong></td>
+      <td></td>
+      <td><%= number_to_currency(@cart.shipping_in_dollars) %></td>
+    </tr>
+    <tr>
+      <td><strong>Total</strong></td>
+      <td></td>
+      <td><%= number_to_currency(@cart.total_in_dollars) %></td>
+    </tr>
+  </tbody>
+</table>
