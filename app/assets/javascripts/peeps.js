@@ -23,15 +23,16 @@ var ready = function() {
   $("#instructor-table").sortable({
       helper: sortableTablesHelper,
       items: "tr:not(.not-sortable)",
-      stop: function() {updatePositionNumbers("survey_question", "question_position_number")}
+      stop: function() {updatePositionNumbers("instructor", "instructor_position")}
   }).disableSelection();
 
-  $("#survey-question-answers-table").sortable({
-      helper: sortableTablesHelper,
-      items: "tr:not(.not-sortable)",
-      stop: function() {updatePositionNumbers("survey_question_answer", "answer_position_number")}
-  }).disableSelection();
-  
+// For store items
+  // $("#survey-question-answers-table").sortable({
+  //     helper: sortableTablesHelper,
+  //     items: "tr:not(.not-sortable)",
+  //     stop: function() {updatePositionNumbers("survey_question_answer", "answer_position_number")}
+  // }).disableSelection();
+
 };
 
 $(document).ready(ready);

@@ -29,7 +29,7 @@ var ready = function() {
     }
   }
 
-  $('.upload-image-icon').click(function() {
+  $('.falsify-image-click').click(function() {
     $('.upload-image-btn').click();
   });
   $('.upload-image-btn').change(function(e) {
@@ -41,7 +41,7 @@ var ready = function() {
       $('.upload-image-icon').css("font-size", "5em");
     };
   });
-  
+
   $('.no-zoom').bind('touchstart', function(e) {
     e.preventDefault();
   });

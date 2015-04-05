@@ -19,9 +19,55 @@ class PeepsController < ApplicationController
   end
 
   def edit_peep
+    @instructor = User.find(params[:id])
+  end
+
+  def update
+    if User.find(params[:id]).update(instructor_params)
+      flash[:notice] = "Instructor successfully updated."
+    else
+      flash[:alert] = "There was an error updating the instructor."
+    end
+    redirect_to dashboard_path
+  end
+
+  def update_peep_position
+    @instructor = User.find(params[:id])
+    @instructor.update(instructor_position: params["instructor"]["instructor_position"].to_i)
+    respond_to do |format|
+      format.json { render json: @instructor }
+    end
+  end
+
+  def promote
+    @instructor = User.new
   end
 
   def promotion
+    new_user = false
+    instructor = User.find_by_email(params[:user][:email])
+    new_user = true if instructor.nil?
+    instructor ||= User.new(email: params[:user][:email], password: "ParkourUtahPKFR4LF")
+    instructor.update(instructor_params)
+    if instructor.save
+      number_of_instructors = User.all.select { |u| u.is_instructor? }.count
+      instructor.update(role: 1, instructor_position: number_of_instructors + 1)
+      # TODO Send Email
+      flash[:notice] = "Instructor successfully created." if new_user == true
+      flash[:notice] = "Instructor successfully added." if new_user == false
+    else
+      flash[:alert] = "There was an error adding the instructor."
+    end
+    redirect_to dashboard_path
+  end
+
+  def demotion
+    if User.find(params[:id]).update(role: 0)
+      flash[:notice] = "Instructor successfully removed."
+    else
+      flash[:alert] = "There was an error updating the instructor."
+    end
+    redirect_to dashboard_path
   end
 
   def show_user
@@ -99,5 +145,9 @@ class PeepsController < ApplicationController
     unless current_user && current_user.is_instructor?
       redirect_to new_user_session_path, alert: "You must be an Instructor to view this page."
     end
+  end
+
+  def instructor_params
+    params.require(:user).permit(:first_name, :last_name, :nickname, :stats, :payment_multiplier, :title, :bio, :avatar, :avatar_2, :role)
   end
 end

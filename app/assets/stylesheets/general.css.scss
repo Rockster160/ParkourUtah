@@ -69,9 +69,6 @@ textarea {
   padding: 10px;
   margin: 0 auto;
   color: red;
-  // & > a {
-  //   color: red;
-  // }
   .disabled {
     cursor: default;
     pointer-events: none;
@@ -114,4 +111,9 @@ textarea {
   &:hover {
     color: red;
   }
+}
+
+.restrictBio {
+  overflow: hidden;
+  font-size: 1em;
 }

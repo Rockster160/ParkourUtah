@@ -1,0 +1,29 @@
+<div class="fancy-box central-container form-offset">
+  <h4><%= link_to "Back to Dashboard", dashboard_path, class: 'fancy-btn' %></h4><br/><br/>
+  <%= form_for @instructor, url: { controller: "peeps", action: "update" } do |f| %>
+    <h3><%= @instructor.full_name %></h3>
+    <%= f.label :first_name %><br/>
+    <%= f.text_field :first_name, class: 'fancy-textbox' %><br/>
+    <%= f.label :last_name %><br/>
+    <%= f.text_field :last_name, class: 'fancy-textbox' %><br/>
+    <%= f.label :nickname %>(Optional)<br/>
+    <%= f.text_field :nickname, class: 'fancy-textbox' %><br/>
+    <%= f.label :title %><br/>
+    <%= f.text_field :title, class: 'fancy-textbox' %><br/>
+    <%= f.label :stats %><br/>
+    <%= f.text_field :stats, class: 'fancy-textbox' %><br/>
+    <%= f.label :payment_multiplier, 'How much paid per student?' %><br/>
+    <%= f.text_field :payment_multiplier, class: 'fancy-textbox restrictNumeric' %><br/>
+    <%= f.label :bio %><br/>
+    <%= f.text_area :bio, rows: '12', maxlength: '550', class: 'fancy-textarea restrictBio' %><br/>
+    <%= f.label :avatar %>
+    <%= f.file_field :avatar %>
+    <%= f.label :avatar_2 %>
+    <%= f.file_field :avatar_2 %>
+    <%= f.submit "Submit", class: 'btn btn-success' %>
+  <% end %>
+  <br/>
+  <br/>
+  <%= link_to "Demote from Instructor", demotion_path, method: :post, class: 'btn btn-danger',
+  data:{confirm: "Are you sure? This will remove this instructors access to running classes."} %>
+</div>
