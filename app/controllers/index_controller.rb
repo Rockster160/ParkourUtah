@@ -56,20 +56,24 @@ class IndexController < ApplicationController
 
   def update_phone
     if params[:phone_number]
-      if current_user.update(phone_number: params[:phone_number])
-        flash[:notice] = "Got it! Thanks!"
+      current_user.phone_number = params[:phone_number]
+      if current_user.save
+        flash[:notice] = "Your phone number has been successfully updated!"
       else
-        flash[:alert] = "There was an error saving your phone number."
+        flash[:alert] = current_user.errors.full_messages.first
       end
     end
   end
 
   def update_address
     current_user.address ||= Address.new
-    if current_user.address.update(params.permit(:line1, :line2, :city, :state, :zip))
-      flash[:notice] = "Got it! Thanks!"
-    else
-      flash[:alert] = "There was an error saving your address."
+    if params[:address]
+      current_user.address.update(params[:address].permit(:line1, :line2, :city, :state, :zip))
+      if current_user.address.is_valid?
+        flash[:notice] = "Your address has been successfully updated!"
+      else
+        flash[:alert] = "There was an error saving your address."
+      end
     end
   end
 
