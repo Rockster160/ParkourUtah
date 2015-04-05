@@ -39,6 +39,7 @@ class User < ActiveRecord::Base
   has_many :subscriptions, dependent: :destroy
 
   after_create :assign_cart
+  after_create :create_blank_address
   before_save :format_phone_number
   before_destroy :clear_associations
 
@@ -95,6 +96,10 @@ class User < ActiveRecord::Base
 
   def assign_cart
     self.cart = Cart.create
+  end
+
+  def assign_cart
+    self.address = Address.new
   end
 
   def phone_number_is_valid?
