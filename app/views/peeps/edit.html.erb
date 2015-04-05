@@ -6,12 +6,12 @@
       <tr class="sortable-row">
         <td class="hidden sortable-url"><%= update_peep_position_url(instructor.id) %></td>
         <td>
-          <div class="fancy-btn">
-            <%= link_to edit_peep_path(instructor.id) do %>
-              <%= icon('arrows', '', class: 'fa-lg pull-left')  %>
-              <%= instructor.full_name %>
-            <% end %>
-          </div><br/>
+          <h4><%= link_to edit_peep_path(instructor.id), class: 'fancy-btn set-min-width-btn' do %>
+            <%= icon('arrows', '', class: 'fa-lg')  %>
+            <%= instructor.full_name %>
+          <% end %></h4>
+          <br/>
+          <br/>
         </td>
       </tr>
     <% end %>

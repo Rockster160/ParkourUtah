@@ -59,10 +59,10 @@ textarea {
   &:focus { outline: none; }
 }
 .fancy-btn {
+  white-space: nowrap;
   transition: 0.3s;
   background: rgba(236, 160, 80, 0.8);
   text-decoration: none;
-  width: 200px;
   font-family: 'Voltaire';
   border: 2px solid red;
   border-radius: 20px;
@@ -73,12 +73,16 @@ textarea {
     cursor: default;
     pointer-events: none;
   }
-  &:focus { outline: none; }
-  &:hover {
+  &:hover, &:active, &:focus {
+    color: red;
+    outline: none;
     text-decoration: none;
     cursor: pointer;
     background: rgb(236, 160, 80);
   }
+}
+.set-min-width-btn {
+  width: 200px;
 }
 .pin-entry {
   letter-spacing: 40px;

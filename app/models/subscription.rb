@@ -5,5 +5,4 @@ class Subscription < ActiveRecord::Base
   belongs_to :event
   belongs_to :user
 
-  # TODO What happens after a subscription is made and a user deletes/changes their phone?
 end
