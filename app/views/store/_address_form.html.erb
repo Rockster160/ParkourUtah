@@ -1,4 +1,4 @@
-<%= form_for current_user.address, url: '/update', method: "post" do |f| %>
+<%= form_for current_user.address, url: '/update', method: "post", class: 'scrollTop' do |f| %>
   <p>
     <%= f.label :line1, 'Address 1' %><br />
     <%= f.text_field :line1, placeholder: '123 Example Street', class: 'fancy-textbox' %>

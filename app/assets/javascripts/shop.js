@@ -15,7 +15,11 @@ var ready = function() {
     }
   });
 
+
 };
+$('.scrollTop').ready(function() {
+  $('body, html').animate({scrollTop:0},300);
+});
 
 sendUpdatedAmount = function(item_id, new_amount) {
   $.post('/cart/update', {item_id: item_id, new_amount: new_amount});
