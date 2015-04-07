@@ -25,7 +25,7 @@ class Waiver < ActiveRecord::Base
   end
 
   def has_matching_name_as_athlete
-    unless Dependent.find(self.dependent_id).full_name == self.signed_for
+    unless Dependent.find(self.dependent_id).full_name.downcase == self.signed_for.squish.downcase
       errors.add(:signed_for, "Athlete name must match the one listed.")
     end
   end
