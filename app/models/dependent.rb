@@ -25,7 +25,7 @@ class Dependent < ActiveRecord::Base
                :convert_options => { :all => '-background white -flatten +matte' }
   validates_attachment_content_type :athlete_photo, :content_type => /\Aimage\/.*\Z/
 
-  after_save :fix_attributes
+  before_save :fix_attributes
 
   def signed_waiver?
     return false unless self.waiver
@@ -77,13 +77,11 @@ class Dependent < ActiveRecord::Base
   end
 
   def format_name
-    full_name = full_name.squish.split(' ').map(&:capitalize).join(' ')
-    self.save
+    self.full_name = self.full_name.squish.split(' ').map(&:capitalize).join(' ')
   end
 
   def format_number
-    self.emergency_contact = emergency_contact.gsub(/[^0-9]/, "")
-    self.save
+    self.emergency_contact = self.emergency_contact.gsub(/[^0-9]/, "")
   end
 
 end
