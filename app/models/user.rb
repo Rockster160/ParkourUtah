@@ -116,6 +116,7 @@ class User < ActiveRecord::Base
 
   def clear_associations
     self.carts.all.each { |cart| cart.destroy }
+    self.address.destroy
   end
 
   def valid_phone_number
