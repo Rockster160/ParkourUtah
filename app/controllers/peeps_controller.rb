@@ -132,7 +132,9 @@ class PeepsController < ApplicationController
   end
 
   def class_logs
-    @athletes = Attendance.where(event_id: params[:id]).map { |a| a.athlete }
+    @athletes = Attendance.where(event_id: params[:id]).select do |att|
+      att.created_at.to_date == DateTime.now.to_date
+    end.map { |a| a.athlete }
   end
 
   private

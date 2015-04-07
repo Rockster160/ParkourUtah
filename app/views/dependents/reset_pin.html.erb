@@ -3,11 +3,11 @@
     <h2>Reset PIN for <%= @athlete.full_name %></h2>
     <br/>
     <h4>Enter new pin</h4>
-    <%= telephone_field_tag :athlete_pin, '', class: 'restrictNumeric fancy-textbox pin-entry formatPin' %>
+    <%= telephone_field_tag :athlete_pin, '', class: 'restrictNumeric fancy-textbox pin-entry formatPin', autocomplete: 'off' %>
     <br/>
     <br/>
     <h4>Confirm new pin</h4>
-    <%= telephone_field_tag :confirm_athlete_pin, '', class: 'restrictNumeric fancy-textbox pin-entry formatPin' %>
+    <%= telephone_field_tag :confirm_athlete_pin, '', class: 'restrictNumeric fancy-textbox pin-entry formatPin', autocomplete: 'off' %>
     <br/>
     <%= submit_tag "Submit", class: 'fancy-btn athleteVerify' %>
   <% end %>
