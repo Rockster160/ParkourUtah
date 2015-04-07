@@ -142,10 +142,11 @@ class StoreController < ApplicationController
             current_user.update(credits: (current_user.credits + (order.amount * line_item.credits)))
           end
         end
-        # binding.pry
-        ItemsPurchasedMailerWorker.perform_async(current_user.cart.id, current_user.email)
         ItemsPurchasedMailerWorker.perform_async(current_user.cart.id, "rocco11nicholls@gmail.com")
-        # ItemsPurchasedMailerWorker.perform_async(current_user.cart, "justin@parkourutah.com")
+        if Rails.env == "production"
+          ItemsPurchasedMailerWorker.perform_async(current_user.cart.id, current_user.email)
+          ItemsPurchasedMailerWorker.perform_async(current_user.cart, "justin@parkourutah.com")
+        end
         current_user.carts.create
         flash[:notice] = "Cart was successfully purchased."
       else
@@ -156,7 +157,7 @@ class StoreController < ApplicationController
   end
 
   def item_params
-    params[:line_item][:cost_in_pennies] = (params[:line_item][:cost].to_i * 100).round.to_s
+    params[:line_item][:cost_in_pennies] = (params[:line_item][:cost_in_dollars].to_i * 100).round.to_s
     params.require(:line_item).permit(:description, :title, :display, :cost_in_pennies, :category, :hidden, :credits)
   end
 
