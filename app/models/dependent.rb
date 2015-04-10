@@ -61,7 +61,14 @@ class Dependent < ActiveRecord::Base
 
   def generate_pin
     self.sign_up_credits
-    self.athlete_id = ((0...9999).to_a - [ENV["PKUT_PIN"].to_i] - Dependent.all.map { |user| user.athlete_id }).sample
+    bads = []
+    10.times do |t|
+      bads << "666#{t}".to_i
+      bads << "#{t}666".to_i
+    end
+    bads << ENV["PKUT_PIN"].to_i
+    bads << Dependent.all.map { |user| user.athlete_id }
+    self.athlete_id = ((0...9999).to_a - bads).sample
     self.save
   end
 
