@@ -1,8 +1,17 @@
+# == Schema Information
+#
+# Table name: redemption_keys
+#
+#  id           :integer          not null, primary key
+#  key          :string
+#  redemption   :string
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  redeemed     :boolean          default(FALSE)
+#  line_item_id :integer
+#
+
 class RedemptionKey < ActiveRecord::Base
-  # t.string :key
-  # t.string :redemption
-  # t.boolean :redeemed
-  # t.integer :line_item_id
 
   after_create :generate_key
   belongs_to :line_item
@@ -45,4 +54,5 @@ class RedemptionKey < ActiveRecord::Base
   def self.keys_redeemed
     self.select { |key| key.redeemed }.count
   end
+  
 end

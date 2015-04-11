@@ -1,36 +1,50 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                     :integer          not null, primary key
+#  email                  :string           default(""), not null
+#  first_name             :string           default(""), not null
+#  last_name              :string           default(""), not null
+#  encrypted_password     :string           default(""), not null
+#  reset_password_token   :string
+#  reset_password_sent_at :datetime
+#  remember_created_at    :datetime
+#  sign_in_count          :integer          default(0), not null
+#  current_sign_in_at     :datetime
+#  last_sign_in_at        :datetime
+#  current_sign_in_ip     :inet
+#  last_sign_in_ip        :inet
+#  role                   :integer          default(0)
+#  created_at             :datetime
+#  updated_at             :datetime
+#  avatar_file_name       :string
+#  avatar_content_type    :string
+#  avatar_file_size       :integer
+#  avatar_updated_at      :datetime
+#  avatar_2_file_name     :string
+#  avatar_2_content_type  :string
+#  avatar_2_file_size     :integer
+#  avatar_2_updated_at    :datetime
+#  bio                    :text
+#  credits                :integer          default(0)
+#  phone_number           :string
+#  confirmation_token     :string
+#  confirmed_at           :datetime
+#  confirmation_sent_at   :datetime
+#  instructor_position    :integer
+#  payment_multiplier     :integer          default(3)
+#  stats                  :string
+#  title                  :string
+#  nickname               :string
+#  email_subscription     :boolean          default(FALSE)
+#  stripe_id              :string
+#  date_of_birth          :datetime
+#  drivers_license_number :string
+#  drivers_license_state  :string
+#
+
 class User < ActiveRecord::Base
-  # create_table "users", force: :cascade do |t|
-  #   t.string   "email",                  default: "", null: false
-  #   t.string   "first_name",             default: "", null: false
-  #   t.string   "last_name",              default: "", null: false
-  #   t.string   "encrypted_password",     default: "", null: false
-  #   t.string   "reset_password_token"
-  #   t.datetime "reset_password_sent_at"
-  #   t.datetime "remember_created_at"
-  #   t.integer  "sign_in_count",          default: 0,  null: false
-  #   t.datetime "current_sign_in_at"
-  #   t.datetime "last_sign_in_at"
-  #   t.inet     "current_sign_in_ip"
-  #   t.inet     "last_sign_in_ip"
-  #   t.integer  "role",                   default: 0
-  #   t.datetime "created_at"
-  #   t.datetime "updated_at"
-  #   t.string   "avatar_file_name"
-  #   t.string   "avatar_content_type"
-  #   t.integer  "avatar_file_size"
-  #   t.datetime "avatar_updated_at"
-  #   t.string   "avatar_2_file_name"
-  #   t.string   "avatar_2_content_type"
-  #   t.integer  "avatar_2_file_size"
-  #   t.datetime "avatar_2_updated_at"
-  #   t.text     "bio"
-  #   t.integer  "payment_id"
-  #   t.integer  "credits"
-  #   t.integer  "phone_number"
-  #   t.integer  "instructor_position"
-  #   t.integer  "payment_multiplier",    default: 3
-  #   t.integer  "shipping_id"
-  # end
 
   has_one :address, dependent: :destroy
   has_many :carts, dependent: :destroy

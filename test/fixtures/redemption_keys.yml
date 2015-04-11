@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: redemption_keys
+#
+#  id           :integer          not null, primary key
+#  key          :string
+#  redemption   :string
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  redeemed     :boolean          default(FALSE)
+#  line_item_id :integer
+#
+
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 # This model initially had no columns defined.  If you add columns to the

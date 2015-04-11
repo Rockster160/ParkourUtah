@@ -1,17 +1,26 @@
+# == Schema Information
+#
+# Table name: dependents
+#
+#  id                         :integer          not null, primary key
+#  user_id                    :integer
+#  full_name                  :string
+#  emergency_contact          :string
+#  athlete_id                 :integer
+#  athlete_pin                :integer
+#  athlete_photo_file_name    :string
+#  athlete_photo_content_type :string
+#  athlete_photo_file_size    :integer
+#  athlete_photo_updated_at   :datetime
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  first_name                 :string
+#  middle_name                :string
+#  last_name                  :string
+#  date_of_birth              :datetime
+#
+
 class Dependent < ActiveRecord::Base
-  # create_table "dependents", force: :cascade do |t|
-  #   t.string   "full_name"
-  #   t.integer  "emergency_contact"
-  #   t.integer  "user_id"
-  #   t.integer  "athlete_id"
-  #   t.integer  "athlete_pin"
-  #   t.string   "athlete_photo_file_name"
-  #   t.string   "athlete_photo_content_type"
-  #   t.integer  "athlete_photo_file_size"
-  #   t.datetime "athlete_photo_updated_at"
-  #   t.datetime "created_at",                 null: false
-  #   t.datetime "updated_at",                 null: false
-  # end
 
   belongs_to :user
   has_many :waivers

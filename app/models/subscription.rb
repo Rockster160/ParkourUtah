@@ -1,6 +1,13 @@
+# == Schema Information
+#
+# Table name: subscriptions
+#
+#  id       :integer          not null, primary key
+#  user_id  :integer
+#  event_id :integer
+#
+
 class Subscription < ActiveRecord::Base
-  # t.integer "user_id"
-  # t.integer "event_id"
 
   belongs_to :event
   belongs_to :user

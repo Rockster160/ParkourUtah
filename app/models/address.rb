@@ -1,14 +1,19 @@
+# == Schema Information
+#
+# Table name: addresses
+#
+#  id         :integer          not null, primary key
+#  user_id    :integer
+#  line1      :string
+#  line2      :string
+#  city       :string
+#  state      :string
+#  zip        :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
 class Address < ActiveRecord::Base
-  # create_table "addresses", force: :cascade do |t|
-  #   t.integer  "user_id"
-  #   t.string   "line1"
-  #   t.string   "line2"
-  #   t.string   "city"
-  #   t.string   "state"
-  #   t.string   "zip"
-  #   t.datetime "created_at", null: false
-  #   t.datetime "updated_at", null: false
-  # end
 
   belongs_to :user
 
@@ -25,4 +30,5 @@ class Address < ActiveRecord::Base
   def is_valid?
     self.line1.length > 0
   end
+
 end

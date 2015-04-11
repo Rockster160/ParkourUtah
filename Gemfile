@@ -36,6 +36,7 @@ gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 gem 'twitter-typeahead-rails'
 gem 'jquery-tablesorter'
 gem 'maskedinput-rails'
+gem 'annotate', '~> 2.6.6'
 # gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library

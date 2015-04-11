@@ -1,21 +1,26 @@
+# == Schema Information
+#
+# Table name: events
+#
+#  id                    :integer          not null, primary key
+#  date                  :datetime
+#  token                 :integer
+#  title                 :string
+#  host                  :string
+#  cost                  :float
+#  description           :text
+#  city                  :string
+#  address               :string
+#  location_instructions :string
+#  class_name            :string
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  zip                   :string
+#  state                 :string           default("Utah")
+#  color                 :integer
+#
+
 class Event < ActiveRecord::Base
-  # create_table "events", force: :cascade do |t|
-  #   t.datetime "date"
-  #   t.integer  "token"
-  #   t.string   "title"
-  #   t.string   "host"
-  #   t.float    "cost"
-  #   t.text     "description"
-  #   t.string   "city"
-  #   t.string   "address"
-  #   t.string   "location_instructions"
-  #   t.string   "class_name"
-  #   t.datetime "created_at",            null: false
-  #   t.datetime "updated_at",            null: false
-  #   t.string   "zip"
-  #   t.string   "state",                 default: "Utah"
-  #   t.integer   "color"
-  # end
 
   # "#{address}"
   # "#{zip} #{city}, #{state.abbreviate_state.nil? ? state : state.abbreviate_state}"

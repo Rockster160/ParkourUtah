@@ -1,12 +1,17 @@
+# == Schema Information
+#
+# Table name: waivers
+#
+#  id           :integer          not null, primary key
+#  dependent_id :integer
+#  signed       :boolean
+#  signed_for   :string
+#  signed_by    :string
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#
+
 class Waiver < ActiveRecord::Base
-  # create_table "waivers", force: :cascade do |t|
-  #   t.integer  "dependent_id"
-  #   t.boolean  "signed"
-  #   t.string   "signed_for"
-  #   t.string   "signed_by"
-  #   t.datetime "created_at",        null: false
-  #   t.datetime "updated_at",        null: false
-  # end
 
   belongs_to :dependent
   validate :has_matching_name_as_athlete
@@ -33,4 +38,5 @@ class Waiver < ActiveRecord::Base
   def signed_false
     self.signed = false
   end
+  
 end

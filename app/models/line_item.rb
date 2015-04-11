@@ -1,19 +1,25 @@
+# == Schema Information
+#
+# Table name: line_items
+#
+#  id                   :integer          not null, primary key
+#  display_file_name    :string
+#  display_content_type :string
+#  display_file_size    :integer
+#  display_updated_at   :datetime
+#  description          :text
+#  cost_in_pennies      :integer
+#  title                :string
+#  category             :string
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  size                 :string
+#  hidden               :boolean
+#  item_order           :integer
+#  credits              :integer          default(0)
+#
+
 class LineItem < ActiveRecord::Base
-  # create_table "line_items", force: :cascade do |t|
-  #   t.string   "display_file_name"
-  #   t.string   "display_content_type"
-  #   t.integer  "display_file_size"
-  #   t.datetime "display_updated_at"
-  #   t.text     "description"
-  #   t.integer  "cost_in_pennies"
-  #   t.string   "title"
-  #   t.string   "category"
-  #   t.datetime "created_at",           null: false
-  #   t.datetime "updated_at",           null: false
-  #   t.string   "size"
-  #   t.integer  "item_order"
-  #   t.integer  "credits"
-  # end
 
   has_many :redemption_keys
 
@@ -53,4 +59,5 @@ class LineItem < ActiveRecord::Base
       self.save
     end
   end
+  
 end
