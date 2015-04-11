@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150411005331) do
+ActiveRecord::Schema.define(version: 20150411035028) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,9 +64,20 @@ ActiveRecord::Schema.define(version: 20150411005331) do
     t.datetime "athlete_photo_updated_at"
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
+    t.string   "first_name"
+    t.string   "middle_name"
+    t.string   "last_name"
+    t.datetime "date_of_birth"
   end
 
   add_index "dependents", ["user_id"], name: "index_dependents_on_user_id", using: :btree
+
+  create_table "emergency_contacts", force: :cascade do |t|
+    t.integer "user_id"
+    t.string  "number"
+  end
+
+  add_index "emergency_contacts", ["user_id"], name: "index_emergency_contacts_on_user_id", using: :btree
 
   create_table "events", force: :cascade do |t|
     t.datetime "date"
@@ -170,6 +181,9 @@ ActiveRecord::Schema.define(version: 20150411005331) do
     t.string   "nickname"
     t.boolean  "email_subscription",     default: false
     t.string   "stripe_id"
+    t.datetime "date_of_birth"
+    t.string   "drivers_license_number"
+    t.string   "drivers_license_state"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
@@ -188,5 +202,6 @@ ActiveRecord::Schema.define(version: 20150411005331) do
   add_index "waivers", ["dependent_id"], name: "index_waivers_on_dependent_id", using: :btree
 
   add_foreign_key "carts", "users"
+  add_foreign_key "emergency_contacts", "users"
   add_foreign_key "transactions", "carts"
 end

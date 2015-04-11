@@ -37,6 +37,7 @@ class User < ActiveRecord::Base
   has_many :dependents, dependent: :destroy
   has_many :transactions, through: :cart
   has_many :subscriptions, dependent: :destroy
+  has_many :emergency_contacts, dependent: :destroy
 
   after_create :assign_cart
   after_create :create_blank_address
@@ -79,6 +80,10 @@ class User < ActiveRecord::Base
 
   def is_admin?
     self.role >= 3
+  end
+
+  def emergency_numbers
+    self.emergency_contacts.map { |num| format_phone_number_to_display(num) }
   end
 
   def subscribed?(event)
@@ -133,6 +138,10 @@ class User < ActiveRecord::Base
 
   def format_phone_number
     self.phone_number = phone_number.gsub(/[^0-9]/, "") if attribute_present?("phone_number")
+  end
+
+  def format_phone_number_to_display(number)
+    "(#{number[0..2]}) #{number[3..5]}-#{number[6..9]}"
   end
 
   def split_name
