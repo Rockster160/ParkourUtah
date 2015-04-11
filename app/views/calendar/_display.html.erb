@@ -7,7 +7,7 @@
         <ul>
           <% @events[[date.year, date.month, date.day]].sort_by { |event| event[:date] }.each do |event| %>
             <% if event.class_name == "special" || (@selected_classes.include?(event.class_name) && @selected_cities.include?(event.city))  %>
-            <li class="event-color open-tooltip calendar-event <%= event.city.parameterize %>">
+            <li class="event-color open-tooltip calendar-event color-<%= event.color %>">
               <div class="show-tooltip">
                 <span class="close-tooltip">X</span>
                 <h4><%= event.class_name.capitalize %></h4><br/>

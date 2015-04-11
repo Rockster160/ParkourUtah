@@ -94,75 +94,72 @@
   &:hover { cursor: pointer; }
 }
 
-$default: steelblue;
-$salt-lake-city: rgb(255, 0, 0);
-$provo: rgb(255, 255, 0);
-$vernal: rgb(255, 0, 255);
-$draper: rgb(255, 125, 0);
-$ogden: rgb(255, 60, 60);
+$default: rgb(128, 128, 128);
 
-$orem: rgb(0, 255, 0);
-$springville: rgb(60, 120, 60);
-$special: rgb(0, 255, 66);
-
-$sandy: rgb(0, 0, 255);
-$south-jordan: rgb(0, 160, 255);
-$saratoga-springs: rgb(162, 97, 255);
-$herriman: rgb(160, 0, 220);
-
-
-// $color: rgb(162, 97, 255);
+// $color-: rgb(255, 255, 255);
+$color-red: rgb(220, 0, 0);
+$color-orange: rgb(220, 128, 0);
+$color-yellow: rgb(220, 220, 0);
+$color-yellowgreen: rgb(128, 220, 0);
+$color-green: rgb(0, 220, 0);
+$color-spring: rgb(0, 220, 128);
+$color-cyan: rgb(0, 220, 220);
+$color-azure: rgb(0, 128, 220);
+$color-blue: rgb(0, 0, 220);
+$color-violet: rgb(128, 0, 220);
+$color-magenta: rgb(220, 0, 220);
+$color-rose: rgb(220, 0, 100);
 
 .event-color {
   background: lighten($default, 25%);
   &:hover { background: $default; }
-  &.sandy {
-    background: lighten($sandy, 25%);
-    &:hover { background: $sandy; }
+  &.color-red {
+    background: lighten($color-red, 25%);
+    &:hover { background: $color-red; }
   }
-  &.provo {
-    background: lighten($provo, 25%);
-    &:hover { background: $provo; }
+  &.color-orange {
+    background: lighten($color-orange, 25%);
+    &:hover { background: $color-orange; }
   }
-  &.ogden {
-    background: lighten($ogden, 25%);
-    &:hover { background: $ogden; }
+  &.color-yellow {
+    background: lighten($color-yellow, 25%);
+    &:hover { background: $color-yellow; }
   }
-  &.springville {
-    background: lighten($springville, 25%);
-    &:hover { background: $springville; }
+  &.color-yellowgreen {
+    background: lighten($color-yellowgreen, 25%);
+    &:hover { background: $color-yellowgreen; }
   }
-  &.south-jordan {
-    background: lighten($south-jordan, 25%);
-    &:hover { background: $south-jordan; }
+  &.color-green {
+    background: lighten($color-green, 25%);
+    &:hover { background: $color-green; }
   }
-  &.salt-lake-city {
-    background: lighten($salt-lake-city, 25%);
-    &:hover { background: $salt-lake-city; }
+  &.color-spring {
+    background: lighten($color-spring, 25%);
+    &:hover { background: $color-spring; }
   }
-  &.saratoga-springs {
-    background: lighten($saratoga-springs, 25%);
-    &:hover { background: $saratoga-springs; }
+  &.color-cyan {
+    background: lighten($color-cyan, 25%);
+    &:hover { background: $color-cyan; }
   }
-  &.vernal {
-    background: lighten($vernal, 25%);
-    &:hover { background: $vernal; }
+  &.color-azure {
+    background: lighten($color-azure, 25%);
+    &:hover { background: $color-azure; }
   }
-  &.herriman {
-    background: lighten($herriman, 25%);
-    &:hover { background: $herriman; }
+  &.color-blue {
+    background: lighten($color-blue, 25%);
+    &:hover { background: $color-blue; }
   }
-  &.draper {
-    background: lighten($draper, 25%);
-    &:hover { background: $draper; }
+  &.color-violet {
+    background: lighten($color-violet, 25%);
+    &:hover { background: $color-violet; }
   }
-  &.orem {
-    background: lighten($orem, 25%);
-    &:hover { background: $orem; }
+  &.color-magenta {
+    background: lighten($color-magenta, 25%);
+    &:hover { background: $color-magenta; }
   }
-  &.special {
-    background: lighten($special, 25%);
-    &:hover { background: $special; }
+  &.color-rose {
+    background: lighten($color-rose, 25%);
+    &:hover { background: $color-rose; }
   }
 }
 

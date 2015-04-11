@@ -12,15 +12,124 @@ class Event < ActiveRecord::Base
   #   t.string   "class_name"
   #   t.datetime "created_at",            null: false
   #   t.datetime "updated_at",            null: false
+  #   t.string   "zip"
+  #   t.string   "state",                 default: "Utah"
+  #   t.integer   "color"
   # end
+
+  # "#{address}"
+  # "#{zip} #{city}, #{state.abbreviate_state.nil? ? state : state.abbreviate_state}"
 
   has_many :attendances
   has_many :subscriptions
+
+  before_save :format_fields
+
+  enum color: [
+    :red,
+    :orange,
+    :yellow,
+    :yellowgreen,
+    :green,
+    :spring,
+    :cyan,
+    :azure,
+    :blue,
+    :violet,
+    :magenta,
+    :rose
+  ]
+
+  # Event.all.to_a.group_by { |event| event.city }.keys.each_with_index { |city, pos| Event.set_color(city, Event.colors.keys[pos]) }
+
+
+  def self.color_of(city)
+    cities = where(city: city)
+    if cities.any?
+      color = cities.first.color
+      color.nil? || color.empty? ? self.set_color(city) : color
+    else
+      ""
+    end
+  end
+
+  def self.set_color(city, color="rand")
+    new_color = color == "rand" ? self.colors.keys.sample : color
+    where(city: city).each do |event|
+      event.update(color: new_color)
+    end
+    new_color
+  end
 
   def host_by_id
     User.find(host)
   end
 
+  def abbreviate_state
+    case self.state.squish.split.map(&:capitalize).join(' ')
+      when "Alabama" then	"AL"
+      when "Alaska" then	"AK"
+      when "Arizona" then	"AZ"
+      when "Arkansas" then	"AR"
+      when "California" then	"CA"
+      when "Colorado" then	"CO"
+      when "Connecticut" then	"CT"
+      when "Delaware" then	"DE"
+      when "Florida" then	"FL"
+      when "Georgia" then	"GA"
+      when "Hawaii" then	"HI"
+      when "Idaho" then	"ID"
+      when "Illinois" then	"IL"
+      when "Indiana" then	"IN"
+      when "Iowa" then	"IA"
+      when "Kansas" then	"KS"
+      when "Kentucky" then	"KY"
+      when "Louisiana" then	"LA"
+      when "Maine" then	"ME"
+      when "Maryland" then	"MD"
+      when "Massachusetts" then	"MA"
+      when "Michigan" then	"MI"
+      when "Minnesota" then	"MN"
+      when "Mississippi" then	"MS"
+      when "Missouri" then	"MO"
+      when "Montana"	then "MT"
+      when "Nebraska"	then "NE"
+      when "Nevada"	then "NV"
+      when "New Hampshire" then "NH"
+      when "New Jersey" then "NJ"
+      when "New Mexico" then "NM"
+      when "New York" then "NY"
+      when "North Carolina" then "NC"
+      when "North Dakota" then "ND"
+      when "Ohio"	then "OH"
+      when "Oklahoma"	then "OK"
+      when "Oregon"	then "OR"
+      when "Pennsylvania"	then "PA"
+      when "Rhode Island" then "RI"
+      when "South Carolina" then "SC"
+      when "South Dakota" then "SD"
+      when "Tennessee"	then "TN"
+      when "Texas"	then "TX"
+      when "Utah"	then "UT"
+      when "Vermont"	then "VT"
+      when "Virginia"	then "VA"
+      when "Washington"	then "WA"
+      when "West Virginia" then "WV"
+      when "Wisconsin"	then "WI"
+      when "Wyoming"	then "WY"
+      else nil
+    end
+  end
+
   private
+
+  def format_fields
+    format_city_name
+    # self.color = Event.color_of(self.city)
+  end
+
+  def format_city_name
+    self.city = self.city.squish.split.map(&:capitalize).join(' ')
+  end
 
 end

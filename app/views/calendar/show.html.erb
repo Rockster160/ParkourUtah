@@ -7,7 +7,7 @@
     <div class="hidden-xs">
       <% @cities.each do |city| %>
         <div href="<%= city %>" class="col-xs-3 calendar-legend">
-          <i class="calendar-legend-blip event-color <%= city.parameterize %>">&nbsp;</i>
+          <i class="calendar-legend-blip event-color color-<%= Event.color_of(city) %>">&nbsp;</i>
           <span class="calendar-legend-text pull-left"><%= city.capitalize %></span>
         </div>
       <% end %>
@@ -18,7 +18,7 @@
           <span class="close-tooltip">X</span>
           <% @cities.each do |city| %>
             <div href="<%= city %>" class="col-xs-8 col-xs-offset-1 calendar-legend">
-              <i class="calendar-legend-blip event-color <%= city.parameterize %>">&nbsp;</i>
+              <i class="calendar-legend-blip event-color color-<%= Event.color_of(city) %>">&nbsp;</i>
               <span class="calendar-legend-text pull-left"><%= city.capitalize %></span>
             </div>
           <% end %>
