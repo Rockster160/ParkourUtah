@@ -32,23 +32,7 @@ var ready = function() {
         // e.preventDefault();
       }
     });
-    /* Remove buffer for Navbar. */
-    $('.navbar-offset').hide();
-    /* highlight the top nav as scrolling occurs */
-    $('.navbar-fixed-top').removeClass('affix');
   };
-
-  $(window).scroll(function() {
-    if (inViewport($('.header-container'))) {
-      if ($('.navbar-fixed-top').hasClass('affix')) {
-        $('.navbar-fixed-top').removeClass('affix');
-      }
-    } else {
-      if (!($('.navbar-fixed-top').hasClass('affix'))) {
-        $('.navbar-fixed-top').addClass('affix');
-      }
-    }
-  });
 };
 
 $('.delayed-load').ready(function() {
