@@ -41,6 +41,7 @@ class User < ActiveRecord::Base
   after_create :assign_cart
   after_create :create_blank_address
   before_save :format_phone_number
+  before_save :split_name
   before_destroy :clear_associations
 
   devise :database_authenticatable, :registerable, :confirmable,
@@ -134,8 +135,16 @@ class User < ActiveRecord::Base
     self.phone_number = phone_number.gsub(/[^0-9]/, "") if attribute_present?("phone_number")
   end
 
+  def split_name
+    name = self.first_name.squish.split
+    self.first_name = "#{name[0][0].capitalize}#{name[0][1..name[0].length]}"
+    if name.count > 1
+      self.last_name = "#{name[1][0].capitalize}#{name[1][1..name[1].length]}"
+    end
+  end
+
   def confirmation_required?
-    false # Leave this- it bypasses Devise's confirmable
+    false # Leave this- it bypasses Devise's confirmable method
   end
 
 end
