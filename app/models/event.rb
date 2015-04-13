@@ -23,7 +23,7 @@
 class Event < ActiveRecord::Base
 
   # "#{address}"
-  # "#{zip} #{city}, #{state.abbreviate_state.nil? ? state : state.abbreviate_state}"
+  # "#{city}, #{state.abbreviate_state} #{zip}"
 
   has_many :attendances
   has_many :subscriptions
@@ -60,6 +60,14 @@ class Event < ActiveRecord::Base
     end
   end
 
+  def self.by_token
+    self.where("date > ?", Time.now.to_date).group_by do |all_events|
+      all_events.token
+    end.map do |keys, values|
+      values.sort_by {|v| v.id}.first
+    end.sort_by { |event| event.city }
+  end
+
   def self.set_color(city, color="rand")
     new_color = color == "rand" ? self.colors.keys.sample : color
     where(city: city).each do |event|
@@ -73,7 +81,8 @@ class Event < ActiveRecord::Base
   end
 
   def abbreviate_state
-    case self.state.squish.split.map(&:capitalize).join(' ')
+    state = self.state.squish.split.map(&:capitalize).join(' ')
+    case state
       when "Alabama" then	"AL"
       when "Alaska" then	"AK"
       when "Arizona" then	"AZ"
@@ -124,7 +133,7 @@ class Event < ActiveRecord::Base
       when "West Virginia" then "WV"
       when "Wisconsin"	then "WI"
       when "Wyoming"	then "WY"
-      else nil
+      else state
     end
   end
 

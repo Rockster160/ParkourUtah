@@ -3,6 +3,10 @@ class EventController < ApplicationController
   # vefore_action :authenticate_instructor/admin only: { :create, :delete }
   # https://github.com/plataformatec/devise#strong-parameters
 
+  def index
+    @events = Event.by_token
+  end
+
   def show
     @event = Event.find(params[:id])
   end
