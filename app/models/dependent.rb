@@ -30,11 +30,19 @@ class Dependent < ActiveRecord::Base
                :styles => { :medium => "300", :thumb => "100x100#" },
                storage: :s3,
                bucket: ENV['PKUT_S3_BUCKET_NAME'],
-              #  :default_url => "/images/missing.png",
                :convert_options => { :all => '-background white -flatten +matte' }
   validates_attachment_content_type :athlete_photo, :content_type => /\Aimage\/.*\Z/
 
   before_save :fix_attributes
+
+  def self.find_or_create_by_name(name, user)
+    athlete = Dependent.where(
+                full_name:name.squish.split(' ').map(&:capitalize).join(' '),
+                user_id: user.id
+    ).first
+    athlete ||= user.dependents.create(full_name: name)
+    athlete
+  end
 
   def signed_waiver?
     return false unless self.waiver
@@ -49,7 +57,9 @@ class Dependent < ActiveRecord::Base
   end
 
   def waiver
-    self.waivers.sort_by(&:id).last
+    waivers = self.waivers.group_by { |waiver| waiver.is_active? }[true]
+    waivers ||= self.waivers
+    waivers.sort_by(&:created_at).last
   end
 
   def emergency_phone
@@ -97,7 +107,7 @@ class Dependent < ActiveRecord::Base
   end
 
   def format_number
-    self.emergency_contact = self.emergency_contact.gsub(/[^0-9]/, "")
+    # self.emergency_contact = self.emergency_contact.gsub(/[^0-9]/, "")
   end
 
 end

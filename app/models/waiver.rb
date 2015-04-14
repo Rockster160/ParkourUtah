@@ -26,7 +26,7 @@ class Waiver < ActiveRecord::Base
   end
 
   def is_active?
-    (Date.today < self.exp_date.to_date && self.signed)
+    (Date.today < self.exp_date.to_date && self.signed?)
   end
 
   def has_matching_name_as_athlete
@@ -38,5 +38,5 @@ class Waiver < ActiveRecord::Base
   def signed_false
     self.signed = false
   end
-  
+
 end

@@ -1,9 +1,14 @@
-<h2><%= @athlete.full_name %>, thanks for joining ParkourUtah!</h2>
+<h2>Thanks for joining ParkourUtah!</h2>
 <br/>
-<p>Your Athlete ID is: <strong><%= @athlete.athlete_id %></strong></p>
-<p>Do NOT give this out or forget this. This is a permanent ID used to identify yourself at the beginning of class.</p>
-<p>Your Athlete PIN is: <strong><%= @athlete.athlete_pin %></strong></p>
-<p>You can change this at any time. This acts as your passcode to confirm it is you.</p>
+<% @athletes.each do |athlete| %>
+  <h4><%= athlete.full_name %></h4>
+  <p>Athlete ID is: <strong><%= athlete.athlete_id %></strong></p>
+  <p>Athlete Access Code is: <strong><%= athlete.athlete_pin %></strong></p>
+<% end %>
+<p>Do NOT give out or forget your ID's or Access Codes.</p>
+<p>ID's are permanent and cannot be changed. They tell us who you are.</p>
+<p>Access Codes are a way for you to tell us that you are who you say you are, so that we know that nobody is impersonating you!</p>
+<p>Access Codes can be changed and Athlete ID's can be retrieved at any time. Just go to your account, find the Athlete, and click the request new ID or forgotten PIN link.</p>
 <p>In the case you do forget, you can refer to this email, or request the ID and a reset PIN link once again from your Account Settings at www.parkourutah.com</p>
 <br/>
 </br>

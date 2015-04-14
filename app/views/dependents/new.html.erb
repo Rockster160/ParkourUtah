@@ -1,15 +1,11 @@
 <div class="fancy-box central-container form-offset">
-  <%= form_for @dependent, url: {action: 'create'} do |f| %>
-    <h2>New Athlete</h2>
-    <h4>Please fill out ALL of the following information.</h4>
+  <%= form_tag url: {action: 'create'} do %>
+    <h2 class="fancy-btn add-athlete-btn">Add Athlete</h2>
     <br/><h5>The Athlete's full name:</h5>
-    <%= f.text_field :full_name, placeholder: 'Sam Smith', class: 'fancy-textbox', required: true, autocomplete: 'off' %>
-    <br/><h5>Emergency contact:</h5>
-    <%= f.telephone_field :emergency_contact, placeholder: '(801) 123-4567', class: 'restrictNumeric formatPhoneNumber fancy-textbox', autocomplete: 'off' %>
-    <h5>Athlete Access Pin:</h5>
-    <h6>Used as a password when the athlete attends class.</h6><br/>
-    <%= f.telephone_field :athlete_pin, class: 'restrictNumeric fancy-textbox pin-entry formatPin', autocomplete: 'off' %>
-    <br/>
-    <%= f.submit "Submit", class: 'fancy-btn athleteVerify set-min-width-btn' %>
+    <div class="athletes-holder">
+      <input type="text" class="fancy-textbox" name="athletes[]" placeholder="Sam Smith" required="true", autocomplete="off"/><br/>
+    </div>
+    <%#= telephone_field_tag :athlete_pin, class: 'restrictNumeric fancy-textbox pin-entry formatPin', autocomplete: 'off' %>
+    <%= submit_tag "Submit", class: 'fancy-btn athleteVerify set-min-width-btn' %>
   <% end %>
 </div>

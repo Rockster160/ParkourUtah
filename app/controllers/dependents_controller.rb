@@ -6,8 +6,21 @@ class DependentsController < ApplicationController
   end
 
   def create
-    current_user.dependents.create(dependent_params)
-    flash[:notice] = "Success! Now fill out a waiver to get an Athlete ID."
+    athletes = params[:athletes].map { |param| Dependent.find_or_create_by_name(param, current_user) }
+    athlete_ids = []
+    athletes.each do |athlete|
+      old_waiver = athlete.waiver
+      if old_waiver
+        if old_waiver.expires_soon?
+          athlete_ids << create_waiver("update", athlete.id).id
+        else
+          flash[:alert] = "#{athlete.full_name} already has an active waiver."
+        end
+      else
+        athlete_ids << create_waiver("create", athlete.id).id
+      end
+    end
+    flash[:notice] = "Success! Now fill out a waiver to get the Athlete Access Codes."
     redirect_to edit_user_registration_path
   end
 
@@ -33,35 +46,25 @@ class DependentsController < ApplicationController
   end
 
   def sign_waiver
-    athlete = Dependent.find(params[:dependent_id])
-    old_waiver = athlete.waiver
-    if old_waiver
-      if old_waiver.expires_soon?
-        create_waiver("update")
-      else
-        flash[:alert] = "#{athlete.full_name} already has an active waiver."
-      end
-    else
-      create_waiver("create")
-    end
+    ::NewAthleteInfoMailerWorker.perform_async(athlete_ids)
     redirect_to edit_user_registration_path
   end
 
-  def create_waiver(verb)
-    new_waiver = Waiver.new(waiver_params.merge(dependent_id: params[:dependent_id]))
-    athlete = Dependent.find(params[:dependent_id])
-    if new_waiver.valid?
-      new_waiver.save
+  def create_waiver(verb, dependent_id)
+    athlete = Dependent.find(dependent_id)
+    new_waiver = athlete.waiver.new(signed_for: athlete.full_name)
+    if new_waiver.save
       flash[:notice] = case verb
-        when "create"
-          athlete.generate_pin
-          ::NewAthleteInfoMailerWorker.perform_async(athlete.id)
-          "Congratulations! Enjoy a free class for #{athlete.full_name}. An email has been sent to you containing the ID and Pin used to attend class."
-        when "update" then "#{athlete.full_name}'s waiver has been updated."
-        else "Waiver created."
+      when "create"
+        athlete.generate_pin
+        "Congratulations! Enjoy a free class for #{athlete.full_name}. An email has been sent to you containing the ID and Pin used to attend class."
+      when "update" then "#{athlete.full_name}'s waiver has been updated."
+      else "Waiver created."
       end
+      athlete
     else
       flash[:alert] = new_waiver.errors.messages.values.first.first
+      nil
     end
   end
 

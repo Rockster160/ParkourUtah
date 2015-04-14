@@ -23,7 +23,8 @@ Rails.application.routes.draw do
   post '/peeps/demotion/:id' => 'peeps#demotion', as: 'demotion'
 
   get '/athletes/new' => 'dependents#new', as: 'new_athlete'
-  post '/athletes/create' => 'dependents#create'
+  post '/athletes/new' => 'dependents#create'
+  # post '/athletes/create' => 'dependents#create'
   post '/athletes/update/:athlete_id' => 'dependents#update'
   post '/athletes/forgot/:athlete_id' => 'dependents#forgot_pin_or_id', as: 'send_reset_pin_or_id_mail'
   get '/athletes/reset/:athlete_id' => 'dependents#reset_pin', as: 'reset_athlete_pin'
@@ -43,7 +44,7 @@ Rails.application.routes.draw do
   get 'events/new' => 'event#new', as: 'add_event'
   post 'events/create' => 'event#create'
   get 'events/edit/:id' => 'event#edit', as: 'edit_event'
-  
+
   get 'events/index' => 'event#index', as: 'edit_events'
   post 'events/update/:token' => 'event#update_token', as: 'update_colors'
 
