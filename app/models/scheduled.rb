@@ -84,9 +84,9 @@ class Scheduled < ActiveRecord::Base
   end
 
   def self.waiver_checks
-    Dependent.select { |a| a.waiver.expires_soon? if a.waiver }.each do |athlete|
-      if athlete.waiver.exp_date.to_date == (Time.now + 1.week).to_date
-        ::ExpiringWaiverMailerWorker.perform_async(athlete.id)
+    Waiver.select { |w| w.expires_soon? }.each do |waiver|
+      if waiver.exp_date.to_date == (Time.now + 1.week).to_date
+        ::ExpiringWaiverMailerWorker.perform_async(waiver.first.dependent.id)
       end
     end
   end
