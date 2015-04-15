@@ -157,12 +157,13 @@ class StoreController < ApplicationController
   end
 
   def item_params
-    params[:line_item][:cost_in_pennies] = (params[:line_item][:cost_in_dollars].to_i * 100).round.to_s
+    binding.pry
+    params[:line_item][:cost_in_pennies] = (params[:line_item][:cost].to_i * 100).round.to_s
     params.require(:line_item).permit(:description, :title, :display, :cost_in_pennies, :category, :hidden, :credits)
   end
 
   def set_categories
-    @categories = ["Class", "Goods"]
+    @categories = ["Class", "Goods", "Coupon"]
   end
 
   def set_cart
