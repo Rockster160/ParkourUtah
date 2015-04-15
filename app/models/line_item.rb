@@ -50,7 +50,7 @@ class LineItem < ActiveRecord::Base
   end
 
   def tax
-    self.category == "Class" ? 0 : (self.cost.to_f * 0.0825).round
+    self.category == "Coupon" ? 0 : (self.cost.to_f * 0.0825).round
   end
 
   def assign_item_position_if_nil
@@ -59,5 +59,5 @@ class LineItem < ActiveRecord::Base
       self.save
     end
   end
-  
+
 end

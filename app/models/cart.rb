@@ -26,13 +26,13 @@ class Cart < ActiveRecord::Base
     self.transactions.each do |order|
       cost += (order.item.cost * order.amount)
     end
-    cost
+    cost <= 0 ? 0 : cost
   end
 
   def shipping
     cost = 0
     self.transactions.each do |order|
-      cost += (order.amount * 200) if order.item.category != "Class"
+      cost += (order.amount * 200) if !(order.item.category == "Class" || order.item.category == "Coupon")
     end
     cost += (cost > 0 ? 300 : 0)
     cost
@@ -63,7 +63,7 @@ class Cart < ActiveRecord::Base
   end
 
   def total_in_dollars
-    (self.total.to_f / 100).round(2)
+    (self.total.to_f / 100).round(2)# <= 0 ? 0 : (self.total.to_f / 100).round(2)
   end
 
 end
