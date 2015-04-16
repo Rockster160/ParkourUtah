@@ -1,4 +1,4 @@
-class DependentsController < ApplicationController
+   class DependentsController < ApplicationController
   layout 'application', except: [:secret]
 
   def new
@@ -6,8 +6,13 @@ class DependentsController < ApplicationController
   end
 
   def create
-    params[:athletes].map { |param| Dependent.find_or_create_by_name(param, current_user) }
-    flash[:notice] = "Success! Now fill out a waiver to get the Athlete Access Codes."
+    potentials = params[:athletes].count
+    athletes = params[:athletes].map { |param| Dependent.find_or_create_by_name_and_dob(param, current_user) }
+    if potentials == athletes.compact.count
+      flash[:notice] = "Success! Now fill out a waiver to get the Athlete Access Codes."
+    else
+      flash[:alert] = "There was an error creating one or more of the athletes."
+    end
     redirect_to edit_user_registration_path
   end
 

@@ -12,6 +12,10 @@ var ready = function() {
     $('.formatPhoneNumber').mask("(999) 999-9999");
   })
 
+  $(function() {
+    $('.maskDOB').mask("99/99/9999");
+  })
+
   $('.pin-entry').keypress(function(e) {
     var value = $(this).val();
     if (value.length >= 4) {
