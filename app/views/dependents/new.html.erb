@@ -8,7 +8,6 @@
       <label>Athlete's Birthdate</label></br>
       <input type="text" class="fancy-textbox maskDOB" name="athletes[<%= token %>][dob]" placeholder="dd/mm/yyyy" required="true", autocomplete="off"/><br/>
     </div>
-    <%#= telephone_field_tag :athlete_pin, class: 'restrictNumeric fancy-textbox pin-entry formatPin', autocomplete: 'off' %>
     <%= submit_tag "Submit", class: 'fancy-btn athleteVerify set-min-width-btn' %>
   <% end %>
 </div>

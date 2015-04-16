@@ -119,10 +119,9 @@ class Dependent < ActiveRecord::Base
   def self.format_dob(dob)
     if dob.class == String
       return false unless dob
-      now = DateTime.current
       if dob.class == String
         day, month, year = dob.split("/").map(&:to_i)
-        if (day <= 31 && month <= 12 && year <= now.year)
+        if (day <= 31 && month <= 12 && year <= DateTime.current.year)
           begin
             DateTime.strptime(dob, '%d/%m/%Y')
           rescue
