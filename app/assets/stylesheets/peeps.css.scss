@@ -1,8 +1,7 @@
 .instructors-container {
-  text-align: justify;
-  -ms-text-justify: distribute-all-lines;
-  text-justify: distribute-all-lines;
+  margin: 0 auto;
   color: black;
+  text-align: center;
 }
 
 .card-bio-text {
@@ -35,7 +34,7 @@
 }
 
 .instructors-container > .flip-container {
-  margin-top: 16px;
+  margin: 8px;
   vertical-align: top;
   display: inline-block;
   *display: inline;
