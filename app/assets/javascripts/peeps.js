@@ -26,12 +26,11 @@ var ready = function() {
       stop: function() {updatePositionNumbers("instructor", "instructor_position")}
   }).disableSelection();
 
-// For store items
-  // $("#survey-question-answers-table").sortable({
-  //     helper: sortableTablesHelper,
-  //     items: "tr:not(.not-sortable)",
-  //     stop: function() {updatePositionNumbers("survey_question_answer", "answer_position_number")}
-  // }).disableSelection();
+  $("#line-item-table").sortable({
+      helper: sortableTablesHelper,
+      items: "tr:not(.not-sortable)",
+      stop: function() {updatePositionNumbers("line_item", "line_item_position")}
+  }).disableSelection();
 
 };
 

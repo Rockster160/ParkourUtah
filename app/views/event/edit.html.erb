@@ -2,7 +2,7 @@
   <h4><%= link_to "Back to Dashboard", dashboard_path, class: 'fancy-btn' %></h4><br/><br/>
   <%= form_for @event, url: {action: "update"} do |f| %>
     <%= f.text_field :title, placeholder: 'Title', required: true, class: 'fancy-textbox' %><br/>
-    <%= f.text_field :cost, placeholder: 'Cost', size: 2, class: 'fancy-textbox' %><br/>
+    <%= f.text_field :cost_in_dollars, placeholder: 'Cost', size: 2, class: 'fancy-textbox' %><br/>
     <%= f.text_area :description, placeholder: 'Event Description', required: true, class: 'fancy-textarea' %><br/>
     <%= f.text_field :city, placeholder: 'City' , required: true, class: 'fancy-textbox' %><br/>
     <!-- Searchable -->

@@ -25,7 +25,7 @@
     <%= f.label :host %><br/>
     <%= f.text_field :host, placeholder: 'Host', required: true, class: 'fancy-textbox' %><br/>
     <%= f.label :cost %><br/>
-    <%= f.number_field :cost, placeholder: 'Cost', size: 2, class: 'fancy-textbox' %><br/>
+    <%= f.number_field :cost_in_dollars, placeholder: 'Cost', size: 2, class: 'fancy-textbox' %><br/>
     <%= f.label :time %><br/>
     <input type="number" placeholder="Hr" name="time[hour]" min="1" max="12" required="required" style="color: black;">:
     <input type="number" placeholder="Min" name="time[minute]" value="00" min="0" max="59" required="required" style="color: black;">

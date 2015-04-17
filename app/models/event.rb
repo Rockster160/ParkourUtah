@@ -68,6 +68,10 @@ class Event < ActiveRecord::Base
     end.sort_by { |event| event.city }
   end
 
+  def cost_in_dollars
+    self.cost.to_f / 100
+  end
+
   def self.set_color(city, color="rand")
     new_color = color == "rand" ? self.colors.keys.sample : color
     where(city: city).each do |event|

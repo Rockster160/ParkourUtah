@@ -9,31 +9,3 @@ class SummaryMailer < ApplicationMailer
     mail(to: ENV['PKUT_EMAIL'], subject: "Class summary #{dates}")
   end
 end
-
-
-=begin
-@classes = {
-  class = [
-    "name - payment_type",6155 5194
-    "name - payment_type"
-  ],
-  class = [
-    "name - payment_type",
-    "name - payment_type",
-    "name - payment_type",
-    "name - payment_type"
-  ]
-}
-
-March 15, 2015
-
-Intermediate - Sandy
-  Marcos
-    Rocco - Cash
-    Kim - Credits
-
-Fundamentals - Draper
-  Justin
-    Sam - Credits
-
-=end

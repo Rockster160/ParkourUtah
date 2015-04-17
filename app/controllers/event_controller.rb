@@ -101,6 +101,7 @@ class EventController < ApplicationController
   end
 
   def event_params
+    params[:event][:cost] = params[:event][:cost_in_dollars].to_i * 100 if params[:event][:cost_in_dollars]
     params.require(:event).permit(:title, :host, :cost, :description, :city, :token,
                               :date, :address, :location_instructions, :class_name)
   end

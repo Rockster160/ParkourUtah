@@ -29,18 +29,28 @@ class Scheduled < ActiveRecord::Base
     payment = {}
 
     (0..(days - 1)).each do |day|
-      Event.select {|e| e.date.to_date == (Time.now - day.days).to_date}.each do |event|
+      events = Event.select {|e| e.date.to_date == (Time.now - day.days).to_date}
+      special = Attendance.select do |attendance|
+        (attendance.created_at - 7.hours).to_date == (Time.now - day.days).to_date && attendance.event_id == 1
+      end.map {|attendance| attendance.event} - [[]]
+      events += special if special.any?
+      events.each do |event|
         instructors = {}
+        return if event == []
         unless event.attendances.count == 0
-          event.attendances.each do |a|
-            instructor = User.find(a.user_id)
+          event.attendances.each do |attendance|
+            instructor = User.find(attendance.user_id)
+            athlete = Dependent.where(athlete_id: attendance.dependent_id).first
+
             instructors[instructor.full_name] ||= {}
             instructors[instructor.full_name]["students"] ||= []
             instructors[instructor.full_name]["pay"] ||= 0
 
-            athlete = Dependent.where(athlete_id: a.dependent_id).first
-            instructors[instructor.full_name]["students"] << "#{athlete.full_name} - #{a.type_of_charge}"
-            instructors[instructor.full_name]["pay"] += instructor.payment_multiplier
+            instructors[instructor.full_name]["students"] << "#{athlete.full_name} - #{attendance.type_of_charge}"
+            pay = event.class_name == "Test" ? 15 : instructor.payment_multiplier
+            instructors[instructor.full_name]["pay"] += pay
+
+            attendance.sent!
           end
         else
           instructors[event.host] ||= {}
@@ -54,7 +64,11 @@ class Scheduled < ActiveRecord::Base
           payment[instructor[0]] += pay
         end
         summary["#{(Time.now - day.days).to_date.strftime("%A %B %-d, %Y")}"] ||= {}
-        summary["#{(Time.now - day.days).to_date.strftime("%A %B %-d, %Y")}"]["#{event.class_name.capitalize} - #{event.city} - #{event.date.strftime('%l:%M%p')}"] = instructors
+        if event.class_name == "Test"
+          summary["#{(Time.now - day.days).to_date.strftime("%A %B %-d, %Y")}"]["Private Class"] = instructors
+        else
+          summary["#{(Time.now - day.days).to_date.strftime("%A %B %-d, %Y")}"]["#{event.class_name.capitalize} - #{event.city} - #{event.date.strftime('%l:%M%p')}"] = instructors
+        end
       end
     end
 

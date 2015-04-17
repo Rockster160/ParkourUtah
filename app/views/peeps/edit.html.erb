@@ -1,7 +1,7 @@
 <div class="fancy-box central-container form-offset">
   <h4><%= link_to "Back to Dashboard", dashboard_path, class: 'fancy-btn' %></h4><br/><br/>
-  <h4>Click and Drag to change Instructor order. Click to edit instructor info.</h4>
-  <table class="sortable" id="instructor-table">
+  <h4>Click and Drag to change Instructor order. Click to edit Instructor info.</h4><br/>
+  <table class="sortable" id="line-item-table">
     <% @instructors.each do |instructor| %>
       <tr class="sortable-row">
         <td class="hidden sortable-url"><%= update_peep_position_url(instructor.id) %></td>

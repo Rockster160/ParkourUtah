@@ -100,6 +100,7 @@ end
 puts "Creating Events"
 Event.create(
   date: DateTime.new(1990),
+  cost: 3500,
   host: 'Expert',
   description: 'This is the expert class. It is by invite only.',
   city: 'Provo',
@@ -113,6 +114,7 @@ puts "Created 1on1 event."
   # Monday
   Event.create(
     date: DateTime.new(2015, 1, 5, 16, 30) + (t.weeks),
+    cost: 1200,
     host: 'Justin Spencer',
     title: 'Draper fundamentals',
     description: 'Our weekly Draper fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
@@ -127,6 +129,7 @@ puts "Created 1on1 event."
   # Monday
   Event.create(
     date: DateTime.new(2015, 1, 5, 17, 30) + (t.weeks),
+    cost: 1200,
     host: 'Justin Spencer',
     title: 'Jordan fundamentals',
     description: 'Our weekly South Jordan fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
@@ -142,6 +145,7 @@ puts "Created 1on1 event."
   # Tuesday
   Event.create(
     date: DateTime.new(2015, 1, 6, 16, 30) + (t.weeks),
+    cost: 1200,
     host: 'Ryan Sannar',
     title: 'Orem fundamentals',
     description: 'Our weekly Orem fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
@@ -156,6 +160,7 @@ puts "Created 1on1 event."
   # Tuesday
   Event.create(
     date: DateTime.new(2015, 1, 6, 16, 30) + (t.weeks),
+    cost: 1200,
     host: 'Ryan Sannar',
     title: 'Springs fundamentals',
     description: 'Our weekly Saratoga Springs fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
@@ -170,6 +175,7 @@ puts "Created 1on1 event."
   # Tuesday
   Event.create(
     date: DateTime.new(2015, 1, 6, 17, 30) + (t.weeks),
+    cost: 1200,
     host: 'Justin Spencer',
     title: 'Jordan fundamentals',
     description: 'Our weekly West Jordan fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
@@ -185,6 +191,7 @@ puts "Created 1on1 event."
   # Wednesday
   Event.create(
     date: DateTime.new(2015, 1, 7, 16, 30) + (t.weeks),
+    cost: 1200,
     host: 'Ryan Sannar',
     title: 'Sandy fundamentals',
     description: 'Our weekly Sandy fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
@@ -199,6 +206,7 @@ puts "Created 1on1 event."
   # Wednesday
   Event.create(
     date: DateTime.new(2015, 1, 7, 16, 30) + (t.weeks),
+    cost: 1200,
     host: 'Marcos Jones',
     title: 'Vernal fundamentals',
     description: 'Our first bi-weekly Vernal fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
@@ -213,6 +221,7 @@ puts "Created 1on1 event."
   # Wednesday
   Event.create(
     date: DateTime.new(2015, 1, 7, 17, 30) + (t.weeks),
+    cost: 1200,
     host: 'Justin Spencer',
     title: 'Taylorsville fundamentals',
     description: 'Our weekly Taylorsville fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
@@ -228,6 +237,7 @@ puts "Created 1on1 event."
   # Thursday
   Event.create(
     date: DateTime.new(2015, 1, 1, 16, 30) + (t.weeks),
+    cost: 1200,
     host: 'Scott May',
     title: 'Provo fundamentals',
     description: 'Our weekly Provo fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
@@ -242,6 +252,7 @@ puts "Created 1on1 event."
   # Thursday
   Event.create(
     date: DateTime.new(2015, 1, 1, 16, 30) + (t.weeks),
+    cost: 1200,
     host: 'Justin Spencer',
     title: 'Park fundamentals',
     description: 'Our weekly Liberty Park fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
@@ -256,6 +267,7 @@ puts "Created 1on1 event."
   # Thursday
   Event.create(
     date: DateTime.new(2015, 1, 1, 17, 30) + (t.weeks),
+    cost: 1200,
     host: 'Justin Spencer',
     title: 'Herriman fundamentals',
     description: 'Our weekly Herriman fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
@@ -271,6 +283,7 @@ puts "Created 1on1 event."
   # Friday
   # Event.create(
   #   date: DateTime.new(2015, 1, 2, 16, 30) + (t.weeks),
+  cost: 1200,
   #   host: 'Ryan Sannar'
   #   Draper fundamentals',
   #   description: 'Our second bi-weekly Sandy fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
@@ -285,6 +298,7 @@ puts "Created 1on1 event."
   # Saturday
   Event.create(
     date: DateTime.new(2015, 1, 3, 11, 00) + (t.weeks),
+    cost: 1200,
     host: 'Zeter Raimondo',
     title: 'Ogden fundamentals',
     description: 'Our weekly Ogden fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
@@ -299,6 +313,7 @@ puts "Created 1on1 event."
   # Saturday
   Event.create(
     date: DateTime.new(2015, 1, 3, 11, 00) + (t.weeks),
+    cost: 1200,
     host: 'Tony Mungiguerra',
     title: 'Springville fundamentals',
     description: 'Our weekly Springville fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,
@@ -312,6 +327,7 @@ puts "Created 1on1 event."
   # Saturday
   Event.create(
     date: DateTime.new(2015, 1, 3, 16, 00) + (t.weeks),
+    cost: 1200,
     host: 'Marcos Jones',
     title: 'Vernal fundamentals',
     description: 'Our second bi-weeky Vernal fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,

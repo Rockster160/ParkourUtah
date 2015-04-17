@@ -4,7 +4,7 @@ class StoreController < ApplicationController
   before_action :validate_admin, only: [:generate_keys, :email_keys]
 
   def index
-    @items = LineItem.select { |item| !(item.hidden) }.sort_by { |order| order.item_order }.reverse
+    @items = LineItem.select { |item| !(item.hidden) }.reverse
   end
 
   def show_cart
@@ -49,6 +49,14 @@ class StoreController < ApplicationController
       flash[:alert] = "There was an error updating the item."
     end
     redirect_to dashboard_path
+  end
+
+  def update_item_position
+    @item = LineItem.find(params[:id])
+    @item.update(item_order: params["line_item"]["line_item_position"].to_i)
+    respond_to do |format|
+      format.json { render json: @item }
+    end
   end
 
   def create

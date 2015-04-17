@@ -67,6 +67,7 @@ Rails.application.routes.draw do
   patch '/store/update/:id' => 'store#update'
   post '/store/create' => 'store#create'
   delete '/store/item/:id/destroy' => 'store#destroy', as: 'destroy_item'
+  put '/store/update_position/:id' => 'store#update_item_position', as: 'update_item_position'
 
   get '/store/admin/generate_keys' => 'store#generate_keys', as: 'generate_keys'
   post '/store/admin/generate_keys' => 'store#email_keys'

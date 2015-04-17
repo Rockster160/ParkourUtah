@@ -16,11 +16,19 @@
 class Attendance < ActiveRecord::Base
 
   belongs_to :dependent
-  belongs_to :instructor
+  belongs_to :user
   belongs_to :event
 
   def athlete
     Dependent.find_by_athlete_id(self.dependent_id)
   end
-  
+
+  def instructor
+    User.find(user_id)
+  end
+
+  def sent!
+    self.update(sent: true)
+  end
+
 end

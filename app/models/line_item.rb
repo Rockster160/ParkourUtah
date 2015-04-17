@@ -34,6 +34,8 @@ class LineItem < ActiveRecord::Base
   before_save :assign_item_position_if_nil
   before_destroy :destroy_keys
 
+  default_scope { order('item_order ASC') }
+
   def destroy_keys
     Transaction.all.select { |t| t.item.id == self.id}.each { |order| order.destroy }
     self.redemption_keys.each do |key|
