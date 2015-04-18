@@ -55,6 +55,7 @@ class User < ActiveRecord::Base
 
   after_create :assign_cart
   after_create :create_blank_address
+  after_create :send_welcome_email
   before_save :format_phone_number
   before_save :split_name
   before_destroy :clear_associations
@@ -120,6 +121,10 @@ class User < ActiveRecord::Base
 
   def create_blank_address
     self.address = Address.new
+  end
+
+  def send_welcome_email
+    SendWelcomeEmailWorker.perform_async(self.email)
   end
 
   def phone_number_is_valid?
