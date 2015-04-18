@@ -64,6 +64,7 @@
       update == true ? id : nil
     end
     ::NewAthleteInfoMailerWorker.perform_async(athlete_ids.compact)
+    ::NewAthleteNotificationMailerWorker.perform_async("FIXME")
     redirect_to edit_user_registration_path
   end
 
