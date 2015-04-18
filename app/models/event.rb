@@ -29,6 +29,7 @@ class Event < ActiveRecord::Base
   has_many :subscriptions
 
   before_save :format_fields
+  after_create :set_color
 
   enum color: [
     :red,
@@ -47,14 +48,15 @@ class Event < ActiveRecord::Base
     :rose
   ]
 
-  # Event.all.to_a.group_by { |event| event.city }.keys.each_with_index { |city, pos| Event.set_color(city, Event.colors.keys[pos]) }
+  # Event.all.to_a.group_by { |event| event.city }.keys.each_with_index { |city, pos| Event.set_city_color(city, Event.colors.keys[pos]) }
 
 
   def self.color_of(city)
     cities = where(city: city)
+    binding.pry if city == nil
     if cities.any?
       color = cities.first.color
-      color.nil? || color.empty? ? self.set_color(city) : color
+      (color.nil? || color.empty?) ? self.set_city_color(city) : color
     else
       ""
     end
@@ -72,7 +74,12 @@ class Event < ActiveRecord::Base
     self.cost.to_f / 100
   end
 
-  def self.set_color(city, color="rand")
+  def set_color
+    self.color = Event.color_of(self.city)
+    self.save
+  end
+
+  def self.set_city_color(city, color="rand")
     new_color = color == "rand" ? self.colors.keys.sample : color
     where(city: city).each do |event|
       event.update(color: new_color)

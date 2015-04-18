@@ -107,7 +107,7 @@ class Scheduled < ActiveRecord::Base
 
   def self.reset_city_colors
     Event.all.to_a.group_by { |event| event.city }.keys.each_with_index do |city, pos|
-      Event.set_color(city, Event.colors.keys[pos])
+      Event.set_city_color(city, Event.colors.keys[pos])
     end
   end
 

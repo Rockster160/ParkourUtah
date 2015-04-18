@@ -6,14 +6,19 @@
   end
 
   def create
-    potentials = params[:athletes].count
-    athletes = params[:athletes].map { |param| Dependent.find_or_create_by_name_and_dob(param, current_user) }
-    if potentials == athletes.compact.count
-      flash[:notice] = "Success! Now fill out a waiver to get the Athlete Access Codes."
+    if params[:athletes]
+      potentials = params[:athletes].count
+      athletes = params[:athletes].map { |param| Dependent.find_or_create_by_name_and_dob(param, current_user) }
+      if potentials == athletes.compact.count
+        flash[:notice] = "Success! Now fill out a waiver to get the Athlete Access Codes."
+      else
+        flash[:alert] = "There was an error creating one or more of the athletes."
+      end
+      redirect_to waivers_path
     else
       flash[:alert] = "There was an error creating one or more of the athletes."
+      redirect_to :back
     end
-    redirect_to edit_user_registration_path
   end
 
   def update
@@ -74,8 +79,8 @@
       flash[:notice] = case verb
       when "create"
         athlete.generate_pin
-        "Congratulations! Enjoy a free class for #{athlete.full_name}. An email has been sent to you containing the ID and Pin used to attend class."
-      when "update" then "#{athlete.full_name}'s waiver has been updated."
+        "Congratulations! Enjoy a class on us for your new athletes. An email has been sent to you containing the ID and Pin used to attend class."
+      when "update" then "Thanks! Your waiver has been updated."
       else "Waiver created."
       end
       athlete

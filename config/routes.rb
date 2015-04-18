@@ -30,7 +30,7 @@ Rails.application.routes.draw do
   get '/athletes/reset/:athlete_id' => 'dependents#reset_pin', as: 'reset_athlete_pin'
 
   get '/waivers' => 'dependents#waivers', as: 'waivers'
-  post '/waivers' => 'dependents#sign_waiver'
+  post '/waivers' => 'dependents#sign_waiver', as: 'sign_waiver'
 
   devise_for :users do
     get '/users/sign_out' => 'devise/sessions#destroy'

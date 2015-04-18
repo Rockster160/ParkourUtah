@@ -36,7 +36,7 @@
               <h3>All athletes need a waiver signed.</h3>
               <h3>Please be sure to read through all parts of the waiver.</h3>
             <% end %>
-            <h3><%= link_to "Sign waiver for #{athlete.full_name}", sign_waiver_path(athlete.id), class: 'fancy-btn set-min-width-btn' %></h3>
+            <h3><%= link_to "Sign waiver for #{athlete.full_name}", sign_waiver_path, class: 'fancy-btn set-min-width-btn' %></h3>
             <br/>
           <% end %>
         <% end %>
@@ -48,7 +48,7 @@
 </div>
 
 <div class="fancy-box central-container form-offset">
-  <h2>Edit <%= resource_name.to_s.humanize %></h2>
+  <h2>Edit Account</h2>
 
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
     <%= devise_error_messages! %>
@@ -86,7 +86,6 @@
       <h3><%= f.submit "Update", class: 'fancy-btn set-min-width-btn' %></h3>
     </div>
   <% end %>
-  <!-- Some Button -->
   <div class="waivers">
     <% if true %>
       <h3>Waivers:</h3>
@@ -103,12 +102,16 @@
           <%= link_to "Must have waiver signed before attending class.", waivers_path, class: 'fancy-link' %></br>
         <% end %>
       <% end %>
-      <br/><h5><%= link_to "Add a new Athlete", new_athlete_path, class: 'fancy-link' %></h5>
+        <%= form_for Dependent.new, url: "/athletes/new" do %>
+          <div class="athletes-holder">
+          </div>
+          <h2 class="fancy-btn add-athlete-btn">Add Athlete</h2></br>
+          <%= submit_tag "Submit", class: 'fancy-btn athleteVerify set-min-width-btn' %>
+        <% end %>
     <% else %>
       <h2>We do not store any of your sensitive information, so you will be redirected to a third party.</h2>
       <h3>You must first fill out your payment information before creating Athlete Profiles.</h3>
     <% end %>
   </div>
 
-  <%= link_to "Back", :back, class: 'fancy-link' %>
 </div>
