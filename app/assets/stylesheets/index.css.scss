@@ -1,8 +1,6 @@
 /* -- custom css for Bootstrap 3.x --*/
 
 /* move special fonts to HTML head for better performance */
-@import url(http://fonts.googleapis.com/css?family=Voltaire);
-
 html,
 body {
   max-width: 100%;
@@ -168,10 +166,6 @@ footer {
     font-size:12px;
     padding:15px;
   }
-}
-
-@media (min-width: 768px) {
-  .modal-dialog { width: 400px; }
 }
 
 /* -- end custom css for Bootstrap 3.x --*/

@@ -5,27 +5,41 @@
   margin-bottom: 50px;
 }
 
+.pkut-box {
+  text-align: left;
+  padding: 0 2.5%;
+  margin-left: 10px;
+  width: 600px;
+  border: 3px solid black;
+  border-radius: 7px;
+  background: $pkut-background-primary;
+}
+
 .pkut-textbox {
   margin: 10px 0;
   width: 300px;
   max-width: 85%;
+  padding: 4px 0 0 10px;
   height: 30px;
+
   font-size: 1.5em;
   color: black;
-  border: 2px solid $pkut-grey;
+
+  border: 2px solid $pkut-grey-dark;
   border-radius: 7px;
-  padding: 4px 0 0 10px;
   &:focus { outline: none; }
 }
 
-.fancy-textarea {
-  width: 350px;
-  margin: 20px 0;
-  max-width: 95%;
+.pkut-textarea {
+  width: 100%;
+  min-height: 6em;
   font-size: 1.3em;
   color: black;
-  padding: 20px;
+  padding: 5px;
   border-radius: 20px;
+
+  border: 2px solid $pkut-grey-dark;
+  border-radius: 7px;
   &:focus { outline: none; }
 }
 
@@ -42,7 +56,7 @@
   border-radius: 5px / 10px;
   box-shadow: 3px 3px 5px black;
 
-  color: $pkut-background-secondary;
+  color: $pkut-background-primary;
   background-color: $pkut-red;
 
   &:hover, &:active, &:focus {

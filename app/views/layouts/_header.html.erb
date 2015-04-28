@@ -36,7 +36,6 @@
             <li><%= link_to "Store", store_path %></li>
             <li><%= link_to "Schedule", calendar_show_path('all') %></li>
             <li><%= link_to "Sign In", new_user_session_path %></li>
-            <li><%= link_to "Register", new_user_registration_path %></li>
           <% end %>
         </ul>
       </div>
@@ -44,7 +43,7 @@
   </div>
 
   <div class="modal fade" id="modal_contact" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="central-container modal-dialog">
       <button type="button" class="close-btn" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
       <%= render partial: 'index/contact_us' %>
     </div>
@@ -85,7 +84,6 @@
               <li><%= link_to "Store", store_path %></li>
               <li><%= link_to "Schedule", calendar_show_path('all') %></li>
               <li><%= link_to "Sign In", new_user_session_path %></li>
-              <li><%= link_to "Register", new_user_registration_path %></li>
             <% end %>
           </li>
         </ul>

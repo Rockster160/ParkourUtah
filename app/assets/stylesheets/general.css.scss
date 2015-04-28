@@ -7,7 +7,7 @@
 .hover-btn:hover { cursor: pointer; }
 
 body {
-  background: $pkut-background-secondary;
+  background: $pkut-background-primary;
 }
 
 a {
@@ -19,10 +19,9 @@ textarea {
 }
 
 .central-container {
-  text-align: center;
   margin-left: auto;
   margin-right: auto;
-  width: 400px;
+  width: 700px;
   max-width: 95%;
 }
 
@@ -33,7 +32,8 @@ textarea {
 
 .close-btn {
   float: right;
-  margin-left: -30px;
+  margin-right: 16px;
+  margin-top: 1px;
   color: $pkut-red;
   background: transparent;
   border: none;
