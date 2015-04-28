@@ -1,0 +1,125 @@
+.fileform-center { margin-left: 90px; }
+
+.form-offset {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.fancy-box {
+  background-image: image-url("concrete-small.png");
+  background-size: cover;
+  color: white;
+  border: 1px solid red;
+  padding: 20px 10px 50px 10px;
+  border-radius: 10px;
+  text-align: center;
+}
+.fancy-textbox {
+  margin: 10px 0;
+  width: 300px;
+  max-width: 85%;
+  height: 40px;
+  font-size: 2em;
+  color: black;
+  border-radius: 20px;
+  padding-left: 20px;
+  &:focus { outline: none; }
+}
+.fancy-textarea {
+  width: 350px;
+  margin: 20px 0;
+  max-width: 95%;
+  font-size: 1.3em;
+  color: black;
+  padding: 20px;
+  border-radius: 20px;
+  &:focus { outline: none; }
+}
+.fancy-btn {
+  white-space: nowrap;
+  transition: 0.3s;
+  background: rgba(236, 160, 80, 0.8);
+  text-decoration: none;
+  font-family: 'Voltaire';
+  border: 2px solid red;
+  border-radius: 20px;
+  padding: 10px;
+  margin: 0 auto;
+  color: red;
+  .disabled {
+    cursor: default;
+    pointer-events: none;
+  }
+  &:hover, &:active, &:focus {
+    color: red;
+    outline: none;
+    text-decoration: none;
+    cursor: pointer;
+    background: rgb(236, 160, 80);
+  }
+}
+.set-min-width-btn {
+  width: 200px;
+}
+.pin-entry {
+  letter-spacing: 40px;
+  padding-left: 50px;
+}
+.fancy-link {
+  color: white;
+  text-decoration: underline;
+}
+
+.money-btn {
+  color: green;
+  border-color: green;
+  background: rgba(160, 236, 80, 0.3);
+  &:hover {
+    background: rgba(160, 236, 80, 0.8);
+  }
+}
+
+.styled-checkbox {
+  position: relative;
+  width: 100%;
+  label {
+    margin-left: 20px;
+    font-weight: normal;
+    font-size: 1.2em;
+    &:before {
+      content: "";
+      left: 2px;
+      top: 5px;
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      border: 2px inset $pkut-grey-light;
+      background: white;
+    }
+    &:hover {
+      cursor: pointer;
+      &:after {
+        content: "\2713 ";
+        position: absolute;
+        color: $pkut-grey-dark;
+        font-size: 1.5em;
+        top: -6px;
+        left: 2px;
+      }
+    }
+  }
+  input[type=checkbox] {
+    visibility: hidden;
+  }
+  input[type=checkbox]:checked + label {
+    &:after {
+      content: "\2713 ";
+      text-shadow: 1px 1px $pkut-grey-dark;
+      position: absolute;
+      color: $pkut-red;
+      font-size: 1.5em;
+      top: -8px;
+      left: 2px;
+    }
+  }
+}

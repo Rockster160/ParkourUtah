@@ -18,8 +18,6 @@ var ready = function() {
         || (uBound >= top && uBound <= bottom);
   };
 
-  $('.navbar-fixed-top').addClass('affix');
-
   if (window.location.pathname == "/") {
     /* smooth scrolling */
     $('.scroll-link').click(function(e){

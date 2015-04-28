@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
 
   root 'index#index'
+
+  get '/new' => 'index#testing_stuff'
+
   get '/test' => 'index#index'
   post '/contact' => 'index#contact'
   post '/receive_sms' => 'index#receive_sms'

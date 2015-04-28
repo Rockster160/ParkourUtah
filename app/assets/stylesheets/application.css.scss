@@ -13,8 +13,27 @@
  *= require jquery-ui
  *= require select2
  *= require select2-bootstrap
- *= require_tree .
+ *= require twitter-bootstrap-static/bootstrap
  *= require_self
  */
+
+@import "config/variables";
+@import "config/font-imports";
+
+@import "components/navbar";
+
+@import "calendar";
+@import "fonts";
+@import "flashes";
+@import "forms";
+@import "general";
+@import "index";
+@import "index_carousel";
+@import "index_video";
+@import "peeps";
+@import "secret";
+@import "store";
+
+
 @import "font-awesome-sprockets";
 @import "font-awesome";

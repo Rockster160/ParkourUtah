@@ -81,6 +81,10 @@ class User < ActiveRecord::Base
 
   validate :valid_phone_number
 
+  def self.[](id)
+    self.find(id)
+  end
+
   def full_name
     "#{self.first_name.capitalize} #{self.last_name.capitalize}"
   end

@@ -1,0 +1,32 @@
+.navbar-offset { height: 51px; }
+
+.navbar {
+  transition: 1s;
+  background-color: #EEE;
+}
+
+.nav-icon {
+  position: absolute;
+  right: 17px;
+  top: 17px;
+}
+
+.navbar a {
+  font-size: 14px;
+  color: $pkut-red;
+  text-shadow:
+    -0.7px -0.7px 0 #FFF,
+    0.7px -0.7px 0 #FFF,
+    -0.7px 0.7px 0 #FFF,
+    0.7px 0.7px 0 #FFF,
+    2px 2px 3px #555;
+}
+
+.navbar a:hover {
+  color: darken($pkut-red, 10%);
+}
+
+.dropdown-menu > li > a {
+  text-transform: none;
+  color: $pkut-red;
+}
