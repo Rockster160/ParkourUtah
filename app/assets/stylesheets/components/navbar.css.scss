@@ -2,7 +2,19 @@
 
 .navbar {
   transition: 1s;
-  background-color: #EEE;
+  background-color: $pkut-grey-light;
+  opacity: 0.8;
+  border-bottom: 3px solid $pkut-grey;
+}
+
+.navbar-nav > li {
+  .dropdown-menu {
+    margin-top: 2px;
+  }
+}
+
+.icon-bar {
+  background-color: red;
 }
 
 .nav-icon {
@@ -14,19 +26,23 @@
 .navbar a {
   font-size: 14px;
   color: $pkut-red;
+  text-transform: uppercase;
+  text-decoration: none;
   text-shadow:
-    -0.7px -0.7px 0 #FFF,
-    0.7px -0.7px 0 #FFF,
-    -0.7px 0.7px 0 #FFF,
-    0.7px 0.7px 0 #FFF,
+    -0.5px -0.5px 0 #FFF,
+    0.5px -0.5px 0 #FFF,
+    -0.5px 0.5px 0 #FFF,
+    0.5px 0.5px 0 #FFF,
     2px 2px 3px #555;
-}
-
-.navbar a:hover {
-  color: darken($pkut-red, 10%);
+  &:hover {
+    text-decoration: none;
+    background-color: inherit;
+    color: darken($pkut-red, 10%);
+  }
 }
 
 .dropdown-menu > li > a {
+  text-decoration: none;
   text-transform: none;
   color: $pkut-red;
 }

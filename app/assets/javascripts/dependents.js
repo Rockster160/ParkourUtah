@@ -1,9 +1,9 @@
 var ready = function() {
   $('.add-athlete-btn').click(function() {
     var token = generateToken();
-    $('.athletes-holder').append('<label>Athlete\'s full name</label></br><input type="text" class="fancy-textbox" name="athletes[' +
+    $('.athletes-holder').append('<label>Athlete\'s full name</label></br><input type="text" class="pkut-textbox" name="athletes[' +
     token +
-    '][name]" placeholder="Sam Smith" required="true", autocomplete="off"/><br/><label>Athlete\'s Birthdate</label></br><input type="text" class="fancy-textbox maskDOB" name="athletes[' +
+    '][name]" placeholder="Sam Smith" required="true", autocomplete="off"/><br/><label>Athlete\'s Birthdate</label></br><input type="text" class="pkut-textbox maskDOB" name="athletes[' +
     token +
     '][dob]" placeholder="dd/mm/yyyy" required="true", autocomplete="off"/><br/>');
     $(".maskDOB:last").mask("99/99/9999");

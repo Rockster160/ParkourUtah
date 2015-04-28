@@ -4,24 +4,24 @@
     <h5>Example text:</h5>
     <%= f.label :title, 'Hope to see you at our {city} {class} class today at {time}!' %><br/>
     <%= f.label :class_name %><br/>
-    <%= f.text_field :class_name, placeholder: 'Class', required: true, class: 'fancy-textbox' %><br/>
+    <%= f.text_field :class_name, placeholder: 'Class', required: true, class: 'pkut-textbox' %><br/>
     <%= f.label :address %><br/>
-    <%= f.text_field :address, placeholder: 'Full Address', required: true, class: 'fancy-textbox' %><br/>
+    <%= f.text_field :address, placeholder: 'Full Address', required: true, class: 'pkut-textbox' %><br/>
     <%= f.label :city %><br/>
-    <%= f.text_field :city, placeholder: 'City' , required: true, class: 'fancy-textbox' %><br/>
+    <%= f.text_field :city, placeholder: 'City' , required: true, class: 'pkut-textbox' %><br/>
     <%= f.label :zip %><br/>
-    <%= f.text_field :zip, placeholder: 'Zip' , required: true, class: 'fancy-textbox' %><br/>
+    <%= f.text_field :zip, placeholder: 'Zip' , required: true, class: 'pkut-textbox' %><br/>
     <%= f.label :state %><br/>
-    <%= f.text_field :state, value: 'Utah' , required: true, class: 'fancy-textbox' %><br/>
+    <%= f.text_field :state, value: 'Utah' , required: true, class: 'pkut-textbox' %><br/>
     <!-- Searchable -->
     <%= f.label :description, 'A description of the event' %><br/>
     <%= f.text_area :description, placeholder: 'Our weekly Draper fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher, Justin Spencer, via text or call 801-580-9274.', required: true, class: 'fancy-textarea' %><br/>
     <%= f.label :location_instructions, "Special instructions for specifically getting to the area. (Not required)" %><br/>
     <%= f.text_area :location_instructions, placeholder: 'Get off the freeway at Provo Center Street, go straight through the first light, take the left fork, take your next two rights then follow the road to the end.', class: 'fancy-textarea' %><br/>
     <%= f.label :host %><br/>
-    <%= f.text_field :host, placeholder: 'Host', required: true, class: 'fancy-textbox' %><br/>
+    <%= f.text_field :host, placeholder: 'Host', required: true, class: 'pkut-textbox' %><br/>
     <%= f.label :cost %><br/>
-    <%= f.number_field :cost_in_dollars, placeholder: 'Cost', size: 2, class: 'fancy-textbox' %><br/>
+    <%= f.number_field :cost_in_dollars, placeholder: 'Cost', size: 2, class: 'pkut-textbox' %><br/>
     <%= f.label :time %><br/>
     <input type="number" placeholder="Hr" name="time[hour]" min="1" max="12" required="required" style="color: black;">:
     <input type="number" placeholder="Min" name="time[minute]" value="00" min="0" max="59" required="required" style="color: black;">

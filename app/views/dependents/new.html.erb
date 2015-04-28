@@ -4,9 +4,9 @@
     <div class="athletes-holder">
       <% token = 10.times.map {(('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a).sample}.join %>
       <label>Athlete's full name</label></br>
-      <input type="text" class="fancy-textbox" name="athletes[<%= token %>][name]" placeholder="Sam Smith" required="true", autocomplete="off"/><br/>
+      <input type="text" class="pkut-textbox" name="athletes[<%= token %>][name]" placeholder="Sam Smith" required="true", autocomplete="off"/><br/>
       <label>Athlete's Birthdate</label></br>
-      <input type="text" class="fancy-textbox maskDOB" name="athletes[<%= token %>][dob]" placeholder="dd/mm/yyyy" required="true", autocomplete="off"/><br/>
+      <input type="text" class="pkut-textbox maskDOB" name="athletes[<%= token %>][dob]" placeholder="dd/mm/yyyy" required="true", autocomplete="off"/><br/>
     </div>
     <%= submit_tag "Submit", class: 'fancy-btn athleteVerify set-min-width-btn' %>
   <% end %>

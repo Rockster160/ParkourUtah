@@ -2,7 +2,8 @@ Rails.application.routes.draw do
 
   root 'index#index'
 
-  get '/new' => 'index#testing_stuff'
+  get '404' => 'index#page_not_found'
+  get '500' => 'index#page_not_found'
 
   get '/test' => 'index#index'
   post '/contact' => 'index#contact'

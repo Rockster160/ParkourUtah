@@ -7,7 +7,7 @@
       <%= select_tag :key_type, options_from_collection_for_select(@hidden, "id", "title") %>
       <br/><br/>
       How many keys?<br/>
-      <%= number_field :how_many, '', step: 1, class: 'fancy-textbox restrictNumeric' %><br/><br/>
+      <%= number_field :how_many, '', step: 1, class: 'pkut-textbox restrictNumeric' %><br/><br/>
 
       <h4><%= submit_tag "Generate!", class: 'fancy-btn' %></h4>
     <% end %>

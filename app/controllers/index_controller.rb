@@ -1,9 +1,9 @@
 class IndexController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  def testing_stuff
+  def page_not_found
   end
-  
+
   def index
     @date = params[:date] ? Date.parse(params[:date]) : Date.today
 

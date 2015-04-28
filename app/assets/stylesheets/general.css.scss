@@ -7,8 +7,11 @@
 .hover-btn:hover { cursor: pointer; }
 
 body {
-  // background: image-url('//s3-us-west-2.amazonaws.com/pkut-default/carbon-fiber-gray.jpg');
-  background: #ddd;
+  background: $pkut-background-secondary;
+}
+
+a {
+  text-decoration: underline;
 }
 
 textarea {
@@ -17,7 +20,8 @@ textarea {
 
 .central-container {
   text-align: center;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
   width: 400px;
   max-width: 95%;
 }
@@ -27,17 +31,23 @@ textarea {
   transform: scale(2);
 }
 
-.close {
-  width: 30px;
+.close-btn {
+  float: right;
   margin-left: -30px;
-  zoom: 2;
-  color: red;
-  &:hover {
-    color: red;
-  }
+  color: $pkut-red;
+  background: transparent;
+  border: none;
+  &:hover { color: $pkut-red-dark; }
 }
 
 .restrictBio {
   overflow: hidden;
   font-size: 1em;
+}
+
+.error-div {
+  margin-top: 50px;
+  line-height: 3em;
+  color: $pkut-grey-dark;
+  & h1 { color: $pkut-red; }
 }

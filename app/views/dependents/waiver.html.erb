@@ -3,7 +3,7 @@
     <h2>New Waiver</h2>
     <h4>Please fill out ALL of the following information.</h4>
     <br/><h4>This waiver of liability is being created for:</h4>
-    <%= f.text_field :signed_for, placeholder: 'Sam Smith', class: 'fancy-textbox', required: true, autocomplete: 'off' %>
+    <%= f.text_field :signed_for, placeholder: 'Sam Smith', class: 'pkut-textbox', required: true, autocomplete: 'off' %>
     <br/>
     <br/>
     <%= link_to 'Review Waiver - available for download', '//s3-us-west-2.amazonaws.com/pkut-default/RELEASE+AGREEMENT1.pdf', class: 'fancy-btn', target: '_blank' %>
@@ -17,7 +17,7 @@
     <h5>By entering my name below, I certify that I have downloaded, read and understand all of the terms and provisions in the liability waiver document available for download above.</h5>
     <h5>I also certify that I understand that the above document that I have downloaded and read is a legal document, and it is my understanding that an electronic signature has the same effect and can be enforced in the same way as a written signature, as stated in Utah Code 46-4-201.</h5>
     <h5>By signing this document, I am waiving any liability claims against Parkour Utah for myself, and, if the athlete listed above is a minor, I certify that I am the parent and/or guardian of that athlete, and I am waiving any liability claims against Parkour Utah on behalf of the minor listed as the athlete above.</h5>
-    <%= f.text_field :signed_by, placeholder: 'Signed By', class: 'fancy-textbox e-sig', required: true, autocomplete: 'off' %>
+    <%= f.text_field :signed_by, placeholder: 'Signed By', class: 'pkut-textbox e-sig', required: true, autocomplete: 'off' %>
     <br/>
     <br/>
     <h3><a alt="..." data-toggle="modal" data-target="#waiver_modal" class="fancy-btn waiverVerify">Submit</a></h3>

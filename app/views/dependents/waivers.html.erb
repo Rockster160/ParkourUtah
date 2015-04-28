@@ -5,7 +5,7 @@
     <% @athletes.each do |athlete| %>
       <h3><%= athlete.full_name %></h3>
       <h5>Desired Access Code:</h5>
-      <%= telephone_field_tag "athletes[#{athlete.id}]", "#{athlete.athlete_pin}", class: 'restrictNumeric fancy-textbox pin-entry formatPin', autocomplete: 'off', required: true %>
+      <%= telephone_field_tag "athletes[#{athlete.id}]", "#{athlete.athlete_pin}", class: 'restrictNumeric pkut-textbox pin-entry formatPin', autocomplete: 'off', required: true %>
       <br/>
     <% end %>
     <br/>
@@ -20,7 +20,7 @@
     <h5>By entering my name below, I certify that I have downloaded, read and understand all of the terms and provisions in the liability waiver document available for download above.</h5>
     <h5>I also certify that I understand that the above document that I have downloaded and read is a legal document, and it is my understanding that an electronic signature has the same effect and can be enforced in the same way as a written signature, as stated in Utah Code 46-4-201.</h5>
     <h5>By signing this document, I am waiving any liability claims against Parkour Utah for myself, and, if the athlete(s) listed above is/are minor(s), I certify that I am the parent and/or guardian of the athlete(s), and I am waiving any liability claims against Parkour Utah on behalf of the minor(s) listed as the athlete(s) above.</h5>
-    <%= text_field_tag :signed_by, '', placeholder: 'Signed By', class: 'fancy-textbox e-sig', required: true, autocomplete: 'off' %>
+    <%= text_field_tag :signed_by, '', placeholder: 'Signed By', class: 'pkut-textbox e-sig', required: true, autocomplete: 'off' %>
     <br/>
     <br/>
     <h3><a alt="..." data-toggle="modal" data-target="#waiver_modal" class="fancy-btn waiverVerify">Submit</a></h3>

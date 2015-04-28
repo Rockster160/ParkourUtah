@@ -1,4 +1,4 @@
-<div class="central-container fancy-box form-offset">
+<div class="central-container form-offset">
 <h2>Step 1</h2>
 <h4>Registration</h4>
 
@@ -7,22 +7,22 @@
 
   <div class="field">
     <%= f.label :first_name, 'First and Last name, separated by a space.' %>
-    <%= f.text_field :first_name, autofocus: true, placeholder: 'Mary Smith', required: true, class: "fancy-textbox" %>
+    <%= f.text_field :first_name, autofocus: true, placeholder: 'Mary Smith', required: true, class: "pkut-textbox" %>
   </div>
 
   <div class="field">
-    <%= f.email_field :email, placeholder: 'Email', class: "fancy-textbox" %>
+    <%= f.email_field :email, placeholder: 'Email', class: "pkut-textbox" %>
   </div>
 
   <div class="field">
     <% if @validatable %>
     <em>(<%= @minimum_password_length %> characters minimum)</em>
     <% end %><br />
-    <%= f.password_field :password, autocomplete: "off", placeholder: 'Password', class: "fancy-textbox" %>
+    <%= f.password_field :password, autocomplete: "off", placeholder: 'Password', class: "pkut-textbox" %>
   </div>
 
   <div class="field">
-    <%= f.password_field :password_confirmation, autocomplete: "off", placeholder: 'Confirm', class: "fancy-textbox" %>
+    <%= f.password_field :password_confirmation, autocomplete: "off", placeholder: 'Confirm', class: "pkut-textbox" %>
   </div>
 
   <div class="actions">

@@ -1,27 +1,27 @@
 <%= form_for current_user.address, url: '/update', method: "post", class: 'scrollTop' do |f| %>
   <p>
     <%= f.label :line1, 'Address 1' %><br />
-    <%= f.text_field :line1, placeholder: '123 Example Street', class: 'fancy-textbox' %>
+    <%= f.text_field :line1, placeholder: '123 Example Street', class: 'pkut-textbox' %>
   </p>
 
   <p>
     <%= f.label :line2, 'Address 2' %><br />
-    <%= f.text_field :line2, placeholder: 'Apt 6789', class: 'fancy-textbox' %>
+    <%= f.text_field :line2, placeholder: 'Apt 6789', class: 'pkut-textbox' %>
   </p>
 
   <p>
     <%= f.label :city %><br />
-    <%= f.text_field :city, placeholder: 'Example Town', class: 'fancy-textbox' %>
+    <%= f.text_field :city, placeholder: 'Example Town', class: 'pkut-textbox' %>
   </p>
 
   <p>
     <%= f.label :state %><br />
-    <%= f.text_field :state, placeholder: 'UT', :size => 2, class: 'fancy-textbox' %>
+    <%= f.text_field :state, placeholder: 'UT', :size => 2, class: 'pkut-textbox' %>
   </p>
 
   <p>
     <%= f.label :zip, 'Zip Code' %><br />
-    <%= f.text_field :zip, placeholder: '84321', class: 'fancy-textbox' %>
+    <%= f.text_field :zip, placeholder: '84321', class: 'pkut-textbox' %>
   </p>
   <h3><%= submit_tag 'Submit', class: 'fancy-btn' %></h3>
 <% end %>

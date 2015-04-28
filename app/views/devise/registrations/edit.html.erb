@@ -13,7 +13,7 @@
     <h3>We will only use this number to send you reminder texts for classes YOU subscribe to.</h3>
     <h3>(We don't bug you. Promise!)</h3>
     <%= form_tag "/update", method: "post" do %>
-      <%= telephone_field_tag :phone_number, '', class: 'fancy-textbox formatPhoneNumber restrictNumeric', placeholder: 'Phone', auto_complete: 'off', required: true %>
+      <%= telephone_field_tag :phone_number, '', class: 'pkut-textbox formatPhoneNumber restrictNumeric', placeholder: 'Phone', auto_complete: 'off', required: true %>
       <h3><%= submit_tag "Update", class: 'fancy-btn set-min-width-btn' %></h3>
     <% end %>
   <% else %>
@@ -55,7 +55,7 @@
 
     <div class="field">
       <%= f.label :email %><br />
-      <%= f.email_field :email, autofocus: true, class: 'fancy-textbox' %>
+      <%= f.email_field :email, autofocus: true, class: 'pkut-textbox' %>
     </div>
 
     <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
@@ -64,22 +64,22 @@
 
     <div class="field">
       <%= f.label :phone_number %> <i><br/>Only used to update you on classes that you have subscribed to.</i><br />
-      <%= f.telephone_field :phone_number, autocomplete: "off", class: 'fancy-textbox restrictNumeric formatPhoneNumber' %>
+      <%= f.telephone_field :phone_number, autocomplete: "off", class: 'pkut-textbox restrictNumeric formatPhoneNumber' %>
     </div>
 
     <div class="field">
       <%= f.label :password %> <i><br/>(leave blank if you don't want to change it)</i><br />
-      <%= f.password_field :password, autocomplete: "off", class: 'fancy-textbox' %>
+      <%= f.password_field :password, autocomplete: "off", class: 'pkut-textbox' %>
     </div>
 
     <div class="field">
       <%= f.label :password_confirmation %><br />
-      <%= f.password_field :password_confirmation, autocomplete: "off", class: 'fancy-textbox' %>
+      <%= f.password_field :password_confirmation, autocomplete: "off", class: 'pkut-textbox' %>
     </div>
 
     <div class="field">
       <%= f.label :current_password %> <i><br/>(we need your current password to confirm your changes)</i><br />
-      <%= f.password_field :current_password, autocomplete: "off", class: 'fancy-textbox' %>
+      <%= f.password_field :current_password, autocomplete: "off", class: 'pkut-textbox' %>
     </div>
 
     <div class="actions">

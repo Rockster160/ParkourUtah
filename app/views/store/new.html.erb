@@ -4,15 +4,15 @@
     <table>
       <div class="field">
         Title<br/>
-        <%= f.text_field :title, placeholder: 'Green Parachute Pants', required: true, class: 'fancy-textbox' %>
+        <%= f.text_field :title, placeholder: 'Green Parachute Pants', required: true, class: 'pkut-textbox' %>
       </div>
       <div class="field">
         Cost<br/>
-        <%= f.number_field :cost, placeholder: '3000.99', required: true, class: 'fancy-textbox' %>
+        <%= f.number_field :cost, placeholder: '3000.99', required: true, class: 'pkut-textbox' %>
       </div>
       <!-- <div class="field">
         Sizes, comma separated
-        <%#= f.text_field :size, placeholder: 'S, M, L / 38.5, 39, 43', required: true, class: 'fancy-textbox' %>
+        <%#= f.text_field :size, placeholder: 'S, M, L / 38.5, 39, 43', required: true, class: 'pkut-textbox' %>
       </div> -->
       <div class="field">
         Description<br/>
@@ -20,7 +20,7 @@
       </div>
       <div class="field">
         Class or Physical Item<br/>
-        <%= f.select :category, @categories, class: 'fancy-textbox' %>
+        <%= f.select :category, @categories, class: 'pkut-textbox' %>
       </div>
       <div class="field">
         Hidden? (Hidden items are only purchasable with a redemption key)<br/>
@@ -28,7 +28,7 @@
       </div>
       <div class="field">
         Credits given to user after purchase (1 class = 12)<br/>
-        <%= f.text_field :credits, class: 'fancy-textbox restrictNumeric' %>
+        <%= f.text_field :credits, class: 'pkut-textbox restrictNumeric' %>
       </div>
       <div class="field">
         Display image<br/>

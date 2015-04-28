@@ -1,4 +1,7 @@
-h1, h2, h3, h4, .lead, .btn, .navbar a {
-  text-transform: uppercase;
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'MicroExtendFLF-Bold', Arial, sans-serif;
+}
+
+.lead, .navbar a {
   font-family: 'MicroExtendFLF-BoldItalic', Arial, sans-serif;
 }

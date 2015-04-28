@@ -1,17 +1,17 @@
 <div class="fancy-box central-container form-offset">
   <h4><%= link_to "Back to Dashboard", dashboard_path, class: 'fancy-btn' %></h4><br/><br/>
   <%= form_for @item, url: {action: "update", id: @item.id} do |f| %>
-    <%= f.text_field :title, placeholder: 'Title', required: true, autocomplete: "off", class: 'fancy-textbox' %><br/>
-    <%= f.text_field :cost_in_dollars, placeholder: 'Cost', required: true, autocomplete: "off", step: 0.01, class: 'fancy-textbox' %><br/>
+    <%= f.text_field :title, placeholder: 'Title', required: true, autocomplete: "off", class: 'pkut-textbox' %><br/>
+    <%= f.text_field :cost_in_dollars, placeholder: 'Cost', required: true, autocomplete: "off", step: 0.01, class: 'pkut-textbox' %><br/>
     <%= f.text_area :description, placeholder: 'Description', required: true, autocomplete: "off", class: 'fancy-textarea' %><br/>
-    <%= f.select :category, @categories, class: 'fancy-textbox' %><br/>
+    <%= f.select :category, @categories, class: 'pkut-textbox' %><br/>
     <div class="field">
       Hidden? (Hidden items are only purchasable with a redemption key)<br/>
       <%= f.check_box :hidden %>
     </div>
     <div class="field">
       Credits given to user after purchase (1 class = 12)<br/>
-      <%= f.text_field :credits, class: 'fancy-textbox restrictNumeric' %>
+      <%= f.text_field :credits, class: 'pkut-textbox restrictNumeric' %>
     </div>
     <%= f.file_field :display, placeholder: 'Display' %><br/>
     <br/>
