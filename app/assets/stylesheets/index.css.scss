@@ -34,37 +34,8 @@ body {
   transform: translateZ(0);
 }
 
-.header .btn-lg {
-  width: 150px;
-  margin: 10px;
-  font-size:24px;
-  border-color:#eee;
-  padding:15px;
-  background-color:transparent;
-  color:#fff;
-}
-
-.call-to-arms {
-  right: 20px;
-  top: 40%;
-  background-color: transparent;
-  color: orange;
-  border-color: orange;
-  width: 170px;
-  font-size: 2em;
-  &:hover {
-    background-color: orange;
-    color: white;
-  }
-}
-
 .container > h1 {
   color: red;
-}
-
-.header .btn-lg:hover {
-  background-color:#eeeeee;
-  color:#777777;
 }
 
 .header h1 {
@@ -73,11 +44,6 @@ body {
   margin-left: -5px;
   margin-bottom: 5px;
   text-transform: uppercase;
-}
-
-.header .lead {
-  color: #d46054;
-  font-size: 25px;
 }
 
 .header {

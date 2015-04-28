@@ -47,7 +47,14 @@ textarea {
 
 .error-div {
   margin-top: 50px;
+  text-align: left;
+  width: 400px;
+  padding-left: 10px;
   line-height: 3em;
-  color: $pkut-grey-dark;
-  & h1 { color: $pkut-red; }
+  color: $pkut-grey;
+  & h1 {
+    font-size: 72px;
+    color: $pkut-red;
+    text-align: center;
+  }
 }
