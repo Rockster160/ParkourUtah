@@ -2,6 +2,37 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'MicroExtendFLF-Bold', Arial, sans-serif;
 }
 
+.title {
+  text-decoration: underline;
+}
+
+p {
+  font-size: 14px;
+  font-family: 'Young', Arial, sans-serif;
+  color: $pkut-grey-dark;
+}
+
 .lead, .navbar a {
   font-family: 'MicroExtendFLF-BoldItalic', Arial, sans-serif;
+}
+
+.standout {
+  color: $pkut-red;
+  text-shadow: 3px 3px 3px $pkut-grey-dark;
+}
+.header-text {
+  color: $pkut-grey-dark;
+}
+
+.pkut-header {
+  color: $pkut-red;
+}
+
+.warning-text {
+  color: $pkut-red;
+  text-transform: uppercase;
+}
+
+.attention-text {
+  text-transform: uppercase;
 }

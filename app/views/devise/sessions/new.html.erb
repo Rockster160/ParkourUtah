@@ -1,4 +1,4 @@
-<div class="central-container form-offset">
+<div class="central-container form-offset internal-center">
   <h2>Login</h2>
   <br/>
 
@@ -10,13 +10,6 @@
     <div class="field">
       <%= f.password_field :password, autocomplete: "off", placeholder: 'Password', class: "pkut-textbox" %>
     </div>
-
-    <%# if devise_mapping.rememberable? -%>
-      <!-- <div class="field"> -->
-        <%#= f.check_box :remember_me %>
-        <%#= f.label :remember_me %>
-      <!-- </div> -->
-    <%# end -%>
 
     <div class="actions">
       <%= f.submit "Login", class: "pkut-btn" %><br/>

@@ -1,0 +1,29 @@
+<div class="central-container form-offset disableEnterSubmit">
+  <h5 class="warning-text">This process must be completed by a parent or legal guardian.</h5>
+  <h2 class="header-text">Add Athletes</h2>
+  <p>Add the first and last name, birthday, and desired fast pass code <a><sup>(What is this?)</sup></a> of any athlete (including yourself) who is going to participate in lessons.</p>
+  <%= form_tag url: {controller: 'registrations'} do %>
+    <% token = 10.times.map {(('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a).sample}.join %>
+    <div class="athlete-container">
+      <div class="row athlete-input-info">
+        <div class="col-sm-6">
+          <%= text_field_tag "athlete[#{token}][name]", '', placeholder: 'Full Name', class: "pkut-textbox formatName" %>
+        </div>
+        <div class="col-sm-6">
+          <%= text_field_tag "athlete[#{token}][dob]", '', placeholder: 'MM/DD/YYYY', class: "pkut-textbox sm-textbox formatDOB" %><%= text_field_tag "athlete[#{token}][code]", '', placeholder: 'Code', class: "pkut-textbox xs-textbox formatPin" %><%= icon("times-circle-o", '', class: 'fa-2x kill-athlete hover-btn') %>
+        </div>
+      </div>
+    </div>
+    <%= render partial: 'dependents/reiterate_waiver' %>
+  <% end %>
+  <h4><span class="add-athlete-btn hover-btn"><%= icon('plus-square-o', '', class: 'fa-lg') %> Add Athlete</span></h4>
+  <a alt="..." class="pkut-btn pull-right populate-waiver-btn" data-toggle="modal" data-target="#waiver_modal">Sign Waiver</a><br/>
+  <%= render partial: 'dependents/waivers' %>
+  <%= render partial: 'layouts/error', locals: {message:
+"Sorry! It looks like we still need some information.
+Before continuing, please make sure you have downloaded, read, and understand the waiver.
+Next, make sure you have done the following:
+  1) Have added at least 1 athlete.
+  2)Have agreed to the Terms and Conditions.
+  3) Have signed your name."} %>
+</div>

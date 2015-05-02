@@ -5,6 +5,15 @@ Rails.application.routes.draw do
   get '404' => 'index#page_not_found'
   get '500' => 'index#page_not_found'
 
+  get '/register/step_2' => 'registrations#step_2', as: 'step_2'
+  get '/register/step_3' => 'registrations#step_3', as: 'step_3'
+  get '/register/step_4' => 'registrations#step_4', as: 'step_4'
+  get '/register/step_5' => 'registrations#step_5', as: 'step_5'
+  post '/register/step_2' => 'registrations#post_step_2'
+  post '/register/step_3' => 'registrations#post_step_3'
+  post '/register/step_4' => 'registrations#post_step_4'
+  post '/register/step_5' => 'registrations#post_step_5'
+
   get '/test' => 'index#index'
   post '/contact' => 'index#contact'
   post '/receive_sms' => 'index#receive_sms'
@@ -36,9 +45,7 @@ Rails.application.routes.draw do
   get '/waivers' => 'dependents#waivers', as: 'waivers'
   post '/waivers' => 'dependents#sign_waiver', as: 'sign_waiver'
 
-  devise_for :users do
-    get '/users/sign_out' => 'devise/sessions#destroy'
-  end
+  devise_for :users, :controllers => {:registrations => "users/registrations"}
 
   get 'calendar/index' => 'calendar#index', as: 'calendar'
   get 'calendar/draw' => 'calendar#draw', as: 'calendar_draw'

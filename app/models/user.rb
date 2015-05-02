@@ -37,7 +37,7 @@
 #  stats                  :string
 #  title                  :string
 #  nickname               :string
-#  email_subscription     :boolean          default(FALSE)
+#  email_subscription     :boolean          default(TRUE)
 #  stripe_id              :string
 #  date_of_birth          :datetime
 #  drivers_license_number :string
@@ -57,7 +57,7 @@ class User < ActiveRecord::Base
   after_create :create_blank_address
   after_create :send_welcome_email
   before_save :format_phone_number
-  before_save :split_name
+  # before_save :split_name
   before_destroy :clear_associations
 
   devise :database_authenticatable, :registerable, :confirmable,

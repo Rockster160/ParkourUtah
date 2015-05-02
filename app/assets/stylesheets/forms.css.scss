@@ -12,13 +12,18 @@
   width: 600px;
   border: 3px solid black;
   border-radius: 7px;
-  background: $pkut-background-primary;
+  background: $pkut-grey-white;
+}
+
+.text-field-height {
+  height: 30px;
+  margin: 10px 0;
 }
 
 .pkut-textbox {
   margin: 10px 0;
-  width: 300px;
-  max-width: 85%;
+  width: 350px;
+  max-width: 100%;
   padding: 4px 0 0 10px;
   height: 30px;
 
@@ -28,6 +33,27 @@
   border: 2px solid $pkut-grey-dark;
   border-radius: 7px;
   &:focus { outline: none; }
+  &.sm-textbox {
+    width: 155px;
+    &:not(:last-child) {
+      margin-right: 5px;
+    }
+  }
+  &.xs-textbox {
+    width: 85px;
+    &:not(:last-child) {
+      margin-right: 5px;
+    }
+  }
+}
+
+.pkut-link {
+  color: $pkut-red;
+  &:hover, &:active, &:focus { color: $pkut-red-dark; }
+}
+
+.kill-athlete {
+  color: $pkut-red;
 }
 
 .pkut-textarea {
@@ -56,7 +82,7 @@
   border-radius: 5px / 10px;
   box-shadow: 3px 3px 5px black;
 
-  color: $pkut-background-primary;
+  color: $pkut-grey-white;
   background-color: $pkut-red;
 
   &:hover, &:active, &:focus {
@@ -69,6 +95,7 @@
 }
 
 .main-btn {
+  transition: 0.3s;
   display: inline-block;
   border: 1px solid white;
   border-radius: 6px;
@@ -107,45 +134,27 @@
   box-shadow: none;
   border-color: transparent;
   background: orange;
-  
+
   &:hover {
     background-color: $pkut-red;
   }
 }
 
-.pin-entry {
-  letter-spacing: 40px;
-  padding-left: 50px;
-}
-.fancy-link {
-  color: white;
-  text-decoration: underline;
-}
-
-.money-btn {
-  color: green;
-  border-color: green;
-  background: rgba(160, 236, 80, 0.3);
-  &:hover {
-    background: rgba(160, 236, 80, 0.8);
-  }
-}
-
 .pkut-checkbox {
-  position: relative;
   width: 100%;
   label {
+    position: relative;
     margin-left: 20px;
     font-weight: normal;
     font-size: 1.2em;
     &:before {
       content: "";
-      left: 2px;
-      top: 5px;
       position: absolute;
+      top: -7px;
+      left: -35px;
       width: 15px;
       height: 15px;
-      border: 2px inset $pkut-grey-light;
+      border: 2px inset $pkut-grey;
       background: white;
     }
     &:hover {
@@ -155,8 +164,8 @@
         position: absolute;
         color: $pkut-grey-dark;
         font-size: 1.5em;
-        top: -6px;
-        left: 2px;
+        top: -18px;
+        left: -35px;
       }
     }
   }
@@ -170,8 +179,8 @@
       position: absolute;
       color: $pkut-red;
       font-size: 1.5em;
-      top: -8px;
-      left: 2px;
+      top: -20px;
+      left: -35px;
     }
   }
 }

@@ -37,6 +37,7 @@ gem 'twitter-typeahead-rails'
 gem 'jquery-tablesorter'
 gem 'maskedinput-rails'
 gem 'annotate', '~> 2.6.6'
+gem 'recaptcha', require: 'recaptcha/rails'
 # gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library

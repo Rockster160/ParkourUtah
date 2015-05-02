@@ -1,0 +1,53 @@
+<div class="central-container form-offset internal-center">
+<h5 class="warning-text">This process must be completed by a parent or legal guardian.</h5>
+<h2 class="header-text">Okay let's get some personal info</h2>
+<p>We just sent you off a welcome email letting you know your account has been created and giving you a copy of your password. Please fill out the personal info below and click next.</p>
+
+<%= form_tag url: {controller: 'registrations'} do %>
+<div class="row">
+  <div class="col-sm-6">
+    <div class="field">
+      <%= telephone_field_tag 'user[phone]', '', placeholder: 'Phone Number', class: "pkut-textbox formatPhoneNumber", required: true %>
+    </div>
+
+    <div class="text-field-height pkut-checkbox text-right">
+      <%= check_box_tag 'smsalert' %>
+      <%= label_tag 'smsalert' do %>
+        <p>Check the box for SMS updates <a><sup>(What is this?)</sup></a></p>
+      <% end %>
+    </div>
+
+    <div class="field">
+      <%= text_field_tag 'ec_contact[name]', '', placeholder: 'Emergency Contact Name', class: "pkut-textbox", required: true %>
+    </div>
+
+    <div class="field">
+      <%= telephone_field_tag 'ec_contact[number]', '', placeholder: 'Emergency Contact Phone #', class: "pkut-textbox", required: true %>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="field">
+      <%= text_field_tag 'address[line1]', '', placeholder: 'Address 1', class: "pkut-textbox", required: true %>
+    </div>
+
+    <div class="field">
+      <%= text_field_tag 'address[line2]', '', placeholder: 'Address 2', class: "pkut-textbox", required: true %>
+    </div>
+
+    <div class="field">
+      <%= text_field_tag 'address[city]', '', placeholder: 'City', class: "pkut-textbox", required: true %>
+    </div>
+
+    <div class="field">
+      <%= text_field_tag 'address[state]', '', placeholder: 'State', class: "pkut-textbox sm-textbox", required: true %>
+      <%= text_field_tag 'address[zip]', '', placeholder: 'Zip Code', class: "restrictNumeric pkut-textbox sm-textbox", required: true %>
+    </div>
+  </div>
+</div>
+
+
+  <div class="actions">
+    <%= submit_tag "Next", class: 'pkut-btn pull-right' %><br />
+  </div>
+<% end %>
+</div>

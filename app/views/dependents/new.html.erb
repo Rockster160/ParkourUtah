@@ -1,4 +1,4 @@
-<div class="fancy-box central-container form-offset">
+<div class="central-container form-offset">
   <%= form_tag url: {action: 'create'} do %>
     <h2 class="fancy-btn add-athlete-btn">Add Athlete</h2></br>
     <div class="athletes-holder">
@@ -6,7 +6,7 @@
       <label>Athlete's full name</label></br>
       <input type="text" class="pkut-textbox" name="athletes[<%= token %>][name]" placeholder="Sam Smith" required="true", autocomplete="off"/><br/>
       <label>Athlete's Birthdate</label></br>
-      <input type="text" class="pkut-textbox maskDOB" name="athletes[<%= token %>][dob]" placeholder="dd/mm/yyyy" required="true", autocomplete="off"/><br/>
+      <input type="text" class="pkut-textbox formatDOB" name="athletes[<%= token %>][dob]" placeholder="dd/mm/yyyy" required="true", autocomplete="off"/><br/>
     </div>
     <%= submit_tag "Submit", class: 'fancy-btn athleteVerify set-min-width-btn' %>
   <% end %>

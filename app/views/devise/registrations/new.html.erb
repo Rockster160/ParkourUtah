@@ -1,33 +1,25 @@
-<div class="central-container form-offset">
-<h2>Step 1</h2>
-<h4>Registration</h4>
+<div class="central-container form-offset internal-center">
+<h5 class="warning-text">This process must be completed by a parent or legal guardian.</h5>
+<h1 class="header-text">Get Started</h1>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= devise_error_messages! %>
-
   <div class="field">
-    <%= f.label :first_name, 'First and Last name, separated by a space.' %>
-    <%= f.text_field :first_name, autofocus: true, placeholder: 'Mary Smith', required: true, class: "pkut-textbox" %>
+    <%= f.email_field :email, placeholder: 'Email Address', class: "pkut-textbox" %>
   </div>
 
   <div class="field">
-    <%= f.email_field :email, placeholder: 'Email', class: "pkut-textbox" %>
-  </div>
-
-  <div class="field">
-    <% if @validatable %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
     <%= f.password_field :password, autocomplete: "off", placeholder: 'Password', class: "pkut-textbox" %>
   </div>
 
   <div class="field">
-    <%= f.password_field :password_confirmation, autocomplete: "off", placeholder: 'Confirm', class: "pkut-textbox" %>
+    <%= f.password_field :password_confirmation, autocomplete: "off", placeholder: 'Confirm Password', class: "pkut-textbox" %>
   </div>
 
+  <div class="center-block" style="width: 43%;"><%= recaptcha_tags %></div>
+
   <div class="actions">
-    <h3><%= f.submit "REGISTER", class: 'fancy-btn set-min-width-btn' %><br /></h3>
-    <h3><%= link_to "LOG IN", new_session_path(resource_name), class: 'fancy-btn' %><br /></h3>
+    <%= f.submit "Next", class: 'pkut-btn' %><br />
+    <%= link_to "Aready have an account?", new_session_path(resource_name), class: '' %>
   </div>
 <% end %>
 </div>

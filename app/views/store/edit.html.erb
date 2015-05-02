@@ -1,4 +1,4 @@
-<div class="fancy-box central-container form-offset">
+<div class="central-container form-offset">
   <h4><%= link_to "Back to Dashboard", dashboard_path, class: 'fancy-btn' %></h4><br/><br/>
   <%= form_for @item, url: {action: "update", id: @item.id} do |f| %>
     <%= f.text_field :title, placeholder: 'Title', required: true, autocomplete: "off", class: 'pkut-textbox' %><br/>

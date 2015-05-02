@@ -7,7 +7,7 @@
 .hover-btn:hover { cursor: pointer; }
 
 body {
-  background: $pkut-background-primary;
+  background: $pkut-grey-light;
 }
 
 a {
@@ -25,19 +25,40 @@ textarea {
   max-width: 95%;
 }
 
+.small-container {
+  width: 400px;
+  max-width: 95%;
+}
+
+.internal-center {
+  text-align: center;
+}
+
 .double {
   zoom: 2;
   transform: scale(2);
 }
 
+.modal-dialog {
+  padding: 10px;
+  background: white;
+  border: 2px solid $pkut-grey-dark;
+  border-radius: 7px;
+}
+
 .close-btn {
   float: right;
-  margin-right: 16px;
-  margin-top: 1px;
   color: $pkut-red;
   background: transparent;
   border: none;
+  text-shadow: 3px 3px 3px $pkut-grey;
   &:hover { color: $pkut-red-dark; }
+  &.contact-close {
+    margin-right: 16px;
+    margin-top: 1px;
+  }
+  &.error-close { padding-right: 165px; }
+  &.standard-close {  }
 }
 
 .restrictBio {

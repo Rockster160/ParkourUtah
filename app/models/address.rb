@@ -28,7 +28,10 @@ class Address < ActiveRecord::Base
   end
 
   def is_valid?
-    self.line1.length > 0
+    self.line1.length > 0 &&
+    self.city.length > 0 &&
+    self.state.length > 0 &&
+    self.zip.length > 0
   end
 
 end

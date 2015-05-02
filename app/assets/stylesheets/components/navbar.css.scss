@@ -2,7 +2,7 @@
 
 .navbar {
   transition: 1s;
-  background-color: $pkut-grey-light;
+  background-color: $pkut-grey-white;
   opacity: 0.8;
   border-bottom: 3px solid $pkut-grey;
 }
@@ -36,7 +36,7 @@
     2px 2px 3px #555;
   &:hover {
     text-decoration: none;
-    background-color: inherit;
+    background-color: $pkut-grey-white;
     color: darken($pkut-red, 10%);
   }
 }

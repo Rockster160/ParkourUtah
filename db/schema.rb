@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150411035028) do
+ActiveRecord::Schema.define(version: 20150502001644) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,7 +67,7 @@ ActiveRecord::Schema.define(version: 20150411035028) do
     t.string   "first_name"
     t.string   "middle_name"
     t.string   "last_name"
-    t.datetime "date_of_birth"
+    t.string   "date_of_birth"
   end
 
   add_index "dependents", ["user_id"], name: "index_dependents_on_user_id", using: :btree
@@ -75,6 +75,7 @@ ActiveRecord::Schema.define(version: 20150411035028) do
   create_table "emergency_contacts", force: :cascade do |t|
     t.integer "user_id"
     t.string  "number"
+    t.string  "name"
   end
 
   add_index "emergency_contacts", ["user_id"], name: "index_emergency_contacts_on_user_id", using: :btree

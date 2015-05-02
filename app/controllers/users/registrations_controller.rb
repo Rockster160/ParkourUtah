@@ -3,19 +3,22 @@ class Users::RegistrationsController < Devise::RegistrationsController
 # before_filter :configure_account_update_params, only: [:update]
 
   # GET /resource/sign_up
-  # def new
-  #   super
-  # end
+  def new
+    super
+  end
 
   # POST /resource
-  # def create
-  #   super
-  # end
+  def create
+    if verify_recaptcha
+      super
+    else
+      redirect_to :back, alert: "You failed the bot test. Make sure to wait for the green checkmark to appear."
+    end
+  end
 
   # GET /resource/edit
   def edit
     super
-    @text = "Hello"
   end
 
   # PUT /resource

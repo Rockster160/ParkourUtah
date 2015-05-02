@@ -37,7 +37,7 @@
 #  stats                  :string
 #  title                  :string
 #  nickname               :string
-#  email_subscription     :boolean          default(FALSE)
+#  email_subscription     :boolean          default(TRUE)
 #  stripe_id              :string
 #  date_of_birth          :datetime
 #  drivers_license_number :string

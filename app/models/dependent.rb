@@ -17,7 +17,7 @@
 #  first_name                 :string
 #  middle_name                :string
 #  last_name                  :string
-#  date_of_birth              :datetime
+#  date_of_birth              :string
 #
 
 class Dependent < ActiveRecord::Base
@@ -36,10 +36,10 @@ class Dependent < ActiveRecord::Base
   before_save :fix_attributes
 
   def self.find_or_create_by_name_and_dob(param, user)
-    name = param[1]["name"]
-    dob = param[1]["dob"]
+    name = param["name"]
+    dob = param["dob"]
     athlete = Dependent.where(
-                full_name:name.squish.split(' ').map(&:capitalize).join(' '),
+                full_name: name.squish.split(' ').map(&:capitalize).join(' '),
                 user_id: user.id
     ).first
     if athlete.nil?
@@ -117,23 +117,7 @@ class Dependent < ActiveRecord::Base
   end
 
   def self.format_dob(dob)
-    if dob.class == String
-      return false unless dob
-      if dob.class == String
-        day, month, year = dob.split("/").map(&:to_i)
-        if (day <= 31 && month <= 12 && year <= DateTime.current.year)
-          begin
-            DateTime.strptime(dob, '%d/%m/%Y')
-          rescue
-            false
-          end
-        else
-          false
-        end
-      end
-    else
-      dob
-    end
+    dob
   end
 
 end

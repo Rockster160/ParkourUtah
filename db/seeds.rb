@@ -283,7 +283,7 @@ puts "Created 1on1 event."
   # Friday
   # Event.create(
   #   date: DateTime.new(2015, 1, 2, 16, 30) + (t.weeks),
-  cost: 1200,
+  # cost: 1200,
   #   host: 'Ryan Sannar'
   #   Draper fundamentals',
   #   description: 'Our second bi-weekly Sandy fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher,

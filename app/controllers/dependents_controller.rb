@@ -8,7 +8,7 @@
   def create
     if params[:athletes]
       potentials = params[:athletes].count
-      athletes = params[:athletes].map { |param| Dependent.find_or_create_by_name_and_dob(param, current_user) }
+      athletes = params[:athletes].map { |param| Dependent.find_or_create_by_name_and_dob(param[1], current_user) }
       if potentials == athletes.compact.count
         flash[:notice] = "Success! Now fill out a waiver to get the Athlete Access Codes."
       else
@@ -35,59 +35,6 @@
     else
       flash[:alert] = "The pins did not match. No changes were made."
       redirect_to :back
-    end
-  end
-
-  def waiver
-    @waiver = Waiver.new
-  end
-
-  def waivers
-    @athletes = Dependent.where(user_id: current_user.id).select { |athlete| !(athlete.waiver) || !(athlete.waiver.is_active?) }
-  end
-
-  def sign_waiver
-    athlete_ids = params[:athletes].map do |id, code|
-      athlete = Dependent.find(id)
-      athlete.update(athlete_pin: code)
-      old_waiver = athlete.waiver
-      update = false
-      if old_waiver
-        if old_waiver.expires_soon?
-          create_waiver("update", athlete.id)
-          update = true
-        end
-      else
-        create_waiver("create", athlete.id)
-        update = true
-      end
-      update == true ? id : nil
-    end
-    ::NewAthleteInfoMailerWorker.perform_async(athlete_ids.compact)
-    ::NewAthleteNotificationMailerWorker.perform_async("FIXME")
-    redirect_to edit_user_registration_path
-  end
-
-  def create_waiver(verb, dependent_id)
-    athlete = Dependent.find(dependent_id)
-    new_waiver = Waiver.new(
-                  signed_for: athlete.full_name,
-                  signed_by: params[:signed_by],
-                  signed: true,
-                  dependent_id: athlete.id
-    )
-    if new_waiver.save
-      flash[:notice] = case verb
-      when "create"
-        athlete.generate_pin
-        "Congratulations! Enjoy a class on us for your new athletes. An email has been sent to you containing the ID and Pin used to attend class."
-      when "update" then "Thanks! Your waiver has been updated."
-      else "Waiver created."
-      end
-      athlete
-    else
-      flash[:alert] = new_waiver.errors.messages.values.first.first
-      nil
     end
   end
 
