@@ -1,5 +1,6 @@
 <div class="central-container form-offset disableEnterSubmit">
-  <h5 class="warning-text">This process must be completed by a parent or legal guardian.</h5>
+  <%= render partial: 'registrations/progress_bar', locals: {step: 3} %>
+  <h6 class="warning-text text-center">This process must be completed by a parent or legal guardian.</h6>
   <h2 class="header-text">Add Athletes</h2>
   <p>Add the first and last name, birthday, and desired fast pass code <a><sup>(What is this?)</sup></a> of any athlete (including yourself) who is going to participate in lessons.</p>
   <%= form_tag url: {controller: 'registrations'} do %>
@@ -15,10 +16,10 @@
       </div>
     </div>
     <%= render partial: 'dependents/reiterate_waiver' %>
+    <%= render partial: 'dependents/waivers' %>
   <% end %>
   <h4><span class="add-athlete-btn hover-btn"><%= icon('plus-square-o', '', class: 'fa-lg') %> Add Athlete</span></h4>
   <a alt="..." class="pkut-btn pull-right populate-waiver-btn" data-toggle="modal" data-target="#waiver_modal">Sign Waiver</a><br/>
-  <%= render partial: 'dependents/waivers' %>
   <%= render partial: 'layouts/error', locals: {message:
 "Sorry! It looks like we still need some information.
 Before continuing, please make sure you have downloaded, read, and understand the waiver.

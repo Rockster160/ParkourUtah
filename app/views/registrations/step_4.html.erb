@@ -1,0 +1,91 @@
+<%= render partial: 'registrations/progress_bar', locals: {step: 4} %>
+<div class="central-container form-offset disableEnterSubmit">
+  <h6 class="warning-text text-center">This process must be completed by a parent or legal guardian.</h6>
+  <h2 class="header-text">Review</h2>
+  <p>Let's make sure all of the information below is correct. If it is; click <span class="pkut-header">confirm</span> to create your account. An activation email will be sent off to you following the confirmation. If the information is NOT correct then click on the incorrect information and a pop up box will allow you to update it.</p>
+  <p>You <strong>MUST</strong> click on the empty checkmarts next to each athlete confirming that the waiver you signed on the previous step had their name on it.</p>
+  <%= form_tag do %>
+    <div class="row">
+      <div class="col-xs-4">
+        <span>Email Address:</span>
+      </div>
+      <div class="col-xs-8">
+        <span class="pkut-link title open-review-modal"><%= current_user.email %></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-4">
+        <span>Phone Number:</span>
+      </div>
+      <div class="col-xs-8">
+        <span class="pkut-link title open-review-modal"><%= current_user.show_phone_number %></span>
+      </div>
+    </div>
+    <br/>
+    <div class="row">
+      <div class="col-xs-4">
+        <span>Emergency Contact Name:</span>
+      </div>
+      <div class="col-xs-8">
+        <span class="pkut-link title open-review-modal"><%= current_user.emergency_contacts.last.name %></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-4">
+        <span>Emergency Contact Number:</span>
+      </div>
+      <div class="col-xs-8">
+        <span class="pkut-link title open-review-modal"><%= current_user.emergency_contacts.last.show_phone_number %></span>
+      </div>
+    </div>
+    <br/>
+    <div class="row">
+      <div class="col-xs-4">
+        <span>Address:</span>
+      </div>
+      <div class="col-xs-8">
+        <span class="pkut-link title open-review-modal"><%= current_user.show_address("%l1") %><br/></span>
+        <span class="pkut-link title open-review-modal"><%= current_user.show_address("%l2") %><br/></span>
+        <span class="pkut-link title open-review-modal"><%= current_user.show_address("%c, %s %z") %><br/></span>
+      </div>
+    </div>
+    <br/>
+    <div class="row">
+      <div class="col-xs-3">
+        <span>Athletes:</span>
+      </div>
+      <div class="col-xs-9">
+        <div class="row">
+          <div class="col-xs-3">Athlete Name</div>
+          <div class="col-xs-3">Birthday</div>
+          <div class="col-xs-2">Code</div>
+          <div class="col-xs-4">Read and Signed Waiver</div>
+        </div>
+        <% @athletes.each do |athlete| %>
+          <div class="row">
+            <div class="col-xs-3">
+              <span class="pkut-link title open-review-modal"><%= athlete.full_name %></span>
+            </div>
+            <div class="col-xs-3">
+              <span class="pkut-link title open-review-modal"><%= athlete.date_of_birth %></span>
+            </div>
+            <div class="col-xs-2">
+              <span class="pkut-link title open-review-modal"><%= athlete.athlete_pin %></span>
+            </div>
+            <div class="col-xs-4">
+              <!-- $('#agreed_61').is(':required') -->
+              <div class="pkut-checkbox text-center">
+                <%= check_box_tag "agreed[#{athlete.id}]", '', false, class: "customRequired" %>
+                <%= label_tag "agreed[#{athlete.id}]", '' %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="internal-center">
+      <%= submit_tag "Confirm", class: 'pkut-btn' %>
+    </div>
+  <% end %>
+</div>
+<%= render partial: 'registrations/review_4' %>

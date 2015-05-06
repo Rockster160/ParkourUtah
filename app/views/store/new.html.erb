@@ -4,19 +4,19 @@
     <table>
       <div class="field">
         Title<br/>
-        <%= f.text_field :title, placeholder: 'Green Parachute Pants', required: true, class: 'pkut-textbox' %>
+        <%= f.text_field :title, placeholder: 'Green Parachute Pants', class: 'customRequired pkut-textbox' %>
       </div>
       <div class="field">
         Cost<br/>
-        <%= f.number_field :cost, placeholder: '3000.99', required: true, class: 'pkut-textbox' %>
+        <%= f.number_field :cost, placeholder: '3000.99', class: 'customRequired pkut-textbox' %>
       </div>
       <!-- <div class="field">
         Sizes, comma separated
-        <%#= f.text_field :size, placeholder: 'S, M, L / 38.5, 39, 43', required: true, class: 'pkut-textbox' %>
+        <%#= f.text_field :size, placeholder: 'S, M, L / 38.5, 39, 43', class: 'customRequired pkut-textbox' %>
       </div> -->
       <div class="field">
         Description<br/>
-        <%= f.text_area :description, placeholder: 'Marvelous skills sewn with godly thread.', required: true, class: 'fancy-textarea' %>
+        <%= f.text_area :description, placeholder: 'Marvelous skills sewn with godly thread.', class: 'customRequired fancy-textarea' %>
       </div>
       <div class="field">
         Class or Physical Item<br/>
@@ -38,3 +38,4 @@
     <%= submit_tag "Submit", class: "btn btn-success" %>
   <% end %>
 </div>
+

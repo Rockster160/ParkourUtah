@@ -1,0 +1,28 @@
+<div class="central-container form-offset disableEnterSubmit">
+  <%= render partial: 'registrations/progress_bar', locals: {step: 5} %>
+  <h2 class="header-text">Registration Complete!</h2>
+  <p>Awesome! Your account is all set up. A confirmation email containing your individal <span class="pkut-header">ATHLETE NUMBER(S)</span> has been sent out. These numbers are used along with your <span class="pkut-header">PIN</span> to sign you in quickly and easily at class. The email sent also contains a guide to get started, so make sure to read over it.</p>
+  <p>We're gonna go ahead and get you (each athlete listed) set up with a FREE class! Check out your profile page to see those credits sitting there waiting for you to use!</p>
+  <p>To see where classes are offered, learn how class works or purchase credits to attend more classes, click the links below.</p>
+
+  <div class="row">
+    <div class="col-sm-5">
+      <%= image_tag("placeholder_thumbnail.png", class: 'img-responsive') %>
+    </div>
+    <div class="col-sm-5">
+      <%= image_tag("placeholder_thumbnail2.png", class: 'img-responsive') %>
+    </div>
+    <br class="visible-xs"/>
+    <div class="col-sm-2">
+      <div class="col-sm-12 col-xs-6">
+        <%= link_to 'Store', store_path, class: "pkut-btn" %>
+      </div>
+      <br class="hidden-xs"/>
+      <br class="hidden-xs"/>
+      <br class="hidden-xs"/>
+      <div class="col-sm-12 col-xs-6">
+        <%= link_to 'Schedule', calendar_show_path("all"), class: "pkut-btn" %>
+      </div>
+    </div>
+  </div>
+</div>

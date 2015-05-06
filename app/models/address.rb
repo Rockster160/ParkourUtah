@@ -34,4 +34,13 @@ class Address < ActiveRecord::Base
     self.zip.length > 0
   end
 
+  def show_address(str)
+    str.gsub!("%l1", self.line1)
+    str.gsub!("%l2", self.line2)
+    str.gsub!("%c", self.city)
+    str.gsub!("%s", self.state)
+    str.gsub!("%z", self.zip)
+    str
+  end
+
 end

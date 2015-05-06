@@ -8,25 +8,38 @@ class RegistrationsController < ApplicationController
   end
 
   def step_4
+    @athletes = current_user.dependents
   end
 
   def step_5
+    current_user.update(registration_complete: true)
   end
 
   def post_step_2
+    update_self = current_user.update(user_params)
     notification = update_notifications
     address = current_user.address.update(address_params)
     ec_contact = current_user.emergency_contacts.new(ec_contact_params)
     contact = ec_contact.save!
-    if notification && address && contact
+    if update_self && notification && address && contact
       redirect_to step_3_path, notice: "Success!"
     else
       redirect_to :back, alert: "Something went wrong."
     end
   end
 
+  def user_params
+    params[:user][:phone_number] = params[:user][:phone]
+    params.require(:user).permit(:phone_number, :email)
+  end
+
   def update_notifications
-    return true
+    new_value = params[:smsalert].present? ? true : false
+    current_user.notifications.update_attributes(
+      text_class_reminder: new_value,
+      text_low_credits: new_value,
+      text_waiver_expiring: new_value
+    )
   end
 
   def address_params
@@ -40,12 +53,17 @@ class RegistrationsController < ApplicationController
   def post_step_3
     valid = []
     params[:athlete].each do |athlete|
-      if validate_attributes(athlete[1])
-        valid << current_user.dependents.create(
+      if validate_athlete_attributes(athlete[1])
+        new_athlete = current_user.dependents.create(
           full_name: athlete[1][:name],
-          date_of_birth: Dependent.format_dob(athlete[1][:dob]),
-          athlete_pin: athlete[1][:pin]
+          date_of_birth: athlete[1][:dob],
+          athlete_pin: athlete[1][:code]
         )
+        new_athlete.waivers.create(
+          signed_for: new_athlete.full_name,
+          signed_by: params[:signed_by],
+        )
+        valid << new_athlete
       end
     end
     if valid.count == 1
@@ -57,7 +75,7 @@ class RegistrationsController < ApplicationController
     end
   end
 
-  def validate_attributes(athlete)
+  def validate_athlete_attributes(athlete)
     all_good = true
     all_good = false unless athlete[:name].length > 0
     all_good = false unless athlete[:dob].length == 10
@@ -65,67 +83,57 @@ class RegistrationsController < ApplicationController
     all_good
   end
 
-  def create_athletes
-
-  end
-
-  def sign_waiver
-    athlete_ids = params[:athletes].map do |id, code|
-      athlete = Dependent.find(id)
-      athlete.update(athlete_pin: code)
-      old_waiver = athlete.waiver
-      update = false
-      if old_waiver
-        if old_waiver.expires_soon?
-          create_waiver("update", athlete.id)
-          update = true
-        end
-      else
-        create_waiver("create", athlete.id)
-        update = true
-      end
-      update == true ? id : nil
-    end
-    ::NewAthleteInfoMailerWorker.perform_async(athlete_ids.compact)
-    ::NewAthleteNotificationMailerWorker.perform_async("FIXME")
-    redirect_to edit_user_registration_path
-  end
-
-  def create_waiver(verb, dependent_id)
-    athlete = Dependent.find(dependent_id)
-    new_waiver = Waiver.new(
-                  signed_for: athlete.full_name,
-                  signed_by: params[:signed_by],
-                  signed: true,
-                  dependent_id: athlete.id
-    )
-    if new_waiver.save
-      flash[:notice] = case verb
-      when "create"
-        athlete.generate_pin
-        "Congratulations! Enjoy a class on us for your new athletes. An email has been sent to you containing the ID and Pin used to attend class."
-      when "update" then "Thanks! Your waiver has been updated."
-      else "Waiver created."
-      end
-      athlete
+  def fix_step_4
+    update_self = current_user.update(user_params)
+    notification = update_notifications
+    address = current_user.address.update(address_params)
+    ec_contact = current_user.emergency_contacts.new(ec_contact_params)
+    contact = ec_contact.save!
+    athletes = update_athletes
+    if update_self && notification && address && contact && update_athletes
+      redirect_to step_4_path, notice: "We've updated the requested changes."
     else
-      flash[:alert] = new_waiver.errors.messages.values.first.first
-      nil
+      redirect_to :back, alert: "Something went wrong."
     end
+  end
+
+  def update_athletes
+    valid = true
+    params[:athlete].each do |athlete_id, values|
+      valid = Dependent.find(athlete_id).update(
+        full_name: values[:name],
+        date_of_birth: values[:dob],
+        athlete_pin: values[:code]
+      )
+    end
+    valid
   end
 
   def post_step_4
-    redirect_to :back
-  end
-
-  def post_step_5
-    redirect_to :back
+    approved = []
+    params[:agreed].each do |id, vals|
+      athlete = Dependent.find(id)
+      if athlete.sign_waiver!
+        approved << athlete.id
+        athlete.generate_pin
+      end
+    end
+    ::NewAthleteInfoMailerWorker.perform_async(approved.compact)
+    ::NewAthleteNotificationMailerWorker.perform_async("FIXME")
+    redirect_to step_5_path
   end
 
   private
 
     def verify_user_signed_in
-      redirect_to root_path, alert: "Must be signed in to do that." unless current_user
+      unless current_user
+        redirect_to root_path, alert: "Must be signed in to do that."
+      else
+        if current_user.registration_complete?
+          redirect_to edit_user_registration_path
+        end
+      end
+
     end
 
 end

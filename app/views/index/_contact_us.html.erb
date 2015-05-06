@@ -4,7 +4,7 @@
   <%= form_tag "/contact" do %>
     <%= text_field_tag :name, '', class: 'pkut-textbox', placeholder: 'Your Name' %><br/>
     <%= text_field_tag :email, '', class: 'pkut-textbox', placeholder: 'Email' %><br/>
-    <%= telephone_field_tag :phone, '', class: 'pkut-textbox formatPhoneNumber restrictNumeric', placeholder: 'Phone', required: true %> (Required)<br/>
+    <%= telephone_field_tag :phone, '', class: 'pkut-textbox formatPhoneNumber customRequired', placeholder: 'Phone' %> (Required)<br/>
     <%= text_area_tag :comment, '', class: 'pkut-textarea', maxlength: 600, placeholder: "Comments, questions, inquiries, interrogations, conversations, queries, chatter, information annex, whatever you need to know type it here and we'll get back to you A.S.A.P.P. (As Soon As Parkour Possible)" %>
     <%= submit_tag "Send", class: "pkut-btn pull-right" %>
   <% end %>

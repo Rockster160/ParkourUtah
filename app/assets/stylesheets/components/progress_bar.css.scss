@@ -1,0 +1,170 @@
+$progress-bar-height-lg: 40px;
+$progress-bar-height-md: 32px;
+$progress-bar-height-sm: 20px;
+$progress-bar-color: $pkut-grey;
+
+.progress-bar {
+  font-family: 'MicroExtendFLF', Arial, sans-serif;
+  font-size: 23px;
+  text-shadow: 3px 3px 3px darken($pkut-grey, 10%);
+  color: $pkut-grey-dark;
+}
+.progress-bar-offset { height: 100px; }
+.progress-bar-background {
+  position: absolute;
+  z-index: -1;
+
+  top: 100px;
+  left: -5px;
+
+  width: 105vw;
+  height: $progress-bar-height-lg;
+
+  background: $progress-bar-color;
+  box-shadow: 0 3px 7px $pkut-grey;
+  i.fa {
+    position: relative;
+    top: 28px;
+    font-size: 115px;
+  }
+  span {
+    &.step-passed {
+      color: $pkut-grey;
+      i.fa {
+        color: $pkut-red;
+        text-shadow: none;
+      }
+      ::after {
+        content: '';
+        z-index: -1;
+        position: absolute;
+        background: $pkut-red;
+        top: $progress-bar-height-lg;
+        right: 30px;
+
+        width: 100vw;
+        height: $progress-bar-height-lg;
+      }
+    }
+    &.step-current {
+      color: $pkut-red;
+      i.fa { color: $pkut-grey-dark; }
+      ::after {
+        content: '';
+        z-index: -1;
+        position: absolute;
+        top: $progress-bar-height-lg;
+        right: 175px;
+        border-left: 20px solid $pkut-red;
+        border-top: $progress-bar-height-lg/2 solid transparent;
+        border-bottom: $progress-bar-height-lg/2 solid transparent;
+
+        width: 0;
+      }
+    }
+    position: relative;
+    top: -68px;
+  }
+}
+
+@media (max-width: 900px) {
+  .progress-bar { font-size: 15px; }
+  .progress-bar-offset { height: 80px; }
+  .progress-bar-background {
+    height: $progress-bar-height-md;
+    top: 80px;
+    span {
+      top: -55px;
+      &.step-passed {
+        ::after {
+          top: $progress-bar-height-md;
+          height: $progress-bar-height-md;
+          right: 20px;
+        }
+      }
+      &.step-current {
+        ::after {
+          top: $progress-bar-height-md;
+          right: 116px;
+          border-top: $progress-bar-height-md/2 solid transparent;
+          border-bottom: $progress-bar-height-md/2 solid transparent;
+
+          width: 0;
+        }
+      }
+    }
+    i.fa {
+      top: 24px;
+      font-size: 90px;
+    }
+  }
+}
+@media (max-width: 600px) {
+  .progress-bar { font-size: 10px; }
+  .progress-bar-offset { height: 80px; }
+  .progress-bar-background {
+    height: $progress-bar-height-md;
+    top: 80px;
+    span {
+      top: -55px;
+      &.step-passed {
+        ::after {
+          top: $progress-bar-height-md;
+          height: $progress-bar-height-md;
+        }
+      }
+      &.step-current {
+        ::after {
+          top: $progress-bar-height-md;
+          right: 90px;
+          border-top: $progress-bar-height-md/2 solid transparent;
+          border-bottom: $progress-bar-height-md/2 solid transparent;
+
+          width: 0;
+        }
+      }
+    }
+    i.fa {
+      top: 24px;
+      font-size: 90px;
+    }
+  }
+}
+@media (max-width: 400px) {
+  .progress-bar { font-size: 8px; }
+  .progress-bar-offset { height: 40px; }
+  .progress-bar-background {
+    height: $progress-bar-height-sm;;
+    top: 81px;
+    span {
+      top: -37px;
+      &.step-passed {
+        ::after {
+          top: $progress-bar-height-sm;
+          height: $progress-bar-height-sm;
+          right: 13px;
+        }
+      }
+      &.step-current {
+        ::after {
+          top: $progress-bar-height-sm;
+          right: 69px;
+          border-left: 10px solid $pkut-red;
+          border-top: $progress-bar-height-sm/2 solid transparent;
+          border-bottom: $progress-bar-height-sm/2 solid transparent;
+
+          width: 0;
+        }
+      }
+    }
+    i.fa {
+      top: 16px;
+      font-size: 60px;
+    }
+  }
+}
+
+.icon-hidden {
+  color: transparent !important;
+  text-shadow: none !important;
+}

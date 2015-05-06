@@ -42,6 +42,7 @@
 #  date_of_birth          :datetime
 #  drivers_license_number :string
 #  drivers_license_state  :string
+#  registration_complete  :boolean          default(FALSE)
 #
 
 require 'test_helper'

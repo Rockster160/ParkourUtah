@@ -35,6 +35,11 @@ class Waiver < ActiveRecord::Base
     end
   end
 
+  def sign!
+    self.signed = true
+    self.save!
+  end
+
   def signed_false
     self.signed = false
   end

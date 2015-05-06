@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   post '/register/step_2' => 'registrations#post_step_2'
   post '/register/step_3' => 'registrations#post_step_3'
   post '/register/step_4' => 'registrations#post_step_4'
+  post '/register/step_4/fix' => 'registrations#fix_step_4', as: 'fix_review_page'
   post '/register/step_5' => 'registrations#post_step_5'
 
   get '/test' => 'index#index'

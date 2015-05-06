@@ -59,6 +59,12 @@ class Dependent < ActiveRecord::Base
     self.waiver.signed?
   end
 
+  def sign_waiver!
+    return false unless self.waiver
+    return true if signed_waiver?
+    self.waiver.sign!
+  end
+
   def padded_pin
     str = ""
     (4 - self.athlete_id.to_s.length).times {str << "0"}

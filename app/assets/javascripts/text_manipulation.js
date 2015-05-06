@@ -1,5 +1,29 @@
 var ready = function() {
 
+  $(':submit').click(function(e) {
+    var form = $(this).closest('form')[0];
+    var invalid = [];
+    $(form).find('.customRequired').each(function(e) {
+      if ($(this).attr('type') == "checkbox") {
+        if (!(this.checked)) {
+          invalid.push(false);
+        }
+      } else {
+        if (!($(this).val().length > 0)) {
+          invalid.push(false);
+        }
+      }
+    });
+    if (invalid.length > 0) {
+      $('.modal').modal('hide');
+      if (invalid.length == 1) {$('#number_of_errors_container').html("field.")}
+      if (invalid.length > 1) {$('#number_of_errors_container').html(invalid.length + " fields.")}
+      $('#incomplete_error_modal').modal('show');
+      e.preventDefault;
+      return false
+    }
+  })
+
   $('.restrictNumeric').keypress(function(e) {
     if (e.which >= 48 && e.which <= 57) {
       return e

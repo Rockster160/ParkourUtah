@@ -6,6 +6,10 @@ h1, h2, h3, h4, h5, h6 {
   text-decoration: underline;
 }
 
+.small-text {
+  font-size: 12px;
+}
+
 p {
   font-size: 14px;
   font-family: 'Young', Arial, sans-serif;
@@ -35,4 +39,14 @@ p {
 
 .attention-text {
   text-transform: uppercase;
+}
+
+.pkut-link {
+  color: $pkut-red;
+  &:hover { cursor: pointer; }
+  &:hover, &:active, &:focus { color: $pkut-red-dark; }
+}
+
+.kill-athlete {
+  color: $pkut-red;
 }

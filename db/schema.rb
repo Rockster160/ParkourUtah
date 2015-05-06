@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150502001644) do
+ActiveRecord::Schema.define(version: 20150505154819) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -115,6 +115,18 @@ ActiveRecord::Schema.define(version: 20150502001644) do
     t.integer  "credits",              default: 0
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.integer "user_id"
+    t.boolean "email_class_reminder",  default: false
+    t.boolean "text_class_reminder",   default: false
+    t.boolean "email_low_credits",     default: false
+    t.boolean "text_low_credits",      default: false
+    t.boolean "email_waiver_expiring", default: false
+    t.boolean "text_waiver_expiring",  default: false
+  end
+
+  add_index "notifications", ["user_id"], name: "index_notifications_on_user_id", using: :btree
+
   create_table "redemption_keys", force: :cascade do |t|
     t.string   "key"
     t.string   "redemption"
@@ -146,14 +158,14 @@ ActiveRecord::Schema.define(version: 20150502001644) do
   add_index "transactions", ["cart_id"], name: "index_transactions_on_cart_id", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "",   null: false
-    t.string   "first_name",             default: "",   null: false
-    t.string   "last_name",              default: "",   null: false
-    t.string   "encrypted_password",     default: "",   null: false
+    t.string   "email",                  default: "",    null: false
+    t.string   "first_name",             default: "",    null: false
+    t.string   "last_name",              default: "",    null: false
+    t.string   "encrypted_password",     default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,    null: false
+    t.integer  "sign_in_count",          default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
@@ -185,6 +197,7 @@ ActiveRecord::Schema.define(version: 20150502001644) do
     t.datetime "date_of_birth"
     t.string   "drivers_license_number"
     t.string   "drivers_license_state"
+    t.boolean  "registration_complete",  default: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
@@ -204,5 +217,6 @@ ActiveRecord::Schema.define(version: 20150502001644) do
 
   add_foreign_key "carts", "users"
   add_foreign_key "emergency_contacts", "users"
+  add_foreign_key "notifications", "users"
   add_foreign_key "transactions", "carts"
 end

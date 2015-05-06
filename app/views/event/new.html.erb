@@ -6,35 +6,35 @@
     <span class="date-placeholder">--/--/----</span><br/>
     <h5>Example text:</h5>
     <%= f.label :title, 'Hope to see you at our {city} {class} class today at {time}!' %><br/>
-    <%#= f.text_field :title, placeholder: 'Title', required: true, class: 'pkut-textbox' %><br/>
+    <%#= f.text_field :title, placeholder: 'Title', class: 'customRequired pkut-textbox' %><br/>
     <%= f.label :class_name %><br/>
-    <%= f.text_field :class_name, placeholder: 'Class', required: true, class: 'pkut-textbox' %><br/>
+    <%= f.text_field :class_name, placeholder: 'Class', class: 'customRequired pkut-textbox' %><br/>
     <%= f.label :address %><br/>
-    <%= f.text_field :address, placeholder: 'Full Address', required: true, class: 'pkut-textbox' %><br/>
+    <%= f.text_field :address, placeholder: 'Full Address', class: 'customRequired pkut-textbox' %><br/>
     <%= f.label :city %><br/>
-    <%= f.text_field :city, placeholder: 'City' , required: true, class: 'pkut-textbox' %><br/>
+    <%= f.text_field :city, placeholder: 'City' , class: 'customRequired pkut-textbox' %><br/>
     <%= f.label :zip %><br/>
-    <%= f.text_field :zip, placeholder: 'Zip' , required: true, class: 'pkut-textbox' %><br/>
+    <%= f.text_field :zip, placeholder: 'Zip' , class: 'customRequired pkut-textbox' %><br/>
     <%= f.label :state %><br/>
-    <%= f.text_field :state, value: 'Utah' , required: true, class: 'pkut-textbox' %><br/>
+    <%= f.text_field :state, value: 'Utah' , class: 'customRequired pkut-textbox' %><br/>
     <!-- Searchable -->
     <%= f.label :description, 'A description of the event' %><br/>
-    <%= f.text_area :description, placeholder: 'Our weekly Draper fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher, Justin Spencer, via text or call 801-580-9274.', required: true, class: 'fancy-textarea' %><br/>
+    <%= f.text_area :description, placeholder: 'Our weekly Draper fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher, Justin Spencer, via text or call 801-580-9274.', class: 'customRequired fancy-textarea' %><br/>
     <%= f.label :location_instructions, "Special instructions for specifically getting to the area. (Not required)" %><br/>
     <%= f.text_area :location_instructions, placeholder: 'Get off the freeway at Provo Center Street, go straight through the first light, take the left fork, take your next two rights then follow the road to the end.', class: 'fancy-textarea' %><br/>
     <%= f.label :host %><br/>
-    <%= f.text_field :host, placeholder: 'Host', required: true, class: 'pkut-textbox' %><br/>
+    <%= f.text_field :host, placeholder: 'Host', class: 'customRequired pkut-textbox' %><br/>
     <%= f.label :cost %><br/>
     <%= f.number_field :cost_in_dollars, placeholder: 'Cost', size: 2, class: 'pkut-textbox' %><br/>
     <%= f.label :time %><br/>
-    <input type="number" placeholder="Hr" name="time[hour]" min="1" max="12" required="required" style="color: black;">:
-    <input type="number" placeholder="Min" name="time[minute]" value="00" min="0" max="59" required="required" style="color: black;">
+    <input type="number" placeholder="Hr" name="time[hour]" min="1" max="12" class="customRequired" style="color: black;">:
+    <input type="number" placeholder="Min" name="time[minute]" value="00" min="0" max="59" class="customRequired" style="color: black;">
     <input type="radio" name="time[meridiam]" value="AM"> AM
     <input type="radio" name="time[meridiam]" checked="checked" value="PM"> PM<br/>
     <h4>This will copy the event every week on the same day for 1 year.</h4>
     <%= label_tag :repeat, "Repeat Weekly?" %>
     <%= check_box_tag :repeat %>
-    <%= hidden_field_tag :date, "", class: "datepicker-placeholder", required: true %>
+    <%= hidden_field_tag :date, "", class: "datepicker-placeholder customRequired" %>
     <br/>
     <%= submit_tag "√", class: "btn btn-success" %>
   <% end %>

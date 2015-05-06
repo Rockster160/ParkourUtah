@@ -17,6 +17,7 @@ var ready = function() {
 
 
 };
+
 $('.scrollTop').ready(function() {
   $('body, html').animate({scrollTop:0},300);
 });

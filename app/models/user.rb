@@ -42,11 +42,13 @@
 #  date_of_birth          :datetime
 #  drivers_license_number :string
 #  drivers_license_state  :string
+#  registration_complete  :boolean          default(FALSE)
 #
 
 class User < ActiveRecord::Base
 
   has_one :address, dependent: :destroy
+  has_one :notifications, dependent: :destroy
   has_many :carts, dependent: :destroy
   has_many :dependents, dependent: :destroy
   has_many :transactions, through: :cart
@@ -55,6 +57,7 @@ class User < ActiveRecord::Base
 
   after_create :assign_cart
   after_create :create_blank_address
+  after_create :create_default_notifications
   after_create :send_welcome_email
   before_save :format_phone_number
   # before_save :split_name
@@ -81,8 +84,13 @@ class User < ActiveRecord::Base
 
   validate :valid_phone_number
 
-  def self.[](id)
-    self.find(id)
+  def self.[](id) #User[4]
+    find(id)
+  end
+
+  def self.every(&block)
+    return self.all.to_enum unless block_given?
+    self.all.each {|user| block.call(user)}
   end
 
   def full_name
@@ -127,6 +135,10 @@ class User < ActiveRecord::Base
     self.address = Address.new
   end
 
+  def create_default_notifications
+    self.notifications ||= Notifications.new
+  end
+
   def send_welcome_email
     SendWelcomeEmailWorker.perform_async(self.email)
   end
@@ -141,10 +153,18 @@ class User < ActiveRecord::Base
     self.carts.sort_by { |cart| cart.created_at }.last
   end
 
+  def show_phone_number
+    format_phone_number_to_display(self.phone_number)
+  end
+
+  def show_address(str)
+    self.address.show_address(str)
+  end
+
   protected
 
   def clear_associations
-    self.carts.all.each { |cart| cart.destroy }
+    self.carts.destroy_all
     self.address.destroy
   end
 
@@ -164,6 +184,7 @@ class User < ActiveRecord::Base
   end
 
   def format_phone_number_to_display(number)
+    return "" unless number && number.length == 10
     "(#{number[0..2]}) #{number[3..5]}-#{number[6..9]}"
   end
 

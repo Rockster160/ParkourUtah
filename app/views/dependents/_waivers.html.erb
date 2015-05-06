@@ -25,10 +25,11 @@
       <p>By signing this document, I am waiving any liability claims against Parkour Utah for myself, and, if any of the athletes listed above are minors, I certify that I am the parent and/or guardian of those athletes, and I am waiving any liability claims against Parkour Utah on behalf of the minors listed as the athletes above.</p>
       <br/>
       <div class="internal-center">
-        <%= text_field_tag :signed_by, '', placeholder: 'Signed By', class: 'pkut-textbox', required: true, autocomplete: 'off' %>
+        <%= text_field_tag :signed_by, '', placeholder: 'Signed By', class: 'pkut-textbox customRequired', autocomplete: 'off' %>
         <br/>
         <a class="pkut-btn add-athletes-submission" data-dismiss="modal">Sign Waiver</a><br/>
       </div>
     <% end %>
   </div>
 </div>
+

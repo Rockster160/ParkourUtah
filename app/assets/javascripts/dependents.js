@@ -7,6 +7,10 @@ var ready = function() {
     }
   });
 
+  $('.open-review-modal').click(function() {
+    $('#review-step-4-modal').modal('show');
+  })
+
   $('.populate-waiver-btn').click(function() {
     $('.waiver-athletes').html('');
     $('.athlete-input-info').each(function() {

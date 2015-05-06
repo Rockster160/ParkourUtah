@@ -45,15 +45,18 @@
       margin-right: 5px;
     }
   }
-}
-
-.pkut-link {
-  color: $pkut-red;
-  &:hover, &:active, &:focus { color: $pkut-red-dark; }
-}
-
-.kill-athlete {
-  color: $pkut-red;
+  &.textbox-2col-5max {
+    width: 130px;
+    &:not(:last-child) {
+      margin-right: 5px;
+    }
+  }
+  &.textbox-1col-5max {
+    width: 70px;
+    &:not(:last-child) {
+      margin-right: 5px;
+    }
+  }
 }
 
 .pkut-textarea {
