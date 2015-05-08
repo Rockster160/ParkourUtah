@@ -14,7 +14,7 @@
       <div class="text-field-height pkut-checkbox text-right">
         <%= check_box_tag 'smsalert' %>
         <%= label_tag 'smsalert' do %>
-          <p>Check the box for SMS updates <a><sup>(What is this?)</sup></a></p>
+          <p>Check the box for SMS updates <a data-toggle="modal" data-target="#what_is"><sup>(What is this?)</sup></a></p>
         <% end %>
       </div>
 
@@ -52,3 +52,4 @@
     </div>
   <% end %>
 </div>
+<%= render partial: 'layouts/message', locals: {modal_id: "what_is", title: "SMS Updates", message: "If you would like, we would be happy to speed things up and send you notifications by text. These can be easily changed and customized from your profile and include reminders for your athletes' waivers expiring, updates to class, and when your account has almost run out of credits."} %>

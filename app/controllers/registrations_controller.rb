@@ -106,6 +106,9 @@ class RegistrationsController < ApplicationController
         date_of_birth: values[:dob],
         athlete_pin: values[:code]
       )
+      athlete.waiver.update(
+        signed_for: values[:name]
+      )
       valid = temp_valid if valid == true
     end
     valid
