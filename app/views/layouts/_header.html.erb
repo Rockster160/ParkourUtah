@@ -15,17 +15,17 @@
                 Account <span class="caret"></span>
               </a>
               <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= edit_user_registration_path %>">
+                  Profile
+                </a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= store_path %>">
+                  Cart
+                </a></li>
                 <% if current_user.is_instructor? %>
                   <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= dashboard_path %>">
                     Dashboard
                   </a></li>
                 <% end %>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= store_path %>">
-                  Cart
-                </a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= edit_user_registration_path %>">
-                  Profile
-                </a></li>
                 <li role="presentation">
                   <%= link_to "Log Out", destroy_user_session_path, method: :delete, tabindex: "-1", role: "menuitem" %>
                 </li>
@@ -61,24 +61,24 @@
         <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
           <li class="dropdown">
             <% if user_signed_in? %>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= edit_user_registration_path %>">
+                Profile
+              </a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= store_path %>">
+                Cart
+              </a></li>
+              <% if current_user.is_instructor? %>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= dashboard_path %>">
+                  Dashboard
+                </a></li>
+              <% end %>
+              <li role="presentation">
+                <%= link_to "Log Out", destroy_user_session_path, method: :delete, tabindex: "-1", role: "menuitem" %>
+              </li>
+              <hr>
               <li><%= link_to "Contact Us", contact_page_path %></li>
               <li><%= link_to "Store", store_path %></li>
               <li><%= link_to "Schedule", calendar_show_path('all') %></li>
-                  <hr>
-                  <% if current_user.is_instructor? %>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= dashboard_path %>">
-                      Dashboard
-                    </a></li>
-                  <% end %>
-                  <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= store_path %>">
-                    Cart
-                  </a></li>
-                  <li role="presentation"><a role="menuitem" tabindex="-1" href="<%= edit_user_registration_path %>">
-                    Profile
-                  </a></li>
-                  <li role="presentation">
-                    <%= link_to "Log Out", destroy_user_session_path, method: :delete, tabindex: "-1", role: "menuitem" %>
-                  </li>
             <% else %>
               <li><a alt="..." class="hover-btn" data-toggle="modal" data-target="#modal_contact">Contact Us</a></li>
               <li><%= link_to "Store", store_path %></li>
