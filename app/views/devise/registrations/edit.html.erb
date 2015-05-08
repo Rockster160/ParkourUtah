@@ -12,7 +12,7 @@
     <div class="actions internal-center">
       <a alt="..." class="pkut-btn text-center" data-toggle="modal" data-target="#notification_modal">Edit Notification Settings</a><br/>
     </div>
-    <%= form_tag do %>
+    <%= form_tag "/user/notifications/update" do %>
       <div class="modal fade" id="notification_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="standard-modal modal-dialog central-container">
           <button type="button" class="close-btn" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>

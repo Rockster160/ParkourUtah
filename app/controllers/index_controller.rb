@@ -29,6 +29,15 @@ class IndexController < ApplicationController
     @selected_classes = params[:classes] ? params[:classes] : @classes
   end
 
+
+  def update_notifications
+    current_user.notifications.blow!
+    params[:notify].each do |attribute, value|
+      current_user.notifications.update(attribute => true)
+    end
+    redirect_to edit_user_registration_path
+  end
+
   def receive_sms
     number = params["From"]
     if params["Body"].downcase.split.join == "stop"

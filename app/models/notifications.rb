@@ -25,4 +25,13 @@ class Notifications < ActiveRecord::Base
     self.email_waiver_expiring ||= true
     self.text_waiver_expiring ||= false
   end
+
+  def blow!
+    self.email_class_reminder = false
+    self.text_class_reminder = false
+    self.email_low_credits = false
+    self.text_low_credits = false
+    self.email_waiver_expiring = false
+    self.text_waiver_expiring = false
+  end
 end

@@ -52,6 +52,7 @@ Rails.application.routes.draw do
   post '/waivers' => 'dependents#sign_waiver', as: 'sign_waiver'
 
   devise_for :users, :controllers => {:registrations => "users/registrations"}
+  post '/user/notifications/update' => 'index#update_notifications'
 
   get 'calendar/index' => 'calendar#index', as: 'calendar'
   get 'calendar/draw' => 'calendar#draw', as: 'calendar_draw'
