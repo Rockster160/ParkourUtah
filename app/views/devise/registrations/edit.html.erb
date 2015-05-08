@@ -1,118 +1,256 @@
-<div class="fancy-box">
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <% unless current_user.phone_number && current_user.phone_number_is_valid? %>
-    <h3>You've successfully signed up!</h3>
-    <h3>Thanks for joining us at PARKOURUTAH!</h3>
-    <h3>Account setup progress: 1/5</h3>
-    <br/>
-    <h3>We need some basic information from you before we get started.</h3>
-    <h3>First, we need a good mobile phone to reach you at.</h3>
-    <h3>We will only use this number to send you reminder texts for classes YOU subscribe to.</h3>
-    <h3>(We don't bug you. Promise!)</h3>
-    <%= form_tag "/update", method: "post" do %>
-      <%= telephone_field_tag :phone_number, '', class: 'pkut-textbox formatPhoneNumber customRequired', placeholder: 'Phone', auto_complete: 'off' %>
-      <h3><%= submit_tag "Update", class: 'fancy-btn set-min-width-btn' %></h3>
-    <% end %>
-  <% else %>
-    <% unless current_user.address && current_user.address.is_valid? %>
-      <h3>Account setup progress: 2/5</h3>
-      <h3>Next we need a shipping address.</h3>
-      <h3>This is for when you buy equipment in the store, we know where to send it!</h3>
-      <%= render partial: 'store/address_form' %>
-    <% else %>
-      <% unless current_user.dependents.count > 0 %>
-        <h3>Account setup progress: 3/5</h3>
-        <h3>Great! Now you can add a new athlete.</h3>
-        <h3><%= link_to "Add an Athlete!", new_athlete_path, class: 'fancy-btn' %></h3>
-      <% else %>
-        <% unsigned = current_user.dependents.select {|d| !(d.signed_waiver?) } %>
-        <% unless unsigned.count == 0 %>
-          <% unsigned.each do |athlete| %>
-            <% if current_user.dependents.count == 1 %>
-              <h3>Account setup progress: 4/5</h3>
-              <h3>All athletes need a waiver signed.</h3>
-              <h3>Please be sure to read through all parts of the waiver.</h3>
-            <% end %>
-            <h3><%= link_to "Sign waiver for #{athlete.full_name}", sign_waiver_path, class: 'fancy-btn set-min-width-btn' %></h3>
-            <br/>
-          <% end %>
-        <% end %>
-        <h3>You currently have <%= current_user.credits %> credits.</h3>
-        <h3><%= link_to "Add Credits", store_path, class: 'fancy-btn' %></h3>
-      <% end %>
-    <% end %>
-  <% end %>
+<div class="row">
+  <div class="col-sm-6">
+    <h2><%= current_user.email %></h2>
+  </div>
+  <div class="col-sm-6 text-right">
+    <h2>Credits: <span class="pkut-header"><%= current_user.credits %><span></h2>
+  </div>
 </div>
-
 <div class="central-container form-offset">
-  <h2>Edit Account</h2>
 
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-    <%= devise_error_messages! %>
-
-    <div class="field">
-      <%= f.label :email %><br />
-      <%= f.email_field :email, autofocus: true, class: 'pkut-textbox' %>
+  <div class="row internal-center">
+    <div class="actions internal-center">
+      <a alt="..." class="pkut-btn text-center" data-toggle="modal" data-target="#notification_modal">Edit Notification Settings</a><br/>
     </div>
-
-    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-      <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-    <% end %>
-
-    <div class="field">
-      <%= f.label :phone_number %> <i><br/>Only used to update you on classes that you have subscribed to.</i><br />
-      <%= f.telephone_field :phone_number, autocomplete: "off", class: 'pkut-textbox restrictNumeric formatPhoneNumber' %>
-    </div>
-
-    <div class="field">
-      <%= f.label :password %> <i><br/>(leave blank if you don't want to change it)</i><br />
-      <%= f.password_field :password, autocomplete: "off", class: 'pkut-textbox' %>
-    </div>
-
-    <div class="field">
-      <%= f.label :password_confirmation %><br />
-      <%= f.password_field :password_confirmation, autocomplete: "off", class: 'pkut-textbox' %>
-    </div>
-
-    <div class="field">
-      <%= f.label :current_password %> <i><br/>(we need your current password to confirm your changes)</i><br />
-      <%= f.password_field :current_password, autocomplete: "off", class: 'pkut-textbox' %>
-    </div>
-
-    <div class="actions">
-      <h3><%= f.submit "Update", class: 'fancy-btn set-min-width-btn' %></h3>
-    </div>
-  <% end %>
-  <div class="waivers">
-    <% if true %>
-      <h3>Waivers:</h3>
-      <% current_user.dependents.each_with_index do |athlete, pos| %>
-        <h3><%= athlete.full_name %></h3>
-        <% if athlete.signed_waiver? && athlete.waiver.is_active? %>
-          Waiver valid until <%= athlete.waiver.exp_date.strftime('%B %-d, %Y') %><br/>
-          <% if athlete.waiver.expires_soon? %>
-            Waiver expires soon!<br/>
-            <%= link_to "Sign a new waiver", sign_waiver_path(athlete.id), class: 'fancy-link' %></br>
-          <% end %>
-          <%= link_to "Forgot PIN / ID? Click here to reset.", send_reset_pin_or_id_mail_path(athlete.id), class: 'fancy-link', method: "post" %></br>
-        <% else %>
-          <%= link_to "Must have waiver signed before attending class.", waivers_path, class: 'fancy-link' %></br>
-        <% end %>
-      <% end %>
-        <%= form_for Dependent.new, url: "/athletes/new" do %>
-          <div class="athletes-holder">
+    <%= form_tag do %>
+      <div class="modal fade" id="notification_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="standard-modal modal-dialog central-container">
+          <button type="button" class="close-btn" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
+          <h1 class="pkut-header">Notifications</h1>
+          <p>Receive Notifications for:</p>
+          <!-- <div class="row">
+            <div class="col-xs-4">
+            </div>
+            <div class="col-xs-4">
+            </div>
+            <div class="col-xs-4">
+            </div>
+          </div> -->
+          <!-- <div class="pkut-checkbox">
+            <%#= check_box_tag "notify[]", '', true %>
+            <%#= label_tag "notify[]", '' %>
+          </div> -->
+          <div class="row">
+            <div class="col-xs-4">
+            </div>
+            <div class="col-xs-4">
+              Email
+            </div>
+            <div class="col-xs-4">
+              Text
+            </div>
           </div>
-          <h2 class="fancy-btn add-athlete-btn">Add Athlete</h2></br>
-          <%= submit_tag "Submit", class: 'fancy-btn athleteVerify set-min-width-btn' %>
-        <% end %>
-    <% else %>
-      <h2>We do not store any of your sensitive information, so you will be redirected to a third party.</h2>
-      <h3>You must first fill out your payment information before creating Athlete Profiles.</h3>
+
+          <div class="row">
+            <div class="col-xs-4">
+              Waiver Expiring
+            </div>
+            <div class="col-xs-4">
+              <div class="pkut-checkbox">
+                <%= check_box_tag "notify[email_waiver_expiring]", '', current_user.notifications.email_waiver_expiring? %>
+                <%= label_tag "notify[email_waiver_expiring]", '' %>
+              </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="pkut-checkbox">
+                <%= check_box_tag "notify[text_waiver_expiring]", '', current_user.notifications.text_waiver_expiring? %>
+                <%= label_tag "notify[text_waiver_expiring]", '' %>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-4">
+              Class Reminders
+            </div>
+            <div class="col-xs-4">
+              <div class="pkut-checkbox">
+                <%= check_box_tag "notify[email_class_reminder]", '', current_user.notifications.email_class_reminder? %>
+                <%= label_tag "notify[email_class_reminder]", '' %>
+              </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="pkut-checkbox">
+                <%= check_box_tag "notify[text_class_reminder]", '', current_user.notifications.text_class_reminder? %>
+                <%= label_tag "notify[text_class_reminder]", '' %>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-4">
+              Low on credits
+            </div>
+            <div class="col-xs-4">
+              <div class="pkut-checkbox">
+                <%= check_box_tag "notify[email_low_credits]", '', current_user.notifications.email_low_credits? %>
+                <%= label_tag "notify[email_low_credits]", '' %>
+              </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="pkut-checkbox">
+                <%= check_box_tag "notify[text_low_credits]", '', current_user.notifications.text_low_credits? %>
+                <%= label_tag "notify[text_low_credits]", '' %>
+              </div>
+            </div>
+          </div>
+          <%= submit_tag "Update", class: 'pkut-btn' %>
+        </div>
+      </div>
     <% end %>
   </div>
+  <br/>
 
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+
+    <div class="row">
+      <div class="col-xs-3">
+        <br/><%= f.label :email, 'Email Address:' %>
+      </div>
+      <div class="col-xs-9">
+        <%= f.email_field :email, class: 'pkut-textbox' %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-3">
+        <br/><%= f.label :phone_number, 'Phone Number:' %>
+      </div>
+      <div class="col-xs-9">
+        <%= f.telephone_field :phone_number, autocomplete: "off", class: 'pkut-textbox formatPhoneNumber' %>
+      </div>
+    </div>
+    <br/>
+
+    <%= fields_for :emergency_contacts, resource.emergency_contacts.last do |ff| %>
+    <h5>Emergency Contact</h5>
+      <div class="row">
+        <div class="col-xs-3">
+          <br/><%= ff.label :name, 'Name:' %>
+        </div>
+        <div class="col-xs-9">
+          <%= ff.text_field :name, class: 'pkut-textbox' %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-3">
+          <br/><%= ff.label :number, 'Phone Number:' %>
+        </div>
+        <div class="col-xs-9">
+          <%= ff.telephone_field :number, class: 'pkut-textbox formatPhoneNumber' %>
+        </div>
+      </div>
+    <% end %>
+    <br/>
+
+    <%= fields_for :address, resource.address do |ff| %>
+    <h5>Address:</h5>
+      <div class="row">
+        <div class="col-xs-3">
+          <br/><%= ff.label :line1, 'Line 1:' %>
+        </div>
+        <div class="col-xs-9">
+          <%= ff.text_field :line1, class: 'pkut-textbox' %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-3">
+          <br/><%= ff.label :line2, 'Line 2:' %>
+        </div>
+        <div class="col-xs-9">
+          <%= ff.text_field :line2, class: 'pkut-textbox' %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-3">
+          <br/><%= ff.label :city, 'City:' %>
+        </div>
+        <div class="col-xs-9">
+          <%= ff.text_field :city, class: 'pkut-textbox' %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-3">
+          <br/><%= ff.label :state, 'State:' %>
+        </div>
+        <div class="col-xs-9">
+          <%= ff.text_field :state, class: 'pkut-textbox' %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-3">
+          <br/><%= ff.label :zip, 'Zip:' %>
+        </div>
+        <div class="col-xs-9">
+          <%= ff.text_field :zip, class: 'pkut-textbox' %>
+        </div>
+      </div>
+    <% end %>
+    <br/>
+
+    <h5>Change Password:</h5>
+    <div class="row">
+      <div class="col-xs-3">
+        <br/><%= f.label :password, "New Password:" %>
+      </div>
+      <div class="col-xs-9">
+        <%= f.password_field :password, autocomplete: "off", class: 'pkut-textbox' %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-3">
+        <br/><%= f.label :password_confirmation, "Confirm Password:" %><br />
+      </div>
+      <div class="col-xs-9">
+        <%= f.password_field :password_confirmation, autocomplete: "off", class: 'pkut-textbox' %>
+      </div>
+    </div>
+
+    <div class="actions internal-center">
+      <a alt="..." class="pkut-btn" data-toggle="modal" data-target="#confirm_modal">Update</a><br/>
+    </div>
+    <div class="modal fade" id="confirm_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="central-container">
+        <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
+        <div class="error-container center-block">
+          <h1 class="pkut-header">Confirm</h1>
+          <p>We need your current password to update your changes.</p>
+          <%= f.password_field :current_password, autocomplete: "off", class: 'pkut-textbox' %>
+          <%= f.submit "Update", class: 'pkut-btn' %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  <hr>
+  <div class="row">
+    <div class="col-xs-3">
+      <h5>Athletes:</h5>
+    </div>
+    <div class="col-xs-9">
+      <% current_user.athletes_by_waiver_expiration.each_with_index do |athlete, pos| %>
+        <div class="row">
+          <h4><%= athlete.full_name %></h4>
+          <% if athlete.signed_waiver? && athlete.waiver.is_active? %>
+            <% if athlete.waiver.expires_soon? %>
+              <%= link_to sign_waiver_path(athlete.id), class: 'fancy-link' do  %>
+                <span class="pkut-header title">Waiver active until <%= athlete.waiver.exp_date.strftime('%B %-d, %Y') %></span>
+                Update Waiver
+              <% end %>
+              <% else %>
+                Waiver active until <%= athlete.waiver.exp_date.strftime('%B %-d, %Y') %>
+            <% end %>
+          <% else %>
+            <%= link_to "Must have waiver signed before attending class.", waivers_path, class: 'fancy-link' %>
+          <% end %>
+          </br>
+          <%= link_to "Forgot PIN / ID? Click here to reset.", send_reset_pin_or_id_mail_path(athlete.id), method: "post" %>
+        </div>
+      <% end %>
+      <%= form_for Dependent.new, url: "/athletes/new" do %>
+        <div class="athletes-holder">
+        </div>
+        <h2 class="fancy-btn add-athlete-btn">Add Athlete</h2></br>
+        <%= submit_tag "Submit", class: 'fancy-btn athleteVerify set-min-width-btn' %>
+      <% end %>
+    </div>
+  </div>
 </div>
-

@@ -1,6 +1,6 @@
 var ready = function() {
   var url = window.location.pathname.split("/")[1];
-  if (url == "class" || url == "password") {
+  if (url == "class" || url == "password" || url == "secret") {
     $('.navbar').hide();
 
     $('.secret-input-field').val("");

@@ -8,7 +8,7 @@ class RegistrationsController < ApplicationController
   end
 
   def step_4
-    @athletes = current_user.dependents
+    @athletes = current_user.dependents.select {|athlete| athlete.signed_waiver? == false }
   end
 
   def step_5
@@ -100,11 +100,13 @@ class RegistrationsController < ApplicationController
   def update_athletes
     valid = true
     params[:athlete].each do |athlete_id, values|
-      valid = Dependent.find(athlete_id).update(
+      athlete = Dependent.find(athlete_id)
+      temp_valid = athlete.update(
         full_name: values[:name],
         date_of_birth: values[:dob],
         athlete_pin: values[:code]
       )
+      valid = temp_valid if valid == true
     end
     valid
   end

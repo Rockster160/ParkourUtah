@@ -1,6 +1,17 @@
 class IndexController < ApplicationController
   skip_before_action :verify_authenticity_token
 
+  def get_request
+    response.headers["Headertitle"]="Parkour Utah"
+    render json: Automator.open?
+  end
+
+  def give_request
+    if params[:secret] == "Rocco"
+    end
+    Automator.deactivate!
+  end
+
   def page_not_found
   end
 
@@ -25,6 +36,7 @@ class IndexController < ApplicationController
         subscription.destroy
       end
       ::SmsMailerWorker.perform_async("You have been unsubscribed from all messages from ParkourUtah.", number)
+      # TODO Send email?
     end
   end
 

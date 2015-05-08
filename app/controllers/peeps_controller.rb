@@ -7,6 +7,16 @@ class PeepsController < ApplicationController
     redirect_to edit_user_registration_path
   end
 
+  def secret
+  end
+
+  def post_secret
+    if params[:secret_code].to_i == 9
+      Automator.activate!
+    end
+    redirect_to secret_path
+  end
+
   def dashboard
     @classes = Event.all.select {|event| event.date.to_date == Time.now.to_date }
   end

@@ -6,6 +6,9 @@
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
+  <% if content_for?(:head) %>
+    <%= yield(:head) %>
+  <% end %>
 </head>
 <body>
   <%= render 'layouts/header' %>

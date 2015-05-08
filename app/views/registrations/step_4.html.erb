@@ -73,7 +73,6 @@
               <span class="pkut-link title open-review-modal"><%= athlete.athlete_pin %></span>
             </div>
             <div class="col-xs-4">
-              <!-- $('#agreed_61').is(':required') -->
               <div class="pkut-checkbox text-center">
                 <%= check_box_tag "agreed[#{athlete.id}]", '', false, class: "customRequired" %>
                 <%= label_tag "agreed[#{athlete.id}]", '' %>

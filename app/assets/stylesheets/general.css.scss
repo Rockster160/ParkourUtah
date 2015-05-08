@@ -39,7 +39,7 @@ textarea {
   transform: scale(2);
 }
 
-.modal-dialog {
+.standard-modal {
   padding: 10px;
   background: white;
   border: 2px solid $pkut-grey-dark;
@@ -58,7 +58,7 @@ textarea {
     margin-top: 1px;
   }
   &.error-close { padding-right: 165px; }
-  &.standard-close {  }
+  &.delete { margin-top: 10px; }
 }
 
 .restrictBio {
