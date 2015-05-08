@@ -65,10 +65,10 @@ class Dependent < ActiveRecord::Base
     self.waiver.sign!
   end
 
-  def padded_pin
+  def zero_padded(num, digits)
     str = ""
-    (4 - self.athlete_id.to_s.length).times {str << "0"}
-    str << self.athlete_id.to_s
+    (digits.to_i - num.to_s.length).times {str << "0"}
+    str << num.to_s
     str
   end
 
