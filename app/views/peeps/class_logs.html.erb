@@ -2,7 +2,9 @@
   <% @athletes.each do |athlete| %>
     <h3><%= athlete.full_name %></h3>
     <p>Guardian phone: <%= athlete.guardian_phone %></p>
-    <p>Emergency Contact: <%= athlete.emergency_phone %></p>
+    <% athlete.user.emergency_contacts.each do |ec| %>
+      <p>Emergency Contact: <strong><%= ec.name %> <%= athlete.format_phone(ec.number) %></strong></p>
+    <% end %>
     <br/>
     <br/>
   <% end %>

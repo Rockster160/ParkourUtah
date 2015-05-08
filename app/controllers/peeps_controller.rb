@@ -122,7 +122,7 @@ class PeepsController < ApplicationController
   end
 
   def charge_class(charge, charge_type)
-    @user = User.find(@athlete.user_id)
+    @user = @athlete.user
     if @user.charge_credits(charge)
       Attendance.create(
         dependent_id: @athlete.athlete_id,
@@ -130,8 +130,13 @@ class PeepsController < ApplicationController
         event_id: params[:id],
         type_of_charge: charge_type
       )
-      if @user.credits < ENV["PKUT_CLASS_PRICE"].to_i && @user.email_subscription
-        ::LowCreditsMailerWorker.perform_async(@user.id)
+      if @user.credits < ENV["PKUT_CLASS_PRICE"].to_i
+        if @user.notifications.email_low_credits
+          ::LowCreditsMailerWorker.perform_async(@user.id)
+        end
+        if @user.notifications.text_low_credits
+          # ::LowCreditsSmsWorker.perform_async(@user.id) TODO
+        end
       end
       flash[:notice] = "Success! Welcome to class."
       redirect_to begin_class_path

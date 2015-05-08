@@ -68,8 +68,13 @@ class IndexController < ApplicationController
   end
 
   def unsubscribe
-    if current_user == User.find(params[:id])
-      User.find(params[:id]).update(email_subscription: false)
+    # :email_class_reminder
+    # :text_class_reminder
+    # :email_low_credits
+    # :text_low_credits
+    # :email_waiver_expiring
+    # :text_waiver_expiring
+    if current_user == User.find(params[:id]) && User.find(params[:id]).notifications.update(params[:type] => false)
       flash[:notice] = "You have been successully unsubscribed."
     else
       flash[:alert] = "You must be signed in to unsubscribe."

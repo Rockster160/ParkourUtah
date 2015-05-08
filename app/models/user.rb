@@ -123,9 +123,8 @@ class User < ActiveRecord::Base
 
   def charge_credits(charge)
     if self.credits >= charge
-      self.update(credits: self.credits - charge)
-      self.save
-      return true
+      self.credits -= charge
+      self.save!
     else
       return false
     end
