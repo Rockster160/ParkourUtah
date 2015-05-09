@@ -2,8 +2,9 @@ Rails.application.routes.draw do
 
   root 'index#index'
 
-  get '404' => 'index#page_not_found'
-  get '500' => 'index#page_not_found'
+  match '/404', to: 'index#page_not_found', via: :all
+  match '/422', to: 'index#page_not_found', via: :all
+  match '/500', to: 'index#page_not_found', via: :all
 
   get '/talk' => 'index#get_request'
   post '/listen' => 'index#give_request'
