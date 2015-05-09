@@ -2,17 +2,37 @@ class RegistrationsController < ApplicationController
   before_action :verify_user_signed_in
 
   def step_2
+    if current_user.registration_step == 1
+      current_user.registration_step = 2
+    else
+      redirect_user_to_step(2)
+    end
   end
 
   def step_3
+    if current_user.registration_step == 2
+      current_user.registration_step = 3
+    else
+      redirect_user_to_step(3)
+    end
   end
 
   def step_4
+    if current_user.registration_step == 3
+      current_user.registration_step = 4
+    else
+      redirect_user_to_step(4)
+    end
     @athletes = current_user.dependents.select {|athlete| athlete.signed_waiver? == false }
   end
 
   def step_5
-    current_user.update(registration_complete: true)
+    if current_user.registration_step == 4
+      current_user.registration_step = 5
+      current_user.update(registration_complete: true)
+    else
+      redirect_user_to_step(5)
+    end
   end
 
   def post_step_2
@@ -138,7 +158,18 @@ class RegistrationsController < ApplicationController
           redirect_to edit_user_registration_path
         end
       end
+    end
 
+    def redirect_user_to_step(step)
+      if current_user.registration_step != step
+        redirect_to case current_user.registration_step
+        when 2 then step_2_path
+        when 3 then step_3_path
+        when 4 then step_4_path
+        when 5 then step_5_path
+        else page_not_found_path
+        end
+      end
     end
 
 end

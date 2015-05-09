@@ -9,7 +9,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-    if verify_recaptcha
+    if verify_recaptcha || !(Rails.env.production?)
       super
     else
       redirect_to :back, alert: "You failed the bot test. Make sure to wait for the green checkmark to appear."
@@ -18,7 +18,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # GET /resource/edit
   def edit
-    super
+    if resource.registration_complete == false
+      redirect_to step_2_path
+    else
+      super
+    end
   end
 
   # PUT /resource

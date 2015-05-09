@@ -43,6 +43,7 @@
 #  drivers_license_number :string
 #  drivers_license_state  :string
 #  registration_complete  :boolean          default(FALSE)
+#  registration_step      :integer          default(2)
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

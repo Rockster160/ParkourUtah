@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150507225247) do
+ActiveRecord::Schema.define(version: 20150509040811) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -204,6 +204,7 @@ ActiveRecord::Schema.define(version: 20150507225247) do
     t.string   "drivers_license_number"
     t.string   "drivers_license_state"
     t.boolean  "registration_complete",  default: false
+    t.integer  "registration_step",      default: 2
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
