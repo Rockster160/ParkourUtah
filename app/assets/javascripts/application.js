@@ -18,7 +18,6 @@
 //= require twitter/bootstrap
 //= require turbolinks
 //= require maskedinput
-//= require_tree .
 
 // $(function () {
 //   $('body')
