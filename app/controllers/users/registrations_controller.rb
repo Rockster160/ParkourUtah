@@ -22,9 +22,19 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   # PUT /resource
-  # def update
-  #   super
-  # end
+  def update
+    super
+    resource.address.update(address_params)
+    resource.emergency_contacts.last.update(ec_contact_params)
+  end
+
+  def address_params
+    params.require(:address).permit(:line1, :line2, :city, :state, :zip)
+  end
+
+  def ec_contact_params
+    params.require(:emergency_contacts).permit(:name, :number)
+  end
 
   # DELETE /resource
   # def destroy
@@ -40,7 +50,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
   #   super
   # end
 
-  # protected
+  protected
+
+  def after_update_path_for(resource)
+    edit_user_registration_path
+  end
 
   # You can put the params you want to permit in the empty array.
   # def configure_sign_up_params

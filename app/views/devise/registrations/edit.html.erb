@@ -94,6 +94,10 @@
               </div>
             </div>
           </div>
+          <hr>
+          <div class="row">
+            <p>Classes subscribed to:</p>
+          </div>
           <%= submit_tag "Update", class: 'pkut-btn' %>
         </div>
       </div>
@@ -120,9 +124,9 @@
       </div>
     </div>
     <br/>
-
+    
     <%= fields_for :emergency_contacts, resource.emergency_contacts.last do |ff| %>
-    <h5>Emergency Contact</h5>
+      <h5>Emergency Contact</h5>
       <div class="row">
         <div class="col-xs-3">
           <br/><%= ff.label :name, 'Name:' %>
@@ -142,46 +146,46 @@
     <% end %>
     <br/>
 
-    <%= fields_for :address, resource.address do |ff| %>
-    <h5>Address:</h5>
+    <%= fields_for :address, resource.address do |fff| %>
+      <h5>Address:</h5>
       <div class="row">
         <div class="col-xs-3">
-          <br/><%= ff.label :line1, 'Line 1:' %>
+          <br/><%= fff.label :line1, 'Line 1:' %>
         </div>
         <div class="col-xs-9">
-          <%= ff.text_field :line1, class: 'pkut-textbox' %>
+          <%= fff.text_field :line1, class: 'pkut-textbox' %>
         </div>
       </div>
       <div class="row">
         <div class="col-xs-3">
-          <br/><%= ff.label :line2, 'Line 2:' %>
+          <br/><%= fff.label :line2, 'Line 2:' %>
         </div>
         <div class="col-xs-9">
-          <%= ff.text_field :line2, class: 'pkut-textbox' %>
+          <%= fff.text_field :line2, class: 'pkut-textbox' %>
         </div>
       </div>
       <div class="row">
         <div class="col-xs-3">
-          <br/><%= ff.label :city, 'City:' %>
+          <br/><%= fff.label :city, 'City:' %>
         </div>
         <div class="col-xs-9">
-          <%= ff.text_field :city, class: 'pkut-textbox' %>
+          <%= fff.text_field :city, class: 'pkut-textbox' %>
         </div>
       </div>
       <div class="row">
         <div class="col-xs-3">
-          <br/><%= ff.label :state, 'State:' %>
+          <br/><%= fff.label :state, 'State:' %>
         </div>
         <div class="col-xs-9">
-          <%= ff.text_field :state, class: 'pkut-textbox' %>
+          <%= fff.text_field :state, class: 'pkut-textbox' %>
         </div>
       </div>
       <div class="row">
         <div class="col-xs-3">
-          <br/><%= ff.label :zip, 'Zip:' %>
+          <br/><%= fff.label :zip, 'Zip:' %>
         </div>
         <div class="col-xs-9">
-          <%= ff.text_field :zip, class: 'pkut-textbox' %>
+          <%= fff.text_field :zip, class: 'pkut-textbox' %>
         </div>
       </div>
     <% end %>
