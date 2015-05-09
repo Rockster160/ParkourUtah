@@ -112,7 +112,7 @@
         <br/><%= f.label :email, 'Email Address:' %>
       </div>
       <div class="col-xs-9">
-        <%= f.email_field :email, class: 'pkut-textbox' %>
+        <%= f.email_field :email, class: 'pkut-textbox customRequired' %>
       </div>
     </div>
     <div class="row">
@@ -120,7 +120,7 @@
         <br/><%= f.label :phone_number, 'Phone Number:' %>
       </div>
       <div class="col-xs-9">
-        <%= f.telephone_field :phone_number, autocomplete: "off", class: 'pkut-textbox formatPhoneNumber' %>
+        <%= f.telephone_field :phone_number, autocomplete: "off", class: 'pkut-textbox formatPhoneNumber customRequired' %>
       </div>
     </div>
     <br/>
@@ -132,7 +132,7 @@
           <br/><%= ff.label :name, 'Name:' %>
         </div>
         <div class="col-xs-9">
-          <%= ff.text_field :name, class: 'pkut-textbox' %>
+          <%= ff.text_field :name, class: 'pkut-textbox customRequired' %>
         </div>
       </div>
       <div class="row">
@@ -140,7 +140,7 @@
           <br/><%= ff.label :number, 'Phone Number:' %>
         </div>
         <div class="col-xs-9">
-          <%= ff.telephone_field :number, class: 'pkut-textbox formatPhoneNumber' %>
+          <%= ff.telephone_field :number, class: 'pkut-textbox formatPhoneNumber customRequired' %>
         </div>
       </div>
     <% end %>
@@ -153,7 +153,7 @@
           <br/><%= fff.label :line1, 'Line 1:' %>
         </div>
         <div class="col-xs-9">
-          <%= fff.text_field :line1, class: 'pkut-textbox' %>
+          <%= fff.text_field :line1, class: 'pkut-textbox customRequired' %>
         </div>
       </div>
       <div class="row">
@@ -169,7 +169,7 @@
           <br/><%= fff.label :city, 'City:' %>
         </div>
         <div class="col-xs-9">
-          <%= fff.text_field :city, class: 'pkut-textbox' %>
+          <%= fff.text_field :city, class: 'pkut-textbox customRequired' %>
         </div>
       </div>
       <div class="row">
@@ -177,7 +177,7 @@
           <br/><%= fff.label :state, 'State:' %>
         </div>
         <div class="col-xs-9">
-          <%= fff.text_field :state, class: 'pkut-textbox' %>
+          <%= fff.text_field :state, class: 'pkut-textbox customRequired' %>
         </div>
       </div>
       <div class="row">
@@ -185,7 +185,7 @@
           <br/><%= fff.label :zip, 'Zip:' %>
         </div>
         <div class="col-xs-9">
-          <%= fff.text_field :zip, class: 'pkut-textbox' %>
+          <%= fff.text_field :zip, class: 'pkut-textbox customRequired' %>
         </div>
       </div>
     <% end %>

@@ -18,12 +18,12 @@ class Notifications < ActiveRecord::Base
   # TODO rename text_class_reminder email_waiver_expiring text_waiver_expiring
 
   def set_defaults
-    self.email_class_reminder ||= true
-    self.text_class_reminder ||= false
-    self.email_low_credits ||= true
-    self.text_low_credits ||= false
-    self.email_waiver_expiring ||= true
-    self.text_waiver_expiring ||= false
+    self.email_class_reminder = true
+    self.text_class_reminder = false
+    self.email_low_credits = true
+    self.text_low_credits = false
+    self.email_waiver_expiring = true
+    self.text_waiver_expiring = false
   end
 
   def blow!

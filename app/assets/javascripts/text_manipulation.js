@@ -7,10 +7,12 @@ var ready = function() {
       if ($(this).attr('type') == "checkbox") {
         if (!(this.checked)) {
           invalid.push(false);
+          $(this).css({"border-color": "red"})
         }
       } else {
         if (!($(this).val().length > 0)) {
           invalid.push(false);
+          $(this).css({"border-color": "red"})
         }
       }
     });

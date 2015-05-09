@@ -13,6 +13,7 @@ class IndexController < ApplicationController
   end
 
   def page_not_found
+    @protocol = "404"
   end
 
   def index
