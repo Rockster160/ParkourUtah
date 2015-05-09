@@ -8,29 +8,29 @@
     <div class="container">
       <%= image_tag('//s3-us-west-2.amazonaws.com/pkut-default/PKUT-full-color.png', class: 'img-responsive pkut-main center-block') %>
       <div>&nbsp;</div>
-      <a href="#about" class="main-btn lead">About Us</a>
-      <a href="#peeps" class="main-btn lead">Our people</a>
+      <a href="#about" class="main-btn lead scroll-link">About Us</a>
+      <a href="#peeps" class="main-btn lead scroll-link">Our people</a>
       <br class="visible-xs visible-sm"/>
       <a href="<%= new_user_registration_path %>" class="main-btn lead call-to-arms">Get Started</a>
       <br class="visible-xs visible-sm"/>
-      <a href="#schedule" class="main-btn lead">Locations</a>
-      <a href="#join" class="main-btn lead">Contact us</a>
+      <a href="#schedule" class="main-btn lead scroll-link">Locations</a>
+      <a href="#join" class="main-btn lead scroll-link">Contact us</a>
     </div>
   </div>
 </div>
 
-<div id="about" class="blurb">
+<!-- <div id="about" class="blurb">
   <div class="container">
     <div class="row">
       <h1>Who we are</h1>
       <p class="lead">We are Parkour Utah and we like to jump over stuff!</p>
     </div>
     <div class="row hidden">
-      <%= render 'index/video_carousel' %>
+      <%#= render 'index/video_carousel' %>
     </div>
   </div>
-</div>
-<%= render 'index/modal_placeholders' %>
+</div> -->
+<%#= render 'index/modal_placeholders' %>
 
 <div class="callout-background">
   <div class="callout-container" id="peeps">

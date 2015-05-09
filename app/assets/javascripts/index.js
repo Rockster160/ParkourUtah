@@ -21,14 +21,12 @@ var ready = function() {
   if (window.location.pathname == "/") {
     /* smooth scrolling */
     $('.scroll-link').click(function(e){
-      if (window.mobilecheck()) {
-        return e
-      } else {
-        return e
-        // $href = $(e.target.hash).offset().top;
-        // $('body,html').animate({scrollTop:$($href)},500);
-        // e.preventDefault();
-      }
+      // if (window.mobilecheck()) {
+      //   return e
+      // } else {
+        $href = $(e.target.hash).offset().top;
+        $('body,html').animate({scrollTop:$href},500);
+      // }
     });
   };
 };
