@@ -78,11 +78,13 @@
 .pkut-btn {
   transition: 0.3s;
   margin: 20px;
+  max-width: 230px;
 
   text-decoration: none;
   padding: 3px 20px;
   font-family: 'MicroExtendFLF-Bold', Arial, sans-serif;
   font-size: 1.2em;
+  white-space: nowrap;
 
   border: none;
   border-radius: 5px / 10px;
@@ -99,6 +101,7 @@
     cursor: pointer;
   }
 }
+@media (max-width:767px) { .pkut-btn {margin-left: 0;}}
 
 .main-btn {
   transition: 0.3s;

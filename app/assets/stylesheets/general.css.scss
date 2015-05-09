@@ -49,8 +49,13 @@ textarea {
   border-radius: 7px;
 }
 
+.list-group-item {
+  text-decoration: none;
+}
+
 .close-btn {
   float: right;
+  position: relative;
   color: $pkut-red;
   background: transparent;
   border: none;
@@ -60,7 +65,10 @@ textarea {
     margin-right: 16px;
     margin-top: 1px;
   }
-  &.error-close { padding-right: 165px; }
+  &.error-close {
+    right: -30px;
+    top: -20px;
+  }
   &.delete { margin-top: 10px; }
 }
 

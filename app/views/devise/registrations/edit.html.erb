@@ -9,8 +9,8 @@
 <div class="central-container form-offset">
 
   <div class="row internal-center">
-    <div class="actions internal-center">
-      <a alt="..." class="pkut-btn text-center" data-toggle="modal" data-target="#notification_modal">Edit Notification Settings</a><br/>
+    <div class="actions">
+      <a alt="..." class="pkut-btn text-center" data-toggle="modal" data-target="#notification_modal">Edit Notifications</a><br/>
     </div>
     <%= render partial: 'devise/registrations/notifications' %>
   </div>
@@ -125,8 +125,8 @@
     </div>
     <div class="modal fade" id="confirm_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="central-container">
-        <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
         <div class="error-container center-block">
+          <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
           <h1 class="pkut-header">Confirm</h1>
           <p>We need your current password to update your changes.</p>
           <%= f.password_field :current_password, autocomplete: "off", class: 'pkut-textbox' %>
