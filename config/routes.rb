@@ -79,16 +79,16 @@ Rails.application.routes.draw do
   get '/comingsoon' => 'index#coming_soon', as: 'coming_soon'
 
 if Rails.env.production?
-  post '/store/charge' => 'index#coming_soon'
-  get '/store' => 'index#coming_soon'
+  post '/store/charge' => 'index#coming_soon', as: 'charge'
+  get '/store' => 'index#coming_soon', as: 'store'
   post '/store/redeem' => 'index#coming_soon'
-  get '/store/new' => 'index#coming_soon'
-  get '/store/edit/:id' => 'index#coming_soon'
-  get '/store/index' => 'index#coming_soon'
+  get '/store/new' => 'index#coming_soon', as: 'add_item'
+  get '/store/edit/:id' => 'index#coming_soon', as: 'edit_item'
+  get '/store/index' => 'index#coming_soon', as: 'edit_items'
   patch '/store/update/:id' => 'index#coming_soon'
   post '/store/create' => 'index#coming_soon'
-  delete '/store/item/:id/destroy' => 'index#coming_soon'
-  put '/store/update_position/:id' => 'index#coming_soon'
+  delete '/store/item/:id/destroy' => 'index#coming_soon', as: 'destroy_item'
+  put '/store/update_position/:id' => 'index#coming_soon', as: 'update_item_position'
 else
   post '/store/charge' => 'store#charge', as: 'charge'
   get '/store' => 'store#index', as: 'store'
