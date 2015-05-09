@@ -1,0 +1,89 @@
+<%= form_tag "/user/notifications/update" do %>
+  <div class="modal fade" id="notification_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="standard-modal modal-dialog central-container">
+      <button type="button" class="close-btn" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
+      <h1 class="pkut-header">Notifications</h1>
+      <p>Receive Notifications for:</p>
+      <div class="row">
+        <div class="col-xs-4">
+        </div>
+        <div class="col-xs-4">
+          Email
+        </div>
+        <div class="col-xs-4">
+          Text
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-4">
+          Waiver Expiring
+        </div>
+        <div class="col-xs-4">
+          <div class="pkut-checkbox">
+            <%= check_box_tag "notify[email_waiver_expiring]", '', current_user.notifications.email_waiver_expiring? %>
+            <%= label_tag "notify[email_waiver_expiring]", '' %>
+          </div>
+        </div>
+        <div class="col-xs-4">
+          <div class="pkut-checkbox">
+            <%= check_box_tag "notify[text_waiver_expiring]", '', current_user.notifications.text_waiver_expiring? %>
+            <%= label_tag "notify[text_waiver_expiring]", '' %>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-4">
+          Class Reminders
+        </div>
+        <div class="col-xs-4">
+          <div class="pkut-checkbox">
+            <%= check_box_tag "notify[email_class_reminder]", '', current_user.notifications.email_class_reminder? %>
+            <%= label_tag "notify[email_class_reminder]", '' %>
+          </div>
+        </div>
+        <div class="col-xs-4">
+          <div class="pkut-checkbox">
+            <%= check_box_tag "notify[text_class_reminder]", '', current_user.notifications.text_class_reminder? %>
+            <%= label_tag "notify[text_class_reminder]", '' %>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-4">
+          Low on credits
+        </div>
+        <div class="col-xs-4">
+          <div class="pkut-checkbox">
+            <%= check_box_tag "notify[email_low_credits]", '', current_user.notifications.email_low_credits? %>
+            <%= label_tag "notify[email_low_credits]", '' %>
+          </div>
+        </div>
+        <div class="col-xs-4">
+          <div class="pkut-checkbox">
+            <%= check_box_tag "notify[text_low_credits]", '', current_user.notifications.text_low_credits? %>
+            <%= label_tag "notify[text_low_credits]", '' %>
+          </div>
+        </div>
+      </div>
+      <%= submit_tag "Update", class: 'pkut-btn' %>
+      <hr>
+      <div class="row">
+        <p>Classes subscribed to:</p>
+        <% current_user.class_subscriptions.map{|s|s.event}.each do |event| %>
+          <div class="row">
+            <div class="col-xs-6">
+              <%= event.city %> <%= event.class_name.capitalize %> <%= event.date.strftime('%l:%M') %>
+            </div>
+            <div class="col-xs-6">
+              <%= link_to 'Unsubscribe', unsubscribe_path(id: event.id), class: 'pkut-btn', method: :delete %>
+            </div>
+          </div>
+          <br/>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

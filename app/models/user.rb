@@ -94,6 +94,12 @@ class User < ActiveRecord::Base
     self.all.each {|user| block.call(user)}
   end
 
+  def class_subscriptions
+    self.subscriptions.each do |subscription|
+      subscription.event
+    end
+  end
+
   def full_name
     "#{self.first_name.capitalize} #{self.last_name.capitalize}"
   end

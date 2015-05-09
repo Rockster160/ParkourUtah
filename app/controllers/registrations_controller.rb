@@ -2,36 +2,22 @@ class RegistrationsController < ApplicationController
   before_action :verify_user_signed_in
 
   def step_2
-    if current_user.registration_step == 1
-      current_user.registration_step = 2
-    else
-      redirect_user_to_step(2)
-    end
+    redirect_user_to_correct_step(2)
   end
 
   def step_3
-    if current_user.registration_step == 2
-      current_user.registration_step = 3
-    else
-      redirect_user_to_step(3)
-    end
+    redirect_user_to_correct_step(3)
   end
 
   def step_4
-    if current_user.registration_step == 3
-      current_user.registration_step = 4
-    else
-      redirect_user_to_step(4)
-    end
+    redirect_user_to_correct_step(4)
     @athletes = current_user.dependents.select {|athlete| athlete.signed_waiver? == false }
   end
 
   def step_5
-    if current_user.registration_step == 4
-      current_user.registration_step = 5
+    redirect_user_to_correct_step(5)
+    if current_user.registration_step == 5
       current_user.update(registration_complete: true)
-    else
-      redirect_user_to_step(5)
     end
   end
 
@@ -42,6 +28,7 @@ class RegistrationsController < ApplicationController
     ec_contact = current_user.emergency_contacts.new(ec_contact_params)
     contact = ec_contact.save!
     if update_self && notification && address && contact
+      current_user.update(registration_step: 3)
       redirect_to step_3_path, notice: "Success!"
     else
       redirect_to :back, alert: "Something went wrong."
@@ -87,8 +74,10 @@ class RegistrationsController < ApplicationController
       end
     end
     if valid.count == 1
+      current_user.update(registration_step: 4)
       redirect_to step_4_path, notice: "Success! #{valid.count} waiver created."
     elsif valid.count > 1
+      current_user.update(registration_step: 4)
       redirect_to step_4_path, notice: "Success! #{valid.count} waivers created."
     else
       redirect_to :back, alert: "An error occurred."
@@ -145,6 +134,7 @@ class RegistrationsController < ApplicationController
     end
     ::NewAthleteInfoMailerWorker.perform_async(approved.compact)
     # ::NewAthleteNotificationMailerWorker.perform_async("FIXME")
+    current_user.update(registration_step: 5)
     redirect_to step_5_path
   end
 
@@ -160,8 +150,8 @@ class RegistrationsController < ApplicationController
       end
     end
 
-    def redirect_user_to_step(step)
-      if current_user.registration_step != step
+    def redirect_user_to_correct_step(current_step)
+      unless current_step == current_user.registration_step
         redirect_to case current_user.registration_step
         when 2 then step_2_path
         when 3 then step_3_path
