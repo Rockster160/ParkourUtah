@@ -48,8 +48,9 @@ Rails.application.routes.draw do
   post '/athletes/forgot/:athlete_id' => 'dependents#forgot_pin_or_id', as: 'send_reset_pin_or_id_mail'
   get '/athletes/reset/:athlete_id' => 'dependents#reset_pin', as: 'reset_athlete_pin'
 
-  get '/waivers' => 'dependents#waivers', as: 'waivers'
-  post '/waivers' => 'dependents#sign_waiver', as: 'sign_waiver'
+  get '/waivers' => 'dependents#sign_waiver', as: 'waivers'
+  post '/waivers' => 'dependents#update_waiver'
+  post '/delete_athlete/:athlete_id' => 'dependents#delete_athlete'
 
   devise_for :users, :controllers => {:registrations => "users/registrations"}
   post '/user/notifications/update' => 'index#update_notifications'

@@ -117,6 +117,10 @@ class User < ActiveRecord::Base
     dependents.sort_by { |d| d.waiver ? d.waiver.created_at : created_at }
   end
 
+  def athletes_where_expired_past_or_soon
+    dependents.select { |d| !(d.waiver) || d.waiver.expires_soon? || !(d.waiver.is_active?) }
+  end
+
   def subscribed?(event)
     Subscription.where(user_id: self.id, event_id: event.id).count > 0
   end

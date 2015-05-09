@@ -38,6 +38,62 @@
     end
   end
 
+  def update_waiver
+    valid = []
+    params[:athlete].each do |athlete|
+      if validate_athlete_attributes(athlete[1])
+        new_athlete = current_user.dependents.create(
+          full_name: athlete[1][:name],
+          date_of_birth: athlete[1][:dob],
+          athlete_pin: athlete[1][:code]
+        )
+        new_athlete.waivers.create(
+          signed_for: new_athlete.full_name,
+          signed_by: params[:signed_by],
+        )
+        if new_athlete.sign_waiver!
+          new_athlete.generate_pin
+          valid << new_athlete
+        end
+      end
+    end if params[:athlete]
+    params[:update_athlete].each do |athlete_id, athlete_params|
+      athlete = Dependent.find(athlete_id)
+      if validate_athlete_attributes(athlete_params)
+        athlete.waivers.create(
+          signed_for: athlete.full_name,
+          signed_by: params[:signed_by],
+        ).sign!
+        valid << athlete
+      end
+    end if params[:update_athlete]
+    if valid.count == 1
+      redirect_to step_4_path, notice: "Success! #{valid.count} waiver updated/created."
+    elsif valid.count > 1
+      redirect_to step_4_path, notice: "Success! #{valid.count} waivers updated/created."
+    else
+      redirect_to :back, alert: "An error occurred."
+    end
+  end
+
+  def validate_athlete_attributes(athlete)
+    all_good = true
+    all_good = false unless athlete[:name].length > 0
+    all_good = false unless athlete[:dob].length == 10
+    all_good = false unless athlete[:code].length == 4
+    all_good
+  end
+
+  def sign_waiver
+    @athletes = current_user.athletes_where_expired_past_or_soon
+  end
+
+  def delete_athlete
+    athlete = Dependent.find(params[:athlete_id])
+    athlete.destroy
+    redirect_to :back, notice: "Athlete successfully deleted."
+  end
+
   def show
   end
 

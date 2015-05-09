@@ -124,7 +124,7 @@
       </div>
     </div>
     <br/>
-    
+
     <%= fields_for :emergency_contacts, resource.emergency_contacts.last do |ff| %>
       <h5>Emergency Contact</h5>
       <div class="row">
@@ -235,7 +235,7 @@
           <h4><%= athlete.full_name %></h4>
           <% if athlete.signed_waiver? && athlete.waiver.is_active? %>
             <% if athlete.waiver.expires_soon? %>
-              <%= link_to sign_waiver_path(athlete.id), class: 'fancy-link' do  %>
+              <%= link_to waivers_path(athlete.id), class: 'fancy-link' do  %>
                 <span class="pkut-header title">Waiver active until <%= athlete.waiver.exp_date.strftime('%B %-d, %Y') %></span>
                 Update Waiver
               <% end %>
@@ -249,12 +249,8 @@
           <%= link_to "Forgot PIN / ID? Click here to reset.", send_reset_pin_or_id_mail_path(athlete.id), method: "post" %>
         </div>
       <% end %>
-      <%= form_for Dependent.new, url: "/athletes/new" do %>
-        <div class="athletes-holder">
-        </div>
-        <h2 class="fancy-btn add-athlete-btn">Add Athlete</h2></br>
-        <%= submit_tag "Submit", class: 'fancy-btn athleteVerify set-min-width-btn' %>
-      <% end %>
+      <br/>
+        <%= link_to "Add Athletes", waivers_path, class: 'pkut-btn' %>
     </div>
   </div>
 </div>

@@ -42,6 +42,9 @@ var ready = function() {
   $('.athlete-container').delegate('.kill-athlete', 'click', function(e) {
     $(this).closest('.row').remove();
   });
+  $('.athlete-input-info').delegate('.delete-athlete', 'click', function(e) {
+    $('.delete-athlete-btn').attr('href', "/delete_athlete/" + $(this).attr('id'));
+  });
 
   var generateToken = function() {
     var alphabet = "abcdefghijklmnopqrstuvwxyz", numbers = "0123456789", token = [];
