@@ -18,12 +18,7 @@
 //= require twitter/bootstrap
 //= require turbolinks
 //= require maskedinput
-
-// $(function () {
-//   $('body')
-//     .on('touchstart.dropdown.data-api', '.dropdown-menu', function (e) { e.stopPropagation() })
-// });
-
+//= require_tree .
 
 ready = function() {
   timeout = setTimeout(function() {

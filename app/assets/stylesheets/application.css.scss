@@ -15,6 +15,7 @@
  *= require select2-bootstrap
  *= require twitter-bootstrap-static/bootstrap
  *= require_self
+ *= require_tree .
  */
 @import "config/variables";
 @import "config/font-imports";
