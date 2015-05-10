@@ -11,7 +11,7 @@ class PeepsController < ApplicationController
   end
 
   def post_secret
-    if params[:secret_code].to_i == 9
+    if params[:secret_code]
       Automator.activate!
     end
     redirect_to secret_path

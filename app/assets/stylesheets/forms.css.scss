@@ -8,6 +8,11 @@
   margin-bottom: 50px;
 }
 
+.recaptcha-container {
+  margin: 0 auto;
+  width: 300px;
+}
+
 .pkut-box {
   text-align: left;
   padding: 0 2.5%;
@@ -101,7 +106,6 @@
     cursor: pointer;
   }
 }
-@media (max-width:767px) { .pkut-btn {margin-left: 0;}}
 
 .main-btn {
   transition: 0.3s;
@@ -131,6 +135,14 @@
     text-decoration: none;
 
     background-color: white;
+  }
+}
+@media (max-width: 500px) {
+  .pkut-btn { margin-left: 0; }
+  .main-btn {
+    padding: 15px 0;
+    width: 40%;
+    font-size: 8px;
   }
 }
 .call-to-arms {

@@ -1,6 +1,7 @@
 <div class="row">
   <div class="col-sm-6">
-    <h2><%= current_user.email %></h2>
+    <h2 class="hidden-xs"><%= current_user.email %></h2>
+    <h4 class="visibl-xs"><%= current_user.email %></h4>
   </div>
   <div class="col-sm-6 text-right">
     <h2>Credits: <span class="pkut-header"><%= current_user.credits %><span></h2>
@@ -9,9 +10,7 @@
 <div class="central-container form-offset">
 
   <div class="row internal-center">
-    <div class="actions">
-      <a alt="..." class="pkut-btn text-center" data-toggle="modal" data-target="#notification_modal">Edit Notifications</a><br/>
-    </div>
+    <a alt="..." class="pkut-btn text-center" data-toggle="modal" data-target="#notification_modal">Edit Notifications</a><br/>
     <%= render partial: 'devise/registrations/notifications' %>
   </div>
   <br/>

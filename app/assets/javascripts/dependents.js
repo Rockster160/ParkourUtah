@@ -30,9 +30,9 @@ var ready = function() {
     var token = generateToken();
     $('.athlete-container').append('<div class="row athlete-input-info"><div class="col-sm-6"><input type="text" name="athlete[' +
     token +
-    '][name]" value="" placeholder="Full Name" class="pkut-textbox formatName" /></div><div class="col-sm-6"><input type="text" name="athlete[' +
+    '][name]" value="" placeholder="Full Name" class="pkut-textbox formatName" /></div><div class="col-sm-6"><input type="tel" name="athlete[' +
     token +
-    '][dob]" value="" placeholder="MM/DD/YYYY" class="pkut-textbox sm-textbox formatDOB" /><input type="text" name="athlete[' +
+    '][dob]" value="" placeholder="MM/DD/YYYY" class="pkut-textbox sm-textbox formatDOB" /><input type="tel" name="athlete[' +
     token +
     '][code]" value="" placeholder="Code" class="pkut-textbox xs-textbox formatPin" /><i class="fa fa-times-circle-o fa-2x kill-athlete"></i></div></div>');
     $(".formatDOB:last").mask("99/99/9999");

@@ -11,7 +11,11 @@
       <a href="#about" class="main-btn lead scroll-link">About Us</a>
       <a href="#peeps" class="main-btn lead scroll-link">Our people</a>
       <br class="visible-xs visible-sm"/>
-      <a href="<%= edit_user_registration_path %>" class="main-btn lead call-to-arms">Get Started</a>
+      <% if user_signed_in? %>
+        <a href="<%= edit_user_registration_path %>" class="main-btn lead call-to-arms">Get Started</a>
+      <% else %>
+        <a href="<%= new_user_registration_path %>" class="main-btn lead call-to-arms">Get Started</a>
+      <% end %>
       <br class="visible-xs visible-sm"/>
       <a href="#schedule" class="main-btn lead scroll-link">Locations</a>
       <a href="#join" class="main-btn lead scroll-link">Contact us</a>
