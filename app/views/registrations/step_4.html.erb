@@ -13,6 +13,7 @@
         <span class="pkut-link title open-review-modal"><%= current_user.email %></span>
       </div>
     </div>
+    <br class="visible-xs"/>
     <div class="row">
       <div class="col-sm-4">
         <span>Phone Number:</span>
@@ -30,6 +31,7 @@
         <span class="pkut-link title open-review-modal"><%= current_user.emergency_contacts.last.name %></span>
       </div>
     </div>
+    <br class="visible-xs"/>
     <div class="row">
       <div class="col-sm-4">
         <span>Emergency Contact Number:</span>
@@ -45,7 +47,9 @@
       </div>
       <div class="col-sm-8">
         <span class="pkut-link title open-review-modal"><%= current_user.show_address("%l1") %><br/></span>
-        <span class="pkut-link title open-review-modal"><%= current_user.show_address("%l2") %><br/></span>
+        <% if current_user.address.line2.length > 0 %>
+          <span class="pkut-link title open-review-modal"><%= current_user.show_address("%l2") %><br/></span>
+        <% end %>
         <span class="pkut-link title open-review-modal"><%= current_user.show_address("%c, %s %z") %><br/></span>
       </div>
     </div>

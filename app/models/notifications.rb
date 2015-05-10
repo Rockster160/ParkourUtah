@@ -26,12 +26,25 @@ class Notifications < ActiveRecord::Base
     self.text_waiver_expiring = false
   end
 
-  def blow!
-    self.email_class_reminder = false
-    self.text_class_reminder = false
-    self.email_low_credits = false
-    self.text_low_credits = false
-    self.email_waiver_expiring = false
-    self.text_waiver_expiring = false
+  def blow!(str="all")
+    case string
+    when "text" then change_all_text_to false
+    when "email" then change_all_email_to false
+    else
+      change_all_text_to false
+      change_all_email_to false
+    end
+  end
+
+  def change_all_email_to(bool)
+    self.email_class_reminder = bool
+    self.email_low_credits = bool
+    self.email_waiver_expiring = bool
+  end
+
+  def change_all_text_to(bool)
+    self.text_class_reminder = bool
+    self.text_low_credits = bool
+    self.text_waiver_expiring = bool
   end
 end

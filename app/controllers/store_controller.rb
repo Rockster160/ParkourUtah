@@ -165,7 +165,6 @@ class StoreController < ApplicationController
   end
 
   def item_params
-    binding.pry
     params[:line_item][:cost_in_pennies] = (params[:line_item][:cost].to_i * 100).round.to_s
     params.require(:line_item).permit(:description, :title, :display, :cost_in_pennies, :category, :hidden, :credits)
   end

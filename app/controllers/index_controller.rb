@@ -31,7 +31,7 @@ class IndexController < ApplicationController
 
 
   def update_notifications
-    current_user.notifications.blow!
+    current_user.notifications.blow!("text")
     params[:notify].each do |attribute, value|
       current_user.notifications.update(attribute => true)
     end
@@ -39,14 +39,14 @@ class IndexController < ApplicationController
   end
 
   def receive_sms
-    number = params["From"]
-    if params["Body"].downcase.split.join == "stop"
-      User.find_by_phone_number(number).subscriptions.each do |subscription|
-        subscription.destroy
-      end
-      ::SmsMailerWorker.perform_async("You have been unsubscribed from all messages from ParkourUtah.", number)
-      # TODO Send email?
-    end
+    # number = params["From"]
+    # if params["Body"].downcase.split.join == "stop"
+    #   User.find_by_phone_number(number).subscriptions.each do |subscription|
+    #     subscription.destroy
+    #   end
+    #   ::SmsMailerWorker.perform_async("You have been unsubscribed from all messages from ParkourUtah.", number)
+    #   # TODO Send email?
+    # end
   end
 
   def update
@@ -74,12 +74,12 @@ class IndexController < ApplicationController
     # :text_low_credits
     # :email_waiver_expiring
     # :text_waiver_expiring
-    if current_user == User.find(params[:id]) && User.find(params[:id]).notifications.update(params[:type] => false)
-      flash[:notice] = "You have been successully unsubscribed."
-    else
-      flash[:alert] = "You must be signed in to unsubscribe."
-    end
-    redirect_to root_path
+    # if current_user == User.find(params[:id]) && User.find(params[:id]).notifications.update(params[:type] => false)
+    #   flash[:notice] = "You have been successully unsubscribed."
+    # else
+    #   flash[:alert] = "You must be signed in to unsubscribe."
+    # end
+    # redirect_to root_path
   end
 
   private

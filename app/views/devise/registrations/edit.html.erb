@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-sm-6">
     <h2 class="hidden-xs"><%= current_user.email %></h2>
-    <h4 class="visibl-xs"><%= current_user.email %></h4>
+    <h4 class="visible-xs"><%= current_user.email %></h4>
   </div>
   <div class="col-sm-6 text-right">
     <h2>Credits: <span class="pkut-header"><%= current_user.credits %><span></h2>
@@ -18,18 +18,18 @@
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
 
     <div class="row">
-      <div class="col-xs-3">
+      <div class="col-sm-3">
         <br/><%= f.label :email, 'Email Address:' %>
       </div>
-      <div class="col-xs-9">
+      <div class="col-sm-9">
         <%= f.email_field :email, class: 'pkut-textbox customRequired' %>
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-3">
+      <div class="col-sm-3">
         <br/><%= f.label :phone_number, 'Phone Number:' %>
       </div>
-      <div class="col-xs-9">
+      <div class="col-sm-9">
         <%= f.telephone_field :phone_number, autocomplete: "off", class: 'pkut-textbox formatPhoneNumber customRequired' %>
       </div>
     </div>
@@ -38,18 +38,18 @@
     <%= fields_for :emergency_contacts, resource.emergency_contacts.last do |ff| %>
       <h5>Emergency Contact</h5>
       <div class="row">
-        <div class="col-xs-3">
+        <div class="col-sm-3">
           <br/><%= ff.label :name, 'Name:' %>
         </div>
-        <div class="col-xs-9">
+        <div class="col-sm-9">
           <%= ff.text_field :name, class: 'pkut-textbox customRequired' %>
         </div>
       </div>
       <div class="row">
-        <div class="col-xs-3">
+        <div class="col-sm-3">
           <br/><%= ff.label :number, 'Phone Number:' %>
         </div>
-        <div class="col-xs-9">
+        <div class="col-sm-9">
           <%= ff.telephone_field :number, class: 'pkut-textbox formatPhoneNumber customRequired' %>
         </div>
       </div>
@@ -59,42 +59,42 @@
     <%= fields_for :address, resource.address do |fff| %>
       <h5>Address:</h5>
       <div class="row">
-        <div class="col-xs-3">
+        <div class="col-sm-3">
           <br/><%= fff.label :line1, 'Line 1:' %>
         </div>
-        <div class="col-xs-9">
+        <div class="col-sm-9">
           <%= fff.text_field :line1, class: 'pkut-textbox customRequired' %>
         </div>
       </div>
       <div class="row">
-        <div class="col-xs-3">
+        <div class="col-sm-3">
           <br/><%= fff.label :line2, 'Line 2:' %>
         </div>
-        <div class="col-xs-9">
+        <div class="col-sm-9">
           <%= fff.text_field :line2, class: 'pkut-textbox' %>
         </div>
       </div>
       <div class="row">
-        <div class="col-xs-3">
+        <div class="col-sm-3">
           <br/><%= fff.label :city, 'City:' %>
         </div>
-        <div class="col-xs-9">
+        <div class="col-sm-9">
           <%= fff.text_field :city, class: 'pkut-textbox customRequired' %>
         </div>
       </div>
       <div class="row">
-        <div class="col-xs-3">
+        <div class="col-sm-3">
           <br/><%= fff.label :state, 'State:' %>
         </div>
-        <div class="col-xs-9">
+        <div class="col-sm-9">
           <%= fff.text_field :state, class: 'pkut-textbox customRequired' %>
         </div>
       </div>
       <div class="row">
-        <div class="col-xs-3">
+        <div class="col-sm-3">
           <br/><%= fff.label :zip, 'Zip:' %>
         </div>
-        <div class="col-xs-9">
+        <div class="col-sm-9">
           <%= fff.text_field :zip, class: 'pkut-textbox customRequired' %>
         </div>
       </div>
@@ -103,18 +103,18 @@
 
     <h5>Change Password:</h5>
     <div class="row">
-      <div class="col-xs-3">
+      <div class="col-sm-3">
         <br/><%= f.label :password, "New Password:" %>
       </div>
-      <div class="col-xs-9">
+      <div class="col-sm-9">
         <%= f.password_field :password, autocomplete: "off", class: 'pkut-textbox' %>
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-3">
+      <div class="col-sm-3">
         <br/><%= f.label :password_confirmation, "Confirm Password:" %><br />
       </div>
-      <div class="col-xs-9">
+      <div class="col-sm-9">
         <%= f.password_field :password_confirmation, autocomplete: "off", class: 'pkut-textbox' %>
       </div>
     </div>
@@ -136,10 +136,10 @@
   <% end %>
   <hr>
   <div class="row">
-    <div class="col-xs-3">
+    <div class="col-sm-3">
       <h5>Athletes:</h5>
     </div>
-    <div class="col-xs-9">
+    <div class="col-sm-9">
       <% current_user.athletes_by_waiver_expiration.each_with_index do |athlete, pos| %>
         <div class="row">
           <h4><%= athlete.full_name %></h4>

@@ -41,7 +41,7 @@ class RegistrationsController < ApplicationController
   end
 
   def update_notifications
-    new_value = params[:smsalert].present? ? true : false
+    new_value = params[:smsalert] ? true : false
     current_user.notifications.update_attributes(
       text_class_reminder: new_value,
       text_low_credits: new_value,
