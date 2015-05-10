@@ -6,44 +6,44 @@
   <p>You <strong>MUST</strong> click on the empty checkmarts next to each athlete confirming that the waiver you signed on the previous step had their name on it.</p>
   <%= form_tag do %>
     <div class="row">
-      <div class="col-xs-4">
+      <div class="col-sm-4">
         <span>Email Address:</span>
       </div>
-      <div class="col-xs-8">
+      <div class="col-sm-8">
         <span class="pkut-link title open-review-modal"><%= current_user.email %></span>
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-4">
+      <div class="col-sm-4">
         <span>Phone Number:</span>
       </div>
-      <div class="col-xs-8">
+      <div class="col-sm-8">
         <span class="pkut-link title open-review-modal"><%= current_user.show_phone_number %></span>
       </div>
     </div>
     <br/>
     <div class="row">
-      <div class="col-xs-4">
+      <div class="col-sm-4">
         <span>Emergency Contact Name:</span>
       </div>
-      <div class="col-xs-8">
+      <div class="col-sm-8">
         <span class="pkut-link title open-review-modal"><%= current_user.emergency_contacts.last.name %></span>
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-4">
+      <div class="col-sm-4">
         <span>Emergency Contact Number:</span>
       </div>
-      <div class="col-xs-8">
+      <div class="col-sm-8">
         <span class="pkut-link title open-review-modal"><%= current_user.emergency_contacts.last.show_phone_number %></span>
       </div>
     </div>
     <br/>
     <div class="row">
-      <div class="col-xs-4">
+      <div class="col-sm-4">
         <span>Address:</span>
       </div>
-      <div class="col-xs-8">
+      <div class="col-sm-8">
         <span class="pkut-link title open-review-modal"><%= current_user.show_address("%l1") %><br/></span>
         <span class="pkut-link title open-review-modal"><%= current_user.show_address("%l2") %><br/></span>
         <span class="pkut-link title open-review-modal"><%= current_user.show_address("%c, %s %z") %><br/></span>
@@ -51,34 +51,37 @@
     </div>
     <br/>
     <div class="row">
-      <div class="col-xs-3">
+      <div class="col-sm-3">
         <span>Athletes:</span>
       </div>
-      <div class="col-xs-9">
-        <div class="row">
-          <div class="col-xs-3">Athlete Name</div>
-          <div class="col-xs-3">Birthday</div>
-          <div class="col-xs-2">Code</div>
-          <div class="col-xs-4">Read and Signed Waiver</div>
+      <div class="col-sm-9">
+        <div class="row text-right">
+          Read and Signed Waiver
         </div>
         <% @athletes.each do |athlete| %>
           <div class="row">
-            <div class="col-xs-3">
+              <div class="col-xs-8 visible-xs">
+              <div class="pkut-link title open-review-modal"><%= athlete.full_name %></div>
+              <div class="pkut-link title open-review-modal"><%= athlete.date_of_birth %></div>
+              <div class="pkut-link title open-review-modal"><%= athlete.athlete_pin %></div>
+            </div>
+            <div class="col-sm-3 hidden-xs">
               <span class="pkut-link title open-review-modal"><%= athlete.full_name %></span>
             </div>
-            <div class="col-xs-3">
+            <div class="col-sm-3 hidden-xs">
               <span class="pkut-link title open-review-modal"><%= athlete.date_of_birth %></span>
             </div>
-            <div class="col-xs-2">
+            <div class="col-sm-2 hidden-xs">
               <span class="pkut-link title open-review-modal"><%= athlete.athlete_pin %></span>
             </div>
-            <div class="col-xs-4">
+            <div class="col-sm-4">
               <div class="pkut-checkbox text-center">
                 <%= check_box_tag "agreed[#{athlete.id}]", '', false, class: "customRequired" %>
                 <%= label_tag "agreed[#{athlete.id}]", '' %>
               </div>
             </div>
           </div>
+          <hr>
         <% end %>
       </div>
     </div>

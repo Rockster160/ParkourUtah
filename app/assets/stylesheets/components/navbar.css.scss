@@ -32,10 +32,10 @@
   text-transform: uppercase;
   text-decoration: none;
   text-shadow:
-    -0.5px -0.5px 0 #FFF,
-    0.5px -0.5px 0 #FFF,
-    -0.5px 0.5px 0 #FFF,
-    0.5px 0.5px 0 #FFF,
+    -1px -1px 0 #FFF,
+    1px -1px 0 #FFF,
+    -1px 1px 0 #FFF,
+    1px 1px 0 #FFF,
     2px 2px 3px #555;
   &:hover {
     text-decoration: none;
