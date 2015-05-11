@@ -8,6 +8,5 @@ class SmsMailerWorker
       to: num,
       from: "+17405714304"
     )
-
   end
 end

@@ -39,6 +39,12 @@ class IndexController < ApplicationController
   end
 
   def receive_sms
+    api = Twilio::REST::Client.new(ENV['PKUT_TWILIO_ACCOUNT_SID'], ENV['PKUT_TWILIO_AUTH_TOKEN'])
+    api.account.messages.create(
+      body: "From: #{params["From"]}\nMessage: #{params["Body"]}",
+      to: "+3852599640",
+      from: "+17405714304"
+    )
     # number = params["From"]
     # if params["Body"].downcase.split.join == "stop"
     #   User.find_by_phone_number(number).subscriptions.each do |subscription|
@@ -68,6 +74,13 @@ class IndexController < ApplicationController
   end
 
   def unsubscribe
+    api = Twilio::REST::Client.new(ENV['PKUT_TWILIO_ACCOUNT_SID'], ENV['PKUT_TWILIO_AUTH_TOKEN'])
+    api.account.messages.create(
+      body: "Somebody unsubscribed.",
+      to: "+3852599640",
+      from: "+17405714304"
+    )
+    redirect_to edit_user_registration, notice: "You may edit which notifications you receive by clicking the Edit Notifications button at the top of the page."
     # :email_class_reminder
     # :text_class_reminder
     # :email_low_credits

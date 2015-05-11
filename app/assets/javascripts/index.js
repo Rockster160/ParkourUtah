@@ -20,7 +20,11 @@ var ready = function() {
 
   if (window.location.pathname == "/") {
     /* smooth scrolling */
-    $('body,html').css({"background-color": "transparent"});
+    if (window.mobilecheck()) {
+      $('body,html').css({"background-color": "#9A9A9A"});
+    } else {
+      $('body,html').css({"background-color": "transparent"});
+    }
     $('.scroll-link').click(function(e){
       $href = $(e.target.hash).offset().top;
       $('body,html').animate({scrollTop:$href},500);
