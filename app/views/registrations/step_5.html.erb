@@ -15,13 +15,17 @@
     </div>
     <br class="visible-xs"/>
     <div class="col-sm-2">
-      <div class="col-sm-12 col-xs-6">
+      <div class="col-sm-12 col-xs-4">
         <%= link_to 'Store', store_path, class: "pkut-btn" %>
       </div>
       <br class="hidden-xs"/>
       <br class="hidden-xs"/>
+      <div class="col-sm-12 col-xs-4">
+        <%= link_to 'Profile', edit_user_registration_path, class: "pkut-btn" %>
+      </div>
       <br class="hidden-xs"/>
-      <div class="col-sm-12 col-xs-6">
+      <br class="hidden-xs"/>
+      <div class="col-sm-12 col-xs-4">
         <%= link_to 'Schedule', calendar_show_path("all"), class: "pkut-btn" %>
       </div>
     </div>
