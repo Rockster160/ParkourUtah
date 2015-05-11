@@ -98,9 +98,15 @@ class Scheduled < ActiveRecord::Base
   end
 
   def self.waiver_checks
-    Waiver.select { |w| w.expires_soon? }.each do |waiver|
-      if waiver.exp_date.to_date == (Time.now + 1.week).to_date
-        ::ExpiringWaiverMailerWorker.perform_async(waiver.first.dependent.id)
+    Dependent.all.each do |athlete|
+      user = athlete.user
+      if athlete.waiver.exp_date.to_date == (Time.now + 1.week).to_date
+        if user.notifications.email_waiver_expiring
+          ::ExpiringWaiverMailerWorker.perform_async(athlete.id)
+        end
+        if user.notifications.text_waiver_expiring
+          ::SmsMailerWorker.perform_async("The waiver belonging to #{athlete.full_name} is no longer active as of #{athlete.waiver.exp_date.strftime('%B %e')}. Head up to ParkourUtah.com to get it renewed!", user.phone_number)
+        end
       end
     end
   end

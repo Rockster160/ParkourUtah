@@ -11,7 +11,7 @@ class PeepsController < ApplicationController
   end
 
   def post_secret
-    if params[:secret_code]
+    if params[:secret_code].to_i == 9
       Automator.activate!
     end
     redirect_to secret_path
@@ -135,7 +135,7 @@ class PeepsController < ApplicationController
           ::LowCreditsMailerWorker.perform_async(@user.id)
         end
         if @user.notifications.text_low_credits
-          # ::LowCreditsSmsWorker.perform_async(@user.id) TODO
+          ::SmsMailerWorker.perform_async(@user.phone_number, "You are low on Credits! Head up to ParkourUtah.com to get some more so you have some for next time.")
         end
       end
       flash[:notice] = "Success! Welcome to class."

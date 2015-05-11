@@ -24,6 +24,7 @@ class Notifications < ActiveRecord::Base
     self.text_low_credits = false
     self.email_waiver_expiring = true
     self.text_waiver_expiring = false
+    self.save!
   end
 
   def blow!(str="all")
