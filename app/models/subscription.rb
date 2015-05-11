@@ -5,6 +5,7 @@
 #  id       :integer          not null, primary key
 #  user_id  :integer
 #  event_id :integer
+#  token    :integer
 #
 
 class Subscription < ActiveRecord::Base

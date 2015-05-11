@@ -129,7 +129,7 @@ class User < ActiveRecord::Base
   end
 
   def subscribed?(event)
-    Subscription.where(user_id: self.id, event_id: event.id).count > 0
+    Subscription.where(user_id: self.id, token: event.token).count > 0
   end
 
   def charge_credits(charge)
