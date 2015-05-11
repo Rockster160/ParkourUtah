@@ -2,11 +2,17 @@ class Scheduled < ActiveRecord::Base
 
   def self.send_class_text
     Subscription.all.each do |subscriber|
+      user = subscriber.user
       Event.where(token: subscriber.token).select { |e| e.date.to_date == Time.now.to_date && e.date.hour == (Time.now + 2.hours).hour }.each do |event|
-        num = subscriber.user.phone_number
-        if num.length == 10
-          msg = "Hope to see you at our #{event.city} #{event.class_name.capitalize} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!"
-          ::SmsMailerWorker.perform_async(msg, num)
+        if user.notifications.text_class_reminder
+          num = user.phone_number
+          if num.length == 10
+            msg = "Hope to see you at our #{event.city} #{event.class_name.capitalize} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!"
+            ::SmsMailerWorker.perform_async(num, msg)
+          end
+        end
+        if user.notifications.email_class_reminder
+          # TODO ::ClassReminderMailerWorker.perform_async(user.id)
         end
       end
     end
@@ -18,9 +24,9 @@ class Scheduled < ActiveRecord::Base
 
   def self.send_test_text
     if Rails.env == "production"
-      ::SmsMailerWorker.perform_async("This is a test from Parkour Utah in Production!", '3852599640')
+      ::SmsMailerWorker.perform_async('3852599640', "This is a test from Parkour Utah in Production!")
     else
-      ::SmsMailerWorker.perform_async("This is a test from Parkour Utah!", '3852599640')
+      ::SmsMailerWorker.perform_async('3852599640', "This is a test from Parkour Utah!")
     end
   end
 
@@ -105,7 +111,7 @@ class Scheduled < ActiveRecord::Base
           ::ExpiringWaiverMailerWorker.perform_async(athlete.id)
         end
         if user.notifications.text_waiver_expiring
-          ::SmsMailerWorker.perform_async("The waiver belonging to #{athlete.full_name} is no longer active as of #{athlete.waiver.exp_date.strftime('%B %e')}. Head up to ParkourUtah.com to get it renewed!", user.phone_number)
+          ::SmsMailerWorker.perform_async('user.phone_number', "The waiver belonging to #{athlete.full_name} is no longer active as of #{athlete.waiver.exp_date.strftime('%B %e')}. Head up to ParkourUtah.com to get it renewed!")
         end
       end
     end

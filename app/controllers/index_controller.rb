@@ -50,7 +50,7 @@ class IndexController < ApplicationController
     #   User.find_by_phone_number(number).subscriptions.each do |subscription|
     #     subscription.destroy
     #   end
-    #   ::SmsMailerWorker.perform_async("You have been unsubscribed from all messages from ParkourUtah.", number)
+    #   ::SmsMailerWorker.perform_async(number, "You have been unsubscribed from all messages from ParkourUtah.")
     #   # TODO Send email?
     # end
   end
