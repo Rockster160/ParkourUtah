@@ -50,6 +50,7 @@ class User < ActiveRecord::Base
 
   has_one :address, dependent: :destroy
   has_one :notifications, dependent: :destroy
+  has_many :unlimited_subscriptions, dependent: :destroy
   has_many :carts, dependent: :destroy
   has_many :dependents, dependent: :destroy
   has_many :transactions, through: :cart
@@ -110,6 +111,19 @@ class User < ActiveRecord::Base
 
   def is_mod?
     self.role >= 2
+  end
+
+  def has_unlimited_access?
+    return false unless self.unlimited_subscription
+
+    self.unlimited_subscription.active?
+  end
+
+  def unlimited_subscription
+    return nil unless self.unlimited_subscriptions
+    return nil unless self.unlimited_subscriptions.first
+
+    self.unlimited_subscriptions.sort_by { |s| s.created_at }.last
   end
 
   def is_admin?
