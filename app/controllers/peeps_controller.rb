@@ -10,6 +10,15 @@ class PeepsController < ApplicationController
   def secret
   end
 
+  def destroy_user
+    if params[:confirmation] == "DELETE"
+      User.find(params[:id]).destroy
+      redirect_to recent_users_path, notice: "User successfully deleted."
+    else
+      redirect_to recent_users_path, notice: "Sorry, DELETE was not entered correctly. User still exists."
+    end
+  end
+
   def post_secret
     if params[:secret_code].to_i == 9
       Automator.activate!
@@ -26,6 +35,10 @@ class PeepsController < ApplicationController
 
   def edit
     @instructors = User.all.select { |u| u.is_instructor? }.sort_by { |s| s.instructor_position }
+  end
+
+  def recent_users
+    @users = User.all.sort_by{|u|u.created_at}.reverse
   end
 
   def edit_peep

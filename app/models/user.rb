@@ -134,6 +134,10 @@ class User < ActiveRecord::Base
     self.emergency_contacts.map { |num| format_phone_number_to_display(num) }
   end
 
+  def athletes
+    dependents
+  end
+
   def athletes_by_waiver_expiration
     dependents.sort_by { |d| d.waiver ? d.waiver.created_at : created_at }
   end

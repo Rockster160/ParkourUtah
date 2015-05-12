@@ -3,6 +3,15 @@ var ready = function() {
   $(':submit').click(function(e) {
     var form = $(this).closest('form')[0];
     var invalid = [];
+    if ($(this).hasClass('delete-user-btn')) {
+      var $field = $(form).find('.delete-user-field:first');
+      if ($field.val() == "DELETE") {
+
+      } else {
+        e.preventDefault;
+        return false
+      }
+    }
     $(form).find('.customRequired').each(function(e) {
       if ($(this).attr('type') == "checkbox") {
         if (!(this.checked)) {

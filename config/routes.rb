@@ -41,6 +41,8 @@ Rails.application.routes.draw do
   get '/peeps/promote' => 'peeps#promote', as: 'promote'
   post '/peeps/promote' => 'peeps#promotion', as: 'promotion'
   post '/peeps/demotion/:id' => 'peeps#demotion', as: 'demotion'
+  get '/peeps/users' => 'peeps#recent_users', as: 'recent_users'
+  delete '/user/:id' => 'peeps#destroy_user', as: 'user'
 
   get '/athletes/new' => 'dependents#new', as: 'new_athlete'
   post '/athletes/new' => 'dependents#create'

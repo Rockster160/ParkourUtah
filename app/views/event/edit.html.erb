@@ -23,14 +23,14 @@
     <%= f.label :cost %><br/>
     <%= f.number_field :cost_in_dollars, placeholder: 'Cost', size: 2, class: 'pkut-textbox' %><br/>
     <%= f.label :time %><br/>
-    <input type="number" placeholder="Hr" name="time[hour]" min="1" max="12" class="customRequired" style="color: black;">:
-    <input type="number" placeholder="Min" name="time[minute]" value="00" min="0" max="59" class="customRequired" style="color: black;">
-    <input type="radio" name="time[meridiam]" value="AM"> AM
-    <input type="radio" name="time[meridiam]" checked="checked" value="PM"> PM<br/>
-    <h4>This will copy the event every week on the same day for 1 year.</h4>
-    <%= label_tag :repeat, "Repeat Weekly?" %>
-    <%= check_box_tag :repeat %>
-    <%= hidden_field_tag :date, "", class: "datepicker-placeholder customRequired" %>
+    <input type="number" value="<%= @event.date.hour > 12 ? @event.date.hour - 12 : @event.date.hour  %>" placeholder="Hr" name="time[hour]" min="1" max="12" class="customRequired" style="color: black;">:
+    <input type="number" value="<%= @event.date.min %>" placeholder="Min" name="time[minute]" value="00" min="0" max="59" class="customRequired" style="color: black;">
+    <input type="radio" name="time[meridiam]" checked="<%= @event.date.hour <= 12 ? 'checked' : '' %>" value="AM"> AM
+    <input type="radio" name="time[meridiam]" checked="<%= @event.date.hour > 12 ? 'checked' : '' %>" value="PM"> PM<br/>
+    <h4>This will update all repeating events.</h4>
+    <%= label_tag :all, "Update all?" %>
+    <%= check_box_tag :all, '', true %>
+    <%= hidden_field_tag :date, @event.date, class: "datepicker-placeholder" %>
     <br/>
     <%= submit_tag "√", class: "btn btn-success" %>
   <% end %>

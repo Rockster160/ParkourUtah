@@ -8,6 +8,7 @@
     <%= link_to "Private Class", begin_class_path(1), class: 'pkut-btn' %><br/><br/>
     <% if current_user.is_admin? %>
       <h2>Admin Abilities</h2><br/>
+      <%= link_to "View Recent Users", recent_users_path, class: 'pkut-btn' %><br/></br>
       <%= link_to "Generate Keys", generate_keys_path, class: 'pkut-btn' %><br/><br/>
       <%= link_to "Add New Item", add_item_path, class: 'pkut-btn' %><br/><br/>
       <%= link_to "Edit Items", edit_items_path, class: 'pkut-btn' %><br/><br/>
