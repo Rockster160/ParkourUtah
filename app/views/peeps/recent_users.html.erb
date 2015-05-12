@@ -3,14 +3,14 @@
   Users: <%= @users.count %>
   <% @users.each do |user| %>
     <h3><%= user.id %>: <%= user.email %></h3>
-    <a data-toggle="modal" data-target="#delete-<%= user.id %>" class="pkut-btn">Delete User</a>
     <p><%= user.show_phone_number %></p>
     <p>Signed up: <%= user.created_at.strftime('%B %e, %Y') %></p>
+    <a data-toggle="modal" data-target="#delete-<%= user.id %>" class="pkut-btn">Delete User</a>
     <h4>Athletes:</h4>
     <% user.athletes_by_waiver_expiration.each do |athlete| %>
       --<%= athlete.id %>: <strong><%= athlete.full_name %></strong> - ID: <%= athlete.athlete_id %><br/>
-      --<%= athlete.date_of_birth %><br/>
-      --Waiver expires: <%= athlete.waiver ? athlete.waiver.exp_date.strftime('%B %e, %Y') : "No waiver signed" %><br/><br/>
+      --Birthday: <%= athlete.date_of_birth %><br/>
+      --Waiver expires: <%= athlete.waiver ? athlete.waiver.exp_date.strftime('%B %e, %Y at %I:%M %p') : "No waiver signed" %><br/><br/>
     <% end %>
     <hr>
     <%= render partial: 'destroy_user', locals: {user: user} %>
