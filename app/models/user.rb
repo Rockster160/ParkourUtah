@@ -114,7 +114,7 @@ class User < ActiveRecord::Base
   end
 
   def signed_in?
-    last_sign_in_at > 30.minutes.ago if last_sign_in_ats
+    last_sign_in_at > 30.minutes.ago if last_sign_in_at
   end
 
   def is_mod?
