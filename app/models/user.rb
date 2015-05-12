@@ -94,7 +94,7 @@ class User < ActiveRecord::Base
     all.select {|u|u.last_sign_in_at}.sort_by { |u| u.last_sign_in_at }.last
   end
 
-  def self.currently_signed_in?
+  def self.currently_signed_in
     all.select { |u| u.signed_in? }
   end
 
