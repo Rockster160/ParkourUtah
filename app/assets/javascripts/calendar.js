@@ -27,23 +27,12 @@ var ready = function () {
       });
     }
   }
-
+  
   $('.cities-container').delegate('.calendar-legend', 'click', function() {
     city = $(this).attr("href");
     $('.select-dropbox').select2("val", city);
     $('.show-tooltip').hide();
     update();
-  });
-  $('.tooltip-container').delegate('.open-tooltip', 'click', function() {
-    $('.show-tooltip').hide();
-    $(this).children('.show-tooltip').show()
-  });
-  $('.tooltip-container').delegate('.close-tooltip', 'mousedown', function() {
-    $('.show-tooltip').hide();
-  });
-  $('body').keyup(function(e) {
-    // esc = 27, space = 32, enter = 13
-    $('.show-tooltip').hide();
   });
 
   $('.back-month, .forward-month').click(function(e) {

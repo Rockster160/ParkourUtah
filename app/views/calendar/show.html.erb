@@ -18,23 +18,23 @@
       <% end %>
     </div>
     <div class="central-container internal-center visible-xs">
-        <a alt="..." class="pkut-btn" data-toggle="modal" data-target="#legend_modal">Show Legend</a><br/>
-        <div class="modal fade" id="legend_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="central-container">
-            <div class="error-container center-block">
-              <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
-              <h1 class="pkut-header">Legend</h1>
-              <div class="relative">
-                <% @cities.each do |city| %>
-                  <div href="<%= city %>" class="row calendar-legend">
-                    <i class="calendar-legend-blip event-color color-<%= Event.color_of(city) %>">&nbsp;</i>
-                    <span class="calendar-legend-text-black pull-left"><%= city.capitalize %></span>
-                  </div>
-                <% end %>
-              </div>
+      <a alt="..." class="pkut-btn" data-toggle="modal" data-target="#legend_modal">Show Legend</a><br/>
+      <div class="modal fade" id="legend_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="central-container">
+          <div class="error-container center-block">
+            <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
+            <h1 class="pkut-header">Legend</h1>
+            <div class="relative">
+              <% @cities.each do |city| %>
+                <div href="<%= city %>" class="row calendar-legend">
+                  <i class="calendar-legend-blip event-color color-<%= Event.color_of(city) %>">&nbsp;</i>
+                  <span class="calendar-legend-text-black pull-left"><%= city.capitalize %></span>
+                </div>
+              <% end %>
             </div>
           </div>
         </div>
+      </div>
     </div>
   </div>
 </div>

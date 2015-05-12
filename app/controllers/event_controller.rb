@@ -44,7 +44,6 @@ class EventController < ApplicationController
     min = params[:time][:minute].to_i
     token = event.token
     if params[:all]
-      binding.pry
       Event.where(token: token).each do |events|
         params[:event][:date] = events.date.change({hour: hour, min: min})
         events.update(event_params)

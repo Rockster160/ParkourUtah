@@ -4,8 +4,8 @@
 #
 #  id                     :integer          not null, primary key
 #  email                  :string           default(""), not null
-#  first_name             :string           default(""), not null
-#  last_name              :string           default(""), not null
+ # first_name             :string           default(""), not null
+ # last_name              :string           default(""), not null
 #  encrypted_password     :string           default(""), not null
 #  reset_password_token   :string
 #  reset_password_sent_at :datetime
@@ -28,7 +28,7 @@
 #  avatar_2_updated_at    :datetime
 #  bio                    :text
 #  credits                :integer          default(0)
-#  phone_number           :string
+ # phone_number           :string
 #  confirmation_token     :string
 #  confirmed_at           :datetime
 #  confirmation_sent_at   :datetime
@@ -37,15 +37,24 @@
 #  stats                  :string
 #  title                  :string
 #  nickname               :string
-#  email_subscription     :boolean          default(TRUE)
+ # email_subscription     :boolean          default(TRUE)
 #  stripe_id              :string
-#  date_of_birth          :datetime
-#  drivers_license_number :string
-#  drivers_license_state  :string
+ # date_of_birth          :datetime
+ # drivers_license_number :string
+ # drivers_license_state  :string
 #  registration_complete  :boolean          default(FALSE)
 #  registration_step      :integer          default(2)
 #  stripe_subscription    :boolean          default(FALSE)
 #
+
+# Ununsed?
+# first_name
+# last_name
+# phone_number
+# email_subscription
+# date_of_birth
+# drivers_license_number
+# drivers_license_state
 
 class User < ActiveRecord::Base
 
@@ -94,7 +103,7 @@ class User < ActiveRecord::Base
     all.select {|u|u.last_sign_in_at}.sort_by { |u| u.last_sign_in_at }.last
   end
 
-  def self.currently_signed_in
+  def self.signed_in
     all.select { |u| u.signed_in? }
   end
 
