@@ -94,6 +94,11 @@ class User < ActiveRecord::Base
     all.select { |u| u.signed_in? }
   end
 
+  def still_signed_in!
+    self.last_sign_in_at = DateTime.current
+    self.save!
+  end
+
   def self.every(&block)
     return self.all.to_enum unless block_given?
     self.all.each {|user| block.call(user)}

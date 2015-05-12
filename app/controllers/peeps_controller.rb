@@ -1,4 +1,5 @@
 class PeepsController < ApplicationController
+  before_action :still_signed_in
   before_action :validate_instructor, except: [:return]
 
   def return
@@ -179,5 +180,9 @@ class PeepsController < ApplicationController
 
   def instructor_params
     params.require(:user).permit(:first_name, :last_name, :nickname, :stats, :payment_multiplier, :title, :bio, :avatar, :avatar_2, :role)
+  end
+
+  def still_signed_in
+    current_user.still_signed_in! if current_user
   end
 end

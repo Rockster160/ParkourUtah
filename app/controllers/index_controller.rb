@@ -1,4 +1,5 @@
 class IndexController < ApplicationController
+  before_action :still_signed_in
   skip_before_action :verify_authenticity_token
 
   def get_request
@@ -122,6 +123,10 @@ class IndexController < ApplicationController
         flash[:alert] = "There was an error saving your address."
       end
     end
+  end
+
+  def still_signed_in
+    current_user.still_signed_in! if current_user
   end
 
 end
