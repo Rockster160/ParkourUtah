@@ -90,6 +90,10 @@ class User < ActiveRecord::Base
     find(id)
   end
 
+  def self.signed_in?
+    all.select { |u| u.signed_in? }
+  end
+
   def self.every(&block)
     return self.all.to_enum unless block_given?
     self.all.each {|user| block.call(user)}
