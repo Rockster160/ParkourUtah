@@ -1,5 +1,5 @@
 <div class="central-container form-offset">
-  <h4><%= link_to "Back to Dashboard", dashboard_path, class: 'fancy-btn' %></h4><br/><br/>
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br/><br/>
   <%= form_for @instructor, url: { controller: "peeps", action: "update" } do |f| %>
     <h3><%= @instructor.full_name %></h3>
     <%= f.label :first_name %><br/>
@@ -16,9 +16,9 @@
     <%= f.text_field :payment_multiplier, class: 'pkut-textbox restrictNumeric' %><br/>
     <%= f.label :bio %><br/>
     <%= f.text_area :bio, rows: '12', maxlength: '550', class: 'fancy-textarea restrictBio' %><br/>
-    <%= f.label :avatar %>
+    <%= f.label :avatar, 'Front Image' %>
     <%= f.file_field :avatar %>
-    <%= f.label :avatar_2 %>
+    <%= f.label :avatar_2, 'Back Image' %>
     <%= f.file_field :avatar_2 %>
     <%= f.submit "Submit", class: 'btn btn-success' %>
   <% end %>

@@ -1,5 +1,5 @@
 <div class="central-container form-offset">
-  <h4><%= link_to "Back to Dashboard", dashboard_path, class: 'fancy-btn' %></h4><br/><br/>
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br/><br/>
   <%= form_for @item, url: {action: "create"} do |f| %>
     <table>
       <div class="field">

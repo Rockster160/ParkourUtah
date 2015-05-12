@@ -1,15 +1,15 @@
 <div class="central-container form-offset">
-  <h4><%= link_to "Back to Dashboard", dashboard_path, class: 'fancy-btn' %></h4><br/><br/>
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br/><br/>
   <h4>Click and Drag to change Instructor order. Click to edit Instructor info.</h4><br/>
-  <table class="sortable" id="line-item-table">
+  <table class="sortable" id="instructor-table">
     <% @instructors.each do |instructor| %>
       <tr class="sortable-row">
         <td class="hidden sortable-url"><%= update_peep_position_url(instructor.id) %></td>
         <td>
-          <h4><%= link_to edit_peep_path(instructor.id), class: 'fancy-btn set-min-width-btn' do %>
+          <%= link_to edit_peep_path(instructor.id), class: 'pkut-btn' do %>
             <%= icon('arrows', '', class: 'fa-lg')  %>
             <%= instructor.full_name %>
-          <% end %></h4>
+          <% end %>
           <br/>
           <br/>
         </td>

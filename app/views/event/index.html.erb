@@ -1,11 +1,11 @@
 <div class="central-container form-offset">
-  <h4><%= link_to "Back to Dashboard", dashboard_path, class: 'fancy-btn' %></h4><br/><br/>
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br/><br/>
   <h2>Events</h2>
   <br/>
   <% @events.each do |event| %>
-    <h4><%= link_to edit_event_path(event.id), class: 'fancy-btn set-min-width-btn' do %>
+    <%= link_to edit_event_path(event.id), class: 'pkut-btn' do %>
       <%= "#{event.city} #{event.class_name}" %>
-    <% end %></h4>
+    <% end %>
     <br/>
     <br/>
   <% end %>

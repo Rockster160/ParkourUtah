@@ -1,5 +1,5 @@
 <div class="central-container form-offset">
-  <h4><%= link_to "Back to Dashboard", dashboard_path, class: 'fancy-btn' %></h4><br/><br/>
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br/><br/>
   <%= form_for @event, url: {action: "update"} do |f| %>
     <h5>Example text:</h5>
     <%= f.label :title, 'Hope to see you at our {city} {class} class today at {time}!' %><br/>

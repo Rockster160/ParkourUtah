@@ -11,7 +11,7 @@ var ready = function() {
 
   function updatePositionNumbers(resource, position_attribute) {
     $('.sortable-row').each(function(e) {
-      var url = $(this).children('.sortable-url').html() + ".json", new_position = e + 1;
+      var url = $(this).children('.sortable-url').html(), new_position = e + 1;
       var params = {};
       params[resource] = {}
       params[resource][position_attribute] = new_position;
