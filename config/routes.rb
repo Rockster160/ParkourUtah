@@ -43,6 +43,7 @@ Rails.application.routes.draw do
   post '/peeps/demotion/:id' => 'peeps#demotion', as: 'demotion'
   get '/peeps/users' => 'peeps#recent_users', as: 'recent_users'
   delete '/user/:id' => 'peeps#destroy_user', as: 'user'
+  delete 'unsubscribe_monthly/:id' => 'store#unsubscribe', as: 'unsubscribe_monthly_subscription'
 
   get '/athletes/new' => 'dependents#new', as: 'new_athlete'
   post '/athletes/new' => 'dependents#create'

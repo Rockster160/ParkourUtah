@@ -70,6 +70,26 @@
         </div>
       </div>
       <%= submit_tag "Update", class: 'pkut-btn' %>
+      <% if current_user.stripe_subscription? %>
+        <hr>
+        <div class="row">
+          <div class="row">
+            <div class="col-xs-6">
+              <p>You are currently set up to auto-pay for your monthly subscription.</p>
+            </div>
+            <div class="col-xs-6">
+              <%= link_to 'Unsubscribe', unsubscribe_monthly_subscription_path(current_user.id), class: 'pkut-btn', method: :delete %>
+            </div>
+          </div>
+          <br/>
+        </div>
+      <% end %>
+      <% if current_user.has_unlimited_access? %>
+      <hr>
+      <div class="row">
+        <p>Your athletes have unlimited classes until: <%= current_user.unlimited_subscription.expires_at.strftime('%B %e, %Y') %></p>
+      </div>
+      <% end %>
       <hr>
       <div class="row">
         <p>Classes subscribed to:</p>

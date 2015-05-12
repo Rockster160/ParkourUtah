@@ -17,6 +17,8 @@
 #  hidden               :boolean
 #  item_order           :integer
 #  credits              :integer          default(0)
+#  is_subscription      :boolean          default(FALSE)
+#  taxable              :boolean          default(TRUE)
 #
 
 require 'test_helper'

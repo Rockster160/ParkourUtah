@@ -44,6 +44,7 @@
 #  drivers_license_state  :string
 #  registration_complete  :boolean          default(FALSE)
 #  registration_step      :integer          default(2)
+#  stripe_subscription    :boolean          default(FALSE)
 #
 
 class User < ActiveRecord::Base
@@ -62,7 +63,6 @@ class User < ActiveRecord::Base
   after_create :create_default_notifications
   after_create :send_welcome_email
   before_save :format_phone_number
-  # before_save :split_name
   before_destroy :clear_associations
 
   devise :database_authenticatable, :registerable, :confirmable,
@@ -151,7 +151,9 @@ class User < ActiveRecord::Base
   end
 
   def charge_credits(charge)
-    if self.credits >= charge
+    if self.has_unlimited_access?
+      self.unlimited_subscription.use!
+    elsif self.credits >= charge
       self.credits -= charge
       self.save!
     else

@@ -44,6 +44,7 @@
 #  drivers_license_state  :string
 #  registration_complete  :boolean          default(FALSE)
 #  registration_step      :integer          default(2)
+#  stripe_subscription    :boolean          default(FALSE)
 #
 
 require 'test_helper'

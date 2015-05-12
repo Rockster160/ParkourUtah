@@ -14,6 +14,15 @@ class StoreController < ApplicationController
     @hidden = LineItem.select { |l| l.hidden == true }.sort_by { |s| s.created_at }.reverse
   end
 
+  def unsubscribe
+    user = User.find(params[:id])
+    if user.update(stripe_subscription: false)
+      redirect_to edit_user_registration_path, notice: 'Successfully Unsubscribed'
+    else
+      redirect_to edit_user_registration_path, alert: 'There was an error.'
+    end
+  end
+
   def email_keys
     keys = []
     item = LineItem.find(params[:key_type])
@@ -148,6 +157,11 @@ class StoreController < ApplicationController
           line_item = LineItem.find(order.item_id)
           if RedemptionKey.redeem(order.redeemed_token)
             current_user.update(credits: (current_user.credits + (order.amount * line_item.credits)))
+          end
+          binding.pry
+          if line_item.is_subscription?
+            current_user.update(stripe_subscription: true)
+            current_user.unlimited_subscriptions.create
           end
         end
         ItemsPurchasedMailerWorker.perform_async(current_user.cart.id, "rocco11nicholls@gmail.com")

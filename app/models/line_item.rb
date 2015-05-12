@@ -17,6 +17,8 @@
 #  hidden               :boolean
 #  item_order           :integer
 #  credits              :integer          default(0)
+#  is_subscription      :boolean          default(FALSE)
+#  taxable              :boolean          default(TRUE)
 #
 
 class LineItem < ActiveRecord::Base
@@ -52,13 +54,13 @@ class LineItem < ActiveRecord::Base
   end
 
   def tax
-    self.category == "Coupon" ? 0 : (self.cost.to_f * 0.0825).round
+    self.taxable? ? (self.cost.to_f * 0.0825).round : 0
   end
 
   def assign_item_position_if_nil
     unless self.item_order
       self.item_order = (LineItem.all.map { |l| l.item_order }.compact.sort.last + 1)
-      self.save
+      self.save!
     end
   end
 

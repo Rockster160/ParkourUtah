@@ -103,6 +103,28 @@ class Scheduled < ActiveRecord::Base
     end
   end
 
+  def self.monthly_subscription_charges
+    SmsMailerWorker.perform_async('3852599640', "Tick,")
+    User.every do |user|
+      if !(user.has_unlimited_access?) && user.stripe_subscription? && user.stripe_id
+        Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
+        charge = Stripe::Charge.create(
+          :amount   => 5000,
+          :currency => "usd",
+          :customer => user.stripe_id
+        )
+        if !(charge) || charge.status == "succeeded"
+          SmsMailerWorker.perform_async('3852599640', "Successfully updated Subscription for #{user.email}.")
+          if Rails.env == "production"
+            # SubscriptionUpdatedMailerWorker.perform_async(user, user.email)
+            # SubscriptionUpdatedMailerWorker.perform_async(user, "justin@parkourutah.com")
+          end
+          user.unlimited_subscriptions.create
+        end
+      end
+    end
+  end
+
   def self.waiver_checks
     Dependent.all.each do |athlete|
       user = athlete.user
@@ -177,6 +199,16 @@ class Scheduled < ActiveRecord::Base
   end
 
   def self.update_store
+  end
+
+  def self.create_subscription_line_item
+    LineItem.create(
+      title: "Monthly Subscription",
+      description: 'This is a recurring transaction. Your account will be charged automatically unless you unsibscribe from the Notifications on your Profile. This allows your students to have unlimited access to classes for 1 month.',
+      cost_in_pennies: 5000,
+      is_subscription: true,
+      category: "Other"
+    )
   end
 
 end

@@ -10,6 +10,14 @@ every 1.day, at: "9:30 am" do
   runner "Scheduled.waiver_checks"
 end
 
+every 1.day, at: "7:00 am" do
+  runner "Scheduled.monthly_subscription_charges"
+end
+
+every 1.minute do
+  runner "Scheduled.send_test_text"
+end
+
 every :saturday, at: "9:30 pm" do
   runner "Scheduled.send_summary(7)"
 end

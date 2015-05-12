@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150511204330) do
+ActiveRecord::Schema.define(version: 20150512021623) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -113,12 +113,14 @@ ActiveRecord::Schema.define(version: 20150511204330) do
     t.integer  "cost_in_pennies"
     t.string   "title"
     t.string   "category"
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
     t.string   "size"
     t.boolean  "hidden"
     t.integer  "item_order"
     t.integer  "credits",              default: 0
+    t.boolean  "is_subscription",      default: false
+    t.boolean  "taxable",              default: true
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -216,6 +218,7 @@ ActiveRecord::Schema.define(version: 20150511204330) do
     t.string   "drivers_license_state"
     t.boolean  "registration_complete",  default: false
     t.integer  "registration_step",      default: 2
+    t.boolean  "stripe_subscription",    default: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
