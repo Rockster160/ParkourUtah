@@ -1,9 +1,14 @@
 <%= javascript_tag do %>
   window.set_date = '<%= @date %>'
 <% end %>
+<% content_for :body do %>
+  <style>
+    html, body { background: black; }
+  </style>
+<% end %>
 
 <div class="row">
-  <div class="col-xs-8 col-xs-offset-2 cities-container fancy-box">
+  <div class="col-md-8 col-md-offset-2 cities-container relative">
     <div class="hidden-xs">
       <% @cities.each do |city| %>
         <div href="<%= city %>" class="col-xs-3 calendar-legend">
@@ -12,22 +17,28 @@
         </div>
       <% end %>
     </div>
-    <div class="tooltip-container">
-      <div class="visible-xs open-tooltip">
-        <div class="show-tooltip">
-          <span class="close-tooltip">X</span>
-          <% @cities.each do |city| %>
-            <div href="<%= city %>" class="col-xs-8 col-xs-offset-1 calendar-legend">
-              <i class="calendar-legend-blip event-color color-<%= Event.color_of(city) %>">&nbsp;</i>
-              <span class="calendar-legend-text pull-left"><%= city.capitalize %></span>
+    <div class="central-container internal-center visible-xs">
+        <a alt="..." class="pkut-btn" data-toggle="modal" data-target="#legend_modal">Show Legend</a><br/>
+        <div class="modal fade" id="legend_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="central-container">
+            <div class="error-container center-block">
+              <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
+              <h1 class="pkut-header">Legend</h1>
+              <div class="relative">
+                <% @cities.each do |city| %>
+                  <div href="<%= city %>" class="row calendar-legend">
+                    <i class="calendar-legend-blip event-color color-<%= Event.color_of(city) %>">&nbsp;</i>
+                    <span class="calendar-legend-text-black pull-left"><%= city.capitalize %></span>
+                  </div>
+                <% end %>
+              </div>
             </div>
-          <% end %>
+          </div>
         </div>
-        <h4 class="fancy-btn">Show Legend</h4>
-      </div>
     </div>
   </div>
 </div>
+
 <div class="row">
   <div class="full-calendar-container">
     <div class="text-center">

@@ -145,7 +145,7 @@
           <h4><%= athlete.full_name %></h4>
           <% if athlete.signed_waiver? && athlete.waiver.is_active? %>
             <% if athlete.waiver.expires_soon? %>
-              <%= link_to waivers_path(athlete.id), class: 'fancy-link' do  %>
+              <%= link_to waivers_path(athlete.id) do  %>
                 <span class="pkut-header title">Waiver active until <%= athlete.waiver.exp_date.strftime('%B %-d, %Y') %></span>
                 Update Waiver
               <% end %>

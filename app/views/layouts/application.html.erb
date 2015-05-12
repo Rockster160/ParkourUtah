@@ -11,6 +11,9 @@
   <% end %>
 </head>
 <body>
+  <% if content_for?(:body) %>
+    <%= yield(:body) %>
+  <% end %>
   <%= render 'layouts/header' %>
   <%= render 'layouts/flashes' %>
   <div class="navbar-offset"></div>
