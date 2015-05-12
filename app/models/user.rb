@@ -109,6 +109,10 @@ class User < ActiveRecord::Base
     self.role >= 1
   end
 
+  def signed_in?
+    last_sign_in_at > 30.minutes.ago
+  end
+
   def is_mod?
     self.role >= 2
   end

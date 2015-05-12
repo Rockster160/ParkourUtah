@@ -15,6 +15,10 @@ class IndexController < ApplicationController
     @protocol = "404"
   end
 
+  def page_broken
+    @protocol = "500"
+  end
+
   def index
     @date = params[:date] ? Date.parse(params[:date]) : Date.today
 
