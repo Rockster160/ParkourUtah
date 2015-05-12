@@ -10,7 +10,7 @@
     <% user.athletes_by_waiver_expiration.each do |athlete| %>
       --<%= athlete.id %>: <strong><%= athlete.full_name %></strong> - ID: <%= athlete.athlete_id %><br/>
       --<%= athlete.date_of_birth %><br/>
-      --Waiver expires: <%= athlete.waiver.exp_date.strftime('%B %e, %Y') %><br/><br/>
+      --Waiver expires: <%= athlete.waiver ? athlete.waiver.exp_date.strftime('%B %e, %Y') : "No waiver signed" %><br/><br/>
     <% end %>
     <hr>
     <%= render partial: 'destroy_user', locals: {user: user} %>
