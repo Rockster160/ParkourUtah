@@ -100,7 +100,7 @@ class PeepsController < ApplicationController
     elsif params[:athlete_id] == ENV["PKUT_PIN"]
       redirect_to class_logs_path(params[:id])
     else
-      create_athlete
+      set_athlete
       if @athlete
         if Attendance.where(dependent_id: @athlete.athlete_id, event_id: params[:id]).count > 0
           redirect_to :back, alert: "Athlete already attending class."
@@ -119,19 +119,19 @@ class PeepsController < ApplicationController
       if params[:athlete_photo]
         Dependent.where(athlete_id: params[:athlete_id]).first.update(athlete_photo: params[:athlete_photo])
       end
-      create_athlete
+      set_athlete
     end
   end
 
   def validate_pin
-    create_athlete
+    set_athlete
     pin = params[:pin].to_i
     if pin == @athlete.athlete_pin
       charge_class(Event.find(params[:id]).cost_in_dollars, "Credits")
     elsif pin == ENV["PKUT_PIN"].to_i
       charge_class(0, "Cash")
     else
-      redirect_to begin_class_path, alert: "Invalid Pin. Try again."
+      redirect_to begin_class_path, alert: "Invalid Pin. Re-enter Athlete ID."
     end
   end
 
@@ -168,7 +168,7 @@ class PeepsController < ApplicationController
 
   private
 
-  def create_athlete
+  def set_athlete
     @athlete = Dependent.where("athlete_id = ?", params[:athlete_id]).first
   end
 
