@@ -397,3 +397,16 @@ print "\e[32m.\e[0m"
 # end
 puts "\nCompleted Store items"
 puts "Seeding Complete"
+
+
+# Event.create(
+#   date: DateTime.current,
+#   cost: 1200,
+#   host: 'Zeter Raimondo',
+#   title: 'Ogden fundamentals',
+#   description: 'Some description',
+#   city: 5.times.map {"qwertyuipoasdlfkjhgmnbzxcv".split('').sample}.join(''),
+#   address: 'City Hall Park, Ogden, UT 84401',
+#   location_instructions: 'Ogden City Hall',
+#   class_name: 'fundamentals'
+# )

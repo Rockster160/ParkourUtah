@@ -13,14 +13,6 @@
   border-radius: 20px 20px 0 0;
 }
 
-.calendar-controls-container {
-}
-
-.full-calendar-container {
-  top: 285px;
-  position: absolute;
-}
-
 .calendar {
   table-layout: fixed;
 }
@@ -203,15 +195,6 @@ $color-rose: rgb(220, 0, 100);
     background: #eee;
     padding-top: 10px;
     border-radius: 20px 20px 0 0;
-  }
-
-  .calendar-container {
-    padding: 0;
-  }
-
-  .full-calendar-container {
-    top: 200px;
-    position: absolute;
   }
 
   .calendar-date-link {
