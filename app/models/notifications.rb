@@ -29,11 +29,11 @@ class Notifications < ActiveRecord::Base
 
   def blow!(str="all")
     case str
-    when "text" then change_all_text_to false
-    when "email" then change_all_email_to false
+    when "text" then change_all_text_to(false)
+    when "email" then change_all_email_to(false)
     else
-      change_all_text_to false
-      change_all_email_to false
+      change_all_text_to(false)
+      change_all_email_to(false)
     end
   end
 

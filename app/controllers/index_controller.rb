@@ -36,7 +36,7 @@ class IndexController < ApplicationController
 
 
   def update_notifications
-    current_user.notifications.blow!("text")
+    current_user.notifications.blow!
     params[:notify].each do |attribute, value|
       current_user.notifications.update(attribute => true)
     end
