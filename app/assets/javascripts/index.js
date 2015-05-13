@@ -30,6 +30,14 @@ var ready = function() {
       $('body,html').animate({scrollTop:$href},500);
     });
   };
+
+  if (window.mobilecheck()) {
+    $('.forceOpen').click(function() {
+      var id = $(this).attr('data-target');
+      $('.modal').modal('hide');
+      $(id).modal('show');
+    });
+  }
 };
 
 $('.delayed-load').ready(function() {

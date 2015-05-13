@@ -2,7 +2,7 @@
   <%= render partial: 'registrations/progress_bar', locals: {step: 3} %>
   <h6 class="warning-text text-center">This process must be completed by a parent or legal guardian.</h6>
   <h2 class="header-text">Add Athletes</h2>
-  <p>Add the first and last name, birthday, and desired <strong>Fast Pass Code</strong> <a data-toggle="modal" data-target="#what_is" class="hover-btn"><sup>(What is this?)</sup></a> of any athlete (including yourself) who is going to participate in lessons.</p>
+  <p>Add the first and last name, birthday, and desired <strong>Fast Pass Code</strong> <a alt="..." data-toggle="modal" data-target="#what_is" class="hover-btn forceOpen"><sup>(What is this?)</sup></a> of any athlete (including yourself) who is going to participate in lessons.</p>
   <%= form_tag url: {controller: 'registrations'} do %>
     <% token = 10.times.map {(('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a).sample}.join %>
     <div class="athlete-container">
