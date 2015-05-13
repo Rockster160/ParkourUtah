@@ -99,8 +99,12 @@ class User < ActiveRecord::Base
     find(id)
   end
 
-  def self.most_recent_signed_in
-    all.select {|u|u.last_sign_in_at}.sort_by { |u| u.last_sign_in_at }.last
+  def self.by_signed_in
+    all.select {|u|u.last_sign_in_at}.sort_by { |u| u.last_sign_in_at }.reverse
+  end
+
+  def self.last_signed_in
+    by_signed_in.first
   end
 
   def self.signed_in

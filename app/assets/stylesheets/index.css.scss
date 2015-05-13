@@ -13,6 +13,10 @@ body {
   background-color: $pkut-grey-light;
 }
 
+#bgvid {
+  background: $pkut-grey-light;
+}
+
 /* fix bs3 horizontal scrollbar bug */
 .row { margin: 0; padding: 0 }
 

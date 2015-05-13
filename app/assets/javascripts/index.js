@@ -20,9 +20,7 @@ var ready = function() {
 
   if (window.location.pathname == "/") {
     /* smooth scrolling */
-    if (window.mobilecheck()) {
-      $('body,html').css({"background-color": "#9A9A9A"});
-    } else {
+    if (window.mobilecheck()) {} else {
       $('body,html').css({"background-color": "transparent"});
     }
     $('.scroll-link').click(function(e){

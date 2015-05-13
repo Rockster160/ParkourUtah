@@ -297,7 +297,6 @@ DEPENDENCIES
   aws-sdk (< 2.0)
   better_errors
   byebug
-  coffee-rails (~> 4.1.0)
   devise
   faker
   font-awesome-sass
