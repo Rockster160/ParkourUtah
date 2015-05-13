@@ -1,8 +1,8 @@
 class NewAthleteNotificationMailerWorker
   include Sidekiq::Worker
 
-  def perform(text)
-    NewAthleteNotificationMailer.new_athlete_notification_mail(text).deliver_now
+  def perform(athlete_ids)
+    NewAthleteNotificationMailer.new_athlete_notification_mail(athlete_ids).deliver_now
   end
 
 end

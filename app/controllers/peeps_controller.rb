@@ -144,7 +144,7 @@ class PeepsController < ApplicationController
         event_id: params[:id],
         type_of_charge: charge_type
       )
-      if @user.credits < ENV["PKUT_CLASS_PRICE"].to_i
+      if @user.credits < 30
         if @user.notifications.email_low_credits && @user.has_unlimited_access? == false
           ::LowCreditsMailerWorker.perform_async(@user.id)
         end

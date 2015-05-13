@@ -40,6 +40,7 @@
 
   def update_waiver
     valid = []
+    new_athlete_ids = []
     params[:athlete].each do |athlete|
       if validate_athlete_attributes(athlete[1])
         new_athlete = current_user.dependents.create(
@@ -52,6 +53,7 @@
           signed_by: params[:signed_by],
         )
         if new_athlete.sign_waiver!
+          new_athlete_ids << new_athlete.id
           new_athlete.generate_pin
           valid << new_athlete
         end
@@ -67,6 +69,10 @@
         valid << athlete
       end
     end if params[:update_athlete]
+    if new_athlete_ids.count > 0
+      ::NewAthleteInfoMailerWorker.perform_async(new_athlete_ids)
+      ::NewAthleteNotificationMailerWorker.perform_async(new_athlete_ids)
+    end
     if valid.count == 1
       redirect_to step_4_path, notice: "Success! #{valid.count} waiver updated/created."
     elsif valid.count > 1

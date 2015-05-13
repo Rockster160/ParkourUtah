@@ -15,7 +15,6 @@
 class Notifications < ActiveRecord::Base
   belongs_to :user
   after_create :set_defaults
-  # TODO rename text_class_reminder email_waiver_expiring text_waiver_expiring
 
   def set_defaults
     self.email_class_reminder = true

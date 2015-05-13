@@ -133,7 +133,7 @@ class RegistrationsController < ApplicationController
       end
     end
     ::NewAthleteInfoMailerWorker.perform_async(approved.compact)
-    # ::NewAthleteNotificationMailerWorker.perform_async("FIXME")
+    ::NewAthleteNotificationMailerWorker.perform_async(approved.compact)
     current_user.update(registration_step: 5)
     redirect_to step_5_path
   end
