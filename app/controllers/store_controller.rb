@@ -4,7 +4,17 @@ class StoreController < ApplicationController
   before_action :validate_admin, only: [:generate_keys, :email_keys]
 
   def index
-    @items = LineItem.select { |item| !(item.hidden) }.reverse
+    @items = {}
+    LineItem.select { |item| !(item.hidden) }.each do |item|
+      dest = case item.category
+      when "Class" then :classes
+      when "Clothing" then :clothing
+      when "Accessories" then :accessories
+      else :other
+      end
+      @items[dest] ||= []
+      @items[dest] << item
+    end
   end
 
   def show_cart
@@ -179,12 +189,12 @@ class StoreController < ApplicationController
   end
 
   def item_params
-    params[:line_item][:cost_in_pennies] = (params[:line_item][:cost].to_i * 100).round.to_s
+    params[:line_item][:cost_in_pennies] = (params[:line_item][:cost].to_f * 100).round.to_s
     params.require(:line_item).permit(:description, :title, :display, :cost_in_pennies, :category, :hidden, :credits)
   end
 
   def set_categories
-    @categories = ["Class", "Goods", "Coupon"]
+    @categories = ["Class", "Clothing", "Accessories", "Other", "Coupon"]
   end
 
   def set_cart

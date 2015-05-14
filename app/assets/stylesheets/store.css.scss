@@ -10,6 +10,39 @@
   // float: left;
 }
 
+.button-to-link {
+  background: none;
+  border: none;
+  color: #003399;
+  text-decoration: underline;
+  display: inline;
+  &:hover {
+    color: #202020;
+  }
+}
+
+.stripe-button-el {
+  float: right;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  &::after {
+    content: 'Pay with Card';
+    font-family: 'MicroExtendFLF-Bold', Arial, sans-serif;
+    font-size: 12px;
+    color: white;
+    padding-top: 7px;
+    z-index: 10;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120px;
+    height: 33px;
+    background: $pkut-red;
+    &:hover { background: black; }
+  }
+}
+
 .shopping-cart {
   padding: 10px;
   border: 1px solid black;
@@ -22,7 +55,7 @@
   height: 90%;
   background: #ccc;
   top: 55px;
-  left: 4px;
+  right: 4px;
 }
 
 .delete-x {
@@ -61,4 +94,100 @@ input.shopping-cart-line-item-quantity-input {
   height: 50px;
   text-overflow: hidden;
   border-bottom: 1px solid black;
+}
+
+// ----------------------------------------------------------------- Flip
+$width: 200px;
+$height: 200px;
+
+.items-container {
+  margin: 0 auto;
+  color: black;
+  text-align: left;
+}
+
+.item-img {
+  max-height: 135px;
+  max-width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-radius: 0 0 5px 5px;
+}
+
+.items-container > .item-flip-container {
+  margin: 8px;
+  vertical-align: top;
+  display: inline-block;
+  *display: inline;
+}
+
+.items-container:after {
+  content: '';
+  width: 100%;
+  display: inline-block;
+  font-size: 0;
+  line-height: 0
+}
+
+/* entire container, keeps perspective */
+.item-flip-container {
+  perspective: 1000;
+}
+/* flip the pane when hovered */
+.item-flip-container:hover .item-flipper, .item-flip-container.hover .item-flipper {
+  transform: rotateY(180deg);
+}
+
+.item-flip-container, .item-front, .item-back {
+  width: $width;
+  height: $height;
+}
+
+/* flip speed goes here */
+.item-flipper {
+  transition: 0.8s;
+  transform-style: preserve-3d;
+
+  position: relative;
+}
+
+/* hide back of pane during swap */
+.item-front, .item-back {
+  backface-visibility: hidden;
+
+  position: absolute;
+  top: 0;
+}
+
+/* front pane, placed above back */
+.item-front {
+  z-index: 2;
+  left: 0;
+  text-align: center;
+  border-radius: 5px;
+  background: $pkut-grey-light;
+  /* for firefox 31 */
+  transform: rotateY(0deg);
+}
+
+/* back, initially hidden pane */
+.item-back {
+  transform: rotateY(180deg);
+  background: $pkut-grey-light;
+  right: 0;
+  position: relative;
+  padding: 10px;
+  border-radius: 5px;
+  .pkut-btn {
+    position: absolute;
+    bottom: 10px;
+    left: 12px;
+    margin: 0 auto;
+  }
+}
+
+.item-text {
+  height: 120px;
+  overflow: hidden;
 }

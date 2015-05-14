@@ -5,7 +5,7 @@
   <table class="sortable" id="line-item-table">
   <% @items.each do |item| %>
       <tr class="sortable-row">
-        <td class="hidden sortable-url">/store/update_position/<%= instructor.id %></td>
+        <td class="hidden sortable-url">/store/update_position/<%= item.id %></td>
         <td>
           <%= link_to edit_item_path(item.id), class: 'pkut-btn' do %>
             <%= icon('arrows', '', class: 'fa-lg')  %>
