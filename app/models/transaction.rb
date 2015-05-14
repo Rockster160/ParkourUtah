@@ -9,6 +9,7 @@
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  redeemed_token :string
+#  order_name     :string
 #
 
 class Transaction < ActiveRecord::Base
@@ -25,6 +26,7 @@ class Transaction < ActiveRecord::Base
   def verify_amount_is_not_nil
     self.amount ||= 0
     self.redeemed_token ||= ""
+    self.order_name ||= LineItem.find(self.item_id).title
   end
-  
+
 end

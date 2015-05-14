@@ -1,13 +1,13 @@
 <div class="shopping-cart-cell relative">
   <div class="shopping-cart-line-item absolute">
-    <span class="delete-x pull-right" id="<%= order.item.id %>">X</span>
-    <div class="shopping-cart-line-item-title"><%= order.item.title %></div>
+    <span class="delete-x pull-right" id="<%= order.order_name %>">X</span>
+    <div class="shopping-cart-line-item-title"><%= order.order_name %></div>
     <div class="shopping-cart-line-item-price"><%= number_to_currency(order.item.cost_in_dollars) %></div>
     <div class="shopping-cart-line-item-quantity">
       <% if order.redeemed_token.length > 0 %>
-        <input value="<%= order.amount %>" id="<%= order.item.id %>" disabled="disabled" size="1" maxlength="2" class="shopping-cart-line-item-quantity-input value-selector-<%= order.item_id %>"></input>
+        <input value="<%= order.amount %>" id="<%= order.order_name %>" disabled="disabled" size="1" maxlength="2" class="shopping-cart-line-item-quantity-input value-selector-<%= order.order_name.parameterize %>"></input>
       <% else %>
-        <input value="<%= order.amount %>" id="<%= order.item.id %>" size="1" maxlength="2" class="shopping-cart-line-item-quantity-input value-selector-<%= order.item_id %>"></input>
+        <input value="<%= order.amount %>" id="<%= order.order_name %>" size="1" maxlength="2" class="shopping-cart-line-item-quantity-input value-selector-<%= order.order_name.parameterize %>"></input>
       <% end %>
     </div>
   </div>

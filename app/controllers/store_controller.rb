@@ -92,8 +92,18 @@ class StoreController < ApplicationController
   end
 
   def update_cart
+    item_title = if params[:item_id]
+      item = LineItem.find(params[:item_id])
+      item.title
+    else
+      params[:item_name]
+    end
+    size = params[:size] ? "#{params[:size]} " : ""
+    color = params[:color] ? "#{params[:color]} " : ""
+    name = "#{size}#{color}#{item_title}"
+
     orders = @cart.transactions
-    order = orders.where(item_id: params[:item_id]).first
+    order = orders.where(order_name: name).first
     if params[:new_amount]
       params[:new_amount] ||= "0"
       if params[:new_amount].to_i <= 0
@@ -105,12 +115,13 @@ class StoreController < ApplicationController
       if order
         order.increment!(:amount)
       else
-        order = Transaction.create(item_id: params[:item_id])
+        order = Transaction.create(item_id: item.id, order_name: name)
         orders << order
         @order = order
       end
-      flash.now[:notice] = "#{order.item.title} successfully added to cart."
+      flash.now[:notice] = "#{order.order_name} successfully added to cart."
     end
+
     respond_to do |format|
       format.js
     end
@@ -169,7 +180,6 @@ class StoreController < ApplicationController
           if RedemptionKey.redeem(order.redeemed_token)
             current_user.update(credits: (current_user.credits + (order.amount * line_item.credits)))
           end
-          binding.pry
           if line_item.is_subscription?
             current_user.update(stripe_subscription: true)
             current_user.unlimited_subscriptions.create
@@ -191,7 +201,9 @@ class StoreController < ApplicationController
 
   def item_params
     params[:line_item][:cost_in_pennies] = (params[:line_item][:cost_in_dollars].to_f * 100).round.to_s
-    params.require(:line_item).permit(:description, :title, :display, :cost_in_pennies, :category, :hidden, :credits)
+    params.require(:line_item).permit(:description, :title, :display,
+                              :cost_in_pennies, :category, :hidden, :credits,
+                              :color, :size, :is_subscription, :taxable)
   end
 
   def set_categories

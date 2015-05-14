@@ -19,6 +19,7 @@
 #  credits              :integer          default(0)
 #  is_subscription      :boolean          default(FALSE)
 #  taxable              :boolean          default(TRUE)
+#  color                :string
 #
 
 class LineItem < ActiveRecord::Base
@@ -43,6 +44,18 @@ class LineItem < ActiveRecord::Base
     self.redemption_keys.each do |key|
       key.destroy
     end
+  end
+
+  def colors
+    return nil unless color
+    my_colors = color.split(',').map(&:squish)
+    my_colors.any? ? my_colors : nil
+  end
+
+  def sizes
+    return nil unless size
+    my_sizes = size.split(',').map(&:squish)
+    my_sizes.any? ? my_sizes : nil
   end
 
   def cost

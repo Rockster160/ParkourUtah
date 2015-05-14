@@ -9,6 +9,7 @@
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  redeemed_token :string
+#  order_name     :string
 #
 
 require 'test_helper'

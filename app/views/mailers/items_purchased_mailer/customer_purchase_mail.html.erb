@@ -30,7 +30,7 @@
   <tbody>
     <% @order_items.each do |transaction| %>
       <tr>
-        <td><%= transaction.item.title %></td>
+        <td><%= transaction.order_name %></td>
         <td><%= transaction.amount %></td>
         <td><%= number_to_currency(transaction.item.cost_in_dollars) %></td>
       </tr>

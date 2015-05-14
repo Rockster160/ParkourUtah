@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150512021623) do
+ActiveRecord::Schema.define(version: 20150514204952) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -121,6 +121,7 @@ ActiveRecord::Schema.define(version: 20150512021623) do
     t.integer  "credits",              default: 0
     t.boolean  "is_subscription",      default: false
     t.boolean  "taxable",              default: true
+    t.string   "color"
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -162,6 +163,7 @@ ActiveRecord::Schema.define(version: 20150512021623) do
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
     t.string   "redeemed_token"
+    t.string   "order_name"
   end
 
   add_index "transactions", ["cart_id"], name: "index_transactions_on_cart_id", using: :btree

@@ -19,6 +19,7 @@
 #  credits              :integer          default(0)
 #  is_subscription      :boolean          default(FALSE)
 #  taxable              :boolean          default(TRUE)
+#  color                :string
 #
 
 require 'test_helper'

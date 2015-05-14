@@ -1,41 +1,31 @@
 <div class="central-container form-offset">
   <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br/><br/>
   <%= form_for @item, url: {action: "create"} do |f| %>
-    <table>
-      <div class="field">
-        Title<br/>
-        <%= f.text_field :title, placeholder: 'Green Parachute Pants', class: 'customRequired pkut-textbox' %>
-      </div>
-      <div class="field">
-        Cost<br/>
-        <%= f.number_field :cost, placeholder: '3000.99', class: 'customRequired pkut-textbox' %>
-      </div>
-      <!-- <div class="field">
-        Sizes, comma separated
-        <%#= f.text_field :size, placeholder: 'S, M, L / 38.5, 39, 43', class: 'customRequired pkut-textbox' %>
-      </div> -->
-      <div class="field">
-        Description<br/>
-        <%= f.text_area :description, placeholder: 'Marvelous skills sewn with godly thread.', class: 'customRequired pkut-textarea' %>
-      </div>
-      <div class="field">
-        Class or Physical Item<br/>
-        <%= f.select :category, @categories, class: 'pkut-textbox' %>
-      </div>
-      <div class="field">
-        Hidden? (Hidden items are only purchasable with a redemption key)<br/>
-        <%= f.check_box :hidden %>
-      </div>
-      <div class="field">
-        Credits given to user after purchase (1 class = 12)<br/>
-        <%= f.text_field :credits, class: 'pkut-textbox restrictNumeric' %>
-      </div>
-      <div class="field">
-        Display image<br/>
-        <%= f.file_field :display %>
-      </div>
-    </table>
+    <h5>Title</h5>
+    <%= f.text_field :title, placeholder: 'Green Parachute Pants', class: 'customRequired pkut-textbox' %>
+    <h5>Cost</h5>
+    <%= f.number_field :cost_in_dollars, placeholder: '3000.99', class: 'customRequired pkut-textbox' %>
+    <h5>Sizes, comma separated</h5>
+    <%= f.text_field :size, placeholder: 'S, M, L / 38.5, 39, 43', class: 'pkut-textbox' %>
+    <h5>Colors, comma separated</h5>
+    <%= f.text_field :color, placeholder: 'Blue, Green, Grey, Black', class: 'pkut-textbox' %>
+    <h5>Description</h5>
+    <%= f.text_area :description, placeholder: 'Marvelous skills sewn with godly thread.', class: 'customRequired pkut-textarea' %>
+    <h5>Category</h5>
+    <%= f.select :category, @categories, class: 'pkut-textbox' %>
+    <br/>
+    <br/>
+    <%= f.check_box :hidden %>
+    <%= f.label :hidden, 'Hidden? (Hidden items are only purchasable with a redemption key)' %>
+    <br/>
+    <%= f.check_box :taxable %>
+    <%= f.label :taxable, 'Taxable?' %>
+    <h5>Credits given to user after purchase (1 class = 12)</h5>
+    <%= f.text_field :credits, class: 'pkut-textbox restrictNumeric' %>
+    <h5>Display image</h5>
+    <%= f.file_field :display %>
+    <br/>
+    <br/>
     <%= submit_tag "Submit", class: "btn btn-success" %>
   <% end %>
 </div>
-
