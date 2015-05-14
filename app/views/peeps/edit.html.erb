@@ -4,7 +4,7 @@
   <table class="sortable" id="instructor-table">
     <% @instructors.each do |instructor| %>
       <tr class="sortable-row">
-        <td class="hidden sortable-url"><%= update_peep_position_url(instructor.id) %></td>
+        <td class="hidden sortable-url">/peeps/update_position/<%= instructor.id %></td>
         <td>
           <%= link_to edit_peep_path(instructor.id), class: 'pkut-btn' do %>
             <%= icon('arrows', '', class: 'fa-lg')  %>

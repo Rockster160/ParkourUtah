@@ -11,7 +11,10 @@ var ready = function() {
 
   function updatePositionNumbers(resource, position_attribute) {
     $('.sortable-row').each(function(e) {
-      var url = $(this).children('.sortable-url').html(), new_position = e + 1;
+      var path = $(this).children('.sortable-url').html();
+      var paths = window.location
+      var new_position = e + 1;
+      var url = paths.protocol + "//" + paths.host + path;
       var params = {};
       params[resource] = {}
       params[resource][position_attribute] = new_position;
