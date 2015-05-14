@@ -95,6 +95,10 @@ class User < ActiveRecord::Base
 
   validate :valid_phone_number
 
+  def is_instructor?; self.role >= 1; end
+  def is_mod?; self.role >= 2; end
+  def is_admin?; self.role >= 3; end
+
   def self.[](id) #User[4]
     find(id)
   end
@@ -131,16 +135,8 @@ class User < ActiveRecord::Base
     "#{self.first_name.capitalize} #{self.last_name.capitalize}"
   end
 
-  def is_instructor?
-    self.role >= 1
-  end
-
   def signed_in?
     last_sign_in_at > 10.minutes.ago if last_sign_in_at
-  end
-
-  def is_mod?
-    self.role >= 2
   end
 
   def has_unlimited_access?
@@ -154,10 +150,6 @@ class User < ActiveRecord::Base
     return nil unless self.unlimited_subscriptions.first
 
     self.unlimited_subscriptions.sort_by { |s| s.created_at }.last
-  end
-
-  def is_admin?
-    self.role >= 3
   end
 
   def emergency_numbers

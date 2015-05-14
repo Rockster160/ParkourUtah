@@ -32,7 +32,7 @@ class Cart < ActiveRecord::Base
   def shipping
     cost = 0
     self.transactions.each do |order|
-      cost += (order.amount * 200) if !(order.item.category == "Class" || order.item.category == "Coupon")
+      cost += (order.amount * 200) unless %w( Class Coupon Other ).include?(order.item.category)
     end
     cost += (cost > 0 ? 300 : 0)
     cost

@@ -1,24 +1,68 @@
-<div class="shopping-cart-container">
-  <div class="shopping-cart">
-    <div class="orders-placeholder">
-      <% @cart.transactions.where("amount > ?", 0).each do |order| %>
-        <%= render partial: 'shopping_cart_item', locals: {order: order} %>
+<div class="hidden-xs">
+  <div class="shopping-cart-container">
+    <div class="shopping-cart">
+      <div class="orders-placeholder">
+        <% @cart.transactions.where("amount > ?", 0).each do |order| %>
+          <%= render partial: 'shopping_cart_item', locals: {order: order} %>
+        <% end %>
+      </div>
+      <br/>
+      <br/>
+      <span class="shopping-cart-total">Sub total: <span class="shopping-cart-price-holder pull-right"><%= number_to_currency(@cart.price_in_dollars) %></span></span><br/>
+      <span class="shopping-cart-total">Taxes: <span class="shopping-cart-taxes-holder pull-right"><%= number_to_currency(@cart.taxes_in_dollars) %></span></span><br/>
+      <span class="shopping-cart-total">Shipping: <span class="shopping-cart-shipping-holder pull-right"><%= number_to_currency(@cart.shipping_in_dollars) %></span></span><br/>
+      <br/>
+      <span class="shopping-cart-total">Total: <span class="shopping-cart-total-holder pull-right"><%= number_to_currency(@cart.total_in_dollars) %></span></span>
+      <%= form_tag '/store/redeem', remote: true do %>
+        <%= text_field_tag :redemption_key, '', placeholder: 'Coupon Code', class: 'redemption-key-container pkut-textbox', autocomplete: "off" %>
+        <%= submit_tag "Submit", class: 'button-to-link' %>
+      <% end %>
+      <%= form_tag charge_path do %>
+        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+                data-description="Purchase Cart"
+                data-amount=0></script>
       <% end %>
     </div>
-    <span class="shopping-cart-total">Sub total: <span class="shopping-cart-price-holder pull-right"><%= number_to_currency(@cart.price_in_dollars) %></span></span><br/>
-    <span class="shopping-cart-total">Taxes: <span class="shopping-cart-taxes-holder pull-right"><%= number_to_currency(@cart.taxes_in_dollars) %></span></span><br/>
-    <span class="shopping-cart-total">Shipping: <span class="shopping-cart-shipping-holder pull-right"><%= number_to_currency(@cart.shipping_in_dollars) %></span></span><br/>
-    <br/>
-    <span class="shopping-cart-total">Total: <span class="shopping-cart-total-holder pull-right"><%= number_to_currency(@cart.total_in_dollars) %></span></span>
-    <%= form_tag '/store/redeem', remote: true do %>
-      <%= text_field_tag :redemption_key, '', placeholder: 'Coupon Code', class: 'redemption-key-container pkut-textbox', autocomplete: "off" %>
-      <%= submit_tag "Submit", class: 'button-to-link' %>
-    <% end %>
-    <%= form_tag charge_path do %>
-      <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-              data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
-              data-description="Purchase Cart"
-              data-amount=0></script>
-    <% end %>
+  </div>
+</div>
+
+<div class="visible-xs">
+  <a alt="..." class="pkut-btn cart-btn" data-toggle="modal" data-target="#cart_modal">Shopping Cart</a><br/>
+</div>
+
+<div class="modal fade" id="cart_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="central-container">
+    <div class="shop-modal center-block">
+
+      <div class="shopping-cart-container">
+        <div class="shopping-cart">
+        <button type="button" class="close-btn shop-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
+          <br>
+          <%= form_tag charge_path do %>
+            <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                    data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+                    data-description="Purchase Cart"
+                    data-amount=0></script>
+          <% end %>
+          <div class="orders-placeholder">
+            <% @cart.transactions.where("amount > ?", 0).each do |order| %>
+              <%= render partial: 'shopping_cart_item', locals: {order: order} %>
+            <% end %>
+          </div>
+          <br/><br/>
+          <span class="shopping-cart-total">Sub total: <span class="shopping-cart-price-holder pull-right"><%= number_to_currency(@cart.price_in_dollars) %></span></span><br/>
+          <span class="shopping-cart-total">Taxes: <span class="shopping-cart-taxes-holder pull-right"><%= number_to_currency(@cart.taxes_in_dollars) %></span></span><br/>
+          <span class="shopping-cart-total">Shipping: <span class="shopping-cart-shipping-holder pull-right"><%= number_to_currency(@cart.shipping_in_dollars) %></span></span><br/>
+          <br/>
+          <span class="shopping-cart-total">Total: <span class="shopping-cart-total-holder pull-right"><%= number_to_currency(@cart.total_in_dollars) %></span></span>
+          <%= form_tag '/store/redeem', remote: true do %>
+            <%= text_field_tag :redemption_key, '', placeholder: 'Coupon Code', class: 'redemption-key-container pkut-textbox', autocomplete: "off" %>
+            <%= submit_tag "Submit", class: 'button-to-link' %>
+          <% end %>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>

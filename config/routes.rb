@@ -81,18 +81,6 @@ Rails.application.routes.draw do
 
   get '/comingsoon' => 'index#coming_soon', as: 'coming_soon'
 
-if Rails.env.production?
-  post '/store/charge' => 'index#coming_soon', as: 'charge'
-  get '/store' => 'index#coming_soon', as: 'store'
-  post '/store/redeem' => 'index#coming_soon'
-  get '/store/new' => 'index#coming_soon', as: 'add_item'
-  get '/store/edit/:id' => 'index#coming_soon', as: 'edit_item'
-  get '/store/index' => 'index#coming_soon', as: 'edit_items'
-  patch '/store/update/:id' => 'index#coming_soon'
-  post '/store/create' => 'index#coming_soon'
-  delete '/store/item/:id/destroy' => 'index#coming_soon', as: 'destroy_item'
-  put '/store/update_position/:id' => 'index#coming_soon', as: 'update_item_position'
-else
   post '/store/charge' => 'store#charge', as: 'charge'
   get '/store' => 'store#index', as: 'store'
   post '/store/redeem' => 'store#redeem'
@@ -103,7 +91,6 @@ else
   post '/store/create' => 'store#create'
   delete '/store/item/:id/destroy' => 'store#destroy', as: 'destroy_item'
   put '/store/update_position/:id' => 'store#update_item_position', as: 'update_item_position'
-end
 
   get '/store/admin/generate_keys' => 'store#generate_keys', as: 'generate_keys'
   post '/store/admin/generate_keys' => 'store#email_keys'

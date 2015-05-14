@@ -2,5 +2,5 @@
 <% @athletes.each do |athlete| %>
   <h4><%= athlete.full_name %></h4>
   <p><%= athlete.date_of_birth %></p>
-  <p>Athlete ID is: <strong><%= athlete.athlete_id %></strong></p>
+  <p>Athlete ID is: <strong><%= athlete.zero_padded(athlete.athlete_id, 4) %></strong></p>
 <% end %>

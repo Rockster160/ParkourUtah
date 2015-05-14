@@ -2,7 +2,7 @@
   <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br/><br/>
   <%= form_for @item, url: {action: "update", id: @item.id} do |f| %>
     <%= f.text_field :title, placeholder: 'Title', required: true, autocomplete: "off", class: 'pkut-textbox' %><br/>
-    <%= f.text_field :cost_in_dollars, placeholder: 'Cost', required: true, autocomplete: "off", step: 0.01, class: 'pkut-textbox' %><br/>
+    <%= f.text_field :cost_in_dollars, value: @item.cost_in_dollars, placeholder: 'Cost', required: true, autocomplete: "off", step: 0.01, class: 'pkut-textbox' %><br/>
     <%= f.text_area :description, placeholder: 'Description', required: true, autocomplete: "off", class: 'pkut-textarea' %><br/>
     <%= f.select :category, @categories, class: 'pkut-textbox' %><br/>
     <div class="field">

@@ -204,7 +204,7 @@ class Scheduled < ActiveRecord::Base
   def self.create_subscription_line_item
     LineItem.create(
       title: "Monthly Subscription",
-      description: 'This is a recurring transaction. Your account will be charged automatically unless you unsibscribe from the Notifications on your Profile. This allows your students to have unlimited access to classes for 1 month.',
+      description: 'This is a recurring transaction. Your account will be charged automatically unless you unsubscribe via the Notifications button on your Profile. This allows your students to have unlimited access to classes for 1 month.',
       taxable: false,
       cost_in_pennies: 5000,
       is_subscription: true,

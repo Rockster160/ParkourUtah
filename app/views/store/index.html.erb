@@ -5,11 +5,14 @@
 <% end %>
 
 <div class="row shopping-container">
-  <div class="items-container col-xs-9">
+  <br class="visible-xs"/>
+  <br class="visible-xs"/>
+  <div class="items-container col-sm-9 relative">
 
     <% [:classes, :clothing, :accessories, :other].each do |category| %>
       <div class="row">
-        <h2 class="pkut-header title pull-left"><%= category.to_s.capitalize %></h2>
+        <h2 class="pkut-header title pull-left hidden-xs"><%= category.to_s.capitalize %></h2>
+        <h2 class="pkut-header title visible-xs"><%= category.to_s.capitalize %></h2>
       </div>
       <% @items[category].sort_by {|i|i.item_order}.each do |item| %>
         <div class="item-flip-container" ontouchstart="this.classList.toggle('hover');">
@@ -31,7 +34,7 @@
       <% end if @items[category] %>
     <% end %>
   </div>
-  <div class="col-xs-3 cart-container">
+  <div class="col-sm-3 cart-container">
     <%= render partial: 'cart' %>
   </div>
 </div>

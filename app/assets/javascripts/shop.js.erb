@@ -5,7 +5,7 @@ var ready = function() {
   });
 
   $('.cart-container').delegate('.delete-x', 'click', function() {
-    $(this).siblings().children('.shopping-cart-line-item-quantity').children().val(0)
+    $(this).siblings('.shopping-cart-line-item-quantity').children().val(0)
     sendUpdatedAmount($(this).attr('id'), 0);
   });
 

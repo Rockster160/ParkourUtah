@@ -1,7 +1,7 @@
-<div class="shopping-cart-cell">
-  <span class="delete-x pull-right" id="<%= order.item.id %>">X</span>
-  <div class="shopping-cart-line-item">
-    <div class="shopping-cart-line-item-total"><%= order.item.title %></div>
+<div class="shopping-cart-cell relative">
+  <div class="shopping-cart-line-item absolute">
+    <span class="delete-x pull-right" id="<%= order.item.id %>">X</span>
+    <div class="shopping-cart-line-item-title"><%= order.item.title %></div>
     <div class="shopping-cart-line-item-price"><%= number_to_currency(order.item.cost_in_dollars) %></div>
     <div class="shopping-cart-line-item-quantity">
       <% if order.redeemed_token.length > 0 %>
