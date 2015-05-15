@@ -11,6 +11,8 @@
       <%= f.password_field :password, autocomplete: "off", placeholder: 'Password', class: "pkut-textbox" %>
     </div>
 
+    <%= f.hidden_field :remember_me, value: true %>
+
     <div class="actions">
       <%= f.submit "Login", class: "pkut-btn" %><br/>
       <br/>
