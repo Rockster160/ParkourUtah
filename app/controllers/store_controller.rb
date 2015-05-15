@@ -1,5 +1,4 @@
 class StoreController < ApplicationController
-  before_action :publicly_unavailable
   before_action :set_cart
   before_action :set_categories, only: [:edit, :new]
   before_action :validate_admin, only: [:generate_keys, :email_keys]

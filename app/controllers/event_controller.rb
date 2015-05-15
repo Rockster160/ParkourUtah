@@ -1,7 +1,5 @@
 class EventController < ApplicationController
   before_action :validate_user, only: [ :create, :new ]
-  # vefore_action :authenticate_instructor/admin only: { :create, :delete }
-  # https://github.com/plataformatec/devise#strong-parameters
 
   def index
     @events = Event.by_token
