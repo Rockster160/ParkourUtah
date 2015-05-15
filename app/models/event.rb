@@ -50,7 +50,7 @@ class Event < ActiveRecord::Base
 
   # Event.all.to_a.group_by { |event| event.city }.keys.each_with_index { |city, pos| Event.set_city_color(city, Event.colors.keys[pos]) }
 
-  def self.list_of_cities
+  def self.cities
     Event.all.to_a.group_by { |event| event.city }.keys
   end
 

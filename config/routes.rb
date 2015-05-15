@@ -70,8 +70,9 @@ Rails.application.routes.draw do
   post 'events/create' => 'event#create'
   get 'events/edit/:id' => 'event#edit', as: 'edit_event'
 
-  get 'events/index' => 'event#index', as: 'edit_events'
-  post 'events/update/:token' => 'event#update_token', as: 'update_colors'
+  get 'events/cities' => 'event#cities', as: 'cities'
+  get 'events/cities/:city' => 'event#city', as: 'city'
+  post 'events/cities/:city/:color' => 'event#color_city', as: 'color_city'
 
   patch 'events/update/:id' => 'event#update'
   delete 'events/destroy' => 'event#destroy', as: 'destroy_event'

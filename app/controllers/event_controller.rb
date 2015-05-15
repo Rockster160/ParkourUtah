@@ -19,6 +19,20 @@ class EventController < ApplicationController
     @instructors = User.where("role > ?", 0)
   end
 
+  def cities
+    @cities = Event.cities
+  end
+
+  def city
+    @city = params[:city]
+    @events = Event.by_token.select { |e| e.city == @city }
+  end
+
+  def color_city
+    Event.set_city_color(params[:city], params[:color])
+    redirect_to city_path(params[:city])
+  end
+
   def create
     date_time = convertToRailsTime(params[:date], params[:time])
     dates = []
