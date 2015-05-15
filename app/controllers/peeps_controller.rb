@@ -20,6 +20,16 @@ class PeepsController < ApplicationController
     end
   end
 
+  def adjust_credits
+    user = User[params[:url][:id]]
+    user.credits += params[:adjust].to_i
+    if user.save!
+      redirect_to :back, notice: 'User successfully updated.'
+    else
+      redirect_to :back, alert: 'There was a problem updating the user.'
+    end
+  end
+
   def post_secret
     if params[:secret_code].to_i == 9
       Automator.activate!

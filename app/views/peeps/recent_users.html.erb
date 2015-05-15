@@ -4,6 +4,7 @@
   <% @users.each do |user| %>
     <h3><%= user.id %>: <%= user.email %></h3>
     <p><strong><%= user.show_phone_number %></strong></p>
+    <p>Credits: <%= user.credits %> -- <a data-toggle="modal" data-target="#adjust-<%= user.id %>">Adjust</a></p>
     <p>Last seen:
       <% if user.signed_in? %>
         <span style="color:green;">Online Now!</span>
@@ -25,5 +26,6 @@
     <% end %>
     <hr>
     <%= render partial: 'destroy_user', locals: {user: user} %>
+    <%= render partial: 'adjust_credits', locals: {user: user} %>
   <% end %>
 </div>
