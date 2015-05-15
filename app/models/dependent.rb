@@ -24,7 +24,6 @@ class Dependent < ActiveRecord::Base
 
   belongs_to :user
   has_many :waivers
-  has_many :attendences
 
   has_attached_file :athlete_photo,
                :styles => { :medium => "300", :thumb => "100x100#" },
@@ -52,6 +51,10 @@ class Dependent < ActiveRecord::Base
       end
     end
     athlete
+  end
+
+  def attendances
+    Attendance.where(dependent_id: athlete_id)
   end
 
   def signed_waiver?
