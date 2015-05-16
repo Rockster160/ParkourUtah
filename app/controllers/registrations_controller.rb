@@ -17,7 +17,7 @@ class RegistrationsController < ApplicationController
   def step_5
     redirect_user_to_correct_step(5)
     if current_user.registration_step == 5
-      # current_user.update(registration_complete: true)
+      current_user.update(registration_complete: true)
     end
   end
 
