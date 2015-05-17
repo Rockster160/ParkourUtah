@@ -105,11 +105,17 @@ $height: 200px;
   text-align: left;
 }
 
+.front-container {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
 .item-img {
+  position: relative;
   max-height: 135px;
   max-width: 100%;
-  position: absolute;
-  bottom: 0;
+  bottom: -7px;
   left: 0;
   border-radius: 0 0 5px 5px;
 }

@@ -84,7 +84,7 @@ class Scheduled < ActiveRecord::Base
   end
 
   def self.attend_random_classes(days=1)
-    instructors = User.all.select { |u| u.is_instructor? }
+    instructors = User.instructors.shuffle
     days.times do |day|
       events = Event.all.select {|e| e.date.to_date == (Time.now - day.days).to_date }
       if events.any?

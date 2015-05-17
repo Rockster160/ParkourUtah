@@ -97,8 +97,12 @@ class User < ActiveRecord::Base
   validate :valid_phone_number
 
   def is_instructor?; self.role >= 1; end
+  def self.instructors; select{ |u| u.is_instructor? }.sort_by { |s| s.instructor_position }; end
   def is_mod?; self.role >= 2; end
+  def self.mods; select{|u|u.is_mod?}; end
   def is_admin?; self.role >= 3; end
+  def self.admins; select{|u|u.is_admin?}; end
+
 
   def self.[](id) #User[4]
     find(id)
@@ -116,14 +120,20 @@ class User < ActiveRecord::Base
     all.select { |u| u.signed_in? }
   end
 
-  def still_signed_in!
-    self.last_sign_in_at = DateTime.current
-    self.save!
-  end
-
   def self.every(&block)
     return self.all.to_enum unless block_given?
     self.all.each {|user| block.call(user)}
+  end
+
+  def self.update_instructor_positions
+    instructors.each_with_index do |instructor, pos|
+      instructor.update(instructor_position: pos+1)
+    end
+  end
+
+  def still_signed_in!
+    self.last_sign_in_at = DateTime.current
+    self.save!
   end
 
   def class_subscriptions

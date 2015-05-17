@@ -45,7 +45,7 @@ class PeepsController < ApplicationController
   end
 
   def edit
-    @instructors = User.all.select { |u| u.is_instructor? }.sort_by { |s| s.instructor_position }
+    @instructors = User.instructors
   end
 
   def recent_users
@@ -78,17 +78,17 @@ class PeepsController < ApplicationController
   end
 
   def promotion
+    new_pass = "UTPKFR4LF"
     new_user = false
     instructor = User.find_by_email(params[:user][:email])
     new_user = true if instructor.nil?
-    instructor ||= User.new(email: params[:user][:email], password: "ParkourUtahPKFR4LF")
+    instructor ||= User.new(email: params[:user][:email], password: new_pass)
     instructor.update(instructor_params)
     if instructor.save
-      number_of_instructors = User.all.select { |u| u.is_instructor? }.count
+      number_of_instructors = User.instructors.count
       instructor.update(role: 1, instructor_position: number_of_instructors + 1)
-      # TODO Send Email
-      flash[:notice] = "Instructor successfully created." if new_user == true
-      flash[:notice] = "Instructor successfully added." if new_user == false
+      flash[:notice] = "Instructor successfully created with password: #{new_pass}." if new_user == true
+      flash[:notice] = "Instructor successfully promoted." if new_user == false
     else
       flash[:alert] = "There was an error adding the instructor."
     end
@@ -101,6 +101,7 @@ class PeepsController < ApplicationController
     else
       flash[:alert] = "There was an error updating the instructor."
     end
+    User.update_instructor_positions
     redirect_to dashboard_path
   end
 
@@ -189,7 +190,11 @@ class PeepsController < ApplicationController
   end
 
   def instructor_params
-    params.require(:user).permit(:first_name, :last_name, :nickname, :stats, :payment_multiplier, :title, :bio, :avatar, :avatar_2, :role)
+    params.require(:user).permit(
+      :email, :first_name, :last_name, :nickname,
+      :stats, :payment_multiplier, :title, :bio,
+      :avatar, :avatar_2, :role
+    )
   end
 
   def still_signed_in
