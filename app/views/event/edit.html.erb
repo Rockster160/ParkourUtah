@@ -32,6 +32,10 @@
     <%= check_box_tag :all, '', true %>
     <%= hidden_field_tag :date, @event.date, class: "datepicker-placeholder" %>
     <br/>
-    <%= submit_tag "√", class: "btn btn-success" %>
+    <%= submit_tag "Submit", class: "btn btn-success" %>
+    <%= link_to 'Destroy all occurrences', destroy_event_path(future: "all", id: @event.id), method: :delete, class: "btn btn-danger",
+    data:{confirm: "Are you sure? This will delete this and all future events tied to this one."} if @event.token %>
+    <h4>If you would like to destroy only one instance, you must do it from the calendar.</h4>
   <% end %>
+
 </div>
