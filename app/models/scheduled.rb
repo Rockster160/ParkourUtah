@@ -12,7 +12,7 @@ class Scheduled < ActiveRecord::Base
           end
         end
         if user.notifications.email_class_reminder
-          # TODO ::ClassReminderMailerWorker.perform_async(user.id)
+          ::ClassReminderMailerWorker.perform_async(user.id, "Hope to see you at our #{event.city} #{event.class_name.capitalize} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!")
         end
       end
     end

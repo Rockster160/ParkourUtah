@@ -45,6 +45,7 @@
 #  registration_complete  :boolean          default(FALSE)
 #  registration_step      :integer          default(2)
 #  stripe_subscription    :boolean          default(FALSE)
+#  referrer               :string           default("")
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

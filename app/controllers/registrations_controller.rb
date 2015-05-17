@@ -37,7 +37,7 @@ class RegistrationsController < ApplicationController
 
   def user_params
     params[:user][:phone_number] = params[:user][:phone]
-    params.require(:user).permit(:phone_number, :email)
+    params.require(:user).permit(:phone_number, :email, :referrer)
   end
 
   def update_notifications

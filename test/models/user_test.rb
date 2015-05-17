@@ -45,6 +45,7 @@
 #  registration_complete  :boolean          default(FALSE)
 #  registration_step      :integer          default(2)
 #  stripe_subscription    :boolean          default(FALSE)
+#  referrer               :string           default("")
 #
 
 require 'test_helper'

@@ -29,14 +29,12 @@ var ready = function() {
     });
   };
 
-  if (window.mobilecheck()) {
-    $('.forceOpen').click(function() {});
-    $('body').delegate('.forceOpen', 'click', function() {
-      var id = $(this).attr('data-target');
-      $('.modal').modal('hide');
-      $(id).modal('show');
-    });
-  }
+  $('.forceOpen').click(function() {});
+  $('body').delegate('.forceOpen', 'click', function() {
+    var id = $(this).attr('data-target');
+    $('.modal').modal('hide');
+    $(id).modal('show');
+  });
 };
 
 $('.delayed-load').ready(function() {
