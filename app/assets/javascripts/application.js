@@ -25,14 +25,14 @@ ready = function() {
     killFlashes();
   }, 6000);
 
-  $('body').delegate('.flash', 'click', function() {
+  $('body').delegate('.close-flash', 'click', function() {
     killFlashes();
   });
 };
 
 killFlashes = function() {
   if ($('.flash-container').length > 0) {
-    slideOut($('.flash-container'));
+    slideOut($('.flash'));
     clearTimeout(timeout);
     timeout = setTimeout(function() {
       killFlashes();
