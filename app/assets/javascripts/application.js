@@ -21,7 +21,7 @@
 //= require_tree .
 
 ready = function() {
-  timeout = setTimeout(function() {
+  setTimeout(function() {
     killFlashes();
   }, 6000);
 
@@ -32,8 +32,8 @@ ready = function() {
 
 killFlashes = function() {
   if ($('.flash-container').length > 0) {
+    slideOut($('.flash-container'));
     slideOut($('.flash'));
-    clearTimeout(timeout);
     timeout = setTimeout(function() {
       killFlashes();
     }, 6000);
