@@ -4,7 +4,6 @@ class StoreController < ApplicationController
   before_action :validate_admin, only: [:generate_keys, :email_keys]
 
   def index
-    flash.now[:notice] = "This is some test."
     @items = {}
     LineItem.select { |item| !(item.hidden) }.each do |item|
       dest = case item.category
