@@ -1,14 +1,16 @@
-<div class="flash-container">
-  <% if flash[:notice].present? %>
-    <div class="flash notice-flash">
-      <i class="fa fa-times-circle-o fa-2x close-flash"></i>
-      <p class="flash-text"><%= flash[:notice] %></p>
-    </div>
-  <% end %>
-  <% if flash[:alert].present? %>
-    <div class="flash alert-flash">
-      <i class="fa fa-times-circle-o fa-2x close-flash"></i>
-      <p class="flash-text"><%= flash[:alert] %></p>
-    </div>
-  <% end %>
-</div>
+<% if flash[:alert].present? || flash[:notice].present? %>
+  <div class="flash-container">
+    <% if flash[:notice].present? %>
+      <div class="flash notice-flash">
+        <i class="fa fa-times-circle-o fa-2x close-flash"></i>
+        <p class="flash-text"><%= flash[:notice] %></p>
+      </div>
+    <% end %>
+    <% if flash[:alert].present? %>
+      <div class="flash alert-flash">
+        <i class="fa fa-times-circle-o fa-2x close-flash"></i>
+        <p class="flash-text"><%= flash[:alert] %></p>
+      </div>
+    <% end %>
+  </div>
+<% end %>

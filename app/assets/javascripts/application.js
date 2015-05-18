@@ -21,6 +21,11 @@
 //= require_tree .
 
 ready = function() {
+
+  if ($('.flash').length > 0) {
+    killFlashes();
+  }
+
   setTimeout(function() {
     killFlashes();
   }, 6000);
@@ -28,16 +33,12 @@ ready = function() {
   $('body').delegate('.close-flash', 'click', function() {
     killFlashes();
   });
+
 };
 
 killFlashes = function() {
-  if ($('.flash-container').length > 0) {
-    slideOut($('.flash-container'));
-    slideOut($('.flash'));
-    timeout = setTimeout(function() {
-      killFlashes();
-    }, 6000);
-  }
+  slideOut($('.flash-container'));
+  slideOut($('.flash'));
 }
 
 slideOut = function(obj) {
