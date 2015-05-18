@@ -200,9 +200,11 @@ class StoreController < ApplicationController
 
   def item_params
     params[:line_item][:cost_in_pennies] = (params[:line_item][:cost_in_dollars].to_f * 100).round.to_s
-    params.require(:line_item).permit(:description, :title, :display,
-                              :cost_in_pennies, :category, :hidden, :credits,
-                              :color, :size, :is_subscription, :taxable)
+    params.require(:line_item).permit(
+      :description, :title, :display,
+      :cost_in_pennies, :category, :hidden, :credits,
+      :color, :size, :is_subscription, :taxable
+    )
   end
 
   def set_categories
@@ -210,7 +212,7 @@ class StoreController < ApplicationController
   end
 
   def set_cart
-    validate_signed_in # Temporary until session carts are fixed....
+    validate_signed_in # Temporary until session carts are fixed.... TODO
     @cart = current_user.cart if user_signed_in?
   end
 

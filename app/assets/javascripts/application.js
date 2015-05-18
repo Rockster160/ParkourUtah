@@ -22,19 +22,29 @@
 
 ready = function() {
 
-  if ($('.flash').length > 0) {
+  if ($('.flash').length == 0) {
     killFlashes();
   }
 
-  setTimeout(function() {
-    killFlashes();
-  }, 6000);
+  killFlashAfterDelay = function() {
+    setTimeout(function() {
+      killFlashes();
+    }, 6000);
+  }
+
+  killFlashAfterDelay();
 
   $('body').delegate('.close-flash', 'click', function() {
     killFlashes();
   });
 
 };
+
+reFlash = function(type, msg) {
+  killFlashes();
+  showFlash(type, msg);
+  killFlashAfterDelay();
+}
 
 killFlashes = function() {
   slideOut($('.flash-container'));
@@ -45,10 +55,12 @@ slideOut = function(obj) {
   obj.slideUp(600);
 }
 
-showError = function(msg) {
+showFlash = function(type, msg) {
   killFlashes();
-  $('.flash-holder').append('<div class="flash-container"><div class="flash alert"><span class="flash-text">' +
+  $('.flash-holder').append('<div class="flash-container"><div class="flash ' +
+  type + '"><span class="flash-text">' +
   msg + '</span></div></div>');
+  killFlashAfterDelay();
 }
 
 $(document).ready(ready);
