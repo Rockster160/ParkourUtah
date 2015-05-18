@@ -125,7 +125,7 @@
     <div class="modal fade" id="confirm_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="central-container">
         <div class="error-container center-block">
-          <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle", '', class: 'fa-2x') %></button>
+          <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
           <h1 class="pkut-header">Confirm</h1>
           <p>We need your current password to update your changes.</p>
           <%= f.password_field :current_password, autocomplete: "off", class: 'pkut-textbox' %>
@@ -147,7 +147,7 @@
           <div class="modal fade" id="edit<%= athlete.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="central-container">
               <div class="error-container center-block">
-                <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle", '', class: 'fa-2x') %></button>
+                <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
                 <h3 class="pkut-header"><%= athlete.full_name %></h3>
                   <p>This will permanently delete this athlete. Are you sure? This action cannot be undone.<p>
                   <%= link_to "Delete", destroy_athlete_path(athlete.id), class: 'pkut-btn', method: :delete %>

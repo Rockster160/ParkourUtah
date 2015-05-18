@@ -34,7 +34,7 @@ var ready = function() {
     token +
     '][dob]" value="" placeholder="MM/DD/YYYY" class="pkut-textbox sm-textbox formatDOB" /><input type="tel" name="athlete[' +
     token +
-    '][code]" value="" placeholder="Code" class="pkut-textbox xs-textbox formatPin" /><i class="fa fa-times-circle fa-2x kill-athlete"></i></div></div>');
+    '][code]" value="" placeholder="Code" class="pkut-textbox xs-textbox formatPin" /><i class="fa fa-times-circle-o fa-2x kill-athlete"></i></div></div>');
     $(".formatDOB:last").mask("99/99/9999");
     $(".formatPin:last").mask("9999");
   });
