@@ -10,10 +10,12 @@
 <div class="col-md-8 col-md-offset-2 cities-container relative">
   <div class="hidden-xs">
     <% @cities.each do |city| %>
-      <div href="<%= city %>" class="col-xs-3 calendar-legend">
-        <i class="calendar-legend-blip event-color color-<%= Event.color_of(city) %>">&nbsp;</i>
-        <span class="calendar-legend-text pull-left"><%= city.capitalize %></span>
-      </div>
+      <% if Event.future_classes_in(city).any? %>
+        <div href="<%= city %>" class="col-xs-3 calendar-legend">
+          <i class="calendar-legend-blip event-color color-<%= Event.color_of(city) %>">&nbsp;</i>
+          <span class="calendar-legend-text pull-left"><%= city.capitalize %></span>
+        </div>
+      <% end %>
     <% end %>
   </div>
   <div class="central-container internal-center visible-xs">

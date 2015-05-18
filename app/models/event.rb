@@ -65,6 +65,10 @@ class Event < ActiveRecord::Base
     end
   end
 
+  def self.future_classes_in(city)
+    where(city: city).where("date >= ?", Time.now.to_date)
+  end
+
   def self.by_token
     self.where("date > ?", Time.now.to_date).group_by do |all_events|
       all_events.token
