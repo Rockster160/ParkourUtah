@@ -110,6 +110,17 @@ class Dependent < ActiveRecord::Base
     self.save
   end
 
+  def self.pins_left
+    bads = []
+    10.times do |t|
+      bads << "666#{t}".to_i
+      bads << "#{t}666".to_i
+    end
+    bads << ENV["PKUT_PIN"].to_i
+    bads << Dependent.all.map { |user| user.athlete_id }
+    ((0...9999).to_a - bads).count
+  end
+
   def sign_up_credits
     self.user.update(credits: (self.user.credits + (ENV["PKUT_CLASS_PRICE"].to_i * 2)))
   end
