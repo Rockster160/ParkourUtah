@@ -59,8 +59,10 @@ class PeepsController < ApplicationController
   def update
     if User.find(params[:id]).update(instructor_params)
       flash[:notice] = "Instructor successfully updated."
+      RoccoLogger.add "Instructor successfully updated."
     else
       flash[:alert] = "There was an error updating the instructor."
+      RoccoLogger.add "There was an error updating the instructor."
     end
     redirect_to dashboard_path
   end
@@ -115,9 +117,13 @@ class PeepsController < ApplicationController
       if @athlete
         if Attendance.where(dependent_id: @athlete.athlete_id, event_id: params[:id]).count > 0
           redirect_to :back, alert: "Athlete already attending class."
+          RoccoLogger.add "#{current_user.first_name} tried to add #{@athlete.full_name}, but they are already in class."
+        else
+          RoccoLogger.add "#{current_user.first_name} looked up #{@athlete.full_name}."
         end
       else
         redirect_to :back, alert: "Athlete not found."
+        RoccoLogger.add "#{current_user.first_name} bad lookup - #{params[:athlete_id]}"
       end
     end
   end
@@ -125,10 +131,12 @@ class PeepsController < ApplicationController
   def pin_password
     unless params["commit"] == "√"
       flash[:alert] = "Pin rejected. Please try again."
+      RoccoLogger.add "#{current_user.first_name} rejected #{Dependent.where(athlete_id: params[:athlete_id]).first.full_name}."
       redirect_to begin_class_path
     else
       if params[:athlete_photo]
         Dependent.where(athlete_id: params[:athlete_id]).first.update(athlete_photo: params[:athlete_photo])
+        RoccoLogger.add "#{current_user.first_name} updated avatar for: #{Dependent.where(athlete_id: params[:athlete_id]).first.full_name}."
       end
       set_athlete
     end
@@ -163,9 +171,11 @@ class PeepsController < ApplicationController
           ::SmsMailerWorker.perform_async(@user.phone_number, "You are low on Credits! Head up to ParkourUtah.com to get some more so you have some for next time.")
         end
       end
+      RoccoLogger.add "#{current_user.first_name} successfully added #{@athlete.full_name} to class."
       flash[:notice] = "Success! Welcome to class."
       redirect_to begin_class_path
     else
+      RoccoLogger.add "#{current_user.first_name} tried to add #{@athlete.full_name}, but insufficient funds."
       flash[:alert] = "Sorry, there are not enough credits in your account."
       redirect_to begin_class_path
     end

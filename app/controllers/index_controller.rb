@@ -44,20 +44,16 @@ class IndexController < ApplicationController
   end
 
   def receive_sms
-    api = Twilio::REST::Client.new(ENV['PKUT_TWILIO_ACCOUNT_SID'], ENV['PKUT_TWILIO_AUTH_TOKEN'])
-    api.account.messages.create(
-      body: "From: #{params["From"]}\nMessage: #{params["Body"]}",
-      to: "+3852599640",
-      from: "+17405714304"
-    )
+    ::SmsMailerWorker.perform_async('3852599640', "From: #{params["From"]}\nMessage: #{params["Body"]}")
     # number = params["From"]
-    # if params["Body"].downcase.split.join == "stop"
+    if params["Body"].downcase.split.join == "Tell me everything."
+      ::SmsMailerWorker.perform_async('3852599640', RoccoLogger.by_date.logs)
     #   User.find_by_phone_number(number).subscriptions.each do |subscription|
     #     subscription.destroy
     #   end
     #   ::SmsMailerWorker.perform_async(number, "You have been unsubscribed from all messages from ParkourUtah.")
     #   # TODO Send email?
-    # end
+    end
   end
 
   def update

@@ -104,9 +104,10 @@ class Scheduled < ActiveRecord::Base
   end
 
   def self.monthly_subscription_charges
-    SmsMailerWorker.perform_async('3852599640', "Tick,")
+    count = 0
     User.every do |user|
       if !(user.has_unlimited_access?) && user.stripe_subscription? && user.stripe_id
+        count += 1
         Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
         charge = Stripe::Charge.create(
           :amount   => 5000,
@@ -123,6 +124,7 @@ class Scheduled < ActiveRecord::Base
         end
       end
     end
+    SmsMailerWorker.perform_async('3852599640', "Tick : #{count}") if count > 0
   end
 
   def self.waiver_checks

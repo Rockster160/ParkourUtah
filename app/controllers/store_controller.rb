@@ -185,10 +185,8 @@ class StoreController < ApplicationController
           end
         end
         ItemsPurchasedMailerWorker.perform_async(current_user.cart.id, "rocco11nicholls@gmail.com")
-        if Rails.env == "production"
-          ItemsPurchasedMailerWorker.perform_async(current_user.cart.id, current_user.email)
-          ItemsPurchasedMailerWorker.perform_async(current_user.cart, ENV["PKUT_EMAIL"])
-        end
+        ItemsPurchasedMailerWorker.perform_async(current_user.cart.id, current_user.email)
+        ItemsPurchasedMailerWorker.perform_async(current_user.cart.id, ENV["PKUT_EMAIL"])
         current_user.carts.create
         flash[:notice] = "Cart was successfully purchased."
       else

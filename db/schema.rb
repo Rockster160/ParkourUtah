@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150517145358) do
+ActiveRecord::Schema.define(version: 20150522143410) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -146,6 +146,12 @@ ActiveRecord::Schema.define(version: 20150517145358) do
   end
 
   add_index "redemption_keys", ["line_item_id"], name: "index_redemption_keys_on_line_item_id", using: :btree
+
+  create_table "rocco_loggers", force: :cascade do |t|
+    t.text     "logs"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "subscriptions", force: :cascade do |t|
     t.integer "user_id"
