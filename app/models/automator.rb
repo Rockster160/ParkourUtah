@@ -11,14 +11,17 @@
 class Automator < ActiveRecord::Base
 
   def self.activate!
+    Automator.create unless first
     first.update(open: true)
   end
 
   def self.deactivate!
+    Automator.create unless first
     first.update(open: false)
   end
 
   def self.open?
+    Automator.create unless first
     first.open
   end
 end
