@@ -35,12 +35,21 @@ var ready = function() {
     }
   })
 
-  $('.restrictNumeric').keypress(function(e) {
+  $('.formatPin, .formatDOB, .formatPhoneNumber').keypress(function(e) {
+    $(this).attr('title', "Please use numeric digits only.");
+    $(this).data('toggle', 'tooltip');
+    $(this).data('placement', 'top');
+    $(this).data('trigger', 'manual');
     if (e.which >= 48 && e.which <= 57) {
+      $(this).tooltip('hide');
       return e
     } else {
+      $(this).tooltip('show');
       e.preventDefault();
     }
+  });
+  $('.formatPin, .formatDOB, .formatPhoneNumber').focusout(function() {
+    $(this).tooltip('hide');
   });
 
   $(function() {
