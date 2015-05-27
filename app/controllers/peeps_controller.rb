@@ -117,9 +117,9 @@ class PeepsController < ApplicationController
       if @athlete
         if Attendance.where(dependent_id: @athlete.athlete_id, event_id: params[:id]).count > 0
           redirect_to :back, alert: "Athlete already attending class."
-          RoccoLogger.add "#{current_user.first_name} tried to add #{@athlete.full_name}, but they are already in class."
+          RoccoLogger.add "#{current_user.first_name} tried to add #{@athlete.athlete_id}:#{@athlete.full_name}, but they are already in class."
         else
-          RoccoLogger.add "#{current_user.first_name} looked up #{@athlete.full_name}."
+          RoccoLogger.add "#{current_user.first_name} looked up #{@athlete.athlete_id}:#{@athlete.full_name}."
         end
       else
         redirect_to :back, alert: "Athlete not found."
@@ -171,11 +171,11 @@ class PeepsController < ApplicationController
           ::SmsMailerWorker.perform_async(@user.phone_number, "You are low on Credits! Head up to ParkourUtah.com to get some more so you have some for next time.")
         end
       end
-      RoccoLogger.add "#{current_user.first_name} successfully added #{@athlete.full_name} to class."
+      RoccoLogger.add "#{current_user.first_name} successfully added #{@athlete.athlete_pin}:#{@athlete.full_name} to class."
       flash[:notice] = "Success! Welcome to class."
       redirect_to begin_class_path
     else
-      RoccoLogger.add "#{current_user.first_name} tried to add #{@athlete.full_name}, but insufficient funds."
+      RoccoLogger.add "#{current_user.first_name} tried to add #{@athlete.athlete_pin}:#{@athlete.full_name}, but insufficient funds."
       flash[:alert] = "Sorry, there are not enough credits in your account."
       redirect_to begin_class_path
     end
