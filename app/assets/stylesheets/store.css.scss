@@ -1,6 +1,12 @@
 @import "config/variables";
 @import 'config/font-imports';
 
+.shopping-container {
+  position: relative;
+  max-width: 950px;
+  margin: 0 auto;
+}
+
 .cart-btn {
   position: fixed;
   top: 40px;
@@ -15,6 +21,7 @@
   position: fixed;
   min-width: 250px;
   min-height: 512px;
+  max-width: 250px;
   width: 22%;
   height: 90%;
   background: #ccc;
