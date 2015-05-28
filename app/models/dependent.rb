@@ -106,7 +106,7 @@ class Dependent < ActiveRecord::Base
     end
     bads << ENV["PKUT_PIN"].to_i
     bads << Dependent.all.map { |user| user.athlete_id }
-    self.athlete_id = ((0...9999).to_a - bads).sample
+    self.athlete_id = ((0...9999).to_a - bads.flatten).sample
     self.save
   end
 
