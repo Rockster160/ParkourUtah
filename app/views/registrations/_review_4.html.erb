@@ -78,7 +78,7 @@
           <% @athletes.each do |athlete| %>
             <%= text_field_tag "athlete[#{athlete.id}][name]", athlete.full_name, placeholder: 'Full Name', class: "pkut-textbox formatName textbox-2col-5max" %>
             <%= text_field_tag "athlete[#{athlete.id}][dob]", athlete.date_of_birth, placeholder: 'MM/DD/YYYY', class: "pkut-textbox formatDOB textbox-2col-5max" %>
-            <%= text_field_tag "athlete[#{athlete.id}][code]", athlete.zero_padded(athlete.athlete_pin, 4), placeholder: '1234', class: "pkut-textbox formatPin textbox-1col-5max" %>
+            <span class='show-required'><%= text_field_tag "athlete[#{athlete.id}][code]", athlete.zero_padded(athlete.athlete_pin, 4), placeholder: 'ex:1234', class: "pkut-textbox formatPin textbox-1col-5max" %></span>
             <!-- <span class="pkut-checkbox text-right"> -->
               <%#= check_box_tag "athlete[#{athlete.id}][keep]", '', true %>
               <%#= label_tag "athlete[#{athlete.id}][keep]", '' %>

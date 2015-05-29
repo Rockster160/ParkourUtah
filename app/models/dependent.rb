@@ -18,6 +18,7 @@
 #  middle_name                :string
 #  last_name                  :string
 #  date_of_birth              :string
+#  verified                   :boolean          default(FALSE)
 #
 
 class Dependent < ActiveRecord::Base
@@ -98,15 +99,14 @@ class Dependent < ActiveRecord::Base
   end
 
   def generate_pin
-    self.sign_up_credits
     bads = []
     10.times do |t|
       bads << "666#{t}".to_i
       bads << "#{t}666".to_i
     end
     bads << ENV["PKUT_PIN"].to_i
-    bads << Dependent.all.map { |user| user.athlete_id }
-    self.athlete_id = ((0...9999).to_a - bads.flatten).sample
+    bads << Dependent.all.map { |athlete| zero_padded(athlete.athlete_id, 4) }
+    self.athlete_id = ((0...9999).to_a - bads.flatten).sample.to_i
     self.save
   end
 

@@ -1,8 +1,8 @@
 <div class="central-container form-offset disableEnterSubmit">
   <%= render partial: 'registrations/progress_bar', locals: {step: 3} %>
-  <h6 class="warning-text text-center">This process must be completed by a parent or legal guardian.</h6>
+  <h4 class="warning-text text-center">This process must be completed by a parent or legal guardian.</h4>
   <h2 class="header-text">Add Athletes</h2>
-  <p>Add the first and last name, birthday, and desired <strong>Fast Pass Code</strong> <a alt="..." data-toggle="modal" data-target="#what_is" class="hover-btn forceOpen"><sup>(What is this?)</sup></a> of any athlete (including yourself) who is going to participate in lessons.</p>
+  <p>Add the first and last name, birthday, and desired Pin Code for each athlete (including yourself) who is going to participate in lessons.</p>
   <%= form_tag url: {controller: 'registrations'} do %>
     <% token = 10.times.map {(('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a).sample}.join %>
     <div class="athlete-container">
@@ -11,14 +11,14 @@
           <%= text_field_tag "athlete[#{token}][name]", '', placeholder: 'Full Name', class: "pkut-textbox formatName" %>
         </div>
         <div class="col-sm-6">
-          <%= telephone_field_tag "athlete[#{token}][dob]", '', placeholder: 'MM/DD/YYYY', class: "pkut-textbox sm-textbox formatDOB" %><%= telephone_field_tag "athlete[#{token}][code]", '', placeholder: '1234', class: "pkut-textbox xs-textbox formatPin" %><%= icon("times-circle-o", '', class: 'fa-2x kill-athlete hover-btn') %>
+          <%= telephone_field_tag "athlete[#{token}][dob]", '', placeholder: 'MM/DD/YYYY', class: "pkut-textbox sm-textbox formatDOB" %><span class='show-required'><a alt="..." data-toggle="modal" data-target="#what_is" class="hover-btn forceOpen what-is-pin"><sup>(What is this?)</sup></a><%= telephone_field_tag "athlete[#{token}][code]", '', placeholder: 'ex:1234', class: "pkut-textbox xs-textbox formatPin" %></span> <%= icon("times-circle-o", '', class: 'fa-2x kill-athlete hover-btn') %>
         </div>
       </div>
     </div>
     <%= render partial: 'dependents/reiterate_waiver' %>
     <%= render partial: 'dependents/waivers' %>
   <% end %>
-  <h4><span class="add-athlete-btn hover-btn"><%= icon('plus-square-o', '', class: 'fa-lg') %> Add Athlete</span></h4>
+  <h4><span class="add-athlete-btn hover-btn pkut-header"><%= icon('plus-square-o', '', class: 'fa-lg') %> Add Additional Athlete</span></h4>
   <a alt="..." class="pkut-btn pull-right populate-waiver-btn" data-toggle="modal" data-target="#waiver_modal">Sign Waiver</a><br/>
 </div>
 <%= render partial: 'layouts/message', locals: {
@@ -31,4 +31,4 @@
     1) Have added at least 1 athlete.
     2)Have agreed to the Terms and Conditions.
     3) Have signed your name."} %>
-<%= render partial: 'layouts/message', locals: {modal_id: "what_is", title: "Fast-Pass Code", message: "The fast pass code is a 4 digit code used by the student or athlete to enter in to the Instructor's pin-pad at the beginning of class in order to easily identify the student and subtract credits from the account for class."} %>
+<%= render partial: 'layouts/message', locals: {modal_id: "what_is", title: "Pin Code", message: "A PIN code (similar to a debit card PIN) is a 4 digit number that the athlete will need in order to attend class. This code will be entered along with the Athlete ID Number, which is assigned to you at the end of your registration. Please select a 4 digit number that is EASY to remember for each athlete."} %>

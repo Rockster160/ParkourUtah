@@ -171,6 +171,10 @@ class User < ActiveRecord::Base
     dependents
   end
 
+  def non_verified_athletes
+    dependents.select { |d| !(d.verified) }
+  end
+
   def athletes_by_waiver_expiration
     dependents.sort_by { |d| d.waiver ? d.waiver.created_at : created_at }
   end

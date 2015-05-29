@@ -1,6 +1,6 @@
 <div class="central-container form-offset internal-center">
   <%= render partial: 'registrations/progress_bar', locals: {step: 2} %>
-  <h6 class="warning-text text-center">This process must be completed by a parent or legal guardian.</h6>
+  <h4 class="warning-text text-center">This process must be completed by a parent or legal guardian.</h4>
   <h2 class="header-text">Okay let's get some personal info</h2>
   <p>We just sent you off a welcome email letting you know your account has been created and giving you a copy of your password. Please fill out the personal info below and click next.</p>
 
@@ -12,10 +12,10 @@
       </div>
 
       <div class="text-field-height pkut-checkbox">
-        <%= check_box_tag 'smsalert' %>
+        <%= check_box_tag 'smsalert', '', checked: 'checked' %>
         <%= label_tag 'smsalert' do %>
         <% end %>
-        <p>Check the box for SMS updates <a data-toggle="modal" data-target="#what_is" class="hover-btn forceOpen"><sup>(What is this?)</sup></a></p>
+        <p>Receive SMS updates <a data-toggle="modal" data-target="#what_is" class="hover-btn forceOpen"><sup>(What is this?)</sup></a></p>
       </div>
       <br class="visible-xs"/>
 

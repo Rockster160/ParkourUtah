@@ -15,7 +15,7 @@
       <p>If any athletes are missing, please be sure that all information is filled out entirely with the requested formats.</p>
       <div class="internal-center">
         <%= link_to 'REVIEW AND DOWNLOAD WAIVER', '//s3-us-west-2.amazonaws.com/pkut-default/RELEASE+AGREEMENT1.pdf', class: 'pkut-link', target: '_blank' %>
-        <div class="text-field-height pkut-checkbox">
+        <div class="text-field-height pkut-checkbox arrow-required">
           <%= check_box_tag :signed, '', nil, class: 'required-checkbox' %>
           <%= label_tag :signed, '' %>
         </div>

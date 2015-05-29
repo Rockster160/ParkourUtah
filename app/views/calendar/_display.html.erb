@@ -29,7 +29,7 @@
                       <p>
                         <% if current_user %>
                           <% unless current_user.subscribed?(event) %>
-                            <%= link_to 'Subscribe to this Event', subscribe_path(id: event.id), class: "calendar-link", method: :post %><br/>
+                            <%= link_to 'Click to receive text alerts for this event.', subscribe_path(id: event.id), class: "calendar-link", method: :post %><br/>
                           <% else %>
                             <%= link_to 'Unsubscribe from this Event', unsubscribe_path(id: event.id), class: "calendar-link", method: :delete %><br/>
                           <% end %>

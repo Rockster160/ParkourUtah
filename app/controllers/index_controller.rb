@@ -54,6 +54,7 @@ class IndexController < ApplicationController
     #   ::SmsMailerWorker.perform_async(number, "You have been unsubscribed from all messages from ParkourUtah.")
     #   # TODO Send email?
     end
+    head :ok
   end
 
   def update
