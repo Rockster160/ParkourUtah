@@ -210,8 +210,12 @@ class StoreController < ApplicationController
   end
 
   def set_cart
-    validate_signed_in # Temporary until session carts are fixed.... TODO
-    @cart = current_user.cart if user_signed_in?
+    # validate_signed_in # Temporary until session carts are fixed.... TODO
+    if user_signed_in?
+      @cart = current_user.cart
+    else
+      redirect_to new_user_session_path, alert: "Store is currently only available to signed in users. Sorry!"
+    end
   end
 
   def validate_signed_in
