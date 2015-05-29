@@ -173,7 +173,7 @@
             <%= link_to "Must have waiver signed before attending class.", waivers_path, class: 'fancy-link' %>
           <% end %>
           </br>
-          <%= link_to "Forgot PIN / ID? Click here to reset.", send_reset_pin_or_id_mail_path(athlete.id), method: "post" %>
+          <%= link_to "Forgot PIN? Click here to reset.", send_reset_pin_or_id_mail_path(athlete.id), method: "post" %>
         </div>
       <% end %>
       <br/>
