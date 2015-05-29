@@ -35,6 +35,7 @@ gem 'jquery-tablesorter'
 gem 'maskedinput-rails'
 gem 'annotate', '~> 2.6.6'
 gem 'recaptcha', require: 'recaptcha/rails'
+gem "dotimeout-rails"
 
 group :development, :test do
   gem 'byebug'

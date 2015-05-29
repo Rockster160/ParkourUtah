@@ -64,7 +64,7 @@ Rails.application.routes.draw do
 
   get 'calendar/index' => 'calendar#index', as: 'calendar'
   get 'calendar/draw' => 'calendar#draw', as: 'calendar_draw'
-
+  get 'calendar/mobile' => 'calendar#mobile', as: 'calendar_mobile'
   get 'schedule/:location' => 'calendar#show', as: 'calendar_show'
 
   get 'events/new' => 'event#new', as: 'add_event'

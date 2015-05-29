@@ -1,6 +1,54 @@
 @import "config/variables";
 @import 'config/font-imports';
 
+.days-container {
+  overflow-x: scroll;
+  overflow-y: none;
+  word-spacing: 0px;
+  width: 100%;
+  height: Calc(100% - 50px);
+  .a-single-date {
+    display: inline-block;
+    width: 100vw;
+    height: Calc(100vh - 50px);
+    border: 5px solid red;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .calendar-container {
   background: white;
   border-radius: 0 0 20px 20px;

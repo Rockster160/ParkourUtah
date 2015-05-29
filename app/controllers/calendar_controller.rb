@@ -32,4 +32,8 @@ class CalendarController < ApplicationController
       format.js
     end
   end
+
+  def mobile
+    @cities = Event.all.to_a.group_by { |event| event.city }.keys.sort
+  end
 end

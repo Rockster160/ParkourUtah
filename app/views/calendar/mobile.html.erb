@@ -1,0 +1,15 @@
+<% content_for :body do %>
+  <style>
+    html, body {
+      max-width: 702vw;
+      width: 702vw;
+      min-width: 702vw;
+    }
+  </style>
+<% end %>
+
+<div class="days-container">
+<% @cities.each do |city| %>
+<span class="a-single-date event-color color-<%= Event.color_of(city) %>"><%= city %></span>
+<% end %>
+</div>

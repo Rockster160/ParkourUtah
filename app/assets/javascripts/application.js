@@ -15,6 +15,7 @@
 //= require jquery-ui
 //= require jquery-tablesorter
 //= require select2
+//= require dotimeout
 //= require twitter/bootstrap
 //= require maskedinput
 //= require_tree .
