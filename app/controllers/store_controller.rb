@@ -214,7 +214,7 @@ class StoreController < ApplicationController
     if user_signed_in?
       @cart = current_user.cart
     else
-      redirect_to new_user_session_path, alert: "Store is currently only available to signed in users. Sorry!"
+      redirect_to new_user_session_path, alert: "Store is currently only available to signed in users. Sorry!", data: { no_turbolink: true }
     end
   end
 
