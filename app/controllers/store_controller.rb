@@ -211,10 +211,9 @@ class StoreController < ApplicationController
 
   def set_cart
     # validate_signed_in # Temporary until session carts are fixed.... TODO
+    redirect_to new_user_session_path, alert: "Store is currently only available to signed in users. Sorry!", data: { no_turbolink: true } unless user_signed_in?
     if user_signed_in?
       @cart = current_user.cart
-    else
-      redirect_to new_user_session_path, alert: "Store is currently only available to signed in users. Sorry!", data: { no_turbolink: true }
     end
   end
 
