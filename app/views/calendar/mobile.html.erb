@@ -1,9 +1,9 @@
 <% content_for :body do %>
   <style>
     html, body {
-      max-width: 702vw;
-      width: 702vw;
-      min-width: 702vw;
+      max-width: <%= @cities.count * 100 + 5 %>vw;
+      width: <%= @cities.count * 100 + 5 %>vw;
+      min-width: <%= @cities.count * 100 + 5 %>vw;
     }
   </style>
 <% end %>
