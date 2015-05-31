@@ -5,20 +5,68 @@ var ready = function () {
     return check;
   };
 
-  // if (window.mobilecheck()) {
-    $(window).scroll(function(){
-      $.doTimeout( 'scroll', 50, function() {
-        var width = $(window).width(), scroll_left = $(window).scrollLeft(), current_x = 0, offset_x = 0;
-
-        while (current_x + width/2 < scroll_left) {
-          current_x += width/2;
-          offset_x += 0.5;
-        }
-        var x_offset = $('.a-single-date')[Math.round(offset_x)].offsetLeft;
-        $('body,html').animate( {scrollLeft: x_offset}, 200 );
-      });
+  getOffsets = function() {
+    var offsets = []
+    $('.a-single-date').each(function() {
+      offsets.push(this.offsetLeft);
     });
-  // }
+    return offsets
+  }
+
+  currentOffset = function(x_position) {
+    var scroll_left = x_position || $(window).scrollLeft() + 1, current_offset = 0;
+    getOffsets().sort(function(a,b){return a-b}).forEach(function(number, index, array) {
+      if (scroll_left > number) { current_offset = number; }
+    });
+    return current_offset;
+  };
+
+  scrollRight = function(x_position) {
+    offsets = getOffsets();
+    scroll_left = offsets[offsets.indexOf(currentOffset(x_position)) + 1];
+    $('body,html').animate( {scrollLeft: scroll_left}, 200 );
+    return scroll_left
+  };
+  scrollLeft = function(x_position) {
+    offsets = getOffsets();
+    scroll_left = offsets[offsets.indexOf(currentOffset(x_position)) - 1];
+    $('body,html').animate( {scrollLeft: scroll_left}, 200 );
+    return scroll_left
+  };
+
+  var last_touch_x = 0;
+  var last_touch_time = 0;
+  $('.a-single-date').bind('touchstart mousedown', function(e) {
+    last_touch_x = e.pageX || e.originalEvent.changedTouches[0].pageX
+    last_touch_time = new Date().getTime();
+    e.preventDefault();
+  });
+  $('.a-single-date').bind('touchend mouseup', function(e) {
+    var touch = e.pageX || e.originalEvent.changedTouches[0].pageX
+    if (new Date().getTime() - 1000 < last_touch_time) {
+      e.preventDefault();
+      if (last_touch_x > touch) {
+        scrollRight(last_touch_x);
+      } else  if (last_touch_x < touch) {
+        scrollLeft(last_touch_x);
+      }
+    }
+  });
+
+
+  $(window).scroll(function(){
+    $.doTimeout( 'scroll', 50, function() {
+      var width = $(window).width(), scroll_left = $(window).scrollLeft(), current_x = 0, offset_x = 0;
+
+      while (current_x + width/2 < scroll_left) {
+        current_x += width/2;
+        offset_x += 0.5;
+      }
+      var x_offset = $('.a-single-date')[Math.round(offset_x)].offsetLeft;
+      $('body,html').animate( {scrollLeft: x_offset}, 200 );
+    });
+  });
+
 
   if ($('.date-picker').length > 0) {
     $('.date-picker').datepicker({
