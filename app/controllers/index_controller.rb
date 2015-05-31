@@ -54,7 +54,7 @@ class IndexController < ApplicationController
     #   ::SmsMailerWorker.perform_async(number, "You have been unsubscribed from all messages from ParkourUtah.")
     #   # TODO Send email?
     end
-    if params["Body"].split.join == "Open."
+    if ["Open.", "Close."].include?(params["Body"].split.join)
       Automator.activate!
     end
     head :ok
