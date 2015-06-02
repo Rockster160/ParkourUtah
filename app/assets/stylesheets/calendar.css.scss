@@ -9,6 +9,7 @@
   height: Calc(100% - 50px);
   .a-single-date {
     display: inline-block;
+    vertical-align: top;
     width: 100vw;
     height: Calc(100vh - 50px);
     border: 5px solid red;

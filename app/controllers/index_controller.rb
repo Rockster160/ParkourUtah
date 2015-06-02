@@ -70,11 +70,13 @@ class IndexController < ApplicationController
   end
 
   def contact
-    binding.pry
+    success = false
     if /\(\d{3}\) \d{3}-\d{4}/ =~ params[:phone]
       flash[:notice] = "Thanks! We'll have somebody get in contact with you shortly."
       ::ContactMailerWorker.perform_async(params)
+      success = true
     end
+    ::SmsMailerWorker.perform_async('3852599640', "#{params[:phone]} requested help. #{success ? 'Succeeded.' : 'Failed.'}")
     redirect_to root_path
   end
 

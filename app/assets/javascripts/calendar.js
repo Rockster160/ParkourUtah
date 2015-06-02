@@ -33,14 +33,14 @@ var ready = function () {
     scrollRight = function(x_position) {
       var scroll_position = getRightOffset(x_position)
       if (scroll_position > $(window).scrollLeft()) {
-        $('body,html').animate( {scrollLeft: scroll_position}, 100 );
+        $('body,html').animate( {scrollLeft: scroll_position}, 200 );
       }
       return scroll_position
     };
     scrollLeft = function(x_position) {
       var scroll_position = getLeftOffset(x_position)
       if (scroll_position < $(window).scrollLeft()) {
-        $('body,html').animate( {scrollLeft: scroll_position}, 100 );
+        $('body,html').animate( {scrollLeft: scroll_position}, 200 );
       }
       return scroll_position
     };
@@ -86,7 +86,7 @@ var ready = function () {
           offset_x += 0.5;
         }
         var x_offset = $('.a-single-date')[Math.round(offset_x)].offsetLeft;
-        $('body,html').animate( {scrollLeft: x_offset}, 100 );
+        $('body,html').animate( {scrollLeft: x_offset}, 200 );
 
         max_scroll = getRightOffset();
         min_scroll = getLeftOffset();

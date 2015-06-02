@@ -34,6 +34,6 @@ class CalendarController < ApplicationController
   end
 
   def mobile
-    @cities = Event.all.to_a.group_by { |event| event.city }.keys.sort
+    @cities = Event.all.to_a.group_by { |event| [event.date.year, event.date.month, event.date.day] }.sort
   end
 end
