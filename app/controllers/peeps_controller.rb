@@ -120,7 +120,7 @@ class PeepsController < ApplicationController
           redirect_to :back, alert: "Athlete already attending class."
           RoccoLogger.add "#{current_user.first_name} tried to add #{@athlete.athlete_id}:#{@athlete.full_name}-#{@athlete.athlete_pin}, but they are already in class."
         else
-          if Event.find(params[:id]).cost_in_dollars <= @athlete.user.credits
+          if (Event.find(params[:id]).cost_in_dollars <= @athlete.user.credits) || @athlete.user.has_unlimited_access?
             RoccoLogger.add "#{current_user.first_name} looked up #{@athlete.athlete_id}:#{@athlete.full_name}-#{@athlete.athlete_pin}."
           else
             RoccoLogger.add "#{current_user.first_name} tried to add #{@athlete.athlete_id}:#{@athlete.full_name}-#{@athlete.athlete_pin}, but insufficient funds."

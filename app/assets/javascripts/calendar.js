@@ -33,14 +33,14 @@ var ready = function () {
     scrollRight = function(x_position) {
       var scroll_position = getRightOffset(x_position)
       if (scroll_position > $(window).scrollLeft()) {
-        $('body,html').animate( {scrollLeft: scroll_position}, 200 );
+        $('body,html').animate( {scrollLeft: scroll_position}, 100 );
       }
       return scroll_position
     };
     scrollLeft = function(x_position) {
       var scroll_position = getLeftOffset(x_position)
       if (scroll_position < $(window).scrollLeft()) {
-        $('body,html').animate( {scrollLeft: scroll_position}, 200 );
+        $('body,html').animate( {scrollLeft: scroll_position}, 100 );
       }
       return scroll_position
     };
@@ -63,35 +63,22 @@ var ready = function () {
         }
       }
     });
-
-    var max_scroll = getRightOffset();
-    var min_scroll = getLeftOffset();
-    var just_scrolled = false;
-    $(window).scroll(function() {
-
-      if ($(window).scrollLeft() > max_scroll) {
-        $(window).scrollLeft(max_scroll);
-        $('body').css('overflow', 'hidden');
-      } else if ($(window).scrollLeft() < min_scroll) {
-        $(window).scrollLeft(min_scroll);
-        $('body').css('overflow', 'hidden');
+    $('body').keydown(function(e) {
+      if (e.which >= 37 && e.which <= 40) {
+        if (e.which == 37) { scrollLeft() };
+        if (e.which == 39) { scrollRight() };
       }
+    });
 
-      $.doTimeout( 'scroll', 50, function() {
-        var width = $(window).width(), scroll_left = $(window).scrollLeft(), current_x = 0, offset_x = 0;
-        $('body').css('overflow', '');
-
-        while (current_x + width/2 < scroll_left) {
-          current_x += width/2;
-          offset_x += 0.5;
+    $(window).scroll(function(e) {
+      $.doTimeout( 'scroll', 40, function() {
+        var x = $(window).width()/2, y = $(window).height()/2, x_offset = document.elementFromPoint(x, y).offsetLeft;
+        if ($(window).scrollLeft() != x_offset) {
+          $('body,html').animate( {scrollLeft: x_offset}, 100 );
+        } else {
+          $('body,html').stop();
         }
-        var x_offset = $('.a-single-date')[Math.round(offset_x)].offsetLeft;
-        $('body,html').animate( {scrollLeft: x_offset}, 200 );
-
-        max_scroll = getRightOffset();
-        min_scroll = getLeftOffset();
       });
-
     });
   }
 

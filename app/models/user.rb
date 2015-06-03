@@ -183,7 +183,7 @@ class User < ActiveRecord::Base
     dependents.select { |d| !(d.waiver) || d.waiver.expires_soon? || !(d.waiver.is_active?) }
   end
 
-  def subscribed?(event)
+  def is_subscribed_to?(event)
     Subscription.where(user_id: self.id, token: event.token).count > 0
   end
 

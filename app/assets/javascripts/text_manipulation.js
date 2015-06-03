@@ -40,7 +40,7 @@ var ready = function() {
     $(this).data('toggle', 'tooltip');
     $(this).data('placement', 'top');
     $(this).data('trigger', 'manual');
-    if (e.which >= 48 && e.which <= 57) {
+    if ((e.which >= 48 && e.which <= 57) || e.which == 0) {
       $(this).tooltip('hide');
       return e
     } else {
