@@ -46,13 +46,7 @@ class IndexController < ApplicationController
   def receive_sms
     ::SmsMailerWorker.perform_async('3852599640', "From: #{params["From"]}\nMessage: #{params["Body"]}")
     if params["From"] == "+13852599640"
-    # if params["Body"].downcase.split.join == "Tell me everything."
       ::SmsMailerWorker.perform_async('3852599640', RoccoLogger.by_date.logs)
-    #   User.find_by_phone_number(number).subscriptions.each do |subscription|
-    #     subscription.destroy
-    #   end
-    #   ::SmsMailerWorker.perform_async(number, "You have been unsubscribed from all messages from ParkourUtah.")
-    #   # TODO Send email?
     end
     if ["Open.", "Close."].include?(params["Body"].split.join)
       Automator.activate!

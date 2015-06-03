@@ -107,10 +107,11 @@ class Scheduled < ActiveRecord::Base
     count = 0
     User.every do |user|
       if !(user.has_unlimited_access?) && user.stripe_subscription? && user.stripe_id
+        monthly_subscription = LineItem.where(is_subscription: true).first
         count += 1
         Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
         charge = Stripe::Charge.create(
-          :amount   => 5000,
+          :amount   => user.subscription_cost,
           :currency => "usd",
           :customer => user.stripe_id
         )
@@ -118,9 +119,11 @@ class Scheduled < ActiveRecord::Base
           SmsMailerWorker.perform_async('3852599640', "Successfully updated Subscription for #{user.email}.")
           if Rails.env == "production"
             # SubscriptionUpdatedMailerWorker.perform_async(user, user.email)
-            # SubscriptionUpdatedMailerWorker.perform_async(user, "justin@parkourutah.com")
+            # SubscriptionUpdatedMailerWorker.perform_async(user, "")
           end
           user.unlimited_subscriptions.create
+        else
+          SmsMailerWorker.perform_async('3852599640', "There was an issue updating the subscription for #{user.email}.")
         end
       end
     end

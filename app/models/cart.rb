@@ -13,6 +13,10 @@ class Cart < ActiveRecord::Base
   belongs_to :user
   has_many :transactions, dependent: :destroy
 
+  def self.purchased
+    all.where
+  end
+
   def items
     items = []
     self.transactions.each do |order|

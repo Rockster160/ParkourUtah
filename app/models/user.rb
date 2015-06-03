@@ -46,6 +46,7 @@
 #  registration_step      :integer          default(2)
 #  stripe_subscription    :boolean          default(FALSE)
 #  referrer               :string           default("")
+#  subscription_cost      :integer          default(5000)
 #
 
 # Ununsed?
@@ -102,7 +103,6 @@ class User < ActiveRecord::Base
   def self.mods; select{|u|u.is_mod?}; end
   def is_admin?; self.role >= 3; end
   def self.admins; select{|u|u.is_admin?}; end
-
 
   def self.[](id) #User[4]
     find(id)

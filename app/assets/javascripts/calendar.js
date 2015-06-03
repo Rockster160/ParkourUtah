@@ -49,7 +49,15 @@ var ready = function () {
     var last_touch_time = 0;
     $('.a-single-date').bind('touchstart mousedown', function(e) {
       last_touch_x = e.pageX || e.originalEvent.changedTouches[0].pageX
-      last_touch_time = new Date().getTime();
+      if (last_touch_x > ($(window).scrollLeft()+$(window).width()-10)) {
+        scrollRight()
+        last_touch_time = new Date().getTime() - 1000;
+      } else if (last_touch_x < ($(window).scrollLeft()+10)) {
+        scrollLeft()
+        last_touch_time = new Date().getTime() - 1000;
+      } else {
+        last_touch_time = new Date().getTime();
+      }
       e.preventDefault();
     });
     $('.a-single-date').bind('touchend mouseup', function(e) {

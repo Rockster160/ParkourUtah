@@ -46,6 +46,7 @@
 #  registration_step      :integer          default(2)
 #  stripe_subscription    :boolean          default(FALSE)
 #  referrer               :string           default("")
+#  subscription_cost      :integer          default(5000)
 #
 
 require 'test_helper'

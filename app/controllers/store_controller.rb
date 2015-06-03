@@ -180,7 +180,7 @@ class StoreController < ApplicationController
             current_user.update(credits: (current_user.credits + (order.amount * line_item.credits)))
           end
           if line_item.is_subscription?
-            current_user.update(stripe_subscription: true)
+            current_user.update(stripe_subscription: true, subscription_cost: line_item.cost_in_pennies)
             current_user.unlimited_subscriptions.create
           end
         end
