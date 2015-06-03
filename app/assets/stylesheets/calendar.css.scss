@@ -1,22 +1,25 @@
 @import "config/variables";
 @import 'config/font-imports';
 
-.days-container {
-  overflow: visible;
-  word-spacing: 0px;
+.view-container {
   width: 100vw;
   height: Calc(100vh - 50px);
-  .a-single-date {
-    float: left;
-    display: block;
-    width: 100vw;
-    height: Calc(100vh - 50px);
-    border: 5px solid red;
-    padding: 0;
-    margin: 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  .days-container {
+    min-width: 10000vw;
+    max-height: Calc(100vh - 50px);
+    overflow-y: hidden;
+    .a-single-date {
+      float: left;
+      width: 100vw;
+      height: Calc(100vh - 50px);
+      border: 5px solid red;
+      padding: 0;
+      margin: 0;
+    }
   }
 }
-
 
 .calendar-container {
   background: white;

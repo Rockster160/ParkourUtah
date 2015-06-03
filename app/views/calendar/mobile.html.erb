@@ -1,21 +1,20 @@
 <% content_for :body do %>
   <style>
     html, body {
-      /*max-width: <%= @cities.count * 100 + 10 %>vw;
-      width: <%= @cities.count * 100 + 10 %>vw;
-      min-width: <%= @cities.count * 100 + 10 %>vw;*/
-      /*overflow-y: hidden;*/
+      overflow: hidden;
     }
   </style>
 <% end %>
 
-<div class="days-container">
-  <% @cities.each do |city| %>
-    <div class="a-single-date">
-      <%= city[1].first.date.strftime('%B %d, %Y') %><br/>
-      <% city[1].each do |event| %>
-        <%= event.title %><br/>
-      <% end %>
-    </div>
-  <% end %>
+<div class="view-container">
+  <div class="days-container">
+    <% @cities.each do |city| %>
+      <div class="a-single-date">
+        <%= city[1].first.date.strftime('%B %d, %Y') %><br/>
+        <% city[1].each do |event| %>
+          <%= event.title %><br/>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
 </div>

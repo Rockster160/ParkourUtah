@@ -14,7 +14,7 @@ var ready = function () {
       return offsets
     }
     currentOffset = function(x_position) {
-      var scroll_left = x_position || $(window).scrollLeft() + 1, current_offset = 0;
+      var scroll_left = x_position || $('.view-container').scrollLeft() + 1, current_offset = 0;
       getOffsets().sort(function(a,b){return a-b}).forEach(function(number, index, array) {
         if (scroll_left > number) { current_offset = number; }
       });
@@ -32,15 +32,15 @@ var ready = function () {
 
     scrollRight = function(x_position) {
       var scroll_position = getRightOffset(x_position)
-      if (scroll_position > $(window).scrollLeft()) {
-        $('body,html').animate( {scrollLeft: scroll_position}, 100 );
+      if (scroll_position > $('.view-container').scrollLeft()) {
+        $('.view-container').animate( {scrollLeft: scroll_position}, 100 );
       }
       return scroll_position
     };
     scrollLeft = function(x_position) {
       var scroll_position = getLeftOffset(x_position)
-      if (scroll_position < $(window).scrollLeft()) {
-        $('body,html').animate( {scrollLeft: scroll_position}, 100 );
+      if (scroll_position < $('.view-container').scrollLeft()) {
+        $('.view-container').animate( {scrollLeft: scroll_position}, 100 );
       }
       return scroll_position
     };
@@ -49,10 +49,10 @@ var ready = function () {
     var last_touch_time = 0;
     $('.a-single-date').bind('touchstart mousedown', function(e) {
       last_touch_x = e.pageX || e.originalEvent.changedTouches[0].pageX
-      if (last_touch_x > ($(window).scrollLeft()+$(window).width()-10)) {
+      if (last_touch_x > ($('.view-container').width()-30)) {
         scrollRight()
         last_touch_time = new Date().getTime() - 1000;
-      } else if (last_touch_x < ($(window).scrollLeft()+10)) {
+      } else if (last_touch_x < 30) {
         scrollLeft()
         last_touch_time = new Date().getTime() - 1000;
       } else {
@@ -62,12 +62,13 @@ var ready = function () {
     });
     $('.a-single-date').bind('touchend mouseup', function(e) {
       var touch = e.pageX || e.originalEvent.changedTouches[0].pageX
+      console.log(last_touch_x + " > " + touch)
       if (new Date().getTime() - 1000 < last_touch_time) {
         e.preventDefault();
         if (last_touch_x > touch) {
-          scrollRight(last_touch_x);
+          scrollRight();
         } else  if (last_touch_x < touch) {
-          scrollLeft(last_touch_x);
+          scrollLeft();
         }
       }
     });
@@ -78,13 +79,13 @@ var ready = function () {
       }
     });
 
-    $(window).scroll(function(e) {
+    $('.view-container').scroll(function(e) {
       $.doTimeout( 'scroll', 40, function() {
-        var x = $(window).width()/2, y = $(window).height()/2, x_offset = document.elementFromPoint(x, y).offsetLeft;
-        if ($(window).scrollLeft() != x_offset) {
-          $('body,html').animate( {scrollLeft: x_offset}, 100 );
+        var x = $('.view-container').width()/2, y = $('.view-container').height()/2, x_offset = document.elementFromPoint(x, y).offsetLeft;
+        if ($('.view-container').scrollLeft() != x_offset) {
+          $('.view-container').animate( {scrollLeft: x_offset}, 100 );
         } else {
-          $('body,html').stop();
+          $('.view-container').stop();
         }
       });
     });
