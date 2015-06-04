@@ -49,10 +49,10 @@ var ready = function () {
     var last_touch_time = 0;
     $('.a-single-date').bind('touchstart mousedown', function(e) {
       last_touch_x = e.pageX || e.originalEvent.changedTouches[0].pageX
-      if (last_touch_x > ($('.view-container').width()-30)) {
+      if (last_touch_x > ($('.view-container').width()-20)) {
         scrollRight()
         last_touch_time = new Date().getTime() - 1000;
-      } else if (last_touch_x < 30) {
+      } else if (last_touch_x < 20) {
         scrollLeft()
         last_touch_time = new Date().getTime() - 1000;
       } else {
@@ -62,7 +62,6 @@ var ready = function () {
     });
     $('.a-single-date').bind('touchend mouseup', function(e) {
       var touch = e.pageX || e.originalEvent.changedTouches[0].pageX
-      console.log(last_touch_x + " > " + touch)
       if (new Date().getTime() - 1000 < last_touch_time) {
         e.preventDefault();
         if (last_touch_x > touch) {
@@ -90,8 +89,6 @@ var ready = function () {
       });
     });
   }
-
-
 
   if ($('.date-picker').length > 0) {
     $('.date-picker').datepicker({

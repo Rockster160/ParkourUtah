@@ -18,6 +18,7 @@
 #  zip                   :string
 #  state                 :string           default("Utah")
 #  color                 :integer
+#  cancelled_text        :boolean          default(FALSE)
 #
 
 class Event < ActiveRecord::Base
@@ -55,7 +56,6 @@ class Event < ActiveRecord::Base
 
   def self.color_of(city)
     cities = where(city: city)
-    binding.pry if city == nil
     if cities.any?
       color = cities.first.color
       (color.nil? || color.empty?) ? self.set_city_color(city) : color
@@ -68,12 +68,32 @@ class Event < ActiveRecord::Base
     where(city: city).where("date >= ?", Time.now.to_date)
   end
 
-  def self.by_token
+  def self.sort_by_token
     self.where("date > ?", Time.now.to_date).group_by do |all_events|
       all_events.token
     end.map do |keys, values|
       values.sort_by {|v| v.id}.first
     end.sort_by { |event| event.city }
+  end
+
+  def self.by_token(token)
+    where(token: token)
+  end
+
+  def cancel!
+    update(cancelled_text: true)
+  end
+
+  def uncancel!
+    update(cancelled_text: false)
+  end
+
+  def cancelled?
+    cancelled_text
+  end
+
+  def subscribed_users
+    subscriptions.map(&:user)
   end
 
   def cost_in_dollars

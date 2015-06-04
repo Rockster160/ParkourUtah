@@ -1,5 +1,16 @@
 <div class="central-container form-offset">
   <%= link_to "Back to PIN entry", begin_class_path(params[:id]), class: 'pkut-btn' %>
+  <% if current_user.is_admin? %>
+    <%= form_tag message_subscribers_path do %>
+      <%= text_area_tag :message, "Our #{@event.city} #{@event.class_name} class today is cancelled! Sorry for the inconvenience.", class: 'pkut-textarea' %>
+      <%= submit_tag "Send to #{@event.subscribed_users.count} user(s).", class: 'pkut-btn' %>
+    <% end %>
+    <% if @event.cancelled? %>
+      <%= link_to 'Uncancel Event', cancel_event_path(@event.id, should_happen: true), method: :post, class: 'pkut-btn' %>
+    <% else %>
+      <%= link_to 'Cancel Event', cancel_event_path(@event.id, should_happen: false), method: :post, class: 'pkut-btn' %>
+    <% end %>
+  <% end %>
   <% @athletes.each do |athlete| %>
     <h3><%= athlete.full_name %></h3>
     <p>Guardian phone: <%= athlete.guardian_phone %></p>

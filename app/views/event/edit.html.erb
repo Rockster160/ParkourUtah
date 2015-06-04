@@ -1,5 +1,17 @@
 <div class="central-container form-offset">
   <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br/><br/>
+  <% this_event = Event.by_token(@event.token).select{|e| e.date.to_date == DateTime.current.to_date}.first %>
+  <% if this_event %>
+    <% if this_event.cancelled? %>
+      <%= link_to 'Uncancel Event', cancel_event_path(this_event.id, should_happen: true), method: :post, class: 'pkut-btn' %>
+    <% else %>
+      <%= link_to 'Cancel Event', cancel_event_path(this_event.id, should_happen: false), method: :post, class: 'pkut-btn' %>
+    <% end %>
+  <% end %>
+  <%= form_tag url: {action: 'send_message_to_subscribers'} do %>
+    <%= text_area_tag :message, "Our #{@event.city} #{@event.class_name} class today is cancelled! Sorry for the inconvenience.", class: 'pkut-textarea' %>
+    <%= submit_tag "Send to #{@event.subscribed_users.count} user(s).", class: 'pkut-btn' %>
+  <% end %>
   <%= form_for @event, url: {action: "update"} do |f| %>
     <h5>Example text:</h5>
     <%= f.label :title, 'Hope to see you at our {city} {class} class today at {time}!' %><br/>

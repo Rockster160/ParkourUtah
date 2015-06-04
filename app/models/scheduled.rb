@@ -3,16 +3,18 @@ class Scheduled < ActiveRecord::Base
   def self.send_class_text
     Subscription.all.each do |subscriber|
       user = subscriber.user
-      Event.where(token: subscriber.token).select { |e| e.date.to_date == Time.now.to_date && e.date.hour == (Time.now + 2.hours).hour }.each do |event|
-        if user.notifications.text_class_reminder
-          num = user.phone_number
-          if num.length == 10
-            msg = "Hope to see you at our #{event.class_name.capitalize} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!"
-            ::SmsMailerWorker.perform_async(num, msg)
+      Event.by_token(subscriber.token).select { |e| e.date.to_date == Time.now.to_date && e.date.hour == (Time.now + 2.hours).hour }.each do |event|
+        unless event.cancelled?
+          if user.notifications.text_class_reminder
+            num = user.phone_number
+            if num.length == 10
+              msg = "Hope to see you at our #{event.class_name.capitalize} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!"
+              ::SmsMailerWorker.perform_async(num, msg)
+            end
           end
-        end
-        if user.notifications.email_class_reminder
-          ::ClassReminderMailerWorker.perform_async(user.id, "Hope to see you at our #{event.class_name.capitalize} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!")
+          if user.notifications.email_class_reminder
+            ::ClassReminderMailerWorker.perform_async(user.id, "Hope to see you at our #{event.class_name.capitalize} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!")
+          end
         end
       end
     end
