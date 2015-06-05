@@ -70,7 +70,7 @@ class IndexController < ApplicationController
       ::ContactMailerWorker.perform_async(params)
       success = true
     end
-    ::SmsMailerWorker.perform_async('3852599640', "#{params[:phone]} requested help. #{success ? 'Succeeded.' : 'Failed.'}\n #{params[:comment]}")
+    ::SmsMailerWorker.perform_async('3852599640', "#{params[:phone]} requested help. #{success ? 'Succeeded.' : 'Failed.'}\n #{params[:name]}\n#{params[:email]}\n#{params[:comment]}")
     redirect_to root_path
   end
 

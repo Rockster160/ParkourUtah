@@ -2,7 +2,7 @@
   <%= link_to "Back to PIN entry", begin_class_path(params[:id]), class: 'pkut-btn' %>
   <% if current_user.is_admin? %>
     <%= form_tag message_subscribers_path do %>
-      <%= text_area_tag :message, "Our #{@event.city} #{@event.class_name} class today is cancelled! Sorry for the inconvenience.", class: 'pkut-textarea' %>
+      <%= text_area_tag :message, "Our #{@event.class_name} class today is cancelled! Sorry for the inconvenience.", class: 'pkut-textarea' %>
       <%= submit_tag "Send to #{@event.subscribed_users.count} user(s).", class: 'pkut-btn' %>
     <% end %>
     <% if @event.cancelled? %>
