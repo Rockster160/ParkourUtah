@@ -25,6 +25,17 @@
     <h4>Athletes:</h4>
     <% user.athletes_by_waiver_expiration.each do |athlete| %>
       --<%= athlete.id %>: <strong><%= athlete.full_name %></strong> - ID: <%= athlete.zero_padded(athlete.athlete_id, 4) %><br/>
+      --<a alt="..." class="pkut-header forceOpen" data-toggle="modal" data-target="#edit<%= athlete.id %>">Delete Athlete</a><br/>
+      <div class="modal fade" id="edit<%= athlete.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="central-container">
+          <div class="error-container center-block">
+            <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
+            <h3 class="pkut-header"><%= athlete.full_name %></h3>
+              <p>This will permanently delete this athlete. Are you sure? This action cannot be undone.<p>
+              <%= link_to "Delete", destroy_athlete_path(athlete.id), class: 'pkut-btn', method: :delete %>
+          </div>
+        </div>
+      </div>
       --Birthday: <%= athlete.date_of_birth %><br/>
       --Waiver expires: <%= athlete.waiver ? athlete.waiver.exp_date.strftime('%B %e, %Y') : "No waiver signed" %><br/><br/>
     <% end %>

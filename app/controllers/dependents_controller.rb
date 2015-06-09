@@ -135,7 +135,11 @@
       athlete.user.update(credits: athlete.user.credits - (ENV["PKUT_CLASS_PRICE"].to_i * (2 - athlete.attendances.count)))
     end
     if athlete.destroy
-      redirect_to edit_user_registration_path, motice: "Athlete successfully deleted."
+      if current_user.is_admin?
+        redirect_to recent_users_path, motice: "Athlete successfully deleted."
+      else
+        redirect_to edit_user_registration_path, motice: "Athlete successfully deleted."
+      end
     else
       redirect_to :back, motice: "There was a problem destroying the athlete."
     end

@@ -149,7 +149,7 @@
       <% current_user.athletes_by_waiver_expiration.each_with_index do |athlete, pos| %>
         <div class="row">
           <h4><%= athlete.full_name %> - ID:<%= athlete.athlete_id %></h4>
-          <a alt="..." class="pkut-header" data-toggle="modal" data-target="#edit<%= athlete.id %>">Delete Athlete</a><br/>
+          <a alt="..." class="pkut-header forceOpen" data-toggle="modal" data-target="#edit<%= athlete.id %>">Delete Athlete</a><br/>
           <div class="modal fade" id="edit<%= athlete.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="central-container">
               <div class="error-container center-block">
