@@ -23,7 +23,7 @@
                   <br/>
                   <strong><%= item.title %></strong><br/>
                   <%= number_to_currency(item.cost_in_dollars) %><%= item.is_subscription? ? "/month" : "" %><br/>
-                  <%= image_tag(item.display, class: 'item-img') if item.display_file_size %>
+                  <%= image_tag(item.display, class: "item-img #{item.is_full_image ? 'full-item-img' : ''}") if item.display_file_size %>
                 </div>
               </div>
               <div class="item-back">

@@ -20,6 +20,7 @@
 #  is_subscription      :boolean          default(FALSE)
 #  taxable              :boolean          default(TRUE)
 #  color                :string
+#  is_full_image        :boolean          default(FALSE)
 #
 
 class LineItem < ActiveRecord::Base

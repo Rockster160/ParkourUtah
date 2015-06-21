@@ -201,7 +201,7 @@ class StoreController < ApplicationController
     params.require(:line_item).permit(
       :description, :title, :display,
       :cost_in_pennies, :category, :hidden, :credits,
-      :color, :size, :is_subscription, :taxable
+      :color, :size, :is_subscription, :taxable, :is_full_image
     )
   end
 
