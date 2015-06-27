@@ -118,7 +118,7 @@ class Scheduled < ActiveRecord::Base
           SmsMailerWorker.perform_async('3852599640', "Successfully updated Subscription for #{user.email}.")
           if Rails.env == "production"
             # SubscriptionUpdatedMailerWorker.perform_async(user, user.email)
-            # SubscriptionUpdatedMailerWorker.perform_async(user, "justin@parkourutah.com")
+            # SubscriptionUpdatedMailerWorker.perform_async(user, "ENV['PKUT_EMAIL']")
           end
           user.unlimited_subscriptions.create
         end

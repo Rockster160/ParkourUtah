@@ -67,7 +67,6 @@ class IndexController < ApplicationController
   end
 
   def contact
-    binding.pry
     if /\(\d{3}\) \d{3}-\d{4}/ =~ params[:phone]
       flash[:notice] = "Thanks! We'll have somebody get in contact with you shortly."
       ::ContactMailerWorker.perform_async(params)
