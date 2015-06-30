@@ -162,7 +162,7 @@ class PeepsController < ApplicationController
 
   def charge_class(charge, charge_type)
     @user = @athlete.user
-    if @user.charge_credits(charge)
+    if charge_type = @user.charge_credits(charge)
       Attendance.create(
         dependent_id: @athlete.athlete_id,
         user_id: current_user.id,

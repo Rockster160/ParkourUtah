@@ -193,6 +193,7 @@ class User < ActiveRecord::Base
     elsif self.credits >= charge
       self.credits -= charge
       self.save!
+      'Credits'
     else
       return false
     end

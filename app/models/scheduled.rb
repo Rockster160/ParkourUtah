@@ -112,11 +112,15 @@ class Scheduled < ActiveRecord::Base
         monthly_subscription = LineItem.where(is_subscription: true).first
         count += 1
         Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
-        charge = Stripe::Charge.create(
-          :amount   => user.subscription_cost,
-          :currency => "usd",
-          :customer => user.stripe_id
-        )
+        charge = if user.subscription_cost > 0
+          Stripe::Charge.create(
+            :amount   => user.subscription_cost,
+            :currency => "usd",
+            :customer => user.stripe_id
+          )
+        else
+          true
+        end
         if !(charge) || charge.status == "succeeded"
           SmsMailerWorker.perform_async('3852599640', "Successfully updated Subscription for #{user.email}.")
           if Rails.env == "production"
