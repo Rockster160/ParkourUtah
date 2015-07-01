@@ -164,7 +164,7 @@ class PeepsController < ApplicationController
     @user = @athlete.user
     charge = event.cost_in_dollars
 
-    charge_type = if [1, 83788378].include?(event.id)
+    charge_type = if [1].include?(event.id) #83788378 - test class
       @user.charge_credits(charge)
     else
       @user.charge(charge, @athlete)
