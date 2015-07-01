@@ -41,7 +41,6 @@
   def verify
     params[:athlete].each do |athlete_id, codes|
       athlete = Dependent.find(athlete_id)
-      binding.pry
       if athlete.athlete_id == codes[:athlete_id].to_i && athlete.athlete_pin == codes[:athlete_pin].to_i
         if athlete.update(verified: true)
           athlete.sign_up_verified
