@@ -30,12 +30,9 @@ var ready = function () {
       return offsets[offsets.indexOf(currentOffset(x_position)) - 1];
     };
 
-    scrollRight = function(x_position) {
-      var scroll_position = getRightOffset(x_position)
-      if (scroll_position > $('.view-container').scrollLeft()) {
-        $('.view-container').animate( {scrollLeft: scroll_position}, 100 );
-      }
-      return scroll_position
+    scrollRight = function() {
+      $('.previous-day').addClass('a-single-date').css('left', '0');
+      $('.previous-day').show('slide', { direction: 'right'}, 500)
     };
     scrollLeft = function(x_position) {
       var scroll_position = getLeftOffset(x_position)

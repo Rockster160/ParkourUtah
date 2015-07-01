@@ -8,10 +8,14 @@
 
 <div class="view-container">
   <div class="days-container">
-    <% @days.each do |day| %>
-      <div class="a-single-date">
-        <%= day %>
-      </div>
-    <% end %>
+    <div class="a-single-date">
+      <%= @date %>
+    </div>
+    <div class="next-day">
+      <%= @date + 1.day %>
+    </div>
+    <div class="previous-day">
+      <%= @date - 1.day %>
+    </div>
   </div>
 </div>
