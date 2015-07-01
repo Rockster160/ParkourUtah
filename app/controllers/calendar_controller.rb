@@ -1,4 +1,6 @@
 class CalendarController < ApplicationController
+  include ApplicationHelper
+
   def index
   end
 
@@ -34,6 +36,8 @@ class CalendarController < ApplicationController
   end
 
   def mobile
-    @cities = Event.all.to_a.group_by { |event| [event.date.year, event.date.month, event.date.day] }.sort
+    @date = getDate(params[:date]) || DateTime.current
+    @events = Event.by_date(@date)
+    @days = (DateTime.current..DateTime.current + 3.days)
   end
 end

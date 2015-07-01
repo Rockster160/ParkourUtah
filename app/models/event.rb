@@ -54,6 +54,10 @@ class Event < ActiveRecord::Base
     Event.all.to_a.group_by { |event| event.city }.keys
   end
 
+  def self.by_date(date=DateTime.current)
+    select { |event| event.date.to_date == date.to_date }
+  end
+
   def self.color_of(city)
     cities = where(city: city)
     if cities.any?

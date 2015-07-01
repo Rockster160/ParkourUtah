@@ -8,12 +8,9 @@
 
 <div class="view-container">
   <div class="days-container">
-    <% @cities.each do |city| %>
+    <% @days.each do |day| %>
       <div class="a-single-date">
-        <%= city[1].first.date.strftime('%B %d, %Y') %><br/>
-        <% city[1].each do |event| %>
-          <%= event.title %><br/>
-        <% end %>
+        <%= day %>
       </div>
     <% end %>
   </div>
