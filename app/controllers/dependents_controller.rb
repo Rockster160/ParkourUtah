@@ -136,12 +136,12 @@
     end
     if athlete.destroy
       if current_user.is_admin?
-        redirect_to recent_users_path, motice: "Athlete successfully deleted."
+        redirect_to recent_users_path, notice: "Athlete successfully deleted."
       else
-        redirect_to edit_user_registration_path, motice: "Athlete successfully deleted."
+        redirect_to edit_user_registration_path, notice: "Athlete successfully deleted."
       end
     else
-      redirect_to :back, motice: "There was a problem destroying the athlete."
+      redirect_to :back, notice: "There was a problem destroying the athlete."
     end
   end
 
