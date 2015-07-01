@@ -3,7 +3,7 @@
     <div class="error-container center-block">
       <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
       <h1 class="pkut-header">Verify</h1>
-      <p>We have sent you an email containing vital information about your attendance to classes. Please check your email and enter these details below to receive your 2 free classes.</p>
+      <p>We have sent you an email containing vital information about your attendance to classes. Please check your email and enter these details below to receive your 2 trial classes.</p>
       <%= form_tag verify_athletes_path do %>
         <% current_user.non_verified_athletes.each do |athlete| %>
           <div class="row"><%= athlete.full_name %></div>

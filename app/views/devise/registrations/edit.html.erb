@@ -12,7 +12,7 @@
   <div class="row internal-center">
     <% if current_user.non_verified_athletes.count > 0 %>
       <div class="pkut-btn big-btn forceOpen" data-toggle="modal" data-target="#verify_athletes">
-        Click here to receive 2 free classes!
+        Click here to receive 2 trial classes!
       </div>
       <%= render partial: 'dependents/verify_athletes' %>
     <% end %>
@@ -149,6 +149,9 @@
       <% current_user.athletes_by_waiver_expiration.each_with_index do |athlete, pos| %>
         <div class="row">
           <h4><%= athlete.full_name %> - ID:<%= athlete.athlete_id %></h4>
+          <% if athlete.trials.count > 0 %>
+            <h4 style='color:yellow;'>Trial Classes remaining: <%= athlete.trials.count %></h4>
+          <% end %>
           <a alt="..." class="pkut-header forceOpen" data-toggle="modal" data-target="#edit<%= athlete.id %>">Delete Athlete</a><br/>
           <div class="modal fade" id="edit<%= athlete.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="central-container">

@@ -59,6 +59,10 @@ class Dependent < ActiveRecord::Base
     trial_classes.select { |trial| trial.used == false }.first
   end
 
+  def trials
+    trial_classes.select { |trial| trial.used == false }
+  end
+
   def has_trial?
     return false unless trial
     !(trial.used)
