@@ -27,7 +27,6 @@ class UnlimitedSubscription < ActiveRecord::Base
     return false unless active?
     self.usages += 1
     self.save!
-    "Unlimited Subscription - User ID: #{self.user_id}"
   end
 
 end

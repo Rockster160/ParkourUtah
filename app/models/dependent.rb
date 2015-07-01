@@ -25,6 +25,7 @@ class Dependent < ActiveRecord::Base
 
   belongs_to :user
   has_many :waivers
+  has_many :trial_classes
 
   has_attached_file :athlete_photo,
                :styles => { :medium => "300", :thumb => "100x100#" },
@@ -52,6 +53,15 @@ class Dependent < ActiveRecord::Base
       end
     end
     athlete
+  end
+
+  def trial
+    trial_classes.select { |trial| trial.used == false }.first
+  end
+
+  def has_trial?
+    return false unless trial
+    !(trial.used)
   end
 
   def attendances
@@ -125,8 +135,9 @@ class Dependent < ActiveRecord::Base
    end
   end
 
-  def sign_up_credits
-    self.user.update(credits: (self.user.credits + (ENV["PKUT_CLASS_PRICE"].to_i * 2)))
+  def sign_up_verified
+    # self.user.update(credits: (self.user.credits + (ENV["PKUT_CLASS_PRICE"].to_i * 2)))
+    2.times { self.trial_classes.create }
   end
 
   private

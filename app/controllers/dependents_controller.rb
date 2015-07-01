@@ -43,7 +43,7 @@
       athlete = Dependent.find(athlete_id)
       if athlete.athlete_id == codes[:athlete_id].to_i && athlete.athlete_pin == codes[:athlete_pin].to_i
         if athlete.update(verified: true)
-          athlete.sign_up_credits
+          athlete.sign_up_verified
         end
       end
     end

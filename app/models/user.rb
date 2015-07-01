@@ -103,13 +103,10 @@ class User < ActiveRecord::Base
   def self.mods; select{|u|u.is_mod?}; end
   def is_admin?; self.role >= 3; end
   def self.admins; select{|u|u.is_admin?}; end
-
-  def self.[](id) #User[4]
-    find(id)
-  end
+  def self.[](id); find(id); end; #User[4]
 
   def self.by_signed_in
-    all.select {|u|u.last_sign_in_at}.sort_by { |u| u.last_sign_in_at }.reverse
+    all.select { |u| u.last_sign_in_at }.sort_by { |u| u.last_sign_in_at }.reverse
   end
 
   def self.last_signed_in
@@ -187,16 +184,24 @@ class User < ActiveRecord::Base
     Subscription.where(user_id: self.id, token: event.token).count > 0
   end
 
-  def charge_credits(charge)
+  def charge(price, athlete)
     if self.has_unlimited_access?
       self.unlimited_subscription.use!
-    elsif self.credits >= charge
-      self.credits -= charge
-      self.save!
-      'Credits'
+      "Unlimited Subscription - User ID: #{self.id}"
+    elsif athlete.has_trial?
+      athlete.trial.use!
+      'Trial Class'
+    elsif self.credits >= price
+      charge_credits(price)
     else
       return false
     end
+  end
+
+  def charge_credits(price)
+    self.credits -= price
+    self.save!
+    'Credits'
   end
 
   def assign_cart

@@ -152,7 +152,7 @@ class PeepsController < ApplicationController
     set_athlete
     pin = params[:pin].to_i
     if pin == @athlete.athlete_pin
-      charge_class(Event.find(params[:id]).cost_in_dollars, "Credits")
+      charge_class(Event.find(params[:id]))
     # elsif pin == ENV["PKUT_PIN"].to_i
     #   charge_class(0, "Cash")
     else
@@ -160,9 +160,17 @@ class PeepsController < ApplicationController
     end
   end
 
-  def charge_class(charge, charge_type)
+  def charge_class(event)
     @user = @athlete.user
-    if charge_type = @user.charge_credits(charge)
+    charge = event.cost_in_dollars
+
+    charge_type = if [1, 83788378].include?(event.id)
+      @user.charge_credits(charge)
+    else
+      @user.charge(charge, @athlete)
+    end
+
+    if charge_type
       Attendance.create(
         dependent_id: @athlete.athlete_id,
         user_id: current_user.id,
