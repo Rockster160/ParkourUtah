@@ -132,7 +132,7 @@
   def destroy
     athlete = Dependent.find(params[:id])
     if athlete.attendances.count < 2
-      athlete.user.update(credits: athlete.user.credits - (ENV["PKUT_CLASS_PRICE"].to_i * (2 - athlete.attendances.count)))
+      # athlete.user.update(credits: athlete.user.credits - (ENV["PKUT_CLASS_PRICE"].to_i * (2 - athlete.attendances.count)))
     end
     if athlete.destroy
       if current_user.is_admin?
