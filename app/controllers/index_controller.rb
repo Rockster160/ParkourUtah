@@ -45,14 +45,11 @@ class IndexController < ApplicationController
 
   def receive_sms
     ::SmsMailerWorker.perform_async('3852599640', "From: #{params["From"]}\nMessage: #{params["Body"]}")
-    if  params["From"] == "+13852599640"
-    # if params["Body"].downcase.split.join == "Tell me everything."
+    if params["From"] == "+13852599640"
       ::SmsMailerWorker.perform_async('3852599640', RoccoLogger.by_date.logs)
-    #   User.find_by_phone_number(number).subscriptions.each do |subscription|
-    #     subscription.destroy
-    #   end
-    #   ::SmsMailerWorker.perform_async(number, "You have been unsubscribed from all messages from ParkourUtah.")
-    #   # TODO Send email?
+    end
+    if ["Open.", "Close."].include?(params["Body"].split.join)
+      Automator.activate!
     end
     head :ok
   end
@@ -67,9 +64,14 @@ class IndexController < ApplicationController
   end
 
   def contact
+    success = false
     if /\(\d{3}\) \d{3}-\d{4}/ =~ params[:phone]
       flash[:notice] = "Thanks! We'll have somebody get in contact with you shortly."
       ::ContactMailerWorker.perform_async(params)
+      success = true
+    end
+    if params[:phone].length > 6
+      ::SmsMailerWorker.perform_async('3852599640', "#{params[:phone]} requested help. #{success ? 'Succeeded.' : 'Failed.'}\n #{params[:name]}\n#{params[:email]}\n#{params[:comment]}")
     end
     redirect_to root_path
   end

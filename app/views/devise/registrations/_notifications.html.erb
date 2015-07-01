@@ -76,6 +76,7 @@
           <div class="row">
             <div class="col-sm-6">
               <p>You are currently set up to auto-pay for your monthly subscription.</p>
+              <p>The next payment of <%= number_to_currency(current_user.subscription_cost.to_f / 100) %> will process on <%= (current_user.unlimited_subscription.expires_at + 1.day).strftime('%B %e, %Y') %></p>
             </div>
             <div class="col-sm-6">
               <%= link_to 'Unsubscribe', unsubscribe_monthly_subscription_path(current_user.id), class: 'pkut-btn', method: :delete %>

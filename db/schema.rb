@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150528175432) do
+ActiveRecord::Schema.define(version: 20150630234858) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,6 +103,7 @@ ActiveRecord::Schema.define(version: 20150528175432) do
     t.string   "zip"
     t.string   "state",                 default: "Utah"
     t.integer  "color"
+    t.boolean  "cancelled_text",        default: false
   end
 
   create_table "line_items", force: :cascade do |t|
@@ -123,6 +124,7 @@ ActiveRecord::Schema.define(version: 20150528175432) do
     t.boolean  "is_subscription",      default: false
     t.boolean  "taxable",              default: true
     t.string   "color"
+    t.boolean  "is_full_image",        default: false
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -174,6 +176,16 @@ ActiveRecord::Schema.define(version: 20150528175432) do
   end
 
   add_index "transactions", ["cart_id"], name: "index_transactions_on_cart_id", using: :btree
+
+  create_table "trial_classes", force: :cascade do |t|
+    t.integer  "dependent_id"
+    t.boolean  "used",         default: false
+    t.datetime "used_at"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
+  add_index "trial_classes", ["dependent_id"], name: "index_trial_classes_on_dependent_id", using: :btree
 
   create_table "unlimited_subscriptions", force: :cascade do |t|
     t.integer  "usages",     default: 0
@@ -229,6 +241,7 @@ ActiveRecord::Schema.define(version: 20150528175432) do
     t.integer  "registration_step",      default: 2
     t.boolean  "stripe_subscription",    default: false
     t.string   "referrer",               default: ""
+    t.integer  "subscription_cost",      default: 5000
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
@@ -250,5 +263,6 @@ ActiveRecord::Schema.define(version: 20150528175432) do
   add_foreign_key "emergency_contacts", "users"
   add_foreign_key "notifications", "users"
   add_foreign_key "transactions", "carts"
+  add_foreign_key "trial_classes", "dependents"
   add_foreign_key "unlimited_subscriptions", "users"
 end

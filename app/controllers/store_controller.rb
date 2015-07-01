@@ -180,7 +180,7 @@ class StoreController < ApplicationController
             current_user.update(credits: (current_user.credits + (order.amount * line_item.credits)))
           end
           if line_item.is_subscription?
-            current_user.update(stripe_subscription: true)
+            current_user.update(stripe_subscription: true, subscription_cost: line_item.cost_in_pennies)
             current_user.unlimited_subscriptions.create
           end
         end
@@ -201,7 +201,7 @@ class StoreController < ApplicationController
     params.require(:line_item).permit(
       :description, :title, :display,
       :cost_in_pennies, :category, :hidden, :credits,
-      :color, :size, :is_subscription, :taxable
+      :color, :size, :is_subscription, :taxable, :is_full_image
     )
   end
 

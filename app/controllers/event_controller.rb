@@ -2,11 +2,31 @@ class EventController < ApplicationController
   before_action :validate_user, only: [ :create, :new ]
 
   def index
-    @events = Event.by_token
+    @events = Event.sort_by_token
   end
 
   def show
     @event = Event.find(params[:id])
+  end
+
+  def cancel
+    if params[:should_happen] == "true"
+      Event.find(params[:id]).uncancel!
+      flash[:notice] = "Event has successfully been uncancelled."
+    else
+      Event.find(params[:id]).cancel!
+      flash[:notice] = "Event has successfully been cancelled."
+    end
+    redirect_to :back
+  end
+
+  def send_message_to_subscribers
+    event = Event.find(params[:id])
+    users = event.subscribed_users
+    users.each do |user|
+      ::SmsMailerWorker.perform_async(user.phone_number, params[:message])
+    end
+    redirect_to :back, notice: 'Your message has been sent.'
   end
 
   def new
@@ -23,7 +43,7 @@ class EventController < ApplicationController
 
   def city
     @city = params[:city]
-    @events = Event.by_token.select { |e| e.city == @city }
+    @events = Event.sort_by_token.select { |e| e.city == @city }
   end
 
   def color_city

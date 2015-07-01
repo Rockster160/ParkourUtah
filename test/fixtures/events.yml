@@ -18,6 +18,7 @@
 #  zip                   :string
 #  state                 :string           default("Utah")
 #  color                 :integer
+#  cancelled_text        :boolean          default(FALSE)
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

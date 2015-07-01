@@ -70,6 +70,8 @@ Rails.application.routes.draw do
   get 'events/new' => 'event#new', as: 'add_event'
   post 'events/create' => 'event#create'
   get 'events/edit/:id' => 'event#edit', as: 'edit_event'
+  post 'events/edit/:id' => 'event#send_message_to_subscribers', as: 'message_subscribers'
+  post 'event/:id/cancel' => 'event#cancel', as: 'cancel_event'
 
   get 'events/cities' => 'event#cities', as: 'cities'
   get 'events/cities/:city' => 'event#city', as: 'city'

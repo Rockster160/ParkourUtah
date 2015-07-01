@@ -3,16 +3,18 @@ class Scheduled < ActiveRecord::Base
   def self.send_class_text
     Subscription.all.each do |subscriber|
       user = subscriber.user
-      Event.where(token: subscriber.token).select { |e| e.date.to_date == Time.now.to_date && e.date.hour == (Time.now + 2.hours).hour }.each do |event|
-        if user.notifications.text_class_reminder
-          num = user.phone_number
-          if num.length == 10
-            msg = "Hope to see you at our #{event.class_name.capitalize} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!"
-            ::SmsMailerWorker.perform_async(num, msg)
+      Event.by_token(subscriber.token).select { |e| e.date.to_date == Time.now.to_date && e.date.hour == (Time.now + 2.hours).hour }.each do |event|
+        unless event.cancelled?
+          if user.notifications.text_class_reminder
+            num = user.phone_number
+            if num.length == 10
+              msg = "Hope to see you at our #{event.class_name.capitalize} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!"
+              ::SmsMailerWorker.perform_async(num, msg)
+            end
           end
-        end
-        if user.notifications.email_class_reminder
-          ::ClassReminderMailerWorker.perform_async(user.id, "Hope to see you at our #{event.class_name.capitalize} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!")
+          if user.notifications.email_class_reminder
+            ::ClassReminderMailerWorker.perform_async(user.id, "Hope to see you at our #{event.class_name.capitalize} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!")
+          end
         end
       end
     end
@@ -107,13 +109,18 @@ class Scheduled < ActiveRecord::Base
     count = 0
     User.every do |user|
       if !(user.has_unlimited_access?) && user.stripe_subscription? && user.stripe_id
+        monthly_subscription = LineItem.where(is_subscription: true).first
         count += 1
         Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
-        charge = Stripe::Charge.create(
-          :amount   => 5000,
-          :currency => "usd",
-          :customer => user.stripe_id
-        )
+        charge = if user.subscription_cost > 0
+          Stripe::Charge.create(
+            :amount   => user.subscription_cost,
+            :currency => "usd",
+            :customer => user.stripe_id
+          )
+        else
+          true
+        end
         if !(charge) || charge.status == "succeeded"
           SmsMailerWorker.perform_async('3852599640', "Successfully updated Subscription for #{user.email}.")
           if Rails.env == "production"
@@ -121,6 +128,8 @@ class Scheduled < ActiveRecord::Base
             # SubscriptionUpdatedMailerWorker.perform_async(user, "ENV['PKUT_EMAIL']")
           end
           user.unlimited_subscriptions.create
+        else
+          SmsMailerWorker.perform_async('3852599640', "There was an issue updating the subscription for #{user.email}.")
         end
       end
     end

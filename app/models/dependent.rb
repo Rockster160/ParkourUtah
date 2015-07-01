@@ -25,6 +25,7 @@ class Dependent < ActiveRecord::Base
 
   belongs_to :user
   has_many :waivers
+  has_many :trial_classes
 
   has_attached_file :athlete_photo,
                :styles => { :medium => "300", :thumb => "100x100#" },
@@ -52,6 +53,19 @@ class Dependent < ActiveRecord::Base
       end
     end
     athlete
+  end
+
+  def trial
+    trial_classes.select { |trial| trial.used == false }.first
+  end
+
+  def trials
+    trial_classes.select { |trial| trial.used == false }
+  end
+
+  def has_trial?
+    return false unless trial
+    !(trial.used)
   end
 
   def attendances
@@ -99,14 +113,7 @@ class Dependent < ActiveRecord::Base
   end
 
   def generate_pin
-    bads = []
-    10.times do |t|
-      bads << "666#{t}".to_i
-      bads << "#{t}666".to_i
-    end
-    bads << ENV["PKUT_PIN"].to_i
-    bads << Dependent.all.map { |athlete| zero_padded(athlete.athlete_id, 4) }
-    self.athlete_id = ((0...9999).to_a - bads.flatten).sample.to_i
+    self.athlete_id = Dependent.pins_left.sample.to_i
     self.save
   end
 
@@ -116,13 +123,25 @@ class Dependent < ActiveRecord::Base
       bads << "666#{t}".to_i
       bads << "#{t}666".to_i
     end
+    bads << 0
     bads << ENV["PKUT_PIN"].to_i
     bads << Dependent.all.map { |user| user.athlete_id }
-    ((0...9999).to_a - bads).count
+    ((0...9999).to_a - bads.flatten)
   end
 
-  def sign_up_credits
-    self.user.update(credits: (self.user.credits + (ENV["PKUT_CLASS_PRICE"].to_i * 2)))
+  def self.athlete_id_tests(num)
+    num.times do |n|
+     athlete = Dependent.first
+     athlete.generate_pin
+     binding.pry if athlete.athlete_id == Dependent.last.athlete_id
+     athlete.athlete_id
+     puts n
+   end
+  end
+
+  def sign_up_verified
+    # self.user.update(credits: (self.user.credits + (ENV["PKUT_CLASS_PRICE"].to_i * 2)))
+    2.times { self.trial_classes.create }
   end
 
   private

@@ -120,7 +120,7 @@ class PeepsController < ApplicationController
           redirect_to :back, alert: "Athlete already attending class."
           RoccoLogger.add "#{current_user.first_name} tried to add #{@athlete.athlete_id}:#{@athlete.full_name}-#{@athlete.athlete_pin}, but they are already in class."
         else
-          if Event.find(params[:id]).cost_in_dollars > @athlete.user.credits
+          if (Event.find(params[:id]).cost_in_dollars <= @athlete.user.credits) || @athlete.user.has_unlimited_access?
             RoccoLogger.add "#{current_user.first_name} looked up #{@athlete.athlete_id}:#{@athlete.full_name}-#{@athlete.athlete_pin}."
           else
             RoccoLogger.add "#{current_user.first_name} tried to add #{@athlete.athlete_id}:#{@athlete.full_name}-#{@athlete.athlete_pin}, but insufficient funds."
@@ -152,7 +152,7 @@ class PeepsController < ApplicationController
     set_athlete
     pin = params[:pin].to_i
     if pin == @athlete.athlete_pin
-      charge_class(Event.find(params[:id]).cost_in_dollars, "Credits")
+      charge_class(Event.find(params[:id]))
     # elsif pin == ENV["PKUT_PIN"].to_i
     #   charge_class(0, "Cash")
     else
@@ -160,9 +160,17 @@ class PeepsController < ApplicationController
     end
   end
 
-  def charge_class(charge, charge_type)
+  def charge_class(event)
     @user = @athlete.user
-    if @user.charge_credits(charge)
+    charge = event.cost_in_dollars
+
+    charge_type = if [1, 83788378].include?(event.id)
+      @user.charge_credits(charge)
+    else
+      @user.charge(charge, @athlete)
+    end
+
+    if charge_type
       Attendance.create(
         dependent_id: @athlete.athlete_id,
         user_id: current_user.id,
@@ -188,6 +196,7 @@ class PeepsController < ApplicationController
   end
 
   def class_logs
+    @event = Event.find(params[:id])
     @athletes = Attendance.where(event_id: params[:id]).select do |att|
       att.created_at.to_date == DateTime.now.to_date
     end.map { |a| a.athlete }

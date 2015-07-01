@@ -6,6 +6,7 @@
       <%= link_to "#{event.date.strftime('%l:%M')} #{event.class_name.capitalize}", begin_class_path(event.id), class: 'pkut-btn' %><br/><br/>
     <% end %>
     <%= link_to "Private Class", begin_class_path(1), class: 'pkut-btn' %><br/><br/>
+    <%= link_to "Testing Session", begin_class_path(83788378), class: 'pkut-btn' %><br/><br/>
     <% if current_user.is_admin? %>
       <h2>Admin Abilities</h2><br/>
       <%= link_to "View Recent Users", recent_users_path, class: 'pkut-btn' %><br/></br>

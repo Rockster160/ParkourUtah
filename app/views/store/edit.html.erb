@@ -20,6 +20,9 @@
     <br/>
     <%= f.check_box :taxable %>
     <%= f.label :taxable, 'Taxable?' %>
+    <br/>
+    <%= f.check_box :is_full_image %>
+    <%= f.label :is_full_image, 'Image takes up entire box?' %>
     <h5>Credits given to user after purchase (1 class = 12)</h5>
     <%= f.text_field :credits, class: 'pkut-textbox restrictNumeric' %>
     <h5>Display image</h5>

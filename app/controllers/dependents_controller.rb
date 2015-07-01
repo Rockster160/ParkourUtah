@@ -41,9 +41,10 @@
   def verify
     params[:athlete].each do |athlete_id, codes|
       athlete = Dependent.find(athlete_id)
+      binding.pry
       if athlete.athlete_id == codes[:athlete_id].to_i && athlete.athlete_pin == codes[:athlete_pin].to_i
         if athlete.update(verified: true)
-          athlete.sign_up_credits
+          athlete.sign_up_verified
         end
       end
     end
@@ -135,7 +136,11 @@
       athlete.user.update(credits: athlete.user.credits - (ENV["PKUT_CLASS_PRICE"].to_i * (2 - athlete.attendances.count)))
     end
     if athlete.destroy
-      redirect_to edit_user_registration_path, motice: "Athlete successfully deleted."
+      if current_user.is_admin?
+        redirect_to recent_users_path, motice: "Athlete successfully deleted."
+      else
+        redirect_to edit_user_registration_path, motice: "Athlete successfully deleted."
+      end
     else
       redirect_to :back, motice: "There was a problem destroying the athlete."
     end
