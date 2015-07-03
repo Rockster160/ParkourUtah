@@ -25,9 +25,12 @@ class StoreController < ApplicationController
   end
 
   def unsubscribe
-    user = User.find(params[:id])
-    user.athlete_subscriptions.each {|s|s.update(auto_renew: false)}
-    redirect_to edit_user_registration_path, notice: 'Successfully Unsubscribed'
+    athlete = Dependent.find(params[:id])
+    if athlete.subscription.update(auto_renew: false)
+      redirect_to edit_user_registration_path, notice: 'Successfully Unsubscribed'
+    else
+      redirect_to edit_user_registration_path, notice: 'There was an error unsubscribing.'
+    end
   end
 
   def email_keys

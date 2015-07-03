@@ -149,7 +149,11 @@ class User < ActiveRecord::Base
   end
 
   def athletes_with_unlimited_access
-    athletes.select { |athlete| athlete.subscribed? }
+    athletes.select { |athlete| athlete.has_unlimited_access? }
+  end
+
+  def subscribed_athletes
+    athletes.select { |athlete| athlete.subscription && athlete.subscription.auto_renew }
   end
 
   def athlete_subscriptions

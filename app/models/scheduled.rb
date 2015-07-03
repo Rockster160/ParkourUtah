@@ -135,6 +135,8 @@ class Scheduled < ActiveRecord::Base
 
           recurring_athletes.each do |athlete|
             old_sub = athlete.subscription
+            old_sub.auto_renew = false
+            old_sub.save
             athlete.athlete_subscriptions.create(cost_in_pennies: old_sub.cost_in_pennies)
           end
         else
