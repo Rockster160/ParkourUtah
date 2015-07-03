@@ -105,13 +105,6 @@ class Scheduled < ActiveRecord::Base
     end
   end
 
-  def user(id)
-    user = User[id]
-    old_sub = user.unlimited_subscriptions.last
-    athsub = user.athletes.last.athlete_subscriptions.create(cost_in_pennies: User[144].subscription_cost, expires_at: old_sub.expires_at)
-    athsub
-  end
-
   def self.monthly_subscription_charges
     count = 0
     User.every do |user|
