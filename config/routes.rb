@@ -54,6 +54,7 @@ Rails.application.routes.draw do
   get 'athletes/reset/:athlete_id' => 'dependents#reset_pin', as: 'reset_athlete_pin'
   delete 'athlete/:id/delete' => 'dependents#destroy', as: 'destroy_athlete'
   post 'athletes/verify' => 'dependents#verify', as: 'verify_athletes'
+  post 'athletes/assign_subscription/:athlete_id' => 'dependents#assign_subscription', as: 'assign_subscription'
 
   get 'waivers' => 'dependents#sign_waiver', as: 'waivers'
   post 'waivers' => 'dependents#update_waiver'

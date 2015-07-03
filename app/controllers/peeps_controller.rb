@@ -120,7 +120,7 @@ class PeepsController < ApplicationController
           redirect_to :back, alert: "Athlete already attending class."
           RoccoLogger.add "#{current_user.first_name} tried to add #{@athlete.athlete_id}:#{@athlete.full_name}-#{@athlete.athlete_pin}, but they are already in class."
         else
-          if (Event.find(params[:id]).cost_in_dollars <= @athlete.user.credits) || @athlete.user.has_unlimited_access?
+          if (Event.find(params[:id]).cost_in_dollars <= @athlete.user.credits) || @athlete.has_unlimited_access?
             RoccoLogger.add "#{current_user.first_name} looked up #{@athlete.athlete_id}:#{@athlete.full_name}-#{@athlete.athlete_pin}."
           else
             RoccoLogger.add "#{current_user.first_name} tried to add #{@athlete.athlete_id}:#{@athlete.full_name}-#{@athlete.athlete_pin}, but insufficient funds."
@@ -178,10 +178,10 @@ class PeepsController < ApplicationController
         type_of_charge: charge_type
       )
       if @user.credits < 30
-        if @user.notifications.email_low_credits && @user.has_unlimited_access? == false
+        if @user.notifications.email_low_credits && @athlete.has_unlimited_access? == false
           ::LowCreditsMailerWorker.perform_async(@user.id)
         end
-        if @user.notifications.text_low_credits && @user.has_unlimited_access? == false
+        if @user.notifications.text_low_credits && @athlete.has_unlimited_access? == false
           ::SmsMailerWorker.perform_async(@user.phone_number, "You are low on Credits! Head up to ParkourUtah.com to get some more so you have some for next time.")
         end
       end

@@ -2,7 +2,7 @@
   <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br/><br/>
   Users: <%= @users.count %>
   <% @users.each do |user| %>
-    <% if user.has_unlimited_access? %>
+    <% if user.stripe_subscription? %>
       <h3 style="color: green;"><%= user.id %>: <%= user.email %>*</h3>
     <% else %>
       <h3><%= user.id %>: <%= user.email %></h3>
@@ -24,7 +24,11 @@
     <a data-toggle="modal" data-target="#delete-<%= user.id %>" class="pkut-btn forceOpen">Delete User</a>
     <h4>Athletes:</h4>
     <% user.athletes_by_waiver_expiration.each do |athlete| %>
-      --<%= athlete.id %>: <strong><%= athlete.full_name %></strong> - ID: <%= athlete.zero_padded(athlete.athlete_id, 4) %><br/>
+      <% if athlete.has_unlimited_access? %>
+        <span style='color: green;'>--<%= athlete.id %>: <strong><%= athlete.full_name %></strong> - ID: <%= athlete.zero_padded(athlete.athlete_id, 4) %>*</span><br/>
+      <% else %>
+        --<%= athlete.id %>: <strong><%= athlete.full_name %></strong> - ID: <%= athlete.zero_padded(athlete.athlete_id, 4) %><br/>
+      <% end %>
       --<a alt="..." class="pkut-header forceOpen" data-toggle="modal" data-target="#edit<%= athlete.id %>">Delete Athlete</a><br/>
       <div class="modal fade" id="edit<%= athlete.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="central-container">

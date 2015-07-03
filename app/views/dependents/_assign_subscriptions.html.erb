@@ -1,0 +1,18 @@
+<div class="modal fade" id="assign_subscriptions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="central-container">
+    <div class="error-container center-block">
+      <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
+      <h1 class="pkut-header">Assign Subscription</h1>
+      Click on the star next to the athlete that you would like to apply the unlimited subscription to.
+      <br/>
+      <br/>
+        <% current_user.athletes.each do |athlete| %>
+          <div class="row"><%= link_to icon('star', '', class: 'fa-lg'), assign_subscription_path(athlete.id), method: :post, style: 'color: gold;' %> <%= athlete.full_name %></div>
+          <br/>
+        <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- <a alt="..." class="pkut-btn pull-right" data-toggle="modal" data-target="#verify_athletes">~~texthere~~</a><br/> -->
+<%#= render partial: 'dependents/verify_athletes' %>

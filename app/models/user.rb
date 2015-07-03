@@ -2,51 +2,52 @@
 #
 # Table name: users
 #
-#  id                     :integer          not null, primary key
-#  email                  :string           default(""), not null
-#  first_name             :string           default(""), not null
-#  last_name              :string           default(""), not null
-#  encrypted_password     :string           default(""), not null
-#  reset_password_token   :string
-#  reset_password_sent_at :datetime
-#  remember_created_at    :datetime
-#  sign_in_count          :integer          default(0), not null
-#  current_sign_in_at     :datetime
-#  last_sign_in_at        :datetime
-#  current_sign_in_ip     :inet
-#  last_sign_in_ip        :inet
-#  role                   :integer          default(0)
-#  created_at             :datetime
-#  updated_at             :datetime
-#  avatar_file_name       :string
-#  avatar_content_type    :string
-#  avatar_file_size       :integer
-#  avatar_updated_at      :datetime
-#  avatar_2_file_name     :string
-#  avatar_2_content_type  :string
-#  avatar_2_file_size     :integer
-#  avatar_2_updated_at    :datetime
-#  bio                    :text
-#  credits                :integer          default(0)
-#  phone_number           :string
-#  confirmation_token     :string
-#  confirmed_at           :datetime
-#  confirmation_sent_at   :datetime
-#  instructor_position    :integer
-#  payment_multiplier     :integer          default(3)
-#  stats                  :string
-#  title                  :string
-#  nickname               :string
-#  email_subscription     :boolean          default(TRUE)
-#  stripe_id              :string
-#  date_of_birth          :datetime
-#  drivers_license_number :string
-#  drivers_license_state  :string
-#  registration_complete  :boolean          default(FALSE)
-#  registration_step      :integer          default(2)
-#  stripe_subscription    :boolean          default(FALSE)
-#  referrer               :string           default("")
-#  subscription_cost      :integer          default(5000)
+#  id                             :integer          not null, primary key
+#  email                          :string           default(""), not null
+#  first_name                     :string           default(""), not null
+#  last_name                      :string           default(""), not null
+#  encrypted_password             :string           default(""), not null
+#  reset_password_token           :string
+#  reset_password_sent_at         :datetime
+#  remember_created_at            :datetime
+#  sign_in_count                  :integer          default(0), not null
+#  current_sign_in_at             :datetime
+#  last_sign_in_at                :datetime
+#  current_sign_in_ip             :inet
+#  last_sign_in_ip                :inet
+#  role                           :integer          default(0)
+#  created_at                     :datetime
+#  updated_at                     :datetime
+#  avatar_file_name               :string
+#  avatar_content_type            :string
+#  avatar_file_size               :integer
+#  avatar_updated_at              :datetime
+#  avatar_2_file_name             :string
+#  avatar_2_content_type          :string
+#  avatar_2_file_size             :integer
+#  avatar_2_updated_at            :datetime
+#  bio                            :text
+#  credits                        :integer          default(0)
+#  phone_number                   :string
+#  confirmation_token             :string
+#  confirmed_at                   :datetime
+#  confirmation_sent_at           :datetime
+#  instructor_position            :integer
+#  payment_multiplier             :integer          default(3)
+#  stats                          :string
+#  title                          :string
+#  nickname                       :string
+#  email_subscription             :boolean          default(TRUE)
+#  stripe_id                      :string
+#  date_of_birth                  :datetime
+#  drivers_license_number         :string
+#  drivers_license_state          :string
+#  registration_complete          :boolean          default(FALSE)
+#  registration_step              :integer          default(2)
+#  stripe_subscription            :boolean          default(FALSE)
+#  referrer                       :string           default("")
+#  subscription_cost              :integer          default(5000)
+#  unassigned_subscriptions_count :integer          default(0)
 #
 
 # Ununsed?
@@ -134,8 +135,8 @@ class User < ActiveRecord::Base
   end
 
   def class_subscriptions
-    self.subscriptions.each do |subscription|
-      subscription.event
+    self.subscriptions.each do |subscribed|
+      subscribed.event
     end
   end
 
@@ -147,17 +148,18 @@ class User < ActiveRecord::Base
     last_sign_in_at > 10.minutes.ago if last_sign_in_at
   end
 
-  def has_unlimited_access?
-    return false unless self.unlimited_subscription
-
-    self.unlimited_subscription.active?
+  def athletes_with_unlimited_access
+    athletes.select { |athlete| athlete.subscribed? }
   end
 
-  def unlimited_subscription
-    return nil unless self.unlimited_subscriptions
-    return nil unless self.unlimited_subscriptions.first
+  def athlete_subscriptions
+    athletes_with_unlimited_access.map(&:subscription).compact
+  end
 
-    self.unlimited_subscriptions.sort_by { |s| s.created_at }.last
+  def subscriptions_cost
+    return 0 unless athlete_subscriptions
+
+    athlete_subscriptions.inject(0) { |sum, subscription| sum + subscription.cost_in_pennies }
   end
 
   def emergency_numbers
@@ -185,9 +187,9 @@ class User < ActiveRecord::Base
   end
 
   def charge(price, athlete)
-    if self.has_unlimited_access?
-      self.unlimited_subscription.use!
-      "Unlimited Subscription - User ID: #{self.id}"
+    if athlete.has_unlimited_access?
+      athlete.subscription.use!
+      "Unlimited Subscription"
     elsif athlete.has_trial?
       athlete.trial.use!
       'Trial Class'

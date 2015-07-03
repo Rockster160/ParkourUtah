@@ -108,32 +108,41 @@ class Scheduled < ActiveRecord::Base
   def self.monthly_subscription_charges
     count = 0
     User.every do |user|
-      if !(user.has_unlimited_access?) && user.stripe_subscription? && user.stripe_id
-        monthly_subscription = LineItem.where(is_subscription: true).first
+      recurring_athletes = []
+      total_cost = user.athletes.inject(0) do |sum, athlete|
+        valid_payment = (athlete.subscription && athlete.subscription.inactive? && athlete.subscription.auto_renew) || false
+        recurring_athletes << athlete if valid_payment
+        sum + (valid_payment ? athlete.subscription.cost_in_pennies : 0)
+      end
+      if recurring_athletes.count > 0 && user.stripe_id
         count += 1
         Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
-        charge = if user.subscription_cost > 0
+        charge = if total_cost > 0
           Stripe::Charge.create(
-            :amount   => user.subscription_cost,
+            :amount   => total_cost,
             :currency => "usd",
             :customer => user.stripe_id
           )
         else
           true
         end
-        if !(charge) || charge.status == "succeeded"
-          SmsMailerWorker.perform_async('3852599640', "Successfully updated Subscription for #{user.email}.")
+        if charge || charge.status == "succeeded"
+          SmsMailerWorker.perform_async('3852599640', "Successfully updated Subscription for #{user.email} at $#{(total_cost/100).round(2)}.")
           if Rails.env == "production"
             # SubscriptionUpdatedMailerWorker.perform_async(user, user.email)
             # SubscriptionUpdatedMailerWorker.perform_async(user, "")
           end
-          user.unlimited_subscriptions.create
+
+          recurring_athletes.each do |athlete|
+            old_sub = athlete.subscription
+            athlete.athlete_subscriptions.create(cost_in_pennies: old_sub.cost_in_pennies)
+          end
         else
           SmsMailerWorker.perform_async('3852599640', "There was an issue updating the subscription for #{user.email}.")
         end
       end
     end
-    SmsMailerWorker.perform_async('3852599640', "Tick : #{count}") if count > 0
+    count
   end
 
   def self.waiver_checks

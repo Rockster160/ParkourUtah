@@ -26,11 +26,8 @@ class StoreController < ApplicationController
 
   def unsubscribe
     user = User.find(params[:id])
-    if user.update(stripe_subscription: false)
-      redirect_to edit_user_registration_path, notice: 'Successfully Unsubscribed'
-    else
-      redirect_to edit_user_registration_path, alert: 'There was an error.'
-    end
+    user.athlete_subscriptions.each {|s|s.update(auto_renew: false)}
+    redirect_to edit_user_registration_path, notice: 'Successfully Unsubscribed'
   end
 
   def email_keys
@@ -181,7 +178,7 @@ class StoreController < ApplicationController
           end
           if line_item.is_subscription?
             current_user.update(stripe_subscription: true, subscription_cost: line_item.cost_in_pennies)
-            current_user.unlimited_subscriptions.create
+            current_user.update(unassigned_subscriptions_count: current_user.unassigned_subscriptions_count + order.amount)
           end
         end
         ItemsPurchasedMailerWorker.perform_async(current_user.cart.id, "rocco11nicholls@gmail.com")

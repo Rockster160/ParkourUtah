@@ -70,13 +70,14 @@
         </div>
       </div>
       <%= submit_tag "Update", class: 'pkut-btn' %>
-      <% if current_user.stripe_subscription? %>
+      <% if current_user.subscriptions_cost > 0 %>
         <hr>
         <div class="row">
           <div class="row">
             <div class="col-sm-6">
               <p>You are currently set up to auto-pay for your monthly subscription.</p>
-              <p>The next payment of <%= number_to_currency(current_user.subscription_cost.to_f / 100) %> will process on <%= (current_user.unlimited_subscription.expires_at + 1.day).strftime('%B %e, %Y') %></p>
+              <% next_due_payment_subscription = current_user.athlete_subscriptions.sort_by(&:expires_at).first %>
+              <p>The next payment of <%= number_to_currency(next_due_payment_subscription.cost) %> will process on <%= (next_due_payment_subscription.expires_at + 1.day).strftime('%B %e, %Y') %></p>
             </div>
             <div class="col-sm-6">
               <%= link_to 'Unsubscribe', unsubscribe_monthly_subscription_path(current_user.id), class: 'pkut-btn', method: :delete %>
@@ -85,11 +86,13 @@
           <br/>
         </div>
       <% end %>
-      <% if current_user.has_unlimited_access? %>
-      <hr>
-      <div class="row">
-        <p>Your athletes have unlimited classes until: <%= current_user.unlimited_subscription.expires_at.strftime('%B %e, %Y') %></p>
-      </div>
+      <% if current_user.athletes_with_unlimited_access.count > 0 %>
+        <hr>
+        <% current_user.athletes_with_unlimited_access.each do |athlete| %>
+          <div class="row">
+            <p><%= athlete.full_name %> has unlimited classes until: <%= athlete.subscription.expires_at.strftime('%B %e, %Y') %></p>
+          </div>
+        <% end %>
       <% end %>
       <hr>
       <div class="row">

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150630234858) do
+ActiveRecord::Schema.define(version: 20150703001540) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,18 @@ ActiveRecord::Schema.define(version: 20150630234858) do
   end
 
   add_index "addresses", ["user_id"], name: "index_addresses_on_user_id", using: :btree
+
+  create_table "athlete_subscriptions", force: :cascade do |t|
+    t.integer  "dependent_id"
+    t.integer  "usages",          default: 0
+    t.datetime "expires_at"
+    t.integer  "cost_in_pennies", default: 0
+    t.boolean  "auto_renew",      default: true
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+  end
+
+  add_index "athlete_subscriptions", ["dependent_id"], name: "index_athlete_subscriptions_on_dependent_id", using: :btree
 
   create_table "attendances", force: :cascade do |t|
     t.integer  "dependent_id"
@@ -198,19 +210,19 @@ ActiveRecord::Schema.define(version: 20150630234858) do
   add_index "unlimited_subscriptions", ["user_id"], name: "index_unlimited_subscriptions_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "",    null: false
-    t.string   "first_name",             default: "",    null: false
-    t.string   "last_name",              default: "",    null: false
-    t.string   "encrypted_password",     default: "",    null: false
+    t.string   "email",                          default: "",    null: false
+    t.string   "first_name",                     default: "",    null: false
+    t.string   "last_name",                      default: "",    null: false
+    t.string   "encrypted_password",             default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,     null: false
+    t.integer  "sign_in_count",                  default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
     t.inet     "last_sign_in_ip"
-    t.integer  "role",                   default: 0
+    t.integer  "role",                           default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "avatar_file_name"
@@ -222,26 +234,27 @@ ActiveRecord::Schema.define(version: 20150630234858) do
     t.integer  "avatar_2_file_size"
     t.datetime "avatar_2_updated_at"
     t.text     "bio"
-    t.integer  "credits",                default: 0
+    t.integer  "credits",                        default: 0
     t.string   "phone_number"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.integer  "instructor_position"
-    t.integer  "payment_multiplier",     default: 3
+    t.integer  "payment_multiplier",             default: 3
     t.string   "stats"
     t.string   "title"
     t.string   "nickname"
-    t.boolean  "email_subscription",     default: true
+    t.boolean  "email_subscription",             default: true
     t.string   "stripe_id"
     t.datetime "date_of_birth"
     t.string   "drivers_license_number"
     t.string   "drivers_license_state"
-    t.boolean  "registration_complete",  default: false
-    t.integer  "registration_step",      default: 2
-    t.boolean  "stripe_subscription",    default: false
-    t.string   "referrer",               default: ""
-    t.integer  "subscription_cost",      default: 5000
+    t.boolean  "registration_complete",          default: false
+    t.integer  "registration_step",              default: 2
+    t.boolean  "stripe_subscription",            default: false
+    t.string   "referrer",                       default: ""
+    t.integer  "subscription_cost",              default: 5000
+    t.integer  "unassigned_subscriptions_count", default: 0
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
@@ -259,6 +272,7 @@ ActiveRecord::Schema.define(version: 20150630234858) do
 
   add_index "waivers", ["dependent_id"], name: "index_waivers_on_dependent_id", using: :btree
 
+  add_foreign_key "athlete_subscriptions", "dependents"
   add_foreign_key "carts", "users"
   add_foreign_key "emergency_contacts", "users"
   add_foreign_key "notifications", "users"

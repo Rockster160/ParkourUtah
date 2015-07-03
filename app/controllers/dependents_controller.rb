@@ -50,6 +50,19 @@
     redirect_to edit_user_registration_path
   end
 
+  def assign_subscription
+    athlete = Dependent.find(params[:athlete_id])
+    user = athlete.user
+
+    if user.unassigned_subscriptions_count > 0
+      if user.update(unassigned_subscriptions_count: user.unassigned_subscriptions_count-1)
+        athlete.athlete_subscriptions.create
+      end
+    end
+
+    redirect_to :back
+  end
+
   def update_waiver
     valid = []
     new_athlete_ids = []

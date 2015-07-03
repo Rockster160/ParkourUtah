@@ -26,6 +26,7 @@ class Dependent < ActiveRecord::Base
   belongs_to :user
   has_many :waivers
   has_many :trial_classes
+  has_many :athlete_subscriptions, dependent: :destroy
 
   has_attached_file :athlete_photo,
                :styles => { :medium => "300", :thumb => "100x100#" },
@@ -66,6 +67,29 @@ class Dependent < ActiveRecord::Base
   def has_trial?
     return false unless trial
     !(trial.used)
+  end
+
+  def has_unlimited_access?
+    return false unless self.subscription
+
+    self.subscription.active?
+  end
+
+  def has_access_until
+    athlete_subscriptions.select {|s| !(s.expires_at.nil?) }.sort_by(&:expires_at).last.expires_at
+  end
+
+  def subscribed?
+    return false unless subscription
+
+    subscription.auto_renew
+  end
+
+  def subscription
+    subs = self.athlete_subscriptions
+    return nil unless subs && subs.first
+
+    subs.select {|s| !(s.expires_at.nil?) }.sort_by { |s| s.created_at }.last
   end
 
   def attendances
