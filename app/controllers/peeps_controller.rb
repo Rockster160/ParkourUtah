@@ -2,6 +2,24 @@ class PeepsController < ApplicationController
   before_action :still_signed_in
   before_action :validate_instructor, except: [:return]
 
+  def user_page
+    @user = User[params[:id]]
+  end
+
+  def edit_trial
+    athlete = Dependent.find(params[:id])
+    if params[:num].to_i < 0
+      params[:num].to_i.abs.times do
+        athlete.trial.use!
+      end
+    else
+      params[:num].to_i.abs.times do
+        athlete.trial_classes.create
+      end
+    end
+    redirect_to :back
+  end
+
   def return
     current_user.get_payment_id
     current_user.get_shipping_id

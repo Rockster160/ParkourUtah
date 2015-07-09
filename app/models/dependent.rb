@@ -24,8 +24,8 @@
 class Dependent < ActiveRecord::Base
 
   belongs_to :user
-  has_many :waivers
-  has_many :trial_classes
+  has_many :waivers, dependent: :destroy
+  has_many :trial_classes, dependent: :destroy
   has_many :athlete_subscriptions, dependent: :destroy
 
   has_attached_file :athlete_photo,

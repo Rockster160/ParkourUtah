@@ -42,6 +42,8 @@ Rails.application.routes.draw do
   post 'peeps/promote' => 'peeps#promotion', as: 'promotion'
   post 'peeps/demotion/:id' => 'peeps#demotion', as: 'demotion'
   get 'peeps/users' => 'peeps#recent_users', as: 'recent_users'
+  get 'user/:id' => 'peeps#user_page', as: 'user_show'
+  get 'athlete/:id/trial' => 'peeps#edit_trial', as: 'edit_trial'
   post 'peeps/users' => 'peeps#adjust_credits'
   delete 'user/:id' => 'peeps#destroy_user', as: 'user'
   delete 'unsubscribe_monthly/:id' => 'store#unsubscribe', as: 'unsubscribe_monthly_subscription'
