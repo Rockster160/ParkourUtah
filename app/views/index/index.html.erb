@@ -40,7 +40,7 @@
     </div>
   </div>
 </div>
-<%= render 'index/modal_placeholders' %>
+<%#= render 'index/modal_placeholders' %>
 
 <div class="callout-background">
   <div class="callout-container" id="peeps">
@@ -52,9 +52,9 @@
           <% @instructors.each do |instructor| %>
             <div class="flip-container" ontouchstart="this.classList.toggle('hover');">
               <div class="flipper">
-                <div class="front" style="background: #FFF url(<%= instructor.avatar(:medium) %>);background-size: 100% 100%;">
+                <div class="front" style="background-color: #FFF url(<%= instructor.avatar(:medium) %>);background-size: 100% 100%;">
                 </div>
-                <div class="back" style="background: #FFF url(<%= instructor.avatar_2(:medium) %>);background-size: 100% 100%;">
+                <div class="back" style="background-color: #FFF url(<%= instructor.avatar_2(:medium) %>);background-size: 100% 100%;">
                   <div class="bio-background">
                     <br/>
                     <p class="card-bio-text">
