@@ -1,6 +1,6 @@
 module ApplicationHelper
   def getDate(str) #mm-dd-year
-    return nil unless str.length == 10
+    return nil unless str && str.length == 10
     month, day, year = str.split('-').map(&:to_i)
     return nil unless year && month && day
     begin

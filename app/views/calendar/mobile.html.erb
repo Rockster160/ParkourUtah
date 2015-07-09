@@ -6,16 +6,12 @@
   </style>
 <% end %>
 
-<div class="view-container">
+<div class="view-container" data-day-url="<%= calendar_day_url %>">
   <div class="days-container">
-    <div class="a-single-date">
-      <%= @date %>
-    </div>
-    <div class="next-day">
-      <%= @date + 1.day %>
-    </div>
-    <div class="previous-day">
-      <%= @date - 1.day %>
-    </div>
+    <% @days.each do |day| %>
+      <%= render partial: 'day', locals: {day: day, date: @date} %>
+    <% end %>
   </div>
 </div>
+
+<div class="loading-container"></div>

@@ -1,0 +1,5 @@
+<% date ||= @date %>
+<% day ||= @day %>
+<div class="a-single-date <%= date.to_date == day.to_date ? 'date' : '' %>" data-date="<%= day %>">
+  <%= day.strftime('%B %d, %Y') %>
+</div>

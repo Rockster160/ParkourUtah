@@ -16,6 +16,15 @@ class CalendarController < ApplicationController
     @selected_classes = params[:classes] ? params[:classes] : @classes
   end
 
+  def get_day
+    @day = params[:date].to_date + (params[:period] == 'past' ? -params[:amount].to_i : params[:amount].to_i).day
+    @date = DateTime.current
+
+    respond_to do |format|
+      format.js { render partial: 'day'}
+    end
+  end
+
   def day
     @events = Event.all.to_a.group_by { |event| event.date.strftime('%Y-%m-%d') }[params[:date]]
   end
@@ -36,8 +45,9 @@ class CalendarController < ApplicationController
   end
 
   def mobile
+    offset = 1
     @date = getDate(params[:date]) || DateTime.current
     @events = Event.by_date(@date)
-    @days = (DateTime.current..DateTime.current + 3.days)
+    @days = (@date - offset.days..@date + offset.days)
   end
 end
