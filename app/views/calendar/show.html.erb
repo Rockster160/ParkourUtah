@@ -50,11 +50,11 @@
         <% end %>
       </select>
       <span class="date-controller col-sm-4 col-sm-offset-0 col-xs-10 col-xs-offset-1">
-        <%= link_to calendar_draw_path(date: @date - 1.month), class: "btn btn-default back-month" do %>
+        <%= link_to calendar_draw_path(date: @date - 4.weeks), class: "btn btn-default back-month" do %>
           <%= icon('chevron-left', '', class: '') %>
         <% end %>
         <span class="date-holder"><%= "#{@date.strftime("%B")} #{@date.year}" %></span>
-        <%= link_to calendar_draw_path(date: @date + 1.month), class: "btn btn-default forward-month" do %>
+        <%= link_to calendar_draw_path(date: @date + 4.weeks), class: "btn btn-default forward-month" do %>
           <%= icon('chevron-right', '', class: '') %>
         <% end %>
       </span>

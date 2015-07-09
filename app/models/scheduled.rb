@@ -130,7 +130,7 @@ class Scheduled < ActiveRecord::Base
           SmsMailerWorker.perform_async('3852599640', "Successfully updated Subscription for #{user.email} at $#{(total_cost/100).round(2)}.")
           if Rails.env == "production"
             # SubscriptionUpdatedMailerWorker.perform_async(user, user.email)
-            # SubscriptionUpdatedMailerWorker.perform_async(user, "")
+            # SubscriptionUpdatedMailerWorker.perform_async(user, "ENV['PKUT_EMAIL']")
           end
 
           recurring_athletes.each do |athlete|

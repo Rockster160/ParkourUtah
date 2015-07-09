@@ -6,15 +6,12 @@
   </style>
 <% end %>
 
-<div class="view-container">
+<div class="view-container" data-day-url="<%= calendar_day_url %>">
   <div class="days-container">
-    <% @cities.each do |city| %>
-      <div class="a-single-date">
-        <%= city[1].first.date.strftime('%B %d, %Y') %><br/>
-        <% city[1].each do |event| %>
-          <%= event.title %><br/>
-        <% end %>
-      </div>
+    <% @days.each do |day| %>
+      <%= render partial: 'day', locals: {day: day, date: @date} %>
     <% end %>
   </div>
 </div>
+
+<div class="loading-container"></div>

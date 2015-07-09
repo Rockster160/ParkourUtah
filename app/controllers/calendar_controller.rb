@@ -1,4 +1,6 @@
 class CalendarController < ApplicationController
+  include ApplicationHelper
+
   def index
   end
 
@@ -12,6 +14,15 @@ class CalendarController < ApplicationController
 
     @selected_cities = params[:cities] ? params[:cities] : @cities
     @selected_classes = params[:classes] ? params[:classes] : @classes
+  end
+
+  def get_day
+    @day = params[:date].to_date + (params[:period] == 'past' ? -params[:amount].to_i : params[:amount].to_i).day
+    @date = DateTime.current
+
+    respond_to do |format|
+      format.js { render partial: 'day'}
+    end
   end
 
   def day
@@ -34,6 +45,9 @@ class CalendarController < ApplicationController
   end
 
   def mobile
-    @cities = Event.all.to_a.group_by { |event| [event.date.year, event.date.month, event.date.day] }.sort
+    offset = 1
+    @date = getDate(params[:date]) || DateTime.current
+    @events = Event.by_date(@date)
+    @days = (@date - offset.days..@date + offset.days)
   end
 end
