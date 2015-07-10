@@ -98,6 +98,13 @@ class User < ActiveRecord::Base
 
   validate :valid_phone_number
 
+  scope :by_fuzzy_text, lambda { |text|
+    text = "%#{text}%"
+    joins('LEFT OUTER JOIN dependents ON users.id = dependents.user_id')
+      .where('email ILIKE ? OR CAST(users.id AS TEXT) ILIKE ? OR dependents.full_name ILIKE ? OR CAST(dependents.athlete_id AS TEXT) ILIKE ?', text, text, text, text).uniq
+  }
+#
+
   def is_instructor?; self.role >= 1; end
   def self.instructors; select{ |u| u.is_instructor? }.sort_by { |s| s.instructor_position }; end
   def is_mod?; self.role >= 2; end

@@ -1,6 +1,8 @@
 <div class="central-container form-offset">
   <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br/><br/>
-  Users: <%= @users.count %>
+  <div><%= text_field_tag(:by_fuzzy_text, 'Search', id: 'user_index_search_field', class: 'form-control', autocomplete: "off", autofocus: true) %></div>
+  <div>Users: <%= @all_users_count %></div>
+  <div><%= paginate @users %></div>
   <% @users.each do |user| %>
     <% if user.stripe_subscription? %>
       <h3 style="color: green;"><%= user.id %>: <%= user.email %>*</h3>

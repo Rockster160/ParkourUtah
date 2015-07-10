@@ -11,6 +11,11 @@
       <%= link_to 'Cancel Event', cancel_event_path(@event.id, should_happen: false), method: :post, class: 'pkut-btn' %>
     <% end %>
   <% end %>
+  <br/>
+  <br/>
+  <br/>
+  <div><%= text_field_tag(:by_fuzzy_text, 'Search', id: 'user_index_search_field', class: 'form-control', autocomplete: "off", autofocus: true) %></div>
+  <br/>
   <% @athletes.each do |athlete| %>
     <h3><%= athlete.full_name %></h3>
     <p>Guardian phone: <%= athlete.guardian_phone %></p>

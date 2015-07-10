@@ -17,6 +17,7 @@
 //= require select2
 //= require dotimeout
 //= require twitter/bootstrap
+//= require twitter/typeahead
 //= require maskedinput
 //= require_tree .
 

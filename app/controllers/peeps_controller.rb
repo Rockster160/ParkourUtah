@@ -67,7 +67,15 @@ class PeepsController < ApplicationController
   end
 
   def recent_users
-    @users = User.all.sort_by{|u|u.created_at}.reverse
+    @all_users_count = User.count
+    @users = User.order(created_at: :desc)
+    @users = @users.by_fuzzy_text(params[:by_fuzzy_text]) if params[:by_fuzzy_text]
+    @users = @users.page(params[:page] || 1)
+
+    respond_to do |format|
+      format.json { render json: @users.to_json(include: :dependents) }
+      format.html
+    end
   end
 
   def edit_peep

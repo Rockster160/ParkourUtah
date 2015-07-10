@@ -36,6 +36,8 @@ gem 'maskedinput-rails'
 gem 'annotate', '~> 2.6.6'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem "dotimeout-rails"
+gem 'kaminari'
+gem 'twitter-typeahead-rails'
 
 group :development, :test do
   gem 'byebug'
