@@ -26,6 +26,7 @@ body {
 }
 
 .vert {
+  z-index: -1;
   vertical-align: middle;
   width:100%;
   padding:4% 0;
@@ -33,7 +34,7 @@ body {
 }
 
 .header-container {
-  min-height: 100vh;
+  min-height: 50vw;
   min-width: 100vw;
   max-height: 100vh;
   max-width: 100vw;
@@ -55,7 +56,7 @@ body {
 }
 
 .header {
-  height: 100vw;
+  height: 100vh;
 }
 
 .blurb {
