@@ -39,7 +39,7 @@ class PeepsController < ApplicationController
   end
 
   def adjust_credits
-    user = User[params[:url][:id]]
+    user = User[params[:id]]
     user.credits += params[:adjust].to_i
     if user.save!
       redirect_to :back, notice: 'User successfully updated.'

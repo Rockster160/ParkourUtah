@@ -144,9 +144,6 @@
 
   def destroy
     athlete = Dependent.find(params[:id])
-    if athlete.attendances.count < 2
-      # athlete.user.update(credits: athlete.user.credits - (ENV["PKUT_CLASS_PRICE"].to_i * (2 - athlete.attendances.count)))
-    end
     if athlete.destroy
       redirect_to :back, notice: "Athlete successfully deleted."
     else
