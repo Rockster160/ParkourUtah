@@ -2,7 +2,7 @@
   <%= submit_tag "X", class: "reject-athlete-pin btn btn-danger" %>
   <%= submit_tag "√", class: "accept-athlete-pin btn btn-success" %>
   <%= hidden_field_tag :athlete_id, @athlete.athlete_id %>
-  <div class="central-container">
+  <div class="central-container min-container">
     <h3><%= @athlete.full_name %></h3>
     <% if @athlete.athlete_photo_file_size %>
       <%= image_tag("#{@athlete.athlete_photo(:medium)}", width: "300", class: 'athlete-image falsify-image-click') %>
