@@ -17,7 +17,7 @@ class CalendarController < ApplicationController
   end
 
   def get_day
-    @day = params[:date].to_date + (params[:period] == 'past' ? -params[:amount].to_i : params[:amount].to_i).day
+    @day = params[:date].to_date + params[:amount].to_i.days
     @date = DateTime.current
 
     respond_to do |format|
@@ -45,9 +45,7 @@ class CalendarController < ApplicationController
   end
 
   def mobile
-    offset = 1
     @date = getDate(params[:date]) || DateTime.current
-    @events = Event.by_date(@date)
-    @days = (@date - offset.days..@date + offset.days)
+    @days = (@date.beginning_of_month...@date.end_of_month)
   end
 end
