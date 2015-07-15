@@ -1,4 +1,5 @@
 Rails.application.configure do
+Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Code is not reloaded between requests.
@@ -24,6 +25,7 @@ Rails.application.configure do
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
+  config.action_mailer.default_url_options   = { :host => 'parkourutah.com' }
   ActionMailer::Base.delivery_method = :smtp
   ActionMailer::Base.smtp_settings = {
     :address              => "smtp.gmail.com",
@@ -39,7 +41,6 @@ Rails.application.configure do
 
   Paperclip.options.merge!(:command_path => "/usr/bin")
   # config.serve_static_files = ENV['RAILS_SERVE_STATIC_FILES'].present?
-  config.action_mailer.default_url_options   = { :host => 'parkourutah.com' }
   config.paperclip_defaults = {
     :storage => :s3,
     :s3_credentials => {

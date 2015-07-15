@@ -38,8 +38,8 @@ var ready = function () {
     }
 
     loadNext = function(period, amount) {
-
       amount = amount || 1;
+
       if (period == 'past') {
         var date = $('.a-single-date').first().data('date');
       } else {

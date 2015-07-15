@@ -6,7 +6,7 @@
   </style>
 <% end %>
 
-<div class="view-container" data-day-url="<%= calendar_day_url %>">
+<div class="view-container" data-day-url="<%= calendar_day_path %>">
   <div class="days-container">
     <% @days.each do |day| %>
       <%= render partial: 'day', locals: {day: day, date: @date} %>
