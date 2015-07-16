@@ -33,7 +33,7 @@ class CalendarController < ApplicationController
     elsif params[:direction] == 'future'
       @date += 1.month
     end
-    @months = [(@date.beginning_of_month...@date.end_of_month)]
+    @months = [(@date.beginning_of_month..@date.end_of_month)]
 
     respond_to do |format|
       format.js { render partial: 'month'}
@@ -64,7 +64,7 @@ class CalendarController < ApplicationController
     @date = getDate(params[:date]) || DateTime.current
     @months = (-amount..amount).map do |offset|
       month = @date + offset.months
-      (month.beginning_of_month...month.end_of_month)
+      (month.beginning_of_month..month.end_of_month)
     end
   end
 end
