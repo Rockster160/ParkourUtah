@@ -49,14 +49,10 @@ var ready = function () {
         })
       }
       if (offset_index > offsets.length - 35 && loading == false) {
-        console.log('start');
         loading = true;
         var date = $('.a-single-date').last().data('date'),
-          old_scroll = $('.view-container').scrollLeft(),
-          width = $('.a-single-date').first().width(),
           month_url = $('.view-container').data('month-url') + '?date=' + date + '&direction=' + 'future';
         $('.loading-container').load(month_url, function() {
-          console.log('stop');
           var new_scroll = $('.view-container').scrollLeft(),
             day_count = $('.month-container').first().children().length,
             month_width = day_count * $(window).width();
@@ -79,7 +75,7 @@ var ready = function () {
 
     sideScroll = function(amount, speed) {
       amount = amount || 1;
-      speed = speed || 200;
+      speed = speed || 100;
 
       $('.view-container').animate( {scrollLeft: getContainerOffset(amount)}, speed );
     }
