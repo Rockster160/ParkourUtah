@@ -25,6 +25,21 @@ class CalendarController < ApplicationController
     end
   end
 
+  def get_month
+    @date = params[:date].to_date || DateTime.current
+
+    if params[:direction] == 'past'
+      @date -= 1.month
+    elsif params[:direction] == 'future'
+      @date += 1.month
+    end
+    @months = [(@date.beginning_of_month...@date.end_of_month)]
+
+    respond_to do |format|
+      format.js { render partial: 'month'}
+    end
+  end
+
   def day
     @events = Event.all.to_a.group_by { |event| event.date.strftime('%Y-%m-%d') }[params[:date]]
   end
@@ -45,7 +60,11 @@ class CalendarController < ApplicationController
   end
 
   def mobile
+    amount = 1
     @date = getDate(params[:date]) || DateTime.current
-    @days = (@date.beginning_of_month...@date.end_of_month)
+    @months = (-amount..amount).map do |offset|
+      month = @date + offset.months
+      (month.beginning_of_month...month.end_of_month)
+    end
   end
 end

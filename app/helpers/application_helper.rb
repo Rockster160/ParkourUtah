@@ -1,7 +1,7 @@
 module ApplicationHelper
   def getDate(str) #mm-dd-year
-    return nil unless str && str.length == 10
-    month, day, year = str.split('-').map(&:to_i)
+    return nil unless str
+    month, day, year = str.first(10).split('-').map(&:to_i)
     return nil unless year && month && day
     begin
       DateTime.new(year, month, day)

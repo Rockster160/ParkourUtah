@@ -1,6 +1,6 @@
 <% date ||= @date %>
 <% day ||= @day %>
-<div class="a-single-date <%= date.to_date == day.to_date ? 'date' : '' %>" data-date="<%= day %>">
+<div class="a-single-date <%= date.to_date == day.to_date ? 'date' : '' %>" data-date="<%= day.to_date %>">
   <%= day.strftime('%A %B %d, %Y') %>
   <br/>
   <% Event.by_date(day).each do |event| %>
