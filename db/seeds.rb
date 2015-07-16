@@ -110,6 +110,19 @@ Event.create(
   class_name: 'Test'
 )
 puts "Created 1on1 event."
+Event.create(
+  id: 83788378,
+  date: DateTime.new(1990),
+  cost: 2000,
+  host: 'Test',
+  description: 'This is the expert class. It is by invite only.',
+  city: 'Provo',
+  token: 83788378,
+  address: 'To be specific',
+  location_instructions: '',
+  class_name: 'Test'
+)
+puts "Created test event."
 50.times do |t|
   # Monday
   Event.create(

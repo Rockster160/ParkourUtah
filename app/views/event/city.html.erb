@@ -3,7 +3,7 @@
   <%= link_to 'Back to Cities', cities_path, class: 'pkut-btn' %>
   <h2 class="event-color color-<%= Event.color_of(@city) %>"><%= @city %></h2>
   <% Event.colors.keys.each do |color| %>
-    <%= link_to color_city_path(color: color, city: @city), method: :post do %>
+    <%= link_to color_class_path(color: color, class_name: @city), method: :post do %>
       <p class="col-xs-3 event-color color-<%= color %>"><%= color %></p>
     <% end %>
   <% end %>

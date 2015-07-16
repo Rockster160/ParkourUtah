@@ -80,7 +80,7 @@ Rails.application.routes.draw do
 
   get 'events/cities' => 'event#cities', as: 'cities'
   get 'events/cities/:city' => 'event#city', as: 'city'
-  post 'events/cities/:city/:color' => 'event#color_city', as: 'color_city'
+  post 'events/cities/:class_name/:color' => 'event#color_class', as: 'color_class'
 
   patch 'events/update/:id' => 'event#update'
   delete 'events/destroy' => 'event#destroy', as: 'destroy_event'

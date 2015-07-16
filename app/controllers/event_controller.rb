@@ -46,9 +46,9 @@ class EventController < ApplicationController
     @events = Event.sort_by_token.select { |e| e.city == @city }
   end
 
-  def color_city
-    Event.set_city_color(params[:city], params[:color])
-    redirect_to city_path(params[:city])
+  def color_class
+    Event.set_class_color(params[:class_name], params[:color])
+    redirect_to city_path(params[:class_name])
   end
 
   def create
