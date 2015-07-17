@@ -57,6 +57,7 @@ Rails.application.routes.draw do
   delete 'athlete/:id/delete' => 'dependents#destroy', as: 'destroy_athlete'
   post 'athletes/verify' => 'dependents#verify', as: 'verify_athletes'
   post 'athletes/assign_subscription/:athlete_id' => 'dependents#assign_subscription', as: 'assign_subscription'
+  patch 'athletes/update_photo/:id' => 'dependents#update_photo'
 
   get 'waivers' => 'dependents#sign_waiver', as: 'waivers'
   post 'waivers' => 'dependents#update_waiver'
