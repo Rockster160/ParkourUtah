@@ -21,6 +21,16 @@
     end
   end
 
+  def update_photo
+    athlete = Dependent.find(params[:id])
+
+    if athlete.update(athlete_photo: params[:athlete_photo])
+      redirect_to :back, notice: 'Image successfully updated.'
+    else
+      redirect_to :back, alert: 'There was an error updating the image.'
+    end
+  end
+
   def update
     pin = params[:athlete_pin]
     confirm = params[:confirm_athlete_pin]

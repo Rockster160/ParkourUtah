@@ -31,6 +31,19 @@
     <% else %>
       --<%= athlete.id %>: <strong><%= athlete.full_name %></strong> - ID: <%= athlete.zero_padded(athlete.athlete_id, 4) %><br/>
     <% end %>
+    --<a alt="..." class="forceOpen" data-toggle="modal" data-target="#image<%= athlete.id %>">View/Edit Athlete Image</a><br/><br/>
+    <div class="modal fade" id="image<%= athlete.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="central-container">
+        <div class="error-container center-block">
+          <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
+          <h3 class="pkut-header"><%= athlete.full_name %></h3>
+          <%= link_to 'View current', athlete.athlete_photo.url, target: '_blank', class: 'pkut-btn' %><br/><br/>
+          <%= form_for athlete, url: {controller: "peeps", action: "update_athlete", id: athlete.id}, html: {multipart: true}, method: :put do %>
+            <%= file_field_tag 'athlete_photo', accept: 'image/*', capture: 'camera', class: 'hidden upload-image-btn' %>
+          <% end %>
+        </div>
+      </div>
+    </div>
     <% if athlete.trials.count > 0 %>
       --Has <%= athlete.trials.count %> trial class(es) remaining. <%= link_to 'Remove 1 Trial', edit_trial_path(athlete, num: '-1') if current_user.is_admin? %>
       <br/>

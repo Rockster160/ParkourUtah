@@ -67,15 +67,9 @@ var ready = function () {
       return offsets[offset_index];
     };
 
-    scrollToCenter = function(speed) {
-      speed = speed || 200
-      var offsets = getOffsets();
-      $('.view-container').animate( {scrollLeft: offsets[Math.floor(offsets.length/2)]}, speed );
-    }
-
     sideScroll = function(amount, speed) {
       amount = amount || 1;
-      speed = speed || 100;
+      speed = speed || 200;
 
       $('.view-container').animate( {scrollLeft: getContainerOffset(amount)}, speed );
     }
