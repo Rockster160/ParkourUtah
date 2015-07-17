@@ -48,7 +48,11 @@ class EventController < ApplicationController
 
   def color_class
     Event.set_class_color(params[:class_name], params[:color])
-    redirect_to city_path(params[:class_name])
+    redirect_to edit_colors_path
+  end
+
+  def color_classes
+    @classes = Event.all.group_by { |e| e.class_name }.keys
   end
 
   def create
