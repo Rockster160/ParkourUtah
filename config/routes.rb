@@ -21,6 +21,8 @@ Rails.application.routes.draw do
   post 'register/step_4/fix' => 'registrations#fix_step_4', as: 'fix_review_page'
   post 'register/step_5' => 'registrations#post_step_5'
 
+  resources :spots
+
   get 'test' => 'index#index'
   post 'contact' => 'index#contact'
   post 'receive_sms' => 'index#receive_sms'

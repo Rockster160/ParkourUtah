@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150703001540) do
+ActiveRecord::Schema.define(version: 20150718210054) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -118,6 +118,14 @@ ActiveRecord::Schema.define(version: 20150703001540) do
     t.boolean  "cancelled_text",        default: false
   end
 
+  create_table "images", force: :cascade do |t|
+    t.integer  "spot_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "images", ["spot_id"], name: "index_images_on_spot_id", using: :btree
+
   create_table "line_items", force: :cascade do |t|
     t.string   "display_file_name"
     t.string   "display_content_type"
@@ -151,6 +159,15 @@ ActiveRecord::Schema.define(version: 20150703001540) do
 
   add_index "notifications", ["user_id"], name: "index_notifications_on_user_id", using: :btree
 
+  create_table "ratings", force: :cascade do |t|
+    t.integer  "rated"
+    t.integer  "spot_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "ratings", ["spot_id"], name: "index_ratings_on_spot_id", using: :btree
+
   create_table "redemption_keys", force: :cascade do |t|
     t.string   "key"
     t.string   "redemption"
@@ -167,6 +184,30 @@ ActiveRecord::Schema.define(version: 20150703001540) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "spot_events", force: :cascade do |t|
+    t.integer  "spot_id"
+    t.integer  "event_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "spot_events", ["event_id"], name: "index_spot_events_on_event_id", using: :btree
+  add_index "spot_events", ["spot_id"], name: "index_spot_events_on_spot_id", using: :btree
+
+  create_table "spots", force: :cascade do |t|
+    t.string   "title"
+    t.text     "description"
+    t.string   "lon"
+    t.string   "lat"
+    t.boolean  "approved",    default: false
+    t.integer  "event_id"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.string   "location"
+  end
+
+  add_index "spots", ["event_id"], name: "index_spots_on_event_id", using: :btree
 
   create_table "subscriptions", force: :cascade do |t|
     t.integer "user_id"
@@ -275,7 +316,12 @@ ActiveRecord::Schema.define(version: 20150703001540) do
   add_foreign_key "athlete_subscriptions", "dependents"
   add_foreign_key "carts", "users"
   add_foreign_key "emergency_contacts", "users"
+  add_foreign_key "images", "spots"
   add_foreign_key "notifications", "users"
+  add_foreign_key "ratings", "spots"
+  add_foreign_key "spot_events", "events"
+  add_foreign_key "spot_events", "spots"
+  add_foreign_key "spots", "events"
   add_foreign_key "transactions", "carts"
   add_foreign_key "trial_classes", "dependents"
   add_foreign_key "unlimited_subscriptions", "users"

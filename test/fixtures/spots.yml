@@ -1,0 +1,33 @@
+# == Schema Information
+#
+# Table name: spots
+#
+#  id          :integer          not null, primary key
+#  title       :string
+#  description :text
+#  lon         :string
+#  lat         :string
+#  approved    :boolean          default(FALSE)
+#  event_id    :integer
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  location    :string
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  description: MyText
+  lon: MyString
+  lat: MyString
+  approved: false
+  event_id: 
+
+two:
+  title: MyString
+  description: MyText
+  lon: MyString
+  lat: MyString
+  approved: false
+  event_id: 

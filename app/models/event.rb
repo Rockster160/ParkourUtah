@@ -27,6 +27,7 @@ class Event < ActiveRecord::Base
   # "#{city}, #{state.abbreviate_state} #{zip}"
 
   has_many :attendances
+  has_many :spot_events
   has_many :subscriptions, dependent: :destroy
 
   before_save :format_fields
