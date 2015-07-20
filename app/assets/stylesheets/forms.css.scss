@@ -143,7 +143,7 @@ font-size: 1em;
   color: $pkut-grey-white;
   background-color: $pkut-red;
 
-  &:hover, &:active, &:focus {
+  &:hover {
     color: $pkut-grey-light;
     background-color: $pkut-red-dark;
     outline: none;

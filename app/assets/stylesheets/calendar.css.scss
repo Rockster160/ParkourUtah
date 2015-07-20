@@ -1,14 +1,15 @@
 @import "config/variables";
 @import 'config/font-imports';
 
-$mobile-controls-height: 100px;
-$single-day-height: Calc(100vh - 150px); //150 = mobile controls + navbar
+$mobile-controls-height: 50px;
+$navbar-height: 50px;
+$single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
 
 .view-container {
   width: 100vw;
   height: $single-day-height;
   position: absolute;
-  bottom: 0;
+  top: 100px;
   overflow-x: hidden;
   overflow-y: hidden;
   .days-container {
@@ -31,9 +32,10 @@ $single-day-height: Calc(100vh - 150px); //150 = mobile controls + navbar
 
 .mobile-calendar-controls {
   height: $mobile-controls-height;
+  margin-top: -10px;
   .center-btn {
     position: relative;
-    top: 30px;
+    top: 25px;
   }
 }
 
