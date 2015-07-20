@@ -33,7 +33,7 @@ var ready = function () {
       offset_index = (offset_index >= offsets.length ? offsets.length - 1 : offset_index);
 
       if (offset_index < 35 && loading == false) {
-        loading = true;
+        setLoading(true);
         var date = $('.a-single-date').first().data('date'),
           width = $('.a-single-date').first().width(),
           month_url = $('.view-container').data('month-url') + '?date=' + date + '&direction=' + 'past';
@@ -45,11 +45,11 @@ var ready = function () {
           $('.loading-container').html('');
           $('.month-container').last().remove();
           $('.view-container').scrollLeft(current_scroll + container_width);
-          loading = false;
+          setLoading(false);
         })
       }
       if (offset_index > offsets.length - 35 && loading == false) {
-        loading = true;
+        setLoading(true);
         var date = $('.a-single-date').last().data('date'),
           month_url = $('.view-container').data('month-url') + '?date=' + date + '&direction=' + 'future';
         $('.loading-container').load(month_url, function() {
@@ -60,12 +60,32 @@ var ready = function () {
           $('.days-container').append($('.loading-container').html());
           $('.loading-container').html('');
           $('.view-container').scrollLeft(new_scroll - month_width);
-          loading = false;
+          setLoading(false);
         })
       }
 
       return offsets[offset_index];
     };
+
+    $('.mobile-control-btn').click(function() {
+      if (!$(this).hasClass('disabled')) {
+        if ($(this).attr('id') == 'next-week') {
+          sideScroll(7);
+        }
+        if ($(this).attr('id') == 'previous-week') {
+          sideScroll(-7);
+        }
+      }
+    });
+
+    setLoading = function(bool) {
+      loading = bool;
+      if (bool) {
+        $('.mobile-control-btn').addClass('disabled');
+      } else {
+        $('.mobile-control-btn').removeClass('disabled');
+      }
+    }
 
     sideScroll = function(amount, speed) {
       amount = amount || 1;
@@ -100,19 +120,19 @@ var ready = function () {
           scroll_horz = Math.abs(difference_x) >= Math.abs(difference_y);
         if (new Date().getTime() - 1000 < last_touch_time) {
           e.preventDefault();
-          if (scroll_horz) {
+          // if (scroll_horz) {
             if (difference_x > 10) {
               sideScroll(1);
             } else if (difference_x < -10) {
               sideScroll(-1);
             }
-          } else {
-            if (difference_y > 10) {
-              sideScroll(7);
-            } else if (difference_y < -10) {
-              sideScroll(-7);
-            }
-          }
+          // } else {
+          //   if (difference_y > 10) {
+          //     sideScroll(7);
+          //   } else if (difference_y < -10) {
+          //     sideScroll(-7);
+          //   }
+          // }
         }
       });
 
@@ -135,6 +155,13 @@ var ready = function () {
       onSelect: function(dateText, inst) {
         $('.datepicker-placeholder').val(dateText);
         $('.date-placeholder').text(dateText);
+      }
+    });
+  }
+  if ($('.mobile-date-picker').length > 0) {
+    $('.mobile-date-picker').datepicker({
+      onSelect: function(dateText, inst) {
+        window.location.href = window.location.href + "?date=" + dateText.replace(/\//g, '-') ;
       }
     });
   }

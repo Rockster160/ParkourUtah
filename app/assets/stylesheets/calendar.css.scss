@@ -1,26 +1,39 @@
 @import "config/variables";
 @import 'config/font-imports';
 
+$mobile-controls-height: 100px;
+$single-day-height: Calc(100vh - 150px); //150 = mobile controls + navbar
+
 .view-container {
   width: 100vw;
-  height: Calc(100vh - 50px);
+  height: $single-day-height;
+  position: absolute;
+  bottom: 0;
   overflow-x: hidden;
   overflow-y: hidden;
   .days-container {
     min-width: 10000vw;
     position: relative;
     width: auto;
-    max-height: Calc(100vh - 50px);
+    max-height: $single-day-height;
     overflow-y: hidden;
     .a-single-date {
       float: left;
       position: relative;
       width: 100vw;
-      height: Calc(100vh - 50px);
+      height: $single-day-height;
       border: 5px solid red;
       padding: 0;
       margin: 0;
     }
+  }
+}
+
+.mobile-calendar-controls {
+  height: $mobile-controls-height;
+  .center-btn {
+    position: relative;
+    top: 30px;
   }
 }
 
