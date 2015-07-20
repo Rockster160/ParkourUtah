@@ -11,7 +11,7 @@ var ready = function () {
     var loading = false;
 
     getOffsets = function() {
-      var offsets = []
+      var offsets = [];
       $('.days-container').find('.a-single-date').each(function() {
         offsets.push(this.offsetLeft);
       });
@@ -135,17 +135,6 @@ var ready = function () {
           // }
         }
       });
-
-    $('.view-container').scroll(function(e) {
-      $.doTimeout( 'scroll', 40, function() {
-        var x = $('.view-container').width()/2, y = $('.view-container').height()/2, x_offset = document.elementFromPoint(x, y).offsetLeft;
-        if ($('.view-container').scrollLeft() != x_offset) {
-          $('.view-container').animate( {scrollLeft: x_offset}, 100 );
-        } else {
-          $('.view-container').stop();
-        }
-      });
-    });
 
     $('.view-container').scrollLeft($('.date').position().left)
   }
