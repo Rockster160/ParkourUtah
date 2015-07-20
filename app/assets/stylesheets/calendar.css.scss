@@ -39,6 +39,18 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
   }
 }
 
+.mobile-events-container {
+  padding: 10px;
+}
+
+.mobile-event-container {
+  margin: 20px;
+}
+
+.mobile-event {
+  padding: 10px;
+}
+
 .loading-container {
   max-height: 10px;
   width: auto;
