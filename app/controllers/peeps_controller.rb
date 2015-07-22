@@ -216,7 +216,7 @@ class PeepsController < ApplicationController
       redirect_to begin_class_path
     else
       RoccoLogger.add "#{current_user.first_name} tried to add #{@athlete.athlete_id}:#{@athlete.full_name}-#{@athlete.athlete_pin}, but insufficient funds."
-      flash[:alert] = "Sorry, there are not enough credits in your account."
+      flash[:alert] = "Sorry, #{@athlete.full_name} does not have enough credits in their account."
       redirect_to begin_class_path
     end
   end
