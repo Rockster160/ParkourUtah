@@ -150,7 +150,7 @@ class PeepsController < ApplicationController
             RoccoLogger.add "#{current_user.first_name} looked up #{@athlete.athlete_id}:#{@athlete.full_name}-#{@athlete.athlete_pin}."
           else
             RoccoLogger.add "#{current_user.first_name} tried to add #{@athlete.athlete_id}:#{@athlete.full_name}-#{@athlete.athlete_pin}, but insufficient funds."
-            redirect_to :back, alert: "Sorry, there are not enough credits in your account."
+            redirect_to :back, alert: "Sorry, #{@athlete.full_name} does not have enough credits in their account."
           end
         end
       else
