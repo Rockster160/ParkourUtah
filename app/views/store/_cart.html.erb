@@ -20,7 +20,7 @@
       <%= form_tag charge_path do %>
         <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                 data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
-                data-description="Purchase Cart"
+                data-description="All Sales are Final"
                 data-amount=0></script>
       <% end %>
     </div>
@@ -42,7 +42,7 @@
           <%= form_tag charge_path do %>
             <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                     data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
-                    data-description="Purchase Cart"
+                    data-description="All Sales are Final"
                     data-amount=0></script>
           <% end %>
           <div class="orders-placeholder">
