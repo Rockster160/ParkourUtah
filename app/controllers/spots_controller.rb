@@ -1,5 +1,6 @@
 class SpotsController < ApplicationController
   before_action :load_spot, except: [:index, :new, :create]
+  before_action :validate_admin, except: [:index, :show]
 
   def index
     @spots = Spot.all
@@ -42,5 +43,15 @@ class SpotsController < ApplicationController
 
   def load_spot
     @spot = Spot.find(params[:id])
+  end
+
+  def validate_admin
+    unless current_user && current_user.is_admin?
+      if user_signed_in?
+        redirect_to new_user_session_path, alert: "You must be an Admin to view this page."
+      else
+        redirect_to edit_user_registration_path, alert: "You must be an Admin to view this page."
+      end
+    end
   end
 end
