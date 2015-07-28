@@ -22,7 +22,7 @@
 #
 
 # Unused
-
+# city address location_instructions zip state 
 
 class Event < ActiveRecord::Base
 
@@ -57,6 +57,10 @@ class Event < ActiveRecord::Base
   # Event.all.to_a.group_by { |event| event.city }.keys.each_with_index { |city, pos| Event.set_city_color(city, Event.colors.keys[pos]) }
   def self.cities
     Event.all.to_a.group_by { |event| event.city }.keys
+  end
+
+  def recurring?
+    Event.by_token(token).count > 1
   end
 
   def self.by_date(date=DateTime.current)

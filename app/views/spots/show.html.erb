@@ -7,7 +7,9 @@
     <%= @spot.description %>
   </div>
   <div class="">
-    <%= @spot.location %> - <a href="http://maps.google.com/maps?z=15&t=m&q=loc:<%= @spot.lat %>+<%= @spot.lon %>" target="_blank">Click here to open in Google Maps</a>
+    <a href="http://maps.google.com/maps?z=15&t=m&q=loc:<%= spot.lat %>+<%= spot.lon %>" target="_blank"><%= spot.location %><br/>Click here to open in Google Maps</a>
+    <br/>
+    <br/>
   </div>
 
   <div style='width: 400px;' class="gmap" data-lat="<%= @spot.lat %>" data-lng="<%= @spot.lon %>" data-zoom="17">

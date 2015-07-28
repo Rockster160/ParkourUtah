@@ -49,6 +49,11 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
 
 .mobile-event {
   padding: 10px;
+  color: black;
+  text-decoration: none;
+  &:hover, &:active, &:visited, &:enabled, &:focus {
+    text-decoration: none;
+  }
 }
 
 .loading-container {
