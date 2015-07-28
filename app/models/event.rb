@@ -21,6 +21,9 @@
 #  cancelled_text        :boolean          default(FALSE)
 #
 
+# Unused
+
+
 class Event < ActiveRecord::Base
 
   # "#{address}"
@@ -28,6 +31,7 @@ class Event < ActiveRecord::Base
 
   has_many :attendances
   has_many :spot_events
+  accepts_nested_attributes_for :spot_events, allow_destroy: true
   has_many :subscriptions, dependent: :destroy
 
   before_save :format_fields

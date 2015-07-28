@@ -1,29 +1,38 @@
-<h1>Edit Spot</h1>
-<%= form_for [@spot], html: {id: 'gmaps_form'} do |f| %>
-  <div class="row">
-    <%= f.label :title %>
-    <%= f.text_field :title %>
-  </div>
+<div class="central-container form-offset">
+  <h1>Edit Spot</h1>
+  <%= form_for [@spot], html: {id: 'gmaps_form'} do |f| %>
+    <div class="row">
+      <%= f.label :title %><br/>
+      <%= f.text_field :title %>
+    </div>
 
-  <div class="row">
-    <%= f.label :description %>
-    <%= f.text_area :description %>
-  </div>
+    <div class="row">
+      <%= f.label :description %><br/>
+      <%= f.text_area :description %>
+    </div>
 
-  <div class="row">
-    <%= f.label :location, 'Address' %>
-    <%= f.text_field :location, id: 'gmaps_address' %>
-    <input type="button" name="submit" value="Search by Address" id="gmaps_search"/>
-  </div>
+    <div class="row">
+      <%= f.label :location, 'Address' %><br/>
+      <%= f.text_field :location, id: 'gmaps_address' %>
+      <input type="button" name="submit" value="Search by Address" id="gmaps_search"/>
+    </div>
 
-  <%= f.text_field :lon, class: 'hidden', id: 'lon' %>
-  <%= f.text_field :lat, class: 'hidden', id: 'lat' %>
+    <%= f.text_field :lon, class: 'hidden', id: 'lon' %>
+    <%= f.text_field :lat, class: 'hidden', id: 'lat' %>
 
-  <%= f.submit %>
-  <%= link_to 'Delete', spot_path(@spot), method: :delete %>
-<% end %>
+    <div style='width: 400px;' class="gmap" data-lat="<%= @spot.lat %>" data-lng="<%= @spot.lon %>" data-zoom="17">
+      <div id="map" style='width: 400px; height: 400px;'></div>
+      <span class="hidden gmap_coord" data-lat="<%= @spot.lat %>" data-lon="<%= @spot.lon %>"/>
+    </div>
 
-<div style='width: 400px;' class="gmap" data-lat="<%= @spot.lat %>" data-lng="<%= @spot.lon %>" data-zoom="17">
-  <div id="map" style='width: 400px; height: 400px;'></div>
-  <span class="hidden gmap_coord" data-lat="<%= @spot.lat %>" data-lon="<%= @spot.lon %>"/>
+    <div class="row">
+      <%= f.submit %>
+    </div>
+    <br/>
+    <br/>
+    <div class="row">
+      <%= link_to 'Delete', spot_path(@spot), method: :delete %>
+    </div>
+  <% end %>
+
 </div>
