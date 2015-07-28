@@ -1,0 +1,18 @@
+<h1><%= @spot.title %></h1>
+<div class="">
+  <%= @spot.description %>
+</div>
+<div class="">
+  <%= @spot.location %> - <a href="http://maps.google.com/maps?z=15&t=m&q=loc:<%= @spot.lat %>+<%= @spot.lon %>" target="_blank">Click here to open in Google Maps</a>
+</div>
+
+<div style='width: 400px;' class="gmap" data-lat="<%= @spot.lat %>" data-lng="<%= @spot.lon %>" data-zoom="17">
+  <div id="map" style='width: 400px; height: 400px;'></div>
+  <span class="hidden gmap_coord" data-lat="<%= @spot.lat %>" data-lon="<%= @spot.lon %>" data-spot-name="<%= @spot.title %>" data-spot-url="<%= spot_path(@spot) %>"/>
+</div>
+
+<div class="">
+  <% @spot.images.each do |image| %>
+    <%= image_tag image.file %>
+  <% end %>
+</div>

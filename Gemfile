@@ -38,6 +38,9 @@ gem 'recaptcha', require: 'recaptcha/rails'
 gem "dotimeout-rails"
 gem 'kaminari'
 gem 'twitter-typeahead-rails'
+gem 'gmaps4rails'
+gem 'underscore-rails'
+gem 'geocoder'
 
 group :development, :test do
   gem 'byebug'

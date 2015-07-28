@@ -143,13 +143,20 @@ font-size: 1em;
   color: $pkut-grey-white;
   background-color: $pkut-red;
 
-  &:hover, &:active, &:focus {
+  &:hover {
     color: $pkut-grey-light;
     background-color: $pkut-red-dark;
     outline: none;
     text-decoration: none;
     cursor: pointer;
   }
+  &.disabled {
+    color: $pkut-grey-light;
+    background-color: $pkut-red-dark;
+    outline: none;
+    text-decoration: none;
+  }
+  &.low-btn { z-index: 1000; }
 }
 
 .big-btn {

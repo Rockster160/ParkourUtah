@@ -5,6 +5,23 @@
     }
   </style>
 <% end %>
+<div class="mobile-calendar-controls internal-center">
+  <span class="pkut-btn pull-left mobile-control-btn" id="previous-week"><<</span>
+  <span class="pkut-btn center-btn low-btn forceOpen" data-toggle="modal" data-target="#datepicker-modal">Goto</span>
+  <span class="pkut-btn pull-right mobile-control-btn" id="next-week">>></span>
+</div>
+<%= render partial: 'layouts/message', locals: {modal_id: "", title: "", message: ""} %>
+<div class="modal fade" id="datepicker-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="central-container">
+    <div class="error-container modal-date-picker-container center-block">
+      <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
+      <h1 class="pkut-header">Select Date</h1>
+      <span class="mobile-date-picker internal-center"></span>
+    </div>
+  </div>
+</div>
+
+
 
 <div class="view-container" data-month-url="<%= calendar_month_path %>">
   <div class="days-container">

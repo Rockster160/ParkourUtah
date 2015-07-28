@@ -11,7 +11,7 @@ var ready = function () {
     var loading = false;
 
     getOffsets = function() {
-      var offsets = []
+      var offsets = [];
       $('.days-container').find('.a-single-date').each(function() {
         offsets.push(this.offsetLeft);
       });
@@ -33,7 +33,7 @@ var ready = function () {
       offset_index = (offset_index >= offsets.length ? offsets.length - 1 : offset_index);
 
       if (offset_index < 35 && loading == false) {
-        loading = true;
+        setLoading(true);
         var date = $('.a-single-date').first().data('date'),
           width = $('.a-single-date').first().width(),
           month_url = $('.view-container').data('month-url') + '?date=' + date + '&direction=' + 'past';
@@ -45,11 +45,11 @@ var ready = function () {
           $('.loading-container').html('');
           $('.month-container').last().remove();
           $('.view-container').scrollLeft(current_scroll + container_width);
-          loading = false;
+          setLoading(false);
         })
       }
       if (offset_index > offsets.length - 35 && loading == false) {
-        loading = true;
+        setLoading(true);
         var date = $('.a-single-date').last().data('date'),
           month_url = $('.view-container').data('month-url') + '?date=' + date + '&direction=' + 'future';
         $('.loading-container').load(month_url, function() {
@@ -60,22 +60,36 @@ var ready = function () {
           $('.days-container').append($('.loading-container').html());
           $('.loading-container').html('');
           $('.view-container').scrollLeft(new_scroll - month_width);
-          loading = false;
+          setLoading(false);
         })
       }
 
       return offsets[offset_index];
     };
 
-    scrollToCenter = function(speed) {
-      speed = speed || 200
-      var offsets = getOffsets();
-      $('.view-container').animate( {scrollLeft: offsets[Math.floor(offsets.length/2)]}, speed );
+    $('.mobile-control-btn').click(function() {
+      if (!$(this).hasClass('disabled')) {
+        if ($(this).attr('id') == 'next-week') {
+          sideScroll(7);
+        }
+        if ($(this).attr('id') == 'previous-week') {
+          sideScroll(-7);
+        }
+      }
+    });
+
+    setLoading = function(bool) {
+      loading = bool;
+      if (bool) {
+        $('.mobile-control-btn').addClass('disabled');
+      } else {
+        $('.mobile-control-btn').removeClass('disabled');
+      }
     }
 
     sideScroll = function(amount, speed) {
       amount = amount || 1;
-      speed = speed || 100;
+      speed = speed || 200;
 
       $('.view-container').animate( {scrollLeft: getContainerOffset(amount)}, speed );
     }
@@ -106,32 +120,21 @@ var ready = function () {
           scroll_horz = Math.abs(difference_x) >= Math.abs(difference_y);
         if (new Date().getTime() - 1000 < last_touch_time) {
           e.preventDefault();
-          if (scroll_horz) {
+          // if (scroll_horz) {
             if (difference_x > 10) {
               sideScroll(1);
             } else if (difference_x < -10) {
               sideScroll(-1);
             }
-          } else {
-            if (difference_y > 10) {
-              sideScroll(7);
-            } else if (difference_y < -10) {
-              sideScroll(-7);
-            }
-          }
+          // } else {
+          //   if (difference_y > 10) {
+          //     sideScroll(7);
+          //   } else if (difference_y < -10) {
+          //     sideScroll(-7);
+          //   }
+          // }
         }
       });
-
-    $('.view-container').scroll(function(e) {
-      $.doTimeout( 'scroll', 40, function() {
-        var x = $('.view-container').width()/2, y = $('.view-container').height()/2, x_offset = document.elementFromPoint(x, y).offsetLeft;
-        if ($('.view-container').scrollLeft() != x_offset) {
-          $('.view-container').animate( {scrollLeft: x_offset}, 100 );
-        } else {
-          $('.view-container').stop();
-        }
-      });
-    });
 
     $('.view-container').scrollLeft($('.date').position().left)
   }
@@ -141,6 +144,13 @@ var ready = function () {
       onSelect: function(dateText, inst) {
         $('.datepicker-placeholder').val(dateText);
         $('.date-placeholder').text(dateText);
+      }
+    });
+  }
+  if ($('.mobile-date-picker').length > 0) {
+    $('.mobile-date-picker').datepicker({
+      onSelect: function(dateText, inst) {
+        window.location.href = window.location.href.split('?')[0] + "?date=" + dateText.replace(/\//g, '-') ;
       }
     });
   }

@@ -1,0 +1,20 @@
+# == Schema Information
+#
+# Table name: spot_events
+#
+#  id         :integer          not null, primary key
+#  spot_id    :integer
+#  event_id   :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  spot_id: 
+  event_id: 
+
+two:
+  spot_id: 
+  event_id: 
