@@ -21,6 +21,8 @@
                       <% if spot %>
                         <p>Spot: <br/> <%= link_to  "#{spot.title} (Click/tap for more details)", spot_path(spot) %></p>
                         <p><%= spot.location %></p>
+                      <% else %>
+                        <p><%= event.address %></p>
                       <% end %>
                       <p><%= event.date.strftime('%l:%M %p') %></p>
                       <p><%=  %></p>
