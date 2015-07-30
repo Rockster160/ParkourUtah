@@ -9,6 +9,7 @@ var ready = function () {
   if ($('.days-container').length > 0) {
 
     var loading = false;
+    var can_scroll = true;
 
     getOffsets = function() {
       var offsets = [];
@@ -32,35 +33,21 @@ var ready = function () {
       offset_index = (offset_index < 0 ? 0 : offset_index);
       offset_index = (offset_index >= offsets.length ? offsets.length - 1 : offset_index);
 
-      if (offset_index < 35 && loading == false) {
+      if (offset_index < 25 && loading == false) {
         setLoading(true);
         var date = $('.a-single-date').first().data('date'),
           width = $('.a-single-date').first().width(),
           month_url = $('.view-container').data('month-url') + '?date=' + date + '&direction=' + 'past';
         $('.loading-container').load(month_url, function() {
-          var day_count = $('.loading-container').find('.a-single-date').length,
-            container_width = day_count * $(window).width(),
-            current_scroll = $('.view-container').scrollLeft();
-          $('.days-container').prepend($('.loading-container').html());
-          $('.loading-container').html('');
-          $('.month-container').last().remove();
-          $('.view-container').scrollLeft(current_scroll + container_width);
-          setLoading(false);
+          loadWhenReady('before');
         })
       }
-      if (offset_index > offsets.length - 35 && loading == false) {
+      if (offset_index > offsets.length - 25 && loading == false) {
         setLoading(true);
         var date = $('.a-single-date').last().data('date'),
           month_url = $('.view-container').data('month-url') + '?date=' + date + '&direction=' + 'future';
         $('.loading-container').load(month_url, function() {
-          var new_scroll = $('.view-container').scrollLeft(),
-            day_count = $('.month-container').first().children().length,
-            month_width = day_count * $(window).width();
-          $('.month-container').first().remove();
-          $('.days-container').append($('.loading-container').html());
-          $('.loading-container').html('');
-          $('.view-container').scrollLeft(new_scroll - month_width);
-          setLoading(false);
+          loadWhenReady('after');
         })
       }
 
@@ -78,11 +65,43 @@ var ready = function () {
       }
     });
 
+    loadWhenReady = function(str) {
+      if (can_scroll) {
+        can_scroll = false
+        if (str == 'before') {
+          var day_count = $('.loading-container').find('.a-single-date').length,
+            container_width = day_count * $(window).width(),
+            current_scroll = $('.view-container').scrollLeft();
+          console.log('before');
+          $('.days-container').prepend($('.loading-container').html());
+          $('.month-container').last().remove();
+          $('.view-container').scrollLeft(current_scroll + container_width);
+        } else {
+          var day_count = $('.month-container').first().children().length,
+            month_width = day_count * $(window).width(),
+            new_scroll = $('.view-container').scrollLeft();
+          console.log('after');
+          $('.month-container').first().remove();
+          $('.days-container').append($('.loading-container').html());
+          $('.view-container').scrollLeft(new_scroll - month_width);
+        }
+        can_scroll = true;
+        $('.loading-container').html('');
+        setLoading(false);
+      } else {
+        setTimeout(loadWhenReady, 50);
+      }
+    }
+
     setLoading = function(bool) {
       loading = bool;
       if (bool) {
+        $('.mobile-control-btn').html('...');
         $('.mobile-control-btn').addClass('disabled');
       } else {
+        $('.mobile-control-btn').each(function() {
+          $(this).html($(this).data('placeholder'));
+        });
         $('.mobile-control-btn').removeClass('disabled');
       }
     }
@@ -91,7 +110,12 @@ var ready = function () {
       amount = amount || 1;
       speed = speed || 200;
 
-      $('.view-container').animate( {scrollLeft: getContainerOffset(amount)}, speed );
+      if (can_scroll) {
+        can_scroll = false;
+        $('.view-container').animate( {scrollLeft: getContainerOffset(amount)}, speed, function() {
+          can_scroll = true;
+        } );
+      }
     }
 
     var last_touch_x = 0;
