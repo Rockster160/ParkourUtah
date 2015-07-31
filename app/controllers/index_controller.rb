@@ -71,7 +71,7 @@ class IndexController < ApplicationController
       success = true
     end
     if params[:phone].length > 6
-      ::SmsMailerWorker.perform_async('3852599640', "#{params[:phone]} requested help. #{success ? 'Succeeded.' : 'Failed.'}\n #{params[:name]}\n#{params[:email]}\n#{params[:comment]}")
+      ::SmsMailerWorker.perform_async('3852599640', "UserAgent: #{request.env['HTTP_USER_AGENT']}\n#{params[:phone]} requested help. #{success ? 'Succeeded.' : 'Failed.'}\n #{params[:name]}\n#{params[:email]}\n#{params[:comment]}")
     end
     redirect_to root_path
   end
