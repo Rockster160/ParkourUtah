@@ -2,6 +2,7 @@
   <h3>Contact Us</h3>
   Let us know if you have any questions about classes, private lessons, what it is we do, etc...
   <%= form_tag "/contact" do %>
+    <%= hidden_field_tag :enabled, false, class: 'enabled-field' %>
     <%= text_field_tag :name, '', class: 'pkut-textbox', placeholder: 'Your Name' %><br/>
     <%= text_field_tag :email, '', class: 'pkut-textbox', placeholder: 'Email' %><br/>
     <%= telephone_field_tag :phone, '', class: 'pkut-textbox formatPhoneNumber customRequired', placeholder: 'Phone' %> (Required)<br/>

@@ -33,6 +33,7 @@ var ready = function() {
       e.preventDefault;
       return false
     }
+    $(form).find('.enabled-field').val(true);
   })
 
   $('.formatPin, .formatDOB, .formatPhoneNumber').keypress(function(e) {
