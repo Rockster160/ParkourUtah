@@ -1,7 +1,0 @@
-<% @months.each do |days| %>
-  <div class="month-container month-<%= days.first.month %>">
-    <% days.each do |day| %>
-      <%= render partial: 'day', locals: {day: day, date: @date} %>
-    <% end %>
-  </div>
-<% end %>

@@ -1,7 +1,7 @@
 @import "config/variables";
 @import 'config/font-imports';
 
-.navbar-offset { height: 51px; }
+.navbar-offset { height: $navbar-height; }
 
 .navbar {
   transition: 1s;

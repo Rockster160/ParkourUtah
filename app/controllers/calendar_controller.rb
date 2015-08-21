@@ -25,6 +25,21 @@ class CalendarController < ApplicationController
     end
   end
 
+  def get_week
+    @date = params[:date].to_date || DateTime.current
+
+    if params[:direction] == 'past'
+      @date -= 1.week
+    elsif params[:direction] == 'future'
+      @date += 1.week
+    end
+    @week = (@date.beginning_of_week(:sunday)..@date.end_of_week(:sunday))
+
+    respond_to do |format|
+      format.js { render partial: 'week'}
+    end
+  end
+
   def get_month
     @date = params[:date].to_date || DateTime.current
 
@@ -60,11 +75,7 @@ class CalendarController < ApplicationController
   end
 
   def mobile
-    amount = 1
-    @date = getDate(params[:date]) || DateTime.current
-    @months = (-amount..amount).map do |offset|
-      month = @date + offset.months
-      (month.beginning_of_month..month.end_of_month)
-    end
+    @date = parse_date(params[:date]) || DateTime.current
+    @week = (@date.beginning_of_week(:sunday)..@date.end_of_week(:sunday))
   end
 end
