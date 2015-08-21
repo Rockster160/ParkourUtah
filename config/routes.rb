@@ -66,6 +66,9 @@ Rails.application.routes.draw do
   post 'delete_athlete/:athlete_id' => 'dependents#delete_athlete'
 
   devise_for :users, :controllers => {:registrations => "users/registrations"}
+  devise_scope :user do
+    get "/account" => "users/registrations#edit"
+  end
   post 'user/notifications/update' => 'index#update_notifications'
 
   get 'calendar/index' => 'calendar#index', as: 'calendar'
