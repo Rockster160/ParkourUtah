@@ -1,6 +1,8 @@
 @import "config/variables";
 @import 'config/font-imports';
 
+.modal { z-index: 10000; }
+
 .error-container {
   margin-top: 20%;
   width: 380px;
