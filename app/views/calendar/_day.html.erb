@@ -6,7 +6,9 @@
   <div class="mobile-events-container">
     <% Event.by_date(day).each do |event| %>
       <div class="mobile-event-container">
-        <%= link_to event.class_name.capitalize, show_event_path(event), class: "mobile-event event-color color-#{Event.color_of(event.city)}" %>
+        <span href="<%= show_event_path(event) %>" class="day-btn mobile-event event-color color-<%= Event.color_of(event.city) %>">
+          <%= event.class_name.capitalize %>
+        </span>
       </div>
     <% end %>
   </div>

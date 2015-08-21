@@ -118,10 +118,16 @@ var ready = function () {
       }
     }
 
-    var last_touch_x = 0;
-    var last_touch_y = 0;
-    var last_touch_time = 0;
+    var last_touch_x = 0, last_touch_y = 0, last_touch_time = 0, clicked = '';
     $('.view-container')
+      .on('touchstart mousedown', '.day-btn', function(e) {
+        clicked = this;
+      })
+      .on('touchend mouseup', '.day-btn', function(e) {
+        if (this == clicked) {
+          window.location.pathname = $(this).attr('href');
+        }
+      })
       .on('touchstart mousedown', '.a-single-date', function(e) {
         last_touch_x = e.pageX || e.originalEvent.changedTouches[0].pageX;
         last_touch_y = e.pageY || e.originalEvent.changedTouches[0].pageY;
@@ -214,6 +220,7 @@ var ready = function () {
   loadJS();
   update();
 };
+
 
 
 loadJS = function() {
