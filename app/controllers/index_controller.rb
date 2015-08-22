@@ -64,6 +64,7 @@ class IndexController < ApplicationController
       if ["Open.", "Close."].include?(params["Body"].split.join)
         Automator.activate!
       else
+      end
     else
       num = params["phone"].split('').map {|x| x[/\d+/]}.join
       ::SmsMailerWorker.perform_async(num, "This is an automated text messaging system. \nIf you have questions about class, please contact the Instructor. Their contact information is available in the class details. \nIf you would like to stop receiving Notifications, please disable text notifications in your Account Settings on parkourutah.com/account")
