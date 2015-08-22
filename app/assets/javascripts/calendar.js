@@ -10,10 +10,10 @@ var ready = function () {
     is_loading = true, load_period = 'next', can_update = true, scroll_timer = 0;
 
     setTimeout(function() {
-      $('body').animate({scrollTop: $('.chosen-day').offset().top - 120}, 500, 'swing', function() {
+      $('body').animate({scrollTop: $('.chosen-day').offset().top - 120}, 0, 'swing', function() {
         is_loading = false;
       })
-    }, 1000)
+    }, 100)
 
     $(window).scroll(function() {
       can_update = false;
@@ -62,9 +62,12 @@ var ready = function () {
     loadWhenReady = function() {
       if (can_update) {
         if (load_period == 'previous') {
-          var new_scroll = $('.day-container').first();
+          var old_height = $('body').height();
           $('.weeks-container').prepend($('.loading-container').html());
-          $('body').scrollTop(new_scroll.offset().top - 110);
+          var new_height = $('body').height(),
+              scroll_offset = new_height - old_height,
+              current_scroll = $('body').scrollTop();
+          $('body').scrollTop(current_scroll + scroll_offset);
           var days_count = $('.day-container').length;
           while (days_count > 70) {
             $('.day-container').last().remove();
@@ -74,7 +77,9 @@ var ready = function () {
           $('.weeks-container').append($('.loading-container').html());
           var days_count = $('.day-container').length;
           while (days_count > 70) {
-            var day_to_remove = $('.day-container').first(), unscroll = day_to_remove.height(), current_scroll = $('body').scrollTop();
+            var day_to_remove = $('.day-container').first(),
+                unscroll = day_to_remove.height(),
+                current_scroll = $('body').scrollTop();
             $('body').scrollTop(current_scroll - unscroll);
             day_to_remove.remove();
             days_count = $('.day-container').length;
