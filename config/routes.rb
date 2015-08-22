@@ -75,6 +75,7 @@ Rails.application.routes.draw do
   get 'calendar/draw' => 'calendar#draw', as: 'calendar_draw'
   get 'calendar/mobile' => 'calendar#mobile', as: 'calendar_mobile'
   get 'calendar/mobile/day' => 'calendar#get_day', as: 'calendar_day'
+  get 'calendar/mobile/week' => 'calendar#get_week', as: 'calendar_week'
   get 'calendar/mobile/month' => 'calendar#get_month', as: 'calendar_month'
   get 'schedule/:location' => 'calendar#show', as: 'calendar_show'
 
