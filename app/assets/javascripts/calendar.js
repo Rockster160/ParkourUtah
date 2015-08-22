@@ -6,48 +6,69 @@ var ready = function () {
     return check;
   };
 
-  if ($('.days-container').length > 0) {
-    is_loading = false, load_period = 'next', can_update = true, scroll_timer = 0;
+  if ($('.view-container').length > 0) {
+    is_loading = true, load_period = 'next', can_update = true, scroll_timer = 0;
+
+    setTimeout(function() {
+      $('body').animate({scrollTop: $('.chosen-day').offset().top - 120}, 500, 'swing', function() {
+        is_loading = false;
+      })
+    }, 1000)
 
     $(window).scroll(function() {
       can_update = false;
       if (scroll_timer) { clearTimeout(scroll_timer) };
-      scroll_timer = setTimeout(function() {can_update = true}, 50);
+      scroll_timer = setTimeout(function() {can_update = true}, 100);
       if (is_loading == false) {
-        if (isScrolledIntoView($('.load-previous'))) {
-          load_period = 'previous'
-        } else if (isScrolledIntoView($('.load-next'))) {
-          load_period = 'next'
+        if (isScrolledIntoView($('.load-next'))) {
+          load_period = 'next';
+          loadWeek();
+        } else if (isScrolledIntoView($('.load-previous'))) {
+          load_period = 'previous';
+          loadWeek();
         }
-        loadWeek();
       }
     });
 
     loadWeek = function(period) {
-      is_loading = true;
-      // grab url based on load_period
-      $('.loading-container').load(url, function() {
-        loadWhenReady();
-      })
+      if (is_loading == false) {
+        is_loading = true;
+
+        if (load_period == 'previous') {
+          var date = $('.day-container').first().data('date');
+        } else {
+          var date = $('.day-container').last().data('date');
+        }
+
+        var week_url = $('.view-container').data('week-url') + '?date=' + date + '&direction=' + load_period;
+        $('.loading-container').load(week_url, function() {
+          loadWhenReady();
+        })
+      }
     }
 
     loadWhenReady = function() {
       if (can_update) {
         if (load_period == 'previous') {
-          var new_scroll = $('.view-container').scrollTop();
-          console.log('after');
-          $('.days-container').append($('.loading-container').html());
-          $('.view-container').scrollLeft(new_scroll - month_width);
+          var new_scroll = $('.day-container').first();
+          $('.weeks-container').prepend($('.loading-container').html());
+          $('body').scrollTop(new_scroll.offset().top - 110);
+          var days_count = $('.day-container').length;
+          while (days_count > 70) {
+            $('.day-container').last().remove();
+            days_count = $('.day-container').length;
+          }
         } else {
-          var day_count = $('.loading-container').find('.a-single-date').length,
-            container_width = day_count * $(window).width(),
-            current_scroll = $('.view-container').scrollLeft();
-          console.log('before');
-          $('.days-container').prepend($('.loading-container').html());
-          $('.month-container').last().remove();
-          $('.view-container').scrollLeft(current_scroll + container_width);
+          $('.weeks-container').append($('.loading-container').html());
+          var days_count = $('.day-container').length;
+          while (days_count > 70) {
+            var day_to_remove = $('.day-container').first(), unscroll = day_to_remove.height(), current_scroll = $('body').scrollTop();
+            $('body').scrollTop(current_scroll - unscroll);
+            day_to_remove.remove();
+            days_count = $('.day-container').length;
+          }
         }
-        is_loading = true;
+        is_loading = false;
         $('.loading-container').html('');
       } else {
         setTimeout(loadWhenReady, 50);

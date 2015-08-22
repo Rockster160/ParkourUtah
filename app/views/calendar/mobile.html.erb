@@ -1,7 +1,5 @@
 <div class="mobile-calendar-controls internal-center">
-  <span class="pkut-btn pull-left mobile-control-btn" data-placeholder="<<" id="previous-week"><<</span>
   <span class="pkut-btn center-btn low-btn forceOpen" data-toggle="modal" data-target="#datepicker-modal">Goto</span>
-  <span class="pkut-btn pull-right mobile-control-btn" data-placeholder=">>" id="next-week">>></span>
 </div>
 <div class="modal fade" id="datepicker-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="central-container">
@@ -15,9 +13,9 @@
 
 
 
-<div class="view-container" data-week-url="<%= calendar_month_path %>">
+<div class="view-container" data-week-url="<%= calendar_week_path %>">
   <div class="load-previous"></div>
-  <div class="days-container">
+  <div class="weeks-container">
     <%= render partial: 'week', locals: {week: @week, date: @date} %>
   </div>
   <div class="load-next"></div>

@@ -5,11 +5,25 @@ $mobile-controls-height: 50px;
 $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
 
 
-.load-next, .load-previous {
-  height: 50px;
-  width: 100%;
-  background: green;
+.view-container {
+  .load-next, .load-previous {
+    height: 50px;
+    width: 100%;
+    background: green;
+  }
+  .week-container {
+    .day-container {
+      .mobile-events-container {
+        .mobile-event-container {
+          height: 300px;
+          .mobile-event {
+          }
+        }
+      }
+    }
+  }
 }
+
 
 .mobile-calendar-controls {
   height: $navbar-height;
@@ -21,6 +35,8 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
     top: 25px;
   }
 }
+
+
 
 .calendar-container {
   background: white;

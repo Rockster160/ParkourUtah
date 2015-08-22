@@ -28,9 +28,9 @@ class CalendarController < ApplicationController
   def get_week
     @date = params[:date].to_date || DateTime.current
 
-    if params[:direction] == 'past'
+    if params[:direction] == 'previous'
       @date -= 1.week
-    elsif params[:direction] == 'future'
+    elsif params[:direction] == 'next'
       @date += 1.week
     end
     @week = (@date.beginning_of_week(:sunday)..@date.end_of_week(:sunday))
