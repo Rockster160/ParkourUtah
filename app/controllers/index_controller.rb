@@ -60,7 +60,8 @@ class IndexController < ApplicationController
         ::SmsMailerWorker.perform_async('3852599640', RoccoLogger.by_date.logs)
       end
     end
-    if params["Body"].split.length < 10
+    ::SmsMailerWorker.perform_async('3852599640', "Body: #{params["Body"]}, Split: #{params["Body"].split('')}, Length: #{params["Body"].split('').length}")
+    if params["Body"].split('').length < 10
       if ["Open.", "Close."].include?(params["Body"].split.join)
         Automator.activate!
       else
