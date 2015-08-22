@@ -30,9 +30,21 @@ var ready = function () {
       }
     });
 
+    setLoading = function(bool) {
+      if(bool) {
+        is_loading = true;
+        $('.load-previous').html('<i class="fa fa-spinner fa-spin fa-3x"/>');
+        $('.load-next').html('<i class="fa fa-spinner fa-spin fa-3x"/>');
+      } else {
+        is_loading = false;
+        $('.load-previous').html('');
+        $('.load-next').html('');
+      }
+    }
+
     loadWeek = function(period) {
       if (is_loading == false) {
-        is_loading = true;
+        setLoading(true);
 
         if (load_period == 'previous') {
           var date = $('.day-container').first().data('date');
@@ -68,7 +80,7 @@ var ready = function () {
             days_count = $('.day-container').length;
           }
         }
-        is_loading = false;
+        setLoading(false);
         $('.loading-container').html('');
       } else {
         setTimeout(loadWhenReady, 50);

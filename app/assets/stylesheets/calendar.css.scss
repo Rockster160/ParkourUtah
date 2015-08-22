@@ -7,9 +7,11 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
 
 .view-container {
   .load-next, .load-previous {
-    height: 50px;
+    height: 150px;
     width: 100%;
-    background: green;
+    line-height: 150px;
+    background: $pkut-grey-light;
+    text-align: center;
   }
   .week-container {
     .day-container {
