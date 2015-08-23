@@ -47,20 +47,16 @@ class IndexController < ApplicationController
     ::SmsMailerWorker.perform_async('3852599640', "From: #{params["From"]}\nMessage: #{params["Body"]}")
 
     if params["Body"].split('').length < 10
-      ::SmsMailerWorker.perform_async('3852599640', 'Body short')
-      ::SmsMailerWorker.perform_async('3852599640', "Body #{params["Body"].split('').length}")
       if ["Open.", "Close."].include?(params["Body"].split.join)
         Automator.activate!
       else
       end
     else
-      ::SmsMailerWorker.perform_async('3852599640', "Body long")
-      ::SmsMailerWorker.perform_async('3852599640', "#{num}")
-      num = params["phone"].split('').map {|x| x[/\d+/]}.join
+      num = params["From"].split('').map {|x| x[/\d+/]}.join
       ::SmsMailerWorker.perform_async('3852599640', "To: #{num}\nThis is an automated text messaging system. \nIf you have questions about class, please contact the Instructor. Their contact information is available in the class details. \nIf you would like to stop receiving Notifications, please disable text notifications in your Account Settings on parkourutah.com/account")
       ::SmsMailerWorker.perform_async(num, "This is an automated text messaging system. \nIf you have questions about class, please contact the Instructor. Their contact information is available in the class details. \nIf you would like to stop receiving Notifications, please disable text notifications in your Account Settings on parkourutah.com/account")
     end
-    
+
     if params["From"] == "+13852599640"
       if params["Body"] == 'pass'
         contact_request = ContactRequest.select { |cr| cr.success == false }.last
