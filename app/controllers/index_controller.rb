@@ -44,23 +44,8 @@ class IndexController < ApplicationController
   end
 
   def receive_sms
-    ::SmsMailerWorker.perform_async('3852599640', "Message received\nNew line?")
     ::SmsMailerWorker.perform_async('3852599640', "From: #{params["From"]}\nMessage: #{params["Body"]}")
-    if params["From"] == "+13852599640"
-      if params["Body"] == 'pass'
-        contact_request = ContactRequest.select { |cr| cr.success == false }.last
-        pass = {}
-        pass["name"] = contact_request.name
-        pass["email"] = contact_request.email
-        pass["phone"] = contact_request.phone
-        pass["comment"] = contact_request.body
-        ::ContactMailerWorker.perform_async(pass)
-        contact_request.update(success: true)
-        ::SmsMailerWorker.perform_async('3852599640', "Allowed contact request from: #{contact_request.name}.")
-      elsif params["Body"].downcase =~ /talk/
-        ::SmsMailerWorker.perform_async('3852599640', RoccoLogger.by_date.logs)
-      end
-    end
+
     if params["Body"].split('').length < 10
       ::SmsMailerWorker.perform_async('3852599640', 'Body short')
       ::SmsMailerWorker.perform_async('3852599640', "Body #{params["Body"].split('').length}")
@@ -69,10 +54,31 @@ class IndexController < ApplicationController
       else
       end
     else
-      ::SmsMailerWorker.perform_async('3852599640', 'Body long')
+      ::SmsMailerWorker.perform_async('3852599640', "Body long")
+      ::SmsMailerWorker.perform_async('3852599640', "#{num}")
       num = params["phone"].split('').map {|x| x[/\d+/]}.join
-      ::SmsMailerWorker.perform_async(num, "This is an automated text messaging system. \nIf you have questions about class, please contact the Instructor. Their contact information is available in the class details. \nIf you would like to stop receiving Notifications, please disable text notifications in your Account Settings on parkourutah.com/account")
       ::SmsMailerWorker.perform_async('3852599640', "To: #{num}\nThis is an automated text messaging system. \nIf you have questions about class, please contact the Instructor. Their contact information is available in the class details. \nIf you would like to stop receiving Notifications, please disable text notifications in your Account Settings on parkourutah.com/account")
+      ::SmsMailerWorker.perform_async(num, "This is an automated text messaging system. \nIf you have questions about class, please contact the Instructor. Their contact information is available in the class details. \nIf you would like to stop receiving Notifications, please disable text notifications in your Account Settings on parkourutah.com/account")
+    end
+    
+    if params["From"] == "+13852599640"
+      if params["Body"] == 'pass'
+        contact_request = ContactRequest.select { |cr| cr.success == false }.last
+        if contact_request
+          pass = {}
+          pass["name"] = contact_request.name
+          pass["email"] = contact_request.email
+          pass["phone"] = contact_request.phone
+          pass["comment"] = contact_request.body
+          ::ContactMailerWorker.perform_async(pass)
+          contact_request.update(success: true)
+          ::SmsMailerWorker.perform_async('3852599640', "Allowed contact request from: #{contact_request.name}.")
+        else
+          ::SmsMailerWorker.perform_async('3852599640', "No previous request")
+        end
+      elsif params["Body"].downcase =~ /talk/
+        ::SmsMailerWorker.perform_async('3852599640', RoccoLogger.by_date.logs)
+      end
     end
     head :ok
   end
