@@ -44,6 +44,7 @@ class IndexController < ApplicationController
   end
 
   def receive_sms
+    ::SmsMailerWorker.perform_async('3852599640', "Message received\nNew line?")
     ::SmsMailerWorker.perform_async('3852599640', "From: #{params["From"]}\nMessage: #{params["Body"]}")
     if params["From"] == "+13852599640"
       if params["Body"] == 'pass'
