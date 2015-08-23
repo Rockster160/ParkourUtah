@@ -6,6 +6,10 @@ var ready = function() {
     return check;
   };
 
+  if (window.location.hash == '#notifications') {
+    $('#notification_modal').modal('show');
+  }
+
   function inViewport($ele) {
     var lBound = $(window).scrollTop(),
         uBound = lBound + $(window).height(),
