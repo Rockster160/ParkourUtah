@@ -60,13 +60,15 @@ class IndexController < ApplicationController
         ::SmsMailerWorker.perform_async('3852599640', RoccoLogger.by_date.logs)
       end
     end
-    ::SmsMailerWorker.perform_async('3852599640', "Body: #{params["Body"]}, Split: #{params["Body"].split('')}, Length: #{params["Body"].split('').length}")
     if params["Body"].split('').length < 10
+      ::SmsMailerWorker.perform_async('3852599640', 'Body short')
+      ::SmsMailerWorker.perform_async('3852599640', "Body #{params["Body"].split('').length}")
       if ["Open.", "Close."].include?(params["Body"].split.join)
         Automator.activate!
       else
       end
     else
+      ::SmsMailerWorker.perform_async('3852599640', 'Body long')
       num = params["phone"].split('').map {|x| x[/\d+/]}.join
       ::SmsMailerWorker.perform_async(num, "This is an automated text messaging system. \nIf you have questions about class, please contact the Instructor. Their contact information is available in the class details. \nIf you would like to stop receiving Notifications, please disable text notifications in your Account Settings on parkourutah.com/account")
       ::SmsMailerWorker.perform_async('3852599640', "To: #{num}\nThis is an automated text messaging system. \nIf you have questions about class, please contact the Instructor. Their contact information is available in the class details. \nIf you would like to stop receiving Notifications, please disable text notifications in your Account Settings on parkourutah.com/account")
