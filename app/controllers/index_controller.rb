@@ -56,7 +56,7 @@ class IndexController < ApplicationController
         ::ContactMailerWorker.perform_async(pass)
         contact_request.update(success: true)
         ::SmsMailerWorker.perform_async('3852599640', "Allowed contact request from: #{contact_request.name}.")
-      else
+      elsif params["Body"].downcase =~ /talk/
         ::SmsMailerWorker.perform_async('3852599640', RoccoLogger.by_date.logs)
       end
     end
