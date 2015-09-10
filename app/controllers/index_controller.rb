@@ -59,7 +59,7 @@ class IndexController < ApplicationController
 
     if params["From"] == "+13852599640"
       if params["Body"] == 'pass'
-        contact_request = ContactRequest.select { |cr| cr.success == false }.last
+        contact_request = ContactRequest.select { |cr| cr.success == false }.sort_by(&:created_at).last
         if contact_request
           pass = {}
           pass["name"] = contact_request.name
