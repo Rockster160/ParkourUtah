@@ -9,6 +9,11 @@ var ready = function() {
     sendUpdatedAmount($(this).attr('id'), 0);
   });
 
+  $('.cart-container').delegate('.delete-all-transactions', 'click', function() {
+    $.post('/cart/update', {delete_all: true});
+    return false;
+  });
+
   $('.cart-container').delegate('.shopping-cart-line-item-quantity-input', 'focusout', function() {
     if ($(this).val() != amount_holder) {
       sendUpdatedAmount($(this).attr('id'), $(this).val());

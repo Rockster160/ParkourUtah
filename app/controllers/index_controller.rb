@@ -46,7 +46,7 @@ class IndexController < ApplicationController
   def receive_sms
     ::SmsMailerWorker.perform_async('3852599640', "From: #{params["From"]}\nMessage: #{params["Body"]}")
 
-    if params["Body"].split('').length < 10
+    if params["Body"].split('').length < 10 && params["Body"].downcase[0..3] != 'pass'
       if ["Open.", "Close."].include?(params["Body"].split.join)
         Automator.activate!
       else

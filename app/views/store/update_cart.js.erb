@@ -5,6 +5,10 @@ $('.shopping-cart-taxes-holder').html('<%= j number_to_currency(@cart.taxes_in_d
 $('.shopping-cart-shipping-holder').html('<%= j number_to_currency(@cart.shipping_in_dollars) %>');
 $('.shopping-cart-total-holder').html('<%= j number_to_currency(@cart.total_in_dollars) %>');
 $('.stripe-button').attr('data-amount', '<%= j number_to_currency(@cart.total) %>');
+
+$('.shopping-cart-line-item-quantity-input').each(function() {
+  $(this).val(0);
+})
 <% @cart.transactions.each do |order| %>
   var amount = "<%= order.amount %>";
   $('.value-selector-<%= order.order_name.parameterize %>').val(amount);
@@ -12,9 +16,11 @@ $('.stripe-button').attr('data-amount', '<%= j number_to_currency(@cart.total) %
 $('.shopping-cart-line-item-quantity-input').each(function(){
   var $container = $(this).parents('.shopping-cart-cell');
   if ($(this).val() == "0" || $(this).val() == "" || $(this).val() == 0) {
-    $container.slideUp(500, function() { $(this).remove() });
+    $container.remove();
+    $(this).remove();
   }
 });
+
 <% if @order %>
   $('.orders-placeholder').append('<div class="hidden-holder"><%= j render partial: "shopping_cart_item", locals: {order: @order} %></div>');
 <% end %>

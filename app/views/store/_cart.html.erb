@@ -7,6 +7,7 @@
         <% end %>
       </div>
       <br/>
+      <%= link_to 'Clear Cart', '', class: 'delete-all-transactions' %>
       <br/>
       <span class="shopping-cart-total">Sub total: <span class="shopping-cart-price-holder pull-right"><%= number_to_currency(@cart.price_in_dollars) %></span></span><br/>
       <span class="shopping-cart-total">Taxes: <span class="shopping-cart-taxes-holder pull-right"><%= number_to_currency(@cart.taxes_in_dollars) %></span></span><br/>
@@ -50,7 +51,9 @@
               <%= render partial: 'shopping_cart_item', locals: {order: order} %>
             <% end %>
           </div>
-          <br/><br/>
+          <br/>
+          <%= link_to 'Clear Cart', '', class: 'delete-all-transactions' %>
+          <br/>
           <span class="shopping-cart-total">Sub total: <span class="shopping-cart-price-holder pull-right"><%= number_to_currency(@cart.price_in_dollars) %></span></span><br/>
           <span class="shopping-cart-total">Taxes: <span class="shopping-cart-taxes-holder pull-right"><%= number_to_currency(@cart.taxes_in_dollars) %></span></span><br/>
           <span class="shopping-cart-total">Shipping: <span class="shopping-cart-shipping-holder pull-right"><%= number_to_currency(@cart.shipping_in_dollars) %></span></span><br/>
