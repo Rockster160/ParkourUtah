@@ -118,7 +118,7 @@ class IndexController < ApplicationController
       body: params[:comment],
       success: success
     )
-    if params[:phone].length > 6
+    if params[:phone].split('').map {|x| x[/\d+/]}.join.length >= 7
       ::SmsMailerWorker.perform_async('3852599640', "#{contact_request.success ? '' : "FAILED\n"}UserAgent: #{contact_request.user_agent}\n#{contact_request.phone} requested help.\nSuccess: #{contact_request.success}\nJS Enabled: #{params[:enabled]}\n#{contact_request.name}\n#{contact_request.email}\n#{contact_request.body}")
     end
     redirect_to root_path
