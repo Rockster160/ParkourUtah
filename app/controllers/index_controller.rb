@@ -10,7 +10,7 @@ class IndexController < ApplicationController
     if params[:secret] == "Rocco"
       Automator.deactivate!
       respond_to do |format|
-        format.json { status: :ok }
+        format.json { status :ok }
       end
     end
   end
