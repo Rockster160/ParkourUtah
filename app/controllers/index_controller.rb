@@ -8,10 +8,14 @@ class IndexController < ApplicationController
 
   def give_request
     if params[:secret] == "Rocco"
-      Automator.deactivate!
-      respond_to do |format|
-        format.json { status :ok }
+      if params[:open] == "true"
+        Automator.activate!
+      else
+        Automator.deactivate!
       end
+    end
+    respond_to do |format|
+      format.json { head :no_content }
     end
   end
 
