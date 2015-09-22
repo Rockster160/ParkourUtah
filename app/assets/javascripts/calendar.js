@@ -119,7 +119,7 @@ var ready = function () {
     for (i=0;i<select_city.length;i++) {
       cities.push(select_city[i].id);
     }
-    if (window.location.pathname.indexOf("/schedule") > -1) {
+    if (window.location.pathname.indexOf("/calendar") > -1) {
       $.get('/calendar/draw', {
         classes: classes,
         cities: cities,
