@@ -128,13 +128,6 @@ var ready = function () {
     }
   }
 
-  $('.cities-container').delegate('.calendar-legend', 'click', function() {
-    city = $(this).attr("href");
-    $('.select-dropbox').select2("val", city);
-    $('.show-tooltip').hide();
-    update();
-  });
-
   $('.back-month, .forward-month').click(function(e) {
     e.preventDefault();
     set_date = $(this).attr('href');

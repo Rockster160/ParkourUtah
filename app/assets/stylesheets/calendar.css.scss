@@ -26,6 +26,11 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
   }
 }
 
+.date-holder {
+  white-space: nowrap;
+  position: relative;
+  top: 10px;
+}
 
 .mobile-calendar-controls {
   height: $navbar-height;
@@ -37,8 +42,6 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
     top: 25px;
   }
 }
-
-
 
 .calendar-container {
   background: white;
