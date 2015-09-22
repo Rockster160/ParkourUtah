@@ -22,7 +22,7 @@
 #
 
 # Unused
-# city address location_instructions zip state 
+# city address location_instructions zip state
 
 class Event < ActiveRecord::Base
 
@@ -51,7 +51,9 @@ class Event < ActiveRecord::Base
     :blue,
     :violet,
     :magenta,
-    :rose
+    :rose,
+    :gray,
+    :transparent
   ]
 
   # Event.all.to_a.group_by { |event| event.city }.keys.each_with_index { |city, pos| Event.set_city_color(city, Event.colors.keys[pos]) }
