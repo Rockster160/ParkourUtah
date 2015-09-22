@@ -1,0 +1,19 @@
+<% date ||= @date %>
+<% week ||= @week %>
+<div class="week-container">
+  <% week.each do |day| %>
+    <div class="day-container <%= date.to_date == day.to_date ? 'chosen-day' : '' %>" data-date="<%= day.to_date %>">
+      <h5 class="text-center"><%= day.strftime('%A %B %d, %Y') %></h5>
+      <br/>
+      <div class="mobile-events-container">
+        <% Event.by_date(day).each do |event| %>
+          <div class="mobile-event-container">
+            <span href="<%= show_event_path(event) %>" class="day-btn mobile-event event-color color-<%= Event.color_of(event.city) %>">
+              <%= event.class_name.capitalize %>
+            </span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

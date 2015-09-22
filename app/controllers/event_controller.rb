@@ -83,12 +83,22 @@ class EventController < ApplicationController
       Event.where(token: token).each do |events|
         params[:event][:date] = events.date.change({hour: hour, min: min})
         events.update(event_params)
+        if events.spot_events.first
+          events.spot_events.first.update(spot_id: params[:spot_id]) if params[:spot_id]
+        else
+          events.spot_events.create(spot_id: params[:spot_id]) if params[:spot_id]
+        end
       end
     else
       params[:event][:date] = event.date.change({hour: hour, min: min})
       event.update(event_params)
+      if event.spot_events.first
+        event.spot_events.first.update(spot_id: params[:spot_id]) if params[:spot_id]
+      else
+        event.spot_events.create(spot_id: params[:spot_id]) if params[:spot_id]
+      end
     end
-    redirect_to calendar_show_path("all")
+    redirect_to :back
   end
 
   def destroy

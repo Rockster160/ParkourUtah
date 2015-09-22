@@ -15,22 +15,14 @@
   <% end %>
   <%= form_for @event, url: {action: "update"} do |f| %>
     <h5>Example text:</h5>
-    <%= f.label :title, 'Hope to see you at our {city} {class} class today at {time}!' %><br/>
+    <%= f.label :title, 'Hope to see you at our {class name} class today at {time}!' %><br/>
     <%= f.label :class_name %><br/>
     <%= f.text_field :class_name, placeholder: 'Class', class: 'customRequired pkut-textbox' %><br/>
-    <%= f.label :address %><br/>
-    <%= f.text_field :address, placeholder: 'Full Address', class: 'pkut-textbox' %><br/>
-    <%= f.label :city %><br/>
-    <%= f.text_field :city, placeholder: 'City' , class: 'customRequired pkut-textbox' %><br/>
-    <%= f.label :zip %><br/>
-    <%= f.text_field :zip, placeholder: 'Zip' , class: 'pkut-textbox' %><br/>
-    <%= f.label :state %><br/>
-    <%= f.text_field :state, value: 'Utah' , class: 'pkut-textbox' %><br/>
-    <!-- Searchable -->
+    <%= f.label 'Spot' %><br/>
+    <% old_spot = @event.spot_events.first %>
+    <%= select_tag(:spot_id, options_for_select(Spot.all.collect { |k, v| [k.title, k.id] }, (old_spot ? old_spot.spot.id : 'Select') ), include_blank: 'Select Spot') %> <br />
     <%= f.label :description, 'A description of the event' %><br/>
     <%= f.text_area :description, placeholder: 'Our weekly Draper fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher, Justin Spencer, via text or call 801-580-9274.', class: 'pkut-textarea' %><br/>
-    <%= f.label :location_instructions, "Special instructions for specifically getting to the area. (Not required)" %><br/>
-    <%= f.text_area :location_instructions, placeholder: 'Get off the freeway at Provo Center Street, go straight through the first light, take the left fork, take your next two rights then follow the road to the end.', class: 'pkut-textarea' %><br/>
     <%= f.label :host %><br/>
     <%= f.text_field :host, placeholder: 'Host', class: 'customRequired pkut-textbox' %><br/>
     <%= f.label :cost %><br/>

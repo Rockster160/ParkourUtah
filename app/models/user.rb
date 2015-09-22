@@ -53,7 +53,6 @@
 # Ununsed?
 # first_name
 # last_name
-# phone_number
 # email_subscription
 # date_of_birth
 # drivers_license_number

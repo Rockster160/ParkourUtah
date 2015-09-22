@@ -31,6 +31,10 @@ class Spot < ActiveRecord::Base
   end
 
   def verify_coords
-
   end
+
+  def self.spot_titles
+    all.map { |s| s.title }
+  end
+
 end

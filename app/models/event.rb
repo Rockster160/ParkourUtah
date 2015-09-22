@@ -21,6 +21,9 @@
 #  cancelled_text        :boolean          default(FALSE)
 #
 
+# Unused
+# city address location_instructions zip state 
+
 class Event < ActiveRecord::Base
 
   # "#{address}"
@@ -28,6 +31,7 @@ class Event < ActiveRecord::Base
 
   has_many :attendances
   has_many :spot_events
+  accepts_nested_attributes_for :spot_events, allow_destroy: true
   has_many :subscriptions, dependent: :destroy
 
   before_save :format_fields
@@ -53,6 +57,10 @@ class Event < ActiveRecord::Base
   # Event.all.to_a.group_by { |event| event.city }.keys.each_with_index { |city, pos| Event.set_class_color(city, Event.colors.keys[pos]) }
   def self.cities
     Event.all.to_a.group_by { |event| event.city }.keys
+  end
+
+  def recurring?
+    Event.by_token(token).count > 1
   end
 
   def self.by_date(date=DateTime.current)

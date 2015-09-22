@@ -7,7 +7,7 @@
         <ul>
           <% @events[[date.year, date.month, date.day]].sort_by { |event| event[:date] }.each do |event| %>
             <% if event.class_name == "special" || (@selected_classes.include?(event.class_name) && @selected_cities.include?(event.city))  %>
-              <li class="event-color calendar-event color-<%= event.color %> clickme forceOpen" onclick="" alt="..." data-toggle="moal" data-target="#city<%= event.id %>_modal">
+              <li class="event-color calendar-event color-<%= event.color %> clickme forceOpen" onclick="" alt="..." data-toggle="modal" data-target="#city<%= event.id %>_modal">
                 <span class="hidden-xs">&nbsp;<%= event.class_name.capitalize %></span>
                 <span class="visible-xs"><%= event.class_name.split('').first.capitalize %></span>
               </li>
@@ -17,13 +17,16 @@
                     <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
                     <h3 class="pkut-header"><%= event.class_name.capitalize %></h3>
                     <div class="relative">
-                      <p><%= event.address %></p>
-                      <p><%= event.city %></p>
+                      <% spot = event.spot_events.first.spot if event.spot_events.first %>
+                      <% if spot %>
+                        <p>Spot: <br/> <%= link_to  "#{spot.title} (Click/tap for more details)", spot_path(spot) %></p>
+                        <p><%= spot.location %></p>
+                      <% else %>
+                        <p><%= event.address %></p>
+                      <% end %>
                       <p><%= event.date.strftime('%l:%M %p') %></p>
                       <p><%=  %></p>
                       <p><%= event.description %></p>
-                      <p><%=  %></p>
-                      <p><%= event.location_instructions %></p>
                       <p><%=  %></p>
                       <p>Instructor: <%= event.host %></p>
                       <p>

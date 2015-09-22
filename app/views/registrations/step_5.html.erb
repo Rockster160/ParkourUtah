@@ -11,28 +11,16 @@
   <% end %>
   <p>Check out our calendar to find a class that best fits your schedule. All students attending class for the first time must attend a Beginner's class so that we can make an assessment of skills and abilities. Bring the email you received and plenty of water to class. See you there!!!</p>
 
+  <br/>
   <div class="row">
-    <div class="col-sm-5">
-      <%= image_tag("placeholder_thumbnail.png", class: 'img-responsive') %>
+    <div class="col-sm-4">
+      <%= link_to 'Store', store_path, class: "pkut-btn" %>
     </div>
-    <div class="col-sm-5">
-      <%= image_tag("placeholder_thumbnail2.png", class: 'img-responsive') %>
+    <div class="col-sm-4">
+      <%= link_to 'Profile', edit_user_registration_path, class: "pkut-btn" %>
     </div>
-    <br class="visible-xs"/>
-    <div class="col-sm-2">
-      <div class="col-sm-12 col-xs-4">
-        <%= link_to 'Store', store_path, class: "pkut-btn" %>
-      </div>
-      <br class="hidden-xs"/>
-      <br class="hidden-xs"/>
-      <div class="col-sm-12 col-xs-4">
-        <%= link_to 'Profile', edit_user_registration_path, class: "pkut-btn" %>
-      </div>
-      <br class="hidden-xs"/>
-      <br class="hidden-xs"/>
-      <div class="col-sm-12 col-xs-4">
-        <%= link_to 'Schedule', calendar_show_path("all"), class: "pkut-btn" %>
-      </div>
+    <div class="col-sm-4">
+      <%= link_to 'Schedule', calendar_show_path("all"), class: "pkut-btn" %>
     </div>
   </div>
   <br/>

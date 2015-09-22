@@ -66,18 +66,27 @@ Rails.application.routes.draw do
   post 'delete_athlete/:athlete_id' => 'dependents#delete_athlete'
 
   devise_for :users, :controllers => {:registrations => "users/registrations"}
+  devise_scope :user do
+    get "/account" => "users/registrations#edit"
+  end
   post 'user/notifications/update' => 'index#update_notifications'
 
   get 'calendar/index' => 'calendar#index', as: 'calendar'
   get 'calendar/draw' => 'calendar#draw', as: 'calendar_draw'
   get 'calendar/mobile' => 'calendar#mobile', as: 'calendar_mobile'
   get 'calendar/mobile/day' => 'calendar#get_day', as: 'calendar_day'
+  get 'calendar/mobile/week' => 'calendar#get_week', as: 'calendar_week'
   get 'calendar/mobile/month' => 'calendar#get_month', as: 'calendar_month'
   get 'schedule/:location' => 'calendar#show', as: 'calendar_show'
+
+  get 'events/cities' => 'event#cities', as: 'cities'
+  get 'events/cities/:city' => 'event#city', as: 'city'
+  post 'events/cities/:city/:color' => 'event#color_city', as: 'color_city'
 
   get 'events/new' => 'event#new', as: 'add_event'
   post 'events/create' => 'event#create'
   get 'events/edit/:id' => 'event#edit', as: 'edit_event'
+  get 'events/:id' => 'event#show', as: 'show_event'
   post 'events/edit/:id' => 'event#send_message_to_subscribers', as: 'message_subscribers'
   post 'event/:id/cancel' => 'event#cancel', as: 'cancel_event'
 

@@ -91,34 +91,38 @@ class StoreController < ApplicationController
   end
 
   def update_cart
-    item_title = if params[:item_id]
-      item = LineItem.find(params[:item_id])
-      item.title
+    if params[:delete_all]
+      @cart.transactions.destroy_all
     else
-      params[:item_name]
-    end
-    size = params[:size] ? "#{params[:size]} " : ""
-    color = params[:color] ? "#{params[:color]} " : ""
-    name = "#{size}#{color}#{item_title}"
+      item_title = if params[:item_id]
+        item = LineItem.find(params[:item_id])
+        item.title
+      else
+        params[:item_name]
+      end
+      size = params[:size] ? "#{params[:size]} " : ""
+      color = params[:color] ? "#{params[:color]} " : ""
+      name = "#{size}#{color}#{item_title}"
 
-    orders = @cart.transactions
-    order = orders.where(order_name: name).first
-    if params[:new_amount]
-      params[:new_amount] ||= "0"
-      if params[:new_amount].to_i <= 0
-        order.destroy!
+      orders = @cart.transactions
+      order = orders.where(order_name: name).first
+      if params[:new_amount]
+        params[:new_amount] ||= "0"
+        if params[:new_amount].to_i <= 0
+          order.destroy!
+        else
+          order.update(amount: params[:new_amount])
+        end
       else
-        order.update(amount: params[:new_amount])
+        if order
+          order.increment!(:amount)
+        else
+          order = Transaction.create(item_id: item.id, order_name: name)
+          orders << order
+          @order = order
+        end
+        flash.now[:notice] = "#{order.order_name} successfully added to cart."
       end
-    else
-      if order
-        order.increment!(:amount)
-      else
-        order = Transaction.create(item_id: item.id, order_name: name)
-        orders << order
-        @order = order
-      end
-      flash.now[:notice] = "#{order.order_name} successfully added to cart."
     end
 
     respond_to do |format|

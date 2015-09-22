@@ -8,7 +8,14 @@ class IndexController < ApplicationController
 
   def give_request
     if params[:secret] == "Rocco"
-      Automator.deactivate!
+      if params[:open] == "true"
+        Automator.activate!
+      else
+        Automator.deactivate!
+      end
+    end
+    respond_to do |format|
+      format.json { head :no_content }
     end
   end
 
@@ -45,11 +52,52 @@ class IndexController < ApplicationController
 
   def receive_sms
     ::SmsMailerWorker.perform_async('3852599640', "From: #{params["From"]}\nMessage: #{params["Body"]}")
-    if params["From"] == "+13852599640"
-      ::SmsMailerWorker.perform_async('3852599640', RoccoLogger.by_date.logs)
+
+    if params["Body"].split('').length < 10 && params["Body"].downcase[0..3] != 'pass'
+      if ["Open.", "Close."].include?(params["Body"].split.join)
+        Automator.activate!
+      else
+      end
+    else
+      num = params["From"].split('').map {|x| x[/\d+/]}.join
+      unless params["From"] == "+13852599640"
+        ::SmsMailerWorker.perform_async(num, "This is an automated text messaging system. \nIf you have questions about class, please contact the Instructor. Their contact information is available in the class details. \nIf you would like to stop receiving Notifications, please disable text notifications in your Account Settings on parkourutah.com/account#notifications")
+      end
     end
-    if ["Open.", "Close."].include?(params["Body"].split.join)
-      Automator.activate!
+
+    if params["From"] == "+13852599640"
+      if params["Body"] == 'pass'
+        contact_request = ContactRequest.select { |cr| cr.success == false }.sort_by(&:created_at).last
+        if contact_request
+          pass = {}
+          pass["name"] = contact_request.name
+          pass["email"] = contact_request.email
+          pass["phone"] = contact_request.phone
+          pass["comment"] = contact_request.body
+          ::ContactMailerWorker.perform_async(pass)
+          contact_request.update(success: true)
+          ::SmsMailerWorker.perform_async('3852599640', "Allowed contact request from: #{contact_request.name}.")
+        else
+          ::SmsMailerWorker.perform_async('3852599640', "No previous request")
+        end
+      elsif params["Body"].downcase =~ /talk/
+        ::SmsMailerWorker.perform_async('3852599640', RoccoLogger.by_date.logs)
+      elsif params["Body"].downcase =~ /pass/
+        name = params["Body"].gsub('pass ', '')
+        contact_request = ContactRequest.select { |cr| cr.success == false && cr.name == name }.last
+        if contact_request
+          pass = {}
+          pass["name"] = contact_request.name
+          pass["email"] = contact_request.email
+          pass["phone"] = contact_request.phone
+          pass["comment"] = contact_request.body
+          ::ContactMailerWorker.perform_async(pass)
+          contact_request.update(success: true)
+          ::SmsMailerWorker.perform_async('3852599640', "Allowed contact request from: #{contact_request.name}.")
+        else
+          ::SmsMailerWorker.perform_async('3852599640', "No such request")
+        end
+      end
     end
     head :ok
   end
@@ -70,8 +118,16 @@ class IndexController < ApplicationController
       ::ContactMailerWorker.perform_async(params)
       success = true
     end
-    if params[:phone].length > 6
-      ::SmsMailerWorker.perform_async('3852599640', "#{params[:phone]} requested help. #{success ? 'Succeeded.' : 'Failed.'}\n #{params[:name]}\n#{params[:email]}\n#{params[:comment]}")
+    contact_request = ContactRequest.create(
+      user_agent: request.env['HTTP_USER_AGENT'],
+      phone: params[:phone],
+      name: params[:name],
+      email: params[:email],
+      body: params[:comment],
+      success: success
+    )
+    if params[:phone].split('').map {|x| x[/\d+/]}.join.length >= 7
+      ::SmsMailerWorker.perform_async('3852599640', "#{contact_request.success ? '' : "FAILED\n"}UserAgent: #{contact_request.user_agent}\n#{contact_request.phone} requested help.\nSuccess: #{contact_request.success}\nJS Enabled: #{params[:enabled]}\n#{contact_request.name}\n#{contact_request.email}\n#{contact_request.body}")
     end
     redirect_to root_path
   end
