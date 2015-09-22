@@ -6,6 +6,12 @@
       <%= event.class_name %>
     <% end %>
   <% end %>
+  <br/><br/>
+  <div class="row">
+    <%= link_to edit_colors_path, class: 'pkut-btn' do %>
+      Edit Class Colors
+    <% end %>
+  </div>
   <h2>Cities</h2>
   <br/>
   <% @cities.each do |city| %>

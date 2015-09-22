@@ -56,7 +56,7 @@ class Event < ActiveRecord::Base
     :transparent
   ]
 
-  # Event.all.to_a.group_by { |event| event.city }.keys.each_with_index { |city, pos| Event.set_city_color(city, Event.colors.keys[pos]) }
+  # Event.all.to_a.group_by { |event| event.city }.keys.each_with_index { |city, pos| Event.set_class_color(city, Event.colors.keys[pos]) }
   def self.cities
     Event.all.to_a.group_by { |event| event.city }.keys
   end
@@ -69,11 +69,11 @@ class Event < ActiveRecord::Base
     select { |event| event.date.to_date == date.to_date }
   end
 
-  def self.color_of(city)
-    cities = where(city: city)
-    if cities.any?
-      color = cities.first.color
-      (color.nil? || color.empty?) ? self.set_city_color(city) : color
+  def self.color_of(class_name)
+    classes = where(class_name: class_name)
+    if classes.any?
+      color = classes.first.color
+      (color.nil? || color.empty?) ? self.set_class_color(class_name) : color
     else
       ""
     end
@@ -120,9 +120,9 @@ class Event < ActiveRecord::Base
     self.save
   end
 
-  def self.set_city_color(city, color="rand")
+  def self.set_class_color(class_name, color="rand")
     new_color = color == "rand" ? self.colors.keys.sample : color
-    where(city: city).each do |event|
+    where(class_name: class_name).each do |event|
       event.update(color: new_color)
     end
     new_color

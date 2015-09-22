@@ -79,16 +79,17 @@ Rails.application.routes.draw do
   get 'calendar/mobile/month' => 'calendar#get_month', as: 'calendar_month'
   get 'calendar/:location' => 'calendar#show', as: 'calendar_show'
 
-  get 'events/cities' => 'event#cities', as: 'cities'
-  get 'events/cities/:city' => 'event#city', as: 'city'
-  post 'events/cities/:city/:color' => 'event#color_city', as: 'color_city'
-
   get 'events/new' => 'event#new', as: 'add_event'
   post 'events/create' => 'event#create'
   get 'events/edit/:id' => 'event#edit', as: 'edit_event'
   get 'events/:id' => 'event#show', as: 'show_event'
   post 'events/edit/:id' => 'event#send_message_to_subscribers', as: 'message_subscribers'
   post 'event/:id/cancel' => 'event#cancel', as: 'cancel_event'
+
+  get 'events/cities' => 'event#cities', as: 'cities'
+  get 'events/cities/:city' => 'event#city', as: 'city'
+  get 'events/classes/colors' => 'event#color_classes', as: 'edit_colors'
+  post 'events/classes/:class_name/:color' => 'event#color_class', as: 'color_class'
 
   patch 'events/update/:id' => 'event#update'
   delete 'events/destroy' => 'event#destroy', as: 'destroy_event'

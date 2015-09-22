@@ -161,9 +161,9 @@ class Scheduled < ActiveRecord::Base
     end
   end
 
-  def self.reset_city_colors
-    Event.all.to_a.group_by { |event| event.city }.keys.each_with_index do |city, pos|
-      Event.set_city_color(city, Event.colors.keys[pos])
+  def self.reset_class_colors
+    Event.all.to_a.group_by { |event| event.class_name }.keys.each_with_index do |class_name, pos|
+      Event.set_class_color(class_name, Event.colors.keys[pos])
     end
   end
 
