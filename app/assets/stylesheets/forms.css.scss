@@ -168,7 +168,16 @@ font-size: 1em;
     text-decoration: none;
     max-width: 200px;
   }
+  &.orange-btn-glowing {
+    animation: glowing 1800ms infinite;
+  }
 }
+
+@keyframes glowing {
+  0%, 100% { background-color: orange; }
+  50% { background-color: red; }
+}
+
 
 .main-btn {
   transition: 0.3s;
