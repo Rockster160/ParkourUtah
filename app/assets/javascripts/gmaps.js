@@ -7,6 +7,7 @@ var ready = function() {
     handler.buildMap({
         provider: {
           // pass in other Google Maps API options here
+          mapTypeId: google.maps.MapTypeId.HYBRID // ROADMAP TERRAIN SATELLITE HYBRID
         },
         internal: {
           id: 'map'
