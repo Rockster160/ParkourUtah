@@ -11,7 +11,7 @@
 
   <div class="row internal-center">
     <% if current_user.non_verified_athletes.count > 0 %>
-      <div class="pkut-btn big-btn forceOpen" data-toggle="modal" data-target="#verify_athletes">
+      <div class="pkut-btn big-btn orange-btn-glowing forceOpen" data-toggle="modal" data-target="#verify_athletes">
         Click here to receive 2 trial classes!
       </div>
       <%= render partial: 'dependents/verify_athletes' %>
