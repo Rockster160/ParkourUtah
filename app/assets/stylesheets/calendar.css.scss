@@ -4,7 +4,6 @@
 $mobile-controls-height: 50px;
 $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
 
-
 .view-container {
   .load-next, .load-previous {
     height: 150px;
@@ -130,13 +129,17 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
 }
 
 .calendar-event {
-  margin-left: -40px;
+  border: 1px solid black;
   overflow: hidden;
   list-style-type: none;
   text-decoration: none;
   color: black;
   & a { color: blue; }
   &:hover { cursor: pointer; }
+  .mobile-name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 }
 
 $default: rgb(128, 128, 128);
@@ -216,15 +219,25 @@ $color-rose: rgb(220, 0, 100);
     background: lighten($color-rose, 25%);
     &:hover { background: $color-rose; }
   }
+  &.color-trans {
+    background: transparent;
+    &:hover { background: rgba(0, 0, 0, 0.25); }
+  }
+  &.color-gray {
+    // Defaults
+  }
 }
 
 .day-cell {
   height: 9.52381%; //(((width / 12)*8 columns) / 7 days a week) = 9.523809523809524
 }
 
-.today .date {
-  background: black;
-  color: white;
+.today {
+  background: gray;
+  .date {
+    background: black;
+    color: white;
+  }
 }
 
 .not-month {
@@ -247,16 +260,6 @@ $color-rose: rgb(220, 0, 100);
     height: auto;
     margin-bottom: 5px !important;
     background: transparent;
-  }
-
-  .calendar-event {
-    color: black;
-    width: 24px;
-    height: 24px;
-    margin-bottom: 4px;
-    border-radius: 50%;
-    padding-left: 1px;
-    padding-top: 1px;
   }
 
   .today .date {

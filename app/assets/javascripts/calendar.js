@@ -101,8 +101,8 @@ var ready = function () {
       }
     });
   }
-  if ($('.mobile-date-picker').length > 0) {
-    $('.mobile-date-picker').datepicker({
+  if ($('.calendar-date-picker').length > 0) {
+    $('.calendar-date-picker').datepicker({
       onSelect: function(dateText, inst) {
         window.location.href = window.location.href.split('?')[0] + "?date=" + dateText.replace(/\//g, '-') ;
       }

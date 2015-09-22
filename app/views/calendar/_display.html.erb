@@ -1,5 +1,7 @@
 <div class="row">
-  <div class="col-md-12 calendar-partial">
+  <div class="col-sm-12 calendar-partial">
+    <%= render partial: 'desktop_week', locals: {date: @date, week: @week} %>
+    <% if false %>
     <%= mobile_calendar(@date) do |date| %>
       <div class="row calendar-date-link date"><%= date.day %></div>
       <div class="row">
@@ -10,13 +12,14 @@
               <% if event.class_name == "special" || (@selected_classes.include?(event.class_name) && @selected_cities.include?(event.city))  %>
                 <li class="event-color calendar-event color-<%= event.color %> clickme forceOpen" onclick="" alt="..." data-toggle="modal" data-target="#city<%= event.id %>_modal">
                   <span class="hidden-xs">&nbsp;<%= event.class_name.capitalize %></span>
-                  <span class="visible-xs"><%= event.class_name.split('').first.capitalize %></span>
+                  <span class="visible-xs mobile-name"><%= event.class_name.capitalize %></span>
                 </li>
               <% end %>
             <% end %>
           </ul>
         <% end %>
       </div>
+    <% end %>
     <% end %>
   </div>
 </div>

@@ -6,6 +6,7 @@ class CalendarController < ApplicationController
 
   def show
     @date = params[:date] ? Date.parse(params[:date]) : Date.today
+    @week = (@date.beginning_of_week(:monday)..@date.end_of_week(:sunday))
 
     all_events = Event.all.to_a
     @events = all_events.group_by { |event| [event.date.year, event.date.month, event.date.day] }
