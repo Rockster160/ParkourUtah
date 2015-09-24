@@ -20,5 +20,8 @@
   <% end %>
   <div class="navbar-offset"></div>
   <%= yield %>
+  <% if content_for?(:modals) %>
+    <%= yield(:modals) %>
+  <% end %>
 </body>
 </html>

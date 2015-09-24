@@ -16,6 +16,8 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
   }
 }
 
+.date-controller { margin-top: 10px; margin-bottom: 10px; }
+
 .day-container {
   &.not_month { background: #DDD; }
 }
