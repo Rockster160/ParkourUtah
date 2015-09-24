@@ -84,7 +84,7 @@
       <% @cities.each do |city| %>
         <div class="col-md-3 col-sm-6 col-xs-12">
           <div class="list-group">
-            <%= link_to city, calendar_show_path(city), class: 'list-group-item' %>
+            <%= link_to city, calendar_show_path(city: city.parameterize), class: 'list-group-item' %>
           </div>
         </div>
       <% end %>
