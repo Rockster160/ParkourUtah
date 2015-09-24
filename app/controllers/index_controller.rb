@@ -19,6 +19,11 @@ class IndexController < ApplicationController
     end
   end
 
+  def sms_receivable
+    current_user.notifications.update(sms_receivable: true)
+    SmsMailerWorker.perform_async(current_user.phone_number, 'Thank you! You will once again be able to receive text message notifications from ParkourUtah.')
+  end
+
   def page_not_found
     @protocol = "404"
   end

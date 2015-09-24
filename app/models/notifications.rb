@@ -10,6 +10,7 @@
 #  text_low_credits      :boolean          default(FALSE)
 #  email_waiver_expiring :boolean          default(FALSE)
 #  text_waiver_expiring  :boolean          default(FALSE)
+#  sms_receivable        :boolean
 #
 
 class Notifications < ActiveRecord::Base
@@ -18,11 +19,12 @@ class Notifications < ActiveRecord::Base
 
   def set_defaults
     self.email_class_reminder = true
-    self.text_class_reminder = false
     self.email_low_credits = true
-    self.text_low_credits = false
     self.email_waiver_expiring = true
+    self.text_class_reminder = false
+    self.text_low_credits = false
     self.text_waiver_expiring = false
+    self.sms_receivable = true
     self.save!
   end
 

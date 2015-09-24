@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150820182454) do
+ActiveRecord::Schema.define(version: 20150924232713) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -166,6 +166,7 @@ ActiveRecord::Schema.define(version: 20150820182454) do
     t.boolean "text_low_credits",      default: false
     t.boolean "email_waiver_expiring", default: false
     t.boolean "text_waiver_expiring",  default: false
+    t.boolean "sms_receivable"
   end
 
   add_index "notifications", ["user_id"], name: "index_notifications_on_user_id", using: :btree

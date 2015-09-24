@@ -207,7 +207,7 @@ class PeepsController < ApplicationController
         if @user.notifications.email_low_credits && @athlete.has_unlimited_access? == false
           ::LowCreditsMailerWorker.perform_async(@user.id)
         end
-        if @user.notifications.text_low_credits && @athlete.has_unlimited_access? == false
+        if @user.notifications.text_low_credits && @user.notifications.sms_receivable && @athlete.has_unlimited_access? == false
           ::SmsMailerWorker.perform_async(@user.phone_number, "You are low on Credits! Head up to ParkourUtah.com to get some more so you have some for next time.")
         end
       end

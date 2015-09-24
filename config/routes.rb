@@ -29,6 +29,7 @@ Rails.application.routes.draw do
   get 'contact' => 'index#contact_page', as: 'contact_page'
   post 'update' => 'index#update'
   get 'unsubscribe' => 'index#unsubscribe', as: 'unsubscribe_email'
+  post 'sms_receivable' => 'index#sms_receivable', as: 'make_sms_receivable'
 
   get 'class/:id' => 'peeps#pin_user', as: 'begin_class'
   get 'pin/:id' => 'peeps#show_user'
