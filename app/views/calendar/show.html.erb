@@ -1,33 +1,18 @@
-<%= javascript_tag do %>
-  window.set_date = '<%= @date %>'
-<% end %>
-<% content_for :body do %>
-  <style>
-    html, body { background: black; }
-  </style>
-<% end %>
-
 <% events = [] %>
 <div class="row relative">
   <div class="full-calendar-container">
     <div class="calendar-controls col-md-8 col-md-offset-2 col-xs-12 text-center">
       <select class="select-dropbox class-name-search col-sm-4 col-sm-offset-0 col-xs-6 col-xs-offset-3" multiple="multiple" placeholder="All Events(Default)">
         <% @classes.each do |class_name| %>
-          <option value="<%= class_name %>"><%= class_name.capitalize %></option>
+          <option value="<%= class_name %>"><%= class_name.split('-').map(&:capitalize).join(' ') %></option>
         <% end %>
       </select>
       <span class="date-controller col-sm-4 col-sm-offset-0 col-xs-10 col-xs-offset-1">
-        <%= link_to calendar_draw_path(date: @date - 4.weeks), class: "btn btn-default back-month" do %>
-          <%= icon('chevron-left', '', class: '') %>
-        <% end %>
-        <span class="date-holder"><%= "#{@date.strftime("%B")} #{@date.year}" %></span>
-        <%= link_to calendar_draw_path(date: @date + 4.weeks), class: "btn btn-default forward-month" do %>
-          <%= icon('chevron-right', '', class: '') %>
-        <% end %>
+        <span class="pkut-btn forceOpen" data-toggle="modal" data-target="#datepicker-modal">Goto</span>
       </span>
       <select class="select-dropbox city-name-search col-sm-4 col-sm-offset-0 col-xs-6 col-xs-offset-3" multiple="multiple" placeholder="All Cities(Default)">
         <% @cities.each do |city| %>
-          <option value="<%= city %>"><%= city.capitalize %></option>
+          <option value="<%= city %>"><%= city.split('-').map(&:capitalize).join(' ') %></option>
         <% end %>
       </select>
     </div>
@@ -36,6 +21,7 @@
     </div>
   </div>
 
+<%= render partial: 'datepicker' %>
 
 <% events.each do |event| %>
   <div class="central-container modal-dialog">

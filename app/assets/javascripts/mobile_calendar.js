@@ -1,4 +1,4 @@
-var ready = function () {
+var mobile_calendar = function () {
 
   window.mobilecheck = function() {
     var check = false;
@@ -22,10 +22,10 @@ var ready = function () {
       if (is_loading == false) {
         if (isScrolledIntoView($('.load-next'))) {
           load_period = 'next';
-          loadWeek();
+          loadMobileWeek();
         } else if (isScrolledIntoView($('.load-previous'))) {
           load_period = 'previous';
-          loadWeek();
+          loadMobileWeek();
         }
       }
     });
@@ -42,7 +42,7 @@ var ready = function () {
       }
     }
 
-    loadWeek = function(period) {
+    loadMobileWeek = function(period) {
       if (is_loading == false) {
         setLoading(true);
 
@@ -52,14 +52,14 @@ var ready = function () {
           var date = $('.day-container').last().data('date');
         }
 
-        var week_url = $('.view-container').data('week-url') + '?date=' + date + '&direction=' + load_period;
+        var week_url = $('.view-container').data('week-url') + '?date=' + date + '&direction=' + load_period + '&size=mobile';
         $('.loading-container').load(week_url, function() {
-          loadWhenReady();
+          mobileLoadWhenReady();
         })
       }
     }
 
-    loadWhenReady = function() {
+    mobileLoadWhenReady = function() {
       if (can_update) {
         if (load_period == 'previous') {
           var old_height = $('body').height();
@@ -88,7 +88,7 @@ var ready = function () {
         setLoading(false);
         $('.loading-container').html('');
       } else {
-        setTimeout(loadWhenReady, 50);
+        setTimeout(mobileLoadWhenReady, 50);
       }
     }
   }
@@ -108,34 +108,6 @@ var ready = function () {
       }
     });
   }
-
-  update = function() {
-    var classes = [], cities = [];
-    select_class = $('.class-name-search').select2('data');
-    select_city = $('.city-name-search').select2('data');
-    for (i=0;i<select_class.length;i++) {
-      classes.push(select_class[i].id);
-    }
-    for (i=0;i<select_city.length;i++) {
-      cities.push(select_city[i].id);
-    }
-    if (window.location.pathname.indexOf("/calendar") > -1) {
-      $.get('/calendar/draw', {
-        classes: classes,
-        cities: cities,
-        date: set_date
-      });
-    }
-  }
-
-  $('.back-month, .forward-month').click(function(e) {
-    e.preventDefault();
-    set_date = $(this).attr('href');
-    update();
-  })
-
-  loadJS();
-  update();
 };
 
 function isScrolledIntoView(elem) {
@@ -146,17 +118,6 @@ function isScrolledIntoView(elem) {
   return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
 }
 
-loadJS = function() {
-  var url = window.location.pathname.split("/");
-  var city = unescape(url[url.length - 1]);
-
-  $('.select-dropbox').select2()
-  .select2("val", city)
-  .on('change', function(e) {
-    update();
-  });
-}
-
 arrUniq = function(arr) {
   return arr.reduce(function(p, c) {
     if (p.indexOf(c) < 0) { p.push(c) };
@@ -164,5 +125,5 @@ arrUniq = function(arr) {
   }, []);
 };
 
-$(document).ready(ready);
-$(document).on('page:load', ready);
+$(document).ready(mobile_calendar);
+$(document).on('page:load', mobile_calendar);

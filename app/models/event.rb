@@ -120,7 +120,7 @@ class Event < ActiveRecord::Base
     self.save
   end
 
-  def self.set_class_color(class_name, color="rand")
+  def self.set_class_color(class_name, color=:transparent)
     new_color = color == "rand" ? self.colors.keys.sample : color
     where(class_name: class_name).each do |event|
       event.update(color: new_color)

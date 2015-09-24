@@ -13,14 +13,29 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
     text-align: center;
   }
   .week-container {
-    .day-container {
-      .mobile-events-container {
-        .mobile-event-container {
-          height: 300px;
-          .mobile-event {
-          }
-        }
-      }
+  }
+}
+
+.day-container {
+  &.not_month { background: #DDD; }
+}
+
+.center-spinner-container {
+  position: absolute;
+  width: 100%;
+}
+
+.make-table {
+  transition: 0.5s;
+  min-height: 100px;
+  display: table;
+  margin-bottom: 50px;
+  position: relative;
+  .make-tr {
+    display: table-row;
+    .make-td {
+      padding: 10px;
+      display: table-cell;
     }
   }
 }
@@ -56,10 +71,42 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
 
 .calendar {
   table-layout: fixed;
+  width: Calc(100% - 40px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.calendar-partial {
+  position: relative;
+}
+
+.calendar-scroll {
+  position: absolute;
+  width: 20px;
+  height: 100%;
+  &:hover { cursor: pointer; }
+  &::before {
+    position: absolute;
+    content: '';
+    left: 0; top: 50px;
+    width: 0; height: 0;
+    border-top: 40px solid transparent;
+    border-bottom: 40px solid transparent;
+  }
+  &.calendar-left {
+    left: 0;
+    &::before { border-right: 20px solid $pkut-red; }
+  }
+  &.calendar-right {
+    right: 0;
+    &::before { border-left: 20px solid $pkut-red; }
+  }
+
 }
 
 .calendar-date-link {
   color: black;
+  margin-bottom: 5px;
   border: solid 2px black;
   width: 24px;
   height: 24px;
@@ -233,7 +280,7 @@ $color-rose: rgb(220, 0, 100);
 }
 
 .today {
-  background: gray;
+  border: 2px inset gray;
   .date {
     background: black;
     color: white;

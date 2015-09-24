@@ -1,28 +1,29 @@
-<% date ||= @date %>
-<% week ||= @week %>
-<div class="row">
-  <div class="week-container">
-    <table class="calendar table">
-      <tr>
-        <% %w(Mon Tues Wed Thurs Fri Sat).each do |day_of_week| %>
-          <th><%= day_of_week %></th>
-        <% end %>
-      </tr>
-      <tr>
-        <% week.each do |day| %>
-          <td class="<%= 'today' if day.to_date == DateTime.current.to_date %>">
-            <div class="calendar-date-link date"><%= day.day %></div>
-            <% Event.by_date(day).each do |event| %>
-              <% if event.class_name == "special" || (@selected_classes.include?(event.class_name) && @selected_cities.include?(event.city)) %>
-                <li class="event-color calendar-event color-<%= event.color %> clickme forceOpen" onclick="" alt="..." data-toggle="modal" data-target="#city<%= event.id %>_modal">
-                  <span class="hidden-xs">&nbsp;<%= event.class_name.capitalize %></span>
-                  <span class="visible-xs mobile-name"><%= event.class_name.capitalize %></span>
-                </li>
-              <% end %>
-            <% end %>
-          </td>
-        <% end %>
-      </tr>
-    </table>
+<%
+  week ||= @week
+  events ||= []
+  months = week.map { |date| date.strftime('%B %Y') }
+  counted_months = months.each_with_object(Hash.new(0)) { |word, counts| counts[word] += 1 }
+
+  display_month = counted_months.max_by{ |k,v| v }[0]
+%>
+
+
+<% week.each do |day| %>
+  <% current_month = day.strftime('%B %Y') %>
+  <% to_display_today = day.to_date == DateTime.current.to_date ? 'today' : '' %>
+  <% to_display_month = display_month == current_month ? '' : 'not_month' %>
+
+  <div class="make-td <%= to_display_today %> <%= to_display_month %> day-container" data-date="<%= day.strftime('%m-%d-%Y') %>" data-month="<%= display_month %>">
+    <div class="calendar-date-link date"><%= day.day %></div>
+    <% Event.by_date(day).each do |event| %>
+      <% events << event %>
+      <% if event.class_name == "special" || (@selected_classes.include?(event.class_name.parameterize) && @selected_cities.include?(event.city.parameterize)) %>
+        <li class="event-color calendar-event color-<%= event.color %> clickme forceOpen" onclick="" alt="..." data-toggle="modal" data-target="#city<%= event.id %>_modal">
+          <span class="hidden-xs">&nbsp;<%= event.class_name.capitalize %></span>
+          <span class="visible-xs mobile-name"><%= event.class_name.capitalize %></span>
+        </li>
+      <% end %>
+    <% end %>
   </div>
-</div>
+<% end %>
+<!-- Should we render the event partials here? -->
