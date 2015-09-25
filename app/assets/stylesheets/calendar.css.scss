@@ -270,8 +270,8 @@ $color-rose: rgb(220, 0, 100);
     background: lighten($color-rose, 25%);
     &:hover { background: $color-rose; }
   }
-  &.color-transparent {
-    background: transparent;
+  &.color-white {
+    background: white;
     &:hover { background: rgba(0, 0, 0, 0.25); }
   }
   &.color-gray {

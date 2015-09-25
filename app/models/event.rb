@@ -53,7 +53,7 @@ class Event < ActiveRecord::Base
     :magenta,
     :rose,
     :gray,
-    :transparent
+    :white
   ]
 
   # Event.all.to_a.group_by { |event| event.city }.keys.each_with_index { |city, pos| Event.set_class_color(city, Event.colors.keys[pos]) }
@@ -120,7 +120,7 @@ class Event < ActiveRecord::Base
     self.save
   end
 
-  def self.set_class_color(class_name, color=:transparent)
+  def self.set_class_color(class_name, color=:white)
     new_color = color == "rand" ? self.colors.keys.sample : color
     where(class_name: class_name).each do |event|
       event.update(color: new_color)
