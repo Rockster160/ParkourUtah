@@ -208,7 +208,7 @@ class PeepsController < ApplicationController
           ::LowCreditsMailerWorker.perform_async(@user.id)
         end
         if @user.notifications.text_low_credits && @user.notifications.sms_receivable && @athlete.has_unlimited_access? == false
-          ::SmsMailerWorker.perform_async(@user.phone_number, "You are low on Credits! Head up to ParkourUtah.com to get some more so you have some for next time.")
+          ::SmsMailerWorker.perform_async(@user.phone_number, "You are low on Credits! Head up to ParkourUtah.com/store to get some more so you have some for next time.")
         end
       end
       RoccoLogger.add "#{current_user.first_name} successfully added #{@athlete.athlete_id}:#{@athlete.full_name}-#{@athlete.athlete_pin} to class."
@@ -223,9 +223,7 @@ class PeepsController < ApplicationController
 
   def class_logs
     @event = Event.find(params[:id])
-    @athletes = Attendance.where(event_id: params[:id]).select do |att|
-      att.created_at.to_date == DateTime.now.to_date
-    end.map { |a| a.athlete }
+    @athletes = Attendance.where(event_id: params[:id]).map { |a| a.athlete }
   end
 
   private
