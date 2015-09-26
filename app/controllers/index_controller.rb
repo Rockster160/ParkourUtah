@@ -56,7 +56,10 @@ class IndexController < ApplicationController
   end
 
   def receive_sms
-    ::SmsMailerWorker.perform_async('3852599640', "From: #{params["From"]}\nMessage: #{params["Body"]}")
+    is_me = params["From"] == "+13852599640"
+    unless is_me
+      ::SmsMailerWorker.perform_async('3852599640', "From: #{params["From"]}\nMessage: #{params["Body"]}")
+    end
 
     if params["Body"].split('').length < 10 && params["Body"].downcase[0..3] != 'pass'
       if ["Open.", "Close."].include?(params["Body"].split.join)
@@ -64,13 +67,13 @@ class IndexController < ApplicationController
       else
       end
     else
-      num = params["From"].split('').map {|x| x[/\d+/]}.join
-      unless params["From"] == "+13852599640"
+      unless is_me
+        num = params["From"].split('').map {|x| x[/\d+/]}.join
         ::SmsMailerWorker.perform_async(num, "This is an automated text messaging system. \nIf you have questions about class, please contact the Instructor. Their contact information is available in the class details. \nIf you would like to stop receiving Notifications, please disable text notifications in your Account Settings on parkourutah.com/account#notifications")
       end
     end
 
-    if params["From"] == "+13852599640"
+    if is_me
       if params["Body"] == 'pass'
         contact_request = ContactRequest.select { |cr| cr.success == false }.sort_by(&:created_at).last
         if contact_request
