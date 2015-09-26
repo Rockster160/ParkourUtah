@@ -1,7 +1,10 @@
 @import "config/variables";
 @import 'config/font-imports';
 
-.modal { z-index: 10000; }
+.modal {
+  z-index: 10000;
+  overflow-y: auto;
+}
 
 .error-container {
   margin-top: 20%;
