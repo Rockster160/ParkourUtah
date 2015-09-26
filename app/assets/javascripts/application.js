@@ -41,6 +41,7 @@ ready = function() {
     killFlashes();
   });
 
+  window.onscroll = killFlashes;
 };
 
 reFlash = function(type, msg) {

@@ -135,6 +135,19 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.by_trial_expired_days_ago(days)
+    users = []
+    every do |user|
+      has_expired_athlete = false
+      user.athletes.each do |athlete|
+        if athlete.created_at.to_date == (Time.now - days.days).to_date && !athlete.verified
+          users << user
+        end
+      end
+    end
+    users
+  end
+
   def still_signed_in!
     self.last_sign_in_at = DateTime.current
     self.save!
