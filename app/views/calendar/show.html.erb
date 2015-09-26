@@ -1,11 +1,6 @@
 <div class="row">
-  <div class="container" style="position: relative; height: 100px; width: 100%; background: red;">
-    <div class="background" style="position: absolute;">
-
-    </div>
-    <div class="foreground" style="position: absolute; text-align: center;">
-      Hello, World!
-    </div>
+  <div class="date-picker-container">
+    <span class="calendar-date-picker"></span>
   </div>
 </div>
 <div class="row relative">
@@ -17,7 +12,6 @@
         <% end %>
       </select>
       <span class="date-controller col-sm-4 col-sm-offset-0 col-xs-10 col-xs-offset-1">
-        <span class="pkut-btn forceOpen" data-toggle="modal" data-target="#datepicker-modal">Goto</span>
       </span>
       <select class="select-dropbox city-name-search col-sm-4 col-sm-offset-0 col-xs-6 col-xs-offset-3" multiple="multiple" placeholder="All Cities(Default)">
         <% @cities.each do |city| %>
@@ -29,5 +23,3 @@
       <%= render partial: 'display' %>
     </div>
   </div>
-
-<%= render partial: 'datepicker' %>

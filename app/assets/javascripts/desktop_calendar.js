@@ -9,10 +9,10 @@ var desktop_calendar = function () {
     }
   });
 
-  loadDesktopWeek = function(period) {
+  loadDesktopWeek = function(period, date) {
     desktop_can_load = false;
 
-    var date = $('.day-container').first().data('date');
+    var date = date || $('.day-container').first().data('date');
     date_params = dateParamsFromSelect();
 
     if ($('.week-container').children().length > 0) { $('.holding-container').html($('.week-container').html()) }
@@ -51,6 +51,14 @@ var desktop_calendar = function () {
     } else {
       setTimeout(tryLoad, 50);
     }
+  }
+
+  if ($('.calendar-date-picker').length > 0) {
+    $('.calendar-date-picker').datepicker({
+      onSelect: function(dateText, inst) {
+        loadDesktopWeek('now', dateText.replace(/\//g, '-'));
+      }
+    });
   }
 
   var city = '';

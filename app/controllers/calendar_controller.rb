@@ -19,12 +19,13 @@ class CalendarController < ApplicationController
 
   def get_week
     @date = if params[:date] == 'undefined'
-      DateTime.current
+      Date.today
     else
-      rails_time_from(params[:date]) || DateTime.current
+      rails_time_from(params[:date]) || Date.today
     end
     @date -= 1.week if params[:direction] == 'previous'
     @date += 1.week if params[:direction] == 'next'
+    @date += 1.day if @date.wday == 0
 
     @week = (@date.beginning_of_week(:monday)..@date.end_of_week(:sunday))
 
@@ -46,7 +47,7 @@ class CalendarController < ApplicationController
   end
 
   def mobile
-    @date = parse_date(params[:date]) || DateTime.current
+    @date = parse_date(params[:date]) || Date.today
     @week = (@date.beginning_of_week(:sunday)..@date.end_of_week(:sunday))
   end
 

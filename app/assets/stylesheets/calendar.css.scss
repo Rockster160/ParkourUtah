@@ -4,7 +4,7 @@
 $mobile-controls-height: 50px;
 $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
 
-.full-calendar-container { margin-top: 50px; }
+.full-calendar-container { margin-top: 10px; }
 
 .view-container {
   .load-next, .load-previous {
@@ -15,6 +15,13 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
     text-align: center;
   }
   .week-container {
+  }
+}
+
+.date-picker-container {
+  .ui-datepicker {
+    margin: 0 auto;
+    margin-top: 10px;
   }
 }
 

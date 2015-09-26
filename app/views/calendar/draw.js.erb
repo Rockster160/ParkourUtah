@@ -1,5 +1,0 @@
-$('.date-holder').html('<%= @date.strftime("%B %Y") %>');
-$('.calendar-container').html('<%= j render partial: "calendar/display", locals: {calendar_date: @date, classes: @selected_classes, cities: @selected_cities } %>')
-$('.forward-month').attr('href', '/calendar/draw?date=<%= (@date + 4.weeks) %>')
-$('.back-month').attr('href', '/calendar/draw?date=<%= (@date - 4.weeks) %>')
-new loadJS;

@@ -8,7 +8,7 @@
 
 <% week.each do |day| %>
   <% current_month = day.strftime('%B %Y') %>
-  <% to_display_today = day.to_date == DateTime.current.to_date ? 'today' : '' %>
+  <% to_display_today = day.to_date == Time.now.to_date ? 'today' : '' %>
   <% to_display_month = display_month == current_month ? '' : 'not_month' %>
 
   <div class="make-td <%= to_display_today %> <%= to_display_month %> day-container" data-date="<%= day.strftime('%m-%d-%Y') %>" data-month="<%= display_month %>">
