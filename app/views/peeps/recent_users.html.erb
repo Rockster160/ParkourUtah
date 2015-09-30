@@ -12,7 +12,7 @@
     <%= link_to 'View User Management Page', user_show_path(user) %>
     <p><strong><%= user.show_phone_number %></strong></p>
     <p>Credits: <%= user.credits %>
-    <p><a href="<%= attendance_page_path(@user) %>">Attendance History</a></p>
+    <p><a href="<%= attendance_page_path(user) %>">Attendance History</a></p>
     <p>Last seen:
       <% if user.signed_in? %>
         <span style="color:green;">Online Now!</span>
