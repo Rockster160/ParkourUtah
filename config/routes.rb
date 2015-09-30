@@ -46,6 +46,7 @@ Rails.application.routes.draw do
   post 'peeps/demotion/:id' => 'peeps#demotion', as: 'demotion'
   get 'peeps/users' => 'peeps#recent_users', as: 'recent_users'
   get 'user/:id' => 'peeps#user_page', as: 'user_show'
+  get 'user/:id/attendance' => 'peeps#attendance_page', as: 'attendance_page'
   get 'athlete/:id/trial' => 'peeps#edit_trial', as: 'edit_trial'
   post 'peeps/users/:id' => 'peeps#adjust_credits', as: 'adjust_credits'
   delete 'user/:id' => 'peeps#destroy_user', as: 'user'

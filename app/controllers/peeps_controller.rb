@@ -6,6 +6,10 @@ class PeepsController < ApplicationController
     @user = User[params[:id]]
   end
 
+  def attendance_page
+    @athletes = User[params[:id]].athletes
+  end
+
   def edit_trial
     athlete = Dependent.find(params[:id])
     if params[:num].to_i < 0
