@@ -18,6 +18,8 @@
     <%= f.label :title, 'Hope to see you at our {class name} class today at {time}!' %><br/>
     <%= f.label :class_name %><br/>
     <%= f.text_field :class_name, placeholder: 'Class', class: 'customRequired pkut-textbox' %><br/>
+    <%= f.label :address %><br/>
+    <%= f.text_field :address, placeholder: 'Full Address', class: 'customRequired pkut-textbox' %><br/>
     <%= f.label 'Spot' %><br/>
     <% old_spot = @event.spot_events.first %>
     <%= select_tag(:spot_id, options_for_select(Spot.all.collect { |k, v| [k.title, k.id] }, (old_spot ? old_spot.spot.id : 'Select') ), include_blank: 'Select Spot') %> <br />

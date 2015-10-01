@@ -53,7 +53,7 @@
         <% end %>
         <p><%= event.date.strftime('%l:%M %p') %></p>
         <p><%=  %></p>
-        <p><%= event.description %></p>
+        <p><%= event.description.gsub("\n", "<br/>").gsub('  ', " &nbsp;").html_safe %></p>
         <p><%=  %></p>
         <p>Instructor: <%= event.host %></p>
         <p>
