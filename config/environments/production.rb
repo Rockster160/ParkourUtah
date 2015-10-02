@@ -57,7 +57,7 @@ Rails.application.configure do
   # when problems arise.
   config.log_level = :warn
   RAILS_DEFAULT_LOGGER = Logger.new('log/production.log')
-  config.logger = Logger.new('log/production.log')
+  config.logger = Logger.new(STDOUT)
   config.log_formatter = ::Logger::Formatter.new
 
   # Prepend all log lines with the following tags.
