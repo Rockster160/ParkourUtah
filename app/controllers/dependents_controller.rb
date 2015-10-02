@@ -135,20 +135,16 @@
     redirect_to :back, notice: "Athlete successfully deleted."
   end
 
-  def show
-  end
-
-  def forgot_pin_or_id
-    flash[:notice] = "We just sent you an email with instructions on what to do next."
-    athlete_id = params[:athlete_id]
-    ::PinResetMailerWorker.perform_async(athlete_id)
-    redirect_to edit_user_registration_path
-  end
-
   def reset_pin
-    @athlete = Dependent.find(params[:athlete_id])
-    unless current_user == @athlete.user
-      redirect_to root_path, alert: "Sorry, you must be the parent or guardian of the athlete to do that."
+    if current_user.valid_password?(params[:password])
+      @athlete = Dependent.find(params[:athlete_id])
+      if params[:athlete_pin] == params[:pin_confirmation] && @athlete.update(athlete_pin: params[:athlete_pin].to_i)
+        redirect_to edit_user_registration_path, notice: "Successfully updated pin for #{@athlete.full_name}."
+      else
+        redirect_to edit_user_registration_path, alert: 'The pins you entered did not match.'
+      end
+    else
+      redirect_to edit_user_registration_path, alert: 'Sorry. Your password was not correct.'
     end
   end
 

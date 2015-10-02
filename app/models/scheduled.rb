@@ -5,7 +5,7 @@ class Scheduled < ActiveRecord::Base
       user = subscriber.user
       Event.by_token(subscriber.token).select { |e| e.date.to_date == Time.now.to_date && e.date.hour == (Time.now + 2.hours).hour }.each do |event|
         unless event.cancelled?
-          if user.notifications.text_class_reminder
+          if user.notifications.text_class_reminder && user.notifications.sms_receivable
             num = user.phone_number
             if num.length == 10
               msg = "Hope to see you at our #{event.class_name} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!"
@@ -22,14 +22,6 @@ class Scheduled < ActiveRecord::Base
 
   def self.nil_padded_time(time)
     (time[0] == " " ? "" : time[0]) + time[1..4]
-  end
-
-  def self.send_test_text
-    if Rails.env == "production"
-      ::SmsMailerWorker.perform_async('3852599640', "This is a test from Parkour Utah in Production!")
-    else
-      ::SmsMailerWorker.perform_async('3852599640', "This is a test from Parkour Utah!")
-    end
   end
 
   def self.send_summary(days)
@@ -154,7 +146,7 @@ class Scheduled < ActiveRecord::Base
         if user.notifications.email_waiver_expiring
           ::ExpiringWaiverMailerWorker.perform_async(athlete.id)
         end
-        if user.notifications.text_waiver_expiring
+        if user.notifications.text_waiver_expiring && user.notifications.sms_receivable
           ::SmsMailerWorker.perform_async('user.phone_number', "The waiver belonging to #{athlete.full_name} is no longer active as of #{athlete.waiver.exp_date.strftime('%B %e')}. Head up to ParkourUtah.com to get it renewed!")
         end
       end

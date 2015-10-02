@@ -12,12 +12,16 @@
   <p>Check out our calendar to find a class that best fits your schedule. All students attending class for the first time must attend a Beginner's class so that we can make an assessment of skills and abilities. Bring the email you received and plenty of water to class. See you there!!!</p>
 
   <br/>
-  <div class="row">
+  <div class="row internal-center">
     <div class="col-sm-4">
       <%= link_to 'Store', store_path, class: "pkut-btn" %>
+      <br class="visible-xs"/>
+      <br class="visible-xs"/>
     </div>
     <div class="col-sm-4">
       <%= link_to 'Profile', edit_user_registration_path, class: "pkut-btn" %>
+      <br class="visible-xs"/>
+      <br class="visible-xs"/>
     </div>
     <div class="col-sm-4">
       <%= link_to 'Calendar', calendar_show_path("all"), class: "pkut-btn" %>
@@ -28,6 +32,8 @@
   <div class="row internal-center">
     <div class="col-sm-6">
       <%= link_to 'Add Credits', store_path, class: "pkut-btn" %>
+      <br class="visible-xs"/>
+      <br class="visible-xs"/>
     </div>
     <div class="col-sm-6">
       <%= link_to 'View Classes', calendar_show_path("all"), class: "pkut-btn" %>

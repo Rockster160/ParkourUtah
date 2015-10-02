@@ -2,9 +2,11 @@
 @import 'config/font-imports';
 
 .media-links {
-  transition: 0.3s;
+  transition: 0.2s;
   color: white;
-  &:hover { color: red; }
+  &.facebook:hover { color: #3B5998 }
+  &.youtube:hover { color: #B31217 }
+  &.twitter:hover { color: #55ACEE }
 }
 
 .hover-btn:hover { cursor: pointer; }
