@@ -1,9 +1,8 @@
 <%
   week ||= @week
   months = week.map { |date| date.strftime('%B %Y') }
-  counted_months = months.each_with_object(Hash.new(0)) { |word, counts| counts[word] += 1 }
-
-  display_month = counted_months.max_by{ |k,v| v }[0]
+  counted_months = months.each_with_object(Hash.new(0)) { |month_year, counts| counts[month_year] += 1 }
+  display_month = week.include?(Date.today) ? Date.today.strftime('%B %Y') : counted_months.max_by{ |k,v| v }[0]
 %>
 
 <% week.each do |day| %>
@@ -28,7 +27,7 @@
               <% end %>
               <p><%= event.date.strftime('%l:%M %p') %></p>
               <p><%=  %></p>
-              <p><%= event.description %></p>
+              <p><%= event.description.gsub("\n", "<br/>").gsub('  ', " &nbsp;").html_safe %></p>
               <p><%=  %></p>
               <p>Instructor: <%= event.host %></p>
               <p>
