@@ -74,6 +74,7 @@ Rails.application.configure do
   # when problems arise.
   config.log_level = :debug
   RAILS_DEFAULT_LOGGER = Logger.new('log/production.log')
+  config.logger = Logger.new('log/production.log')
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
