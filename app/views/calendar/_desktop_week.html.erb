@@ -17,7 +17,7 @@
         <div class="modal fade" id="city<%= event.id %>_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
           <div class="central-container modal-dialog pkut-box">
             <button type="button" class="close-btn contact-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
-            <h3 class="pkut-header"><%= event.class_name.capitalize %></h3>
+            <h3 class="pkut-header"><%= event.class_name %></h3>
             <div class="relative">
               <% spot = event.spot_events.first.spot if event.spot_events.first %>
               <% if spot %>
@@ -52,8 +52,8 @@
         </div>
       <% if event.class_name == "special" || (@selected_classes.include?(event.class_name.parameterize) && @selected_cities.include?(event.city.parameterize)) %>
         <li class="event-color calendar-event color-<%= event.color %> clickme forceOpen" onclick="" alt="..." data-toggle="modal" data-target="#city<%= event.id %>_modal">
-          <span class="hidden-xs">&nbsp;<%= event.class_name.capitalize %></span>
-          <span class="visible-xs mobile-name"><%= event.class_name.capitalize %></span>
+          <span class="hidden-xs">&nbsp;<%= event.class_name %></span>
+          <span class="visible-xs mobile-name"><%= event.class_name %></span>
         </li>
       <% end %>
     <% end %>

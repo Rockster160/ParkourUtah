@@ -8,12 +8,12 @@ class Scheduled < ActiveRecord::Base
           if user.notifications.text_class_reminder
             num = user.phone_number
             if num.length == 10
-              msg = "Hope to see you at our #{event.class_name.capitalize} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!"
+              msg = "Hope to see you at our #{event.class_name} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!"
               ::SmsMailerWorker.perform_async(num, msg)
             end
           end
           if user.notifications.email_class_reminder
-            ::ClassReminderMailerWorker.perform_async(user.id, "Hope to see you at our #{event.class_name.capitalize} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!")
+            ::ClassReminderMailerWorker.perform_async(user.id, "Hope to see you at our #{event.class_name} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!")
           end
         end
       end
@@ -75,7 +75,7 @@ class Scheduled < ActiveRecord::Base
         if event.class_name == "Test"
           summary["#{(Time.now - day.days).to_date.strftime("%A %B %-d, %Y")}"]["Private Class"] = instructors
         else
-          summary["#{(Time.now - day.days).to_date.strftime("%A %B %-d, %Y")}"]["#{event.class_name.capitalize} - #{event.city} - #{event.date.strftime('%l:%M%p')}"] = instructors
+          summary["#{(Time.now - day.days).to_date.strftime("%A %B %-d, %Y")}"]["#{event.class_name} - #{event.city} - #{event.date.strftime('%l:%M%p')}"] = instructors
         end
       end
     end
