@@ -41,6 +41,7 @@ gem 'twitter-typeahead-rails'
 gem 'gmaps4rails'
 gem 'underscore-rails'
 gem 'geocoder'
+gem 'browser'
 
 group :development, :test do
   gem 'byebug'

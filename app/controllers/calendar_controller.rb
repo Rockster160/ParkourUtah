@@ -1,9 +1,6 @@
 class CalendarController < ApplicationController
   include ApplicationHelper
 
-  def index
-  end
-
   def show
     @date = params[:date] ? Date.parse(params[:date]) : Date.today
 
@@ -14,15 +11,6 @@ class CalendarController < ApplicationController
 
     @selected_cities = params[:cities] ? params[:cities] : @cities
     @selected_classes = params[:classes] ? params[:classes] : @classes
-  end
-
-  def get_day
-    @day = params[:date].to_date + params[:amount].to_i.days
-    @date = DateTime.current
-
-    respond_to do |format|
-      format.js { render partial: 'day'}
-    end
   end
 
   def get_week
@@ -38,25 +26,6 @@ class CalendarController < ApplicationController
     respond_to do |format|
       format.js { render partial: 'week'}
     end
-  end
-
-  def get_month
-    @date = params[:date].to_date || DateTime.current
-
-    if params[:direction] == 'past'
-      @date -= 1.month
-    elsif params[:direction] == 'future'
-      @date += 1.month
-    end
-    @months = [(@date.beginning_of_month..@date.end_of_month)]
-
-    respond_to do |format|
-      format.js { render partial: 'month'}
-    end
-  end
-
-  def day
-    @events = Event.all.to_a.group_by { |event| event.date.strftime('%Y-%m-%d') }[params[:date]]
   end
 
   def draw
