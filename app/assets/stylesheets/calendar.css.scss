@@ -6,7 +6,7 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
 
 .full-calendar-container { margin-top: 10px; }
 
-.view-container {
+.mobile-view-container {
   .load-next, .load-previous {
     height: 150px;
     width: 100%;

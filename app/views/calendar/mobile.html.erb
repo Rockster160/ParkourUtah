@@ -2,8 +2,7 @@
   <span class="pkut-btn center-btn low-btn forceOpen" data-toggle="modal" data-target="#datepicker-modal">Goto</span>
 </div>
 <%= render partial: 'datepicker' %>
-
-<div class="view-container" data-week-url="<%= week_path %>">
+<div class="mobile-view-container" data-week-url="<%= week_path %>">
   <div class="load-previous"></div>
   <div class="weeks-container">
     <%= render partial: 'mobile_week', locals: {week: @week, date: @date} %>

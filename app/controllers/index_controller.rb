@@ -41,7 +41,6 @@ class IndexController < ApplicationController
     @classes = all_events.group_by { |event| event.class_name }.keys
   end
 
-
   def update_notifications
     current_user.notifications.blow!
     params[:notify].each do |attribute, value|

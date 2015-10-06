@@ -1,9 +1,6 @@
 class CalendarController < ApplicationController
   include ApplicationHelper
 
-  def index
-  end
-
   def show
     @date = params[:date] ? rails_time_from(params[:date]) : Date.today
     @week = (@date.beginning_of_week(:monday)..@date.end_of_week(:sunday))
@@ -51,11 +48,11 @@ class CalendarController < ApplicationController
     @week = (@date.beginning_of_week(:sunday)..@date.end_of_week(:sunday))
   end
 
-  # mm-dd-yyyy
+  # mm-dd-yyyy : From Rails
+  # yyyy-mm-dd : From Javascript
   def rails_time_from(date)
-    month = date[0..1].to_i
-    day = date[3..4].to_i
-    year = date[6..10].to_i
-    DateTime.new(year, month, day)
+    a, b, c = date.split('-')
+    day, month, year = a.length == 4 ? [c, b, a] : [b, a, c]
+    DateTime.new(year.to_i, month.to_i, day.to_i)
   end
 end

@@ -6,7 +6,7 @@ var mobile_calendar = function () {
     return check;
   };
 
-  if ($('.view-container').length > 0) {
+  if ($('.mobile-view-container').length > 0) {
     is_loading = true, load_period = 'next', can_update = true, scroll_timer = 0;
 
     setTimeout(function() {
@@ -52,7 +52,7 @@ var mobile_calendar = function () {
           var date = $('.day-container').last().data('date');
         }
 
-        var week_url = $('.view-container').data('week-url') + '?date=' + date + '&direction=' + load_period + '&size=mobile';
+        var week_url = $('.mobile-view-container').data('week-url').replace(/\/m/, '') + '?date=' + date + '&direction=' + load_period + '&size=mobile';
         $('.loading-container').load(week_url, function() {
           mobileLoadWhenReady();
         })

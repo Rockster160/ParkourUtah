@@ -1,0 +1,50 @@
+<div class="modal fade" id="subscription_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="standard-modal modal-dialog central-container">
+    <button type="button" class="close-btn" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
+    <h1 class="pkut-header hidden-xs">Subscriptions</h1>
+    <h4 class="pkut-header visible-xs">Subscriptions</h4>
+    <% if current_user.subscribed_athletes.any? %>
+      <hr>
+      <div class="row">
+          <p>You are currently set up to auto-pay for monthly subscriptions.</p>
+          <% current_user.subscribed_athletes.sort_by {|a|a.subscription.expires_at}.each do |athlete| %>
+          <% subscription = athlete.subscription %>
+            <div class="row">
+              <div class="col-xs-6">
+                <p>The next payment of <%= number_to_currency(subscription.cost) %> for <%= athlete.full_name %> will process on <%= (subscription.expires_at + 1.day).strftime('%B %e, %Y') %>.</p>
+              </div>
+              <div class="col-xs-6">
+                <%= link_to 'Unsubscribe', unsubscribe_monthly_subscription_path(athlete.id), class: 'pkut-btn', method: :delete %>
+              </div>
+            </div>
+          <% end %>
+          <p>
+      </div>
+    <% end %>
+    <% if current_user.athletes_with_unlimited_access.count > 0 %>
+      <hr>
+      <% current_user.athletes_with_unlimited_access.each do |athlete| %>
+        <div class="row">
+          <p><%= athlete.full_name %> has unlimited classes until: <%= athlete.subscription.expires_at.strftime('%B %e, %Y') %></p>
+        </div>
+      <% end %>
+    <% end %>
+    <% if current_user.class_subscriptions.any? %>
+      <hr>
+      <div class="row">
+        <p>Classes subscribed to:</p>
+        <% current_user.class_subscriptions.map{|s|s.event}.each do |event| %>
+          <div class="row">
+            <div class="col-xs-6">
+              <%= event.city %> <%= event.class_name.capitalize %> <%= event.date.strftime('%l:%M') %>
+            </div>
+            <div class="col-xs-6">
+              <%= link_to 'Unsubscribe', unsubscribe_path(id: event.id), class: 'pkut-btn', method: :delete %>
+            </div>
+          </div>
+          <br/>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

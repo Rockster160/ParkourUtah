@@ -61,17 +61,19 @@ var desktop_calendar = function () {
     });
   }
 
-  var city = '';
-  $(window.location.href.split(/[\&, \?]+/)).each(function() {
-    if (this.indexOf('city=') > -1) { city = this.split('city=')[1].replace(/(%20)/g, ' ') }
-  });
-  $('.select-dropbox').select2()
-    .select2("val", city.parameterize())
-    .on('change', function(e) {
-      tryLoad();
+  if ($('.desktop-view-container').length > 0) {
+    var city = '';
+    $(window.location.href.split(/[\&, \?]+/)).each(function() {
+      if (this.indexOf('city=') > -1) { city = this.split('city=')[1].replace(/(%20)/g, ' ') }
     });
+    $('.select-dropbox').select2()
+      .select2("val", city.parameterize())
+      .on('change', function(e) {
+        tryLoad();
+      });
 
-  loadDesktopWeek('now');
+    loadDesktopWeek('now');
+  }
 };
 
 String.prototype.parameterize = function () {

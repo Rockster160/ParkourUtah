@@ -72,11 +72,10 @@ Rails.application.routes.draw do
   end
   post 'user/notifications/update' => 'index#update_notifications'
 
-  get 'calendar/index' => 'calendar#index', as: 'calendar'
-  get 'calendar/draw' => 'calendar#draw', as: 'calendar_draw'
-  get 'calendar/mobile' => 'calendar#mobile', as: 'calendar_mobile'
   get 'calendar/week' => 'calendar#get_week', as: 'week'
   get 'calendar' => 'calendar#show', as: 'calendar_show'
+  get 'm/calendar' => 'calendar#mobile', as: 'calendar_mobile'
+  get 'calendar/week' => 'calendar#get_week', as: 'calendar_week'
 
   get 'events/new' => 'event#new', as: 'add_event'
   post 'events/create' => 'event#create'
