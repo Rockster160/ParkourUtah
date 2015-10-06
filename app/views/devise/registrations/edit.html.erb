@@ -24,6 +24,16 @@
     <%= render partial: 'dependents/assign_subscriptions' %>
     <a class="pkut-btn text-center forceOpen" data-toggle="modal" data-target="#notification_modal">Edit Notifications</a><br/>
     <%= render partial: 'devise/registrations/notifications' %>
+    <%
+      has_subscriptions = current_user.subscribed_athletes.any? ||
+      current_user.athletes_with_unlimited_access.count > 0 ||
+      current_user.class_subscriptions.any?
+    %>
+    <% if has_subscriptions %>
+      <br/>
+      <a class="pkut-btn text-center forceOpen" data-toggle="modal" data-target="#subscription_modal">Manage Subscriptions</a><br/>
+      <%= render partial: 'devise/registrations/subscriptions' %>
+    <% end %>
   </div>
   <br/>
 
