@@ -283,7 +283,7 @@ class StoreController < ApplicationController
   end
 
   def set_categories
-    @categories = ["Class", "Clothing", "Accessories", "Gift Card", "Other", "Coupon"]
+    @categories = ["Class", "Clothing", "Accessories", "Gift Card", "Other", "Coupon", "Redemption"]
   end
 
   def set_hidden
