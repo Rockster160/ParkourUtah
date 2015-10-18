@@ -21,6 +21,7 @@
 #  taxable              :boolean          default(TRUE)
 #  color                :string
 #  is_full_image        :boolean          default(FALSE)
+#  redemption_item_id   :integer
 #
 
 class LineItem < ActiveRecord::Base
@@ -40,8 +41,12 @@ class LineItem < ActiveRecord::Base
 
   default_scope { order('item_order ASC') }
 
+  def redemption_item
+    LineItem.find(redemption_item_id)
+  end
+
   def destroy_keys
-    Transaction.all.select { |t| t.item.id == self.id}.each { |order| order.destroy }
+    Transaction.all.select { |t| t.item.id == self.id }.each { |order| order.destroy }
     self.redemption_keys.each do |key|
       key.destroy
     end

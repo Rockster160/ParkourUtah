@@ -61,8 +61,6 @@ numeralStrip = function(str) {
   return num;
 }
 
-
-
 Array.prototype.shuffle = function() {
   var new_array = this, count = this.length;
   for (var i=0;i<(count * 2);i++) {

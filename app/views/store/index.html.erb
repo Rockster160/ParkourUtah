@@ -9,13 +9,19 @@
   <br class="visible-xs"/>
   <div class="items-container col-sm-9 relative">
 
-    <% [:classes, :clothing, :accessories, :other].each do |category| %>
-    <% if @items[category].present? %>
+    <% unless user_signed_in? %>
+      <div class="row">
+        <h2 class="pkut-header">Please sign in to get access to the rest of the store.</h2>
+      </div>
+    <% end %>
+    <% [:classes, :clothing, :accessories, :gift_card, :other].each do |category| %>
+      <% next if category != :gift_card && !user_signed_in? %>
+      <% if @items[category].present? %>
         <div class="row">
-          <h2 class="pkut-header title pull-left hidden-xs"><%= category.to_s.capitalize %></h2>
-          <h2 class="pkut-header title visible-xs"><%= category.to_s.capitalize %></h2>
+          <h2 class="pkut-header title pull-left hidden-xs"><%= category.to_s.split('_').map(&:capitalize).join(' ') %></h2>
+          <h2 class="pkut-header title visible-xs"><%= category.to_s.split('_').map(&:capitalize).join(' ') %></h2>
         </div>
-        <% @items[category].sort_by {|i|i.item_order}.each do |item| %>
+        <% @items[category].sort_by { |i| i.item_order }.each do |item| %>
           <div class="item-flip-container" ontouchstart="this.classList.toggle('hover');">
             <div class="item-flipper">
               <div class="item-front">
@@ -36,7 +42,7 @@
                 <% elsif item.sizes %>
                   <a alt="..." class="pkut-btn" data-toggle="modal" data-target="#info<%= item.id %>">Select Size</a><br/>
                 <% else %>
-                  <%= link_to "Add to Cart", update_cart_path(item_id: item.id), class: "pkut-btn", remote: true, method: :post if user_signed_in? %><br/>
+                  <%= link_to "Add to Cart", update_cart_path(item_id: item.id), class: "pkut-btn", remote: true, method: :post %><br/>
                 <% end %>
               </div>
             </div>

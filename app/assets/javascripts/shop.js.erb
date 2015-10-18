@@ -1,5 +1,14 @@
 var ready = function() {
 
+  $('.cart-container').delegate('.fake-stripe-btn', 'click', function(e) {
+    if ($('.shopping-cart-total-holder').html() != "$0.00") {
+      $('.modal').modal('hide');
+      $('.stripe-button-el').click()
+      e.preventDefault();
+      return false
+    }
+  });
+
   $('.cart-container').delegate('.shopping-cart-line-item-quantity-input', 'focusin', function() {
     amount_holder = $(this).val();
   });
