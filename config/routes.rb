@@ -115,6 +115,13 @@ Rails.application.routes.draw do
   post 'cart/update' => 'store#update_cart', as: 'update_cart'
   post 'cart/purchase' => 'store#purchase', as: 'purchase'
 
+  namespace :api do
+    namespace :v1 do
+      post :valid_credentials
+      get :valid_credentials
+    end
+  end
+
   require 'sidekiq/web'
   authenticate :user, lambda { |u| u.is_admin? } do
     mount Sidekiq::Web => 'sidekiq'
