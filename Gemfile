@@ -42,6 +42,7 @@ gem 'gmaps4rails'
 gem 'underscore-rails'
 gem 'geocoder'
 gem 'browser'
+gem 'unirest'
 
 group :development, :test do
   gem 'byebug'

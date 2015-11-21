@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   get 'secret' => 'peeps#secret', as: 'secret'
   post 'post_secret' => 'peeps#post_secret'
 
+  get 'venmo' => 'index#venmo'
+
   get 'register/step_2' => 'registrations#step_2', as: 'step_2'
   get 'register/step_3' => 'registrations#step_3', as: 'step_3'
   get 'register/step_4' => 'registrations#step_4', as: 'step_4'

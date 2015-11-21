@@ -2,6 +2,40 @@ class IndexController < ApplicationController
   before_action :still_signed_in
   skip_before_action :verify_authenticity_token
 
+  def venmo
+    response = Unirest.post("https://api.venmo.com/v1/oauth/access_token", headers: {}, parameters:
+      {
+        "client_id" => ENV["PKUT_VENMO_ID"],
+        "code" => params[:code],
+        "client_secret" => ENV["PKUT_VENMO_SECRET"]
+      }
+    )
+    expires_at = DateTime.now + response["expires_in"].to_i.seconds
+    Venmo.find_by_username("Rocco").update(
+      access_token: response["access_token"],
+      refresh_token: response["refresh_token"],
+      expires_at: expires_at
+    )
+    # https://api.venmo.com/v1/oauth/authorize?client_id=3191&scope=make_payments&response_type=code
+    SmsMailerWorker.perform_async('3852599640', "#{response}")
+  end
+
+  def refresh_venmo
+    response = Unirest.post("https://api.venmo.com/v1/oauth/access_token", headers: {}, parameters:
+      {
+        "client_id" => ENV["PKUT_VENMO_ID"],
+        "client_secret" => ENV["PKUT_VENMO_SECRET"],
+        "refresh_token" => Venmo.first.refresh_token
+      }
+    )
+    expires_at = DateTime.now + response["expires_in"].to_i.seconds
+    Venmo.find_by_username("Rocco").update(
+      access_token: response["access_token"],
+      refresh_token: response["refresh_token"],
+      expires_at: expires_at
+    )
+  end
+
   def get_request
     render json: Automator.open?
   end
