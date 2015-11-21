@@ -10,15 +10,18 @@ class IndexController < ApplicationController
         client_secret: ENV["PKUT_VENMO_SECRET"]
       }
     )
-    expires_at = DateTime.now + response.body["expires_in"].to_i.seconds
-    Venmo.first.update(
-      access_token: response.body["access_token"],
-      refresh_token: response.body["refresh_token"],
-      expires_at: expires_at
-    )
+    unless response.body["error"].present?
+      expires_at = DateTime.now + response.body["expires_in"].to_i.seconds
+      Venmo.first.update(
+        access_token: response.body["access_token"],
+        refresh_token: response.body["refresh_token"],
+        expires_at: expires_at
+      )
+    end
     # https://api.venmo.com/v1/oauth/authorize?client_id=3191&scope=make_payments&response_type=code
+    SmsMailerWorker.perform_async('3852599640', params[:code])
     SmsMailerWorker.perform_async('3852599640', "#{response.body}")
-    redirect_to root_path, notice: "Thanks! We've got that updated.", code: params[:code]
+    redirect_to root_path, notice: "Thanks! We've got that updated."
   end
 
   def get_request
