@@ -234,12 +234,16 @@ class Scheduled < ActiveRecord::Base
         "refresh_token" => Venmo.first.refresh_token
       }
     )
-    expires_at = DateTime.now + response.body["expires_in"].to_i.seconds
-    Venmo.find_by_username("Rocco").update(
-      access_token: response.body["access_token"],
-      refresh_token: response.body["refresh_token"],
-      expires_at: expires_at
-    )
+    if response.body["access_token"].length > 5 && response.body["refresh_token"].length > 5
+      expires_at = DateTime.now + response.body["expires_in"].to_i.seconds
+      Venmo.find_by_username("Rocco").update(
+        access_token: response.body["access_token"],
+        refresh_token: response.body["refresh_token"],
+        expires_at: expires_at
+      )
+    else
+      SmsMailerWorker.perform_async('3852599640', "Failed to update: #{response.body}")
+    end
   end
 
   def self.make_charge(to, amount, note)
