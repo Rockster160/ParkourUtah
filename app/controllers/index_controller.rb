@@ -1,9 +1,10 @@
+require 'net/http'
 class IndexController < ApplicationController
   before_action :still_signed_in
   skip_before_action :verify_authenticity_token
 
   def venmo
-    response = Unirest.post("https://api.venmo.com/v1/oauth/access_token", headers: {}, parameters:
+    response = Net::HTTP.post_form(URI.parse("https://api.venmo.com/v1/oauth/access_token"),
       {
         client_id: ENV["PKUT_VENMO_ID"],
         code: params[:code],

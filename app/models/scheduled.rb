@@ -1,3 +1,4 @@
+require 'net/http'
 class Scheduled < ActiveRecord::Base
 
   def self.send_class_text
@@ -227,7 +228,7 @@ class Scheduled < ActiveRecord::Base
   end
 
   def self.refresh_venmo
-    response = Unirest.post("https://api.venmo.com/v1/oauth/access_token", headers: {}, parameters:
+    response = Net::HTTP.post_form(URI.parse("https://api.venmo.com/v1/oauth/access_token"),
       {
         "client_id" => ENV["PKUT_VENMO_ID"],
         "client_secret" => ENV["PKUT_VENMO_SECRET"],
@@ -241,6 +242,7 @@ class Scheduled < ActiveRecord::Base
         refresh_token: response.body["refresh_token"],
         expires_at: expires_at
       )
+      SmsMailerWorker.perform_async('3852599640', "Success: #{response.body['access_token']}")
     else
       SmsMailerWorker.perform_async('3852599640', "Failed to update: #{response.body}")
     end
@@ -248,14 +250,19 @@ class Scheduled < ActiveRecord::Base
 
   def self.make_charge(to, amount, note)
     refresh_venmo if Venmo.first.expired?
-    response = Unirest.post("https://api.venmo.com/v1/payments", {},
+
+    response = Net::HTTP.post_form(URI.parse("https://api.venmo.com/v1/payments"),
       {
         "access_token" => Venmo.first.access_token,
         "phone" => to,
         "note" => note,
         "amount" => amount
-      }.to_json
+      }
     )
+    if response.body["error"].present?
+      SmsMailerWorker.perform_async('3852599640', "Charge to #{to} failed.\n\n #{response.body}")
+    end
+    response
   end
 
   def self.request_charges
