@@ -248,13 +248,13 @@ class Scheduled < ActiveRecord::Base
 
   def self.make_charge(to, amount, note)
     refresh_venmo if Venmo.first.expired?
-    response = Unirest.post("https://api.venmo.com/v1/payments", headers: {}, parameters:
+    response = Unirest.post("https://api.venmo.com/v1/payments", {},
       {
         "access_token" => Venmo.first.access_token,
         "phone" => to,
         "note" => note,
         "amount" => amount
-      }
+      }.to_json
     )
   end
 
