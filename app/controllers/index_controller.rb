@@ -5,20 +5,20 @@ class IndexController < ApplicationController
   def venmo
     response = Unirest.post("https://api.venmo.com/v1/oauth/access_token", headers: {}, parameters:
       {
-        "client_id" => ENV["PKUT_VENMO_ID"],
-        "code" => params[:code],
-        "client_secret" => ENV["PKUT_VENMO_SECRET"]
+        client_id: ENV["PKUT_VENMO_ID"],
+        code: params[:code],
+        client_secret: ENV["PKUT_VENMO_SECRET"]
       }
     )
     expires_at = DateTime.now + response.body["expires_in"].to_i.seconds
-    Venmo.find_by_username("Rocco").update(
+    Venmo.first.update(
       access_token: response.body["access_token"],
       refresh_token: response.body["refresh_token"],
       expires_at: expires_at
     )
     # https://api.venmo.com/v1/oauth/authorize?client_id=3191&scope=make_payments&response_type=code
-    # code: ccbf944121aa2f147ffe0510ffe6564e
     SmsMailerWorker.perform_async('3852599640', "#{response.body}")
+    redirect_to root_path, notice: "Thanks! We've got that updated.", code: params[:code]
   end
 
   def get_request
