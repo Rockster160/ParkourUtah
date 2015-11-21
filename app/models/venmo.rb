@@ -12,4 +12,8 @@
 #
 
 class Venmo < ActiveRecord::Base
+
+  def expired?
+    DateTime.current > expires_at
+  end
 end

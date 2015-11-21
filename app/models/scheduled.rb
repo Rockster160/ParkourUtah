@@ -226,4 +226,46 @@ class Scheduled < ActiveRecord::Base
     )
   end
 
+  def self.refresh_venmo
+    response = Unirest.post("https://api.venmo.com/v1/oauth/access_token", headers: {}, parameters:
+      {
+        "client_id" => ENV["PKUT_VENMO_ID"],
+        "client_secret" => ENV["PKUT_VENMO_SECRET"],
+        "refresh_token" => Venmo.first.refresh_token
+      }
+    )
+    expires_at = DateTime.now + response.body["expires_in"].to_i.seconds
+    Venmo.find_by_username("Rocco").update(
+      access_token: response.body["access_token"],
+      refresh_token: response.body["refresh_token"],
+      expires_at: expires_at
+    )
+  end
+
+  def self.make_charge(to, amount, note)
+    refresh_venmo if Venmo.first.expired?
+    response = Unirest.post("https://api.venmo.com/v1/payments", headers: {}, parameters:
+      {
+        "access_token" => Venmo.first.access_token,
+        "phone" => to,
+        "note" => note,
+        "amount" => amount
+      }
+    )
+  end
+
+  def self.request_charges
+    make_charge('8018089455', -60, "👧 🚙")
+    make_charge('8017924442', -60, "👧 🚙")
+    make_charge('8016041947', -60, "👧 🚙")
+  end
+
+  def self.give_charges
+    make_charge('doug', 150, "🚲")
+  end
+
+  def self.test_charge(amount)
+    make_charge('8019317892', amount, "🚲")
+  end
+
 end
