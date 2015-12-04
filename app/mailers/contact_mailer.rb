@@ -8,4 +8,8 @@ class ContactMailer < ApplicationMailer
     @body = params["comment"]
     mail(to: ENV['PKUT_EMAIL'], subject: "Request for Contact")
   end
+
+  def party_mail(email)
+    mail(to: email, subject: "Parkour Party!")
+  end
 end
