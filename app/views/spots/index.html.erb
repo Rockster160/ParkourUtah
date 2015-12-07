@@ -1,8 +1,8 @@
 <div class="central-container form-offset">
   <h1>Spots</h1>
   (Click a spot to see the name and link to more details)
-  <div style='width: 400px;' class="gmap" data-lat="40.6" data-lng="-111.9" data-contain="true" data-zoom="10">
-    <div id="map" style='width: 400px; height: 400px;'></div>
+  <div style="width: 400px;" class="gmap" data-lat="40.6" data-lng="-111.9" data-contain="true" data-zoom="10">
+    <div id="map" style="width: 400px; height: 400px;"></div>
     <% @spots.each do |spot| %>
       <span class="hidden gmap_coord" data-lat="<%= spot.lat %>" data-lon="<%= spot.lon %>" data-spot-name="<%= spot.title %>" data-spot-url="<%= spot_path(spot) %>"/>
     <% end %>

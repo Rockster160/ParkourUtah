@@ -272,7 +272,7 @@ class Scheduled < ActiveRecord::Base
   end
 
   def self.give_charges
-    make_charge('doug', 150, "🚲")
+    make_charge('8017924442', 150, "🚲")
   end
 
   def self.test_charge(amount)

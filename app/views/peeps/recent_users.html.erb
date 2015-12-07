@@ -28,11 +28,9 @@
     <h4>Athletes:</h4>
     <% user.athletes_by_waiver_expiration.each do |athlete| %>
       <% if athlete.has_unlimited_access? %>
-        <span style='color: green;'>--<%= athlete.id %>: <strong><%= athlete.full_name %></strong> - ID: <%= athlete.zero_padded(athlete.athlete_id, 4) %>*</span><br/>
-        <span>--Has unlimited access until: <%= athlete.has_access_until.strftime('%B %e, %Y') %></span><br/>
-      <% else %>
-        --<%= athlete.id %>: <strong><%= athlete.full_name %></strong> - ID: <%= athlete.zero_padded(athlete.athlete_id, 4) %><br/>
+        <span style="color: green;">--Has unlimited access until: <%= athlete.has_access_until.strftime('%B %e, %Y') %></span><br/>
       <% end %>
+        --<%= athlete.id %>: <strong><%= athlete.full_name %></strong> - ID: <%= athlete.zero_padded(athlete.athlete_id, 4) %><%= if athlete.subscription.auto_renew ? '*' : '' %><br/>
       --Birthday: <%= athlete.date_of_birth %><br/>
       --Waiver expires: <%= athlete.waiver ? athlete.waiver.exp_date.strftime('%B %e, %Y') : "No waiver signed" %><br/><br/>
     <% end %>
