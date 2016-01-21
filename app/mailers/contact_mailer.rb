@@ -10,6 +10,6 @@ class ContactMailer < ApplicationMailer
   end
 
   def party_mail(email)
-    mail(to: email, subject: "Parkour Party!")
+    mail(to: email, subject: "Open Gym!")
   end
 end
