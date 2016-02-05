@@ -235,7 +235,7 @@ class Scheduled < ActiveRecord::Base
         "refresh_token" => Venmo.first.refresh_token
       }
     )
-    if response.body["access_token"].length > 5 && response.body["refresh_token"].length > 5
+    if response.body["access_token"] && response.body["refresh_token"] && response.body["access_token"].length > 5 && response.body["refresh_token"].length > 5
       expires_at = DateTime.now + response.body["expires_in"].to_i.seconds
       Venmo.find_by_username("Rocco").update(
         access_token: response.body["access_token"],
