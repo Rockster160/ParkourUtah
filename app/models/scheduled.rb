@@ -249,20 +249,21 @@ class Scheduled < ActiveRecord::Base
   end
 
   def self.make_charge(to, amount, note)
-    refresh_venmo if Venmo.first.expired?
-
-    response = Net::HTTP.post_form(URI.parse("https://api.venmo.com/v1/payments"),
-      {
-        "access_token" => Venmo.first.access_token,
-        "phone" => to,
-        "note" => note,
-        "amount" => amount
-      }
-    )
-    if response.body["error"].present?
-      SmsMailerWorker.perform_async('3852599640', "Charge to #{to} failed.\n\n #{response.body}")
-    end
-    response
+    SmsMailerWorker.perform_async('3852599640', "Charge to #{to} - #{amount} - #{note}.")
+    # refresh_venmo if Venmo.first.expired?
+    #
+    # response = Net::HTTP.post_form(URI.parse("https://api.venmo.com/v1/payments"),
+    #   {
+    #     "access_token" => Venmo.first.access_token,
+    #     "phone" => to,
+    #     "note" => note,
+    #     "amount" => amount
+    #   }
+    # )
+    # if response.body["error"].present?
+    #   SmsMailerWorker.perform_async('3852599640', "Charge to #{to} failed.\n\n #{response.body}")
+    # end
+    # response
   end
 
   def self.request_charges
