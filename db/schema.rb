@@ -130,14 +130,6 @@ ActiveRecord::Schema.define(version: 20151121064523) do
     t.boolean  "cancelled_text",        default: false
   end
 
-  create_table "games", force: :cascade do |t|
-    t.string   "player_1"
-    t.string   "player_2"
-    t.string   "last_move"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "images", force: :cascade do |t|
     t.integer  "spot_id"
     t.datetime "created_at", null: false

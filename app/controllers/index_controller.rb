@@ -4,6 +4,7 @@ class IndexController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def venmo
+    # https://api.venmo.com/v1/oauth/authorize?client_id=3191&scope=make_payments&response_type=code
     response = Net::HTTP.post_form(URI.parse("https://api.venmo.com/v1/oauth/access_token"),
       {
         client_id: ENV["PKUT_VENMO_ID"],
@@ -19,7 +20,6 @@ class IndexController < ApplicationController
         expires_at: expires_at
       )
     end
-    # https://api.venmo.com/v1/oauth/authorize?client_id=3191&scope=make_payments&response_type=code
     SmsMailerWorker.perform_async('3852599640', params[:code])
     SmsMailerWorker.perform_async('3852599640', "#{response.body}")
     redirect_to root_path, notice: "Thanks! We've got that updated."

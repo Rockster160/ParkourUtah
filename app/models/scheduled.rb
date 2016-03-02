@@ -227,6 +227,16 @@ class Scheduled < ActiveRecord::Base
     )
   end
 
+  # {
+  #     "apps_url": "https://api.venmo.com/v1/apps{/app_id}",
+  #     "current_user_url": "https://api.venmo.com/v1/me",
+  #     "errors_url": "https://api.venmo.com/v1/error_messages",
+  #     "payments_url": "https://api.venmo.com/v1/payments{/payment_id}",
+  #     "sandbox_payments_url": "https://sandbox-api.venmo.com/payments",
+  #     "user_url": "https://api.venmo.com/v1/users{/user_id}",
+  #     "user_friends_url": "https://api.venmo.com/v1/users{/user_id}/friends"
+  # }
+
   def self.refresh_venmo
     response = Net::HTTP.post_form(URI.parse("https://api.venmo.com/v1/oauth/access_token"),
       {
@@ -250,20 +260,20 @@ class Scheduled < ActiveRecord::Base
 
   def self.make_charge(to, amount, note)
     SmsMailerWorker.perform_async('3852599640', "Charge to #{to} - #{amount} - #{note}.")
-    # refresh_venmo if Venmo.first.expired?
-    #
-    # response = Net::HTTP.post_form(URI.parse("https://api.venmo.com/v1/payments"),
-    #   {
-    #     "access_token" => Venmo.first.access_token,
-    #     "phone" => to,
-    #     "note" => note,
-    #     "amount" => amount
-    #   }
-    # )
-    # if response.body["error"].present?
-    #   SmsMailerWorker.perform_async('3852599640', "Charge to #{to} failed.\n\n #{response.body}")
-    # end
-    # response
+    refresh_venmo if Venmo.first.expired?
+
+    response = Net::HTTP.post_form(URI.parse("https://api.venmo.com/v1/payments"),
+      {
+        "access_token" => Venmo.first.access_token,
+        "phone" => to,
+        "note" => note,
+        "amount" => amount
+      }
+    )
+    if response.body["error"].present?
+      SmsMailerWorker.perform_async('3852599640', "Charge to #{to} failed.\n\n #{response.body}")
+    end
+    response
   end
 
   def self.request_charges
