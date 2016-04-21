@@ -87,7 +87,7 @@ class Dependent < ActiveRecord::Base
 
   def subscription
     subs = self.athlete_subscriptions
-    return nil unless subs && subs.first
+    return nil unless subs.any?
 
     subs.select {|s| !(s.expires_at.nil?) }.sort_by { |s| s.created_at }.last
   end

@@ -219,7 +219,7 @@ class User < ActiveRecord::Base
   def charge(price, athlete)
     if athlete.has_unlimited_access?
       athlete.subscription.use!
-      "Unlimited Subscription"
+      'Unlimited Subscription'
     elsif athlete.has_trial?
       athlete.trial.use!
       'Trial Class'
