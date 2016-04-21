@@ -136,6 +136,15 @@ class User < ActiveRecord::Base
     self.all.each {|user| block.call(user)}
   end
 
+  def self.remove_number_from_texting(num)
+    if user = find_by_phone_number(num)
+      user.notifications.update(sms_receivable: false)
+      "Success!"
+    else
+      "Fail."
+    end
+  end
+
   def self.update_instructor_positions
     instructors.each_with_index do |instructor, pos|
       instructor.update(instructor_position: pos+1)
