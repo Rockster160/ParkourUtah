@@ -102,9 +102,7 @@ class EventController < ApplicationController
       event = Event.find(params[:id])
       token = event.token
       date = event.date
-      Event.where("token = :token AND date >= :date", token: token, date: date).each do |event|
-        event.destroy
-      end
+      Event.where("token = :token AND date >= :date", token: token, date: date).each(&:destroy)
     else
       Event.find(params[:id]).destroy
     end
