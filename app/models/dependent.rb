@@ -27,6 +27,7 @@ class Dependent < ActiveRecord::Base
   has_many :waivers, dependent: :destroy
   has_many :trial_classes, dependent: :destroy
   has_many :athlete_subscriptions, dependent: :destroy
+  has_many :attendances, dependent: :destroy
 
   has_attached_file :athlete_photo,
                :styles => { :medium => "300", :thumb => "100x100#" },
