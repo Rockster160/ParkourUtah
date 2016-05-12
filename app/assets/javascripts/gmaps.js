@@ -1,8 +1,8 @@
-handler = Gmaps.build('Google');
 
 var ready = function() {
 
   if ($('.gmap').length > 0) {
+    handler = Gmaps.build('Google');
     var gmap = $('.gmap');
     handler.buildMap({
         provider: {
