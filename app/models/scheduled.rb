@@ -59,7 +59,7 @@ class Scheduled < ActiveRecord::Base
           instructors[event.host]["pay"] = 15
         end
         instructors.each do |instructor|
-          pay = instructor[1]["pay"] < 15 ? 15 : instructor[1]["pay"]
+          pay = event.attendances.count > 5 ? instructor[1]["pay"] : 15
           instructor[1]["pay"] = pay
           payment[instructor[0]] ||= 0
           payment[instructor[0]] += pay
