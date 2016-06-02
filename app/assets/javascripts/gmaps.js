@@ -1,9 +1,8 @@
-
 var ready = function() {
-
   if ($('.gmap').length > 0) {
-    handler = Gmaps.build('Google');
+
     var gmap = $('.gmap');
+    handler = Gmaps.build('Google');
     handler.buildMap({
         provider: {
           // pass in other Google Maps API options here
@@ -73,6 +72,7 @@ var ready = function() {
         }
       })
     }
+
   }
 }
 

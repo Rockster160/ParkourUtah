@@ -19,7 +19,7 @@
 //= require twitter/bootstrap
 //= require twitter/typeahead
 //= require underscore
-// require gmaps/google
+//= require gmaps/google
 //= require maskedinput
 //= require_tree .
 
