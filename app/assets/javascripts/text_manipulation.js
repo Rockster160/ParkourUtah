@@ -8,7 +8,7 @@ var ready = function() {
       if ($field.val() == "DELETE") {
 
       } else {
-        e.preventDefault;
+        e.preventDefault();
         return false
       }
     }
@@ -30,7 +30,7 @@ var ready = function() {
       if (invalid.length == 1) {$('#number_of_errors_container').html("field.")}
       if (invalid.length > 1) {$('#number_of_errors_container').html(invalid.length + " fields.")}
       $('#incomplete_error_modal').modal('show');
-      e.preventDefault;
+      e.preventDefault();
       return false
     }
     $(form).find('.enabled-field').val(true);

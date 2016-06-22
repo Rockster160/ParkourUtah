@@ -80,11 +80,11 @@ if Rails.env == "development"
   puts "Creating Athletes"
   50.times do |athlete|
     athlete = RandomuserLocal.generate
-    dependent = Dependent.create(
-      user_id: User.all.sample.id,
-      full_name: "#{athlete[:name][:first].capitalize} #{athlete[:name][:last].capitalize}",
-      emergency_contact: athlete[:phone].gsub(/[^0-9]/, ''),
-    )
+    dependent = Dependent.new
+    dependent.user_id = User.all.sample.id
+    dependent.full_name = "#{athlete[:name][:first].capitalize} #{athlete[:name][:last].capitalize}"
+    dependent.emergency_contact = athlete[:phone].gsub(/[^0-9]/, '')
+    dependent.save
     waiver = Waiver.create(
       dependent_id: dependent.id,
       signed: true,

@@ -164,9 +164,9 @@ class StoreController < ApplicationController
       if user_signed_in?
         unless current_user.stripe_id
           customer = create_customer
-          current_user.update(stripe_id: customer.id)
+          current_user.update(stripe_id: customer.id) if customer
         end
-        purchase_cart
+        purchase_cart if current_user.stripe_id
       else
         categories = @cart.items.map(&:category).uniq
         if categories.count == 1 && categories.first == "Gift Card"
@@ -193,19 +193,25 @@ class StoreController < ApplicationController
   end
 
   def create_charge
+    stripe_charge = nil
     if @cart.price > 0
       if user_signed_in?
         stripe_id = current_user.stripe_id
       else
         stripe_id = session["stripe_id"]
       end
-      charge = Stripe::Charge.create(
-        :amount   => @cart.total,
-        :currency => "usd",
-        :customer => stripe_id
-      )
+      begin
+        stripe_charge = Stripe::Charge.create(
+          :amount   => @cart.total,
+          :currency => "usd",
+          :customer => stripe_id
+        )
+      rescue
+        stripe_charge = false
+      end
     end
-    if !(charge) || charge.status == "succeeded"
+    order_success = stripe_charge.nil? || stripe_charge.try(:status) == "succeeded"
+    if order_success
       @cart.transactions.each do |order|
         line_item = LineItem.find(order.item_id)
         if RedemptionKey.redeem(order.redeemed_token)
@@ -217,7 +223,7 @@ class StoreController < ApplicationController
         end
       end
     end
-    !(charge) || charge.status == "succeeded"
+    return order_success
   end
 
   def purchase_cart
