@@ -25,6 +25,9 @@
 <%= form_tag charge_path do %>
   <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
           data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+          data-image="http://parkourutah.com/favicon.ico"
+          data-name="Parkour Utah"
+          data-billingAddress="true"
           data-description="All Sales are Final"
           data-amount=0></script>
 <% end %>
