@@ -1,5 +1,8 @@
 <div class="shopping-cart-cell relative">
   <div class="shopping-cart-line-item absolute">
+    <% unless order.item.category == "Gift Card" || user_signed_in? %>
+      <div class="hidden required-sign-in"></div>
+    <% end %>
     <span class="delete-x pull-right" id="<%= order.order_name %>">X</span>
     <div class="shopping-cart-line-item-title"><%= order.order_name %></div>
     <div class="shopping-cart-line-item-price"><%= number_to_currency(order.item.cost_in_dollars) %></div>

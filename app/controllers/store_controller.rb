@@ -123,7 +123,7 @@ class StoreController < ApplicationController
           orders << order
           @order = order
         end
-        flash.now[:notice] = "#{order.order_name} successfully added to cart."
+        # flash.now[:notice] = "#{order.order_name} successfully added to cart."
       end
     end
 
@@ -293,7 +293,7 @@ class StoreController < ApplicationController
   end
 
   def set_hidden
-    @hidden_items = LineItem.select { |l| l.hidden == true }.sort_by { |s| s.created_at }.reverse.map { |item| [item.title, item.id] }
+    @hidden_items = LineItem.where(hidden: true).reorder(created_at: :desc).map { |item| [item.title, item.id] }
   end
 
   def set_cart

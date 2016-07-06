@@ -1,6 +1,13 @@
 var ready = function() {
 
-  $('.cart-container').delegate('.fake-stripe-btn', 'click', function(e) {
+  $('.cart-container').on('click', '.fake-stripe-btn', function(e) {
+    if ($('.required-sign-in').length > 0) {
+      if ($('#registration_required').length > 0) {
+        $('#registration_required').modal('show');
+        e.preventDefault();
+        return false
+      }
+    }
     if ($('.shopping-cart-total-holder').html() != "$0.00") {
       $('.modal').modal('hide');
       $('.stripe-button-el').click()
@@ -9,21 +16,21 @@ var ready = function() {
     }
   });
 
-  $('.cart-container').delegate('.shopping-cart-line-item-quantity-input', 'focusin', function() {
+  $('.cart-container').on('focusin', '.shopping-cart-line-item-quantity-input', function() {
     amount_holder = $(this).val();
   });
 
-  $('.cart-container').delegate('.delete-x', 'click', function() {
+  $('.cart-container').on('click', '.delete-x', function() {
     $(this).siblings('.shopping-cart-line-item-quantity').children().val(0)
     sendUpdatedAmount($(this).attr('id'), 0);
   });
 
-  $('.cart-container').delegate('.delete-all-transactions', 'click', function() {
+  $('.cart-container').on('click', '.delete-all-transactions', function() {
     $.post('/cart/update', {delete_all: true});
     return false;
   });
 
-  $('.cart-container').delegate('.shopping-cart-line-item-quantity-input', 'focusout', function() {
+  $('.cart-container').on('focusout', '.shopping-cart-line-item-quantity-input', function() {
     if ($(this).val() != amount_holder) {
       sendUpdatedAmount($(this).attr('id'), $(this).val());
     }
