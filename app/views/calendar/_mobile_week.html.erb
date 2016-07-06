@@ -3,14 +3,12 @@
 <div class="week-container">
   <% week.each do |day| %>
     <div class="day-container <%= date.to_date == day.to_date ? 'chosen-day' : '' %>" data-date="<%= day.to_date %>">
-      <h5 class="text-center"><%= day.strftime('%A %B %d, %Y') %></h5>
-      <br/>
+      <h5 class="day-label"><%= day.strftime('%A %B %d, %Y') %></h5>
       <div class="mobile-events-container">
         <% Event.by_date(day).each do |event| %>
-          <div class="mobile-event-container">
-            <span href="<%= show_event_path(event) %>" class="day-btn mobile-event event-color color-<%= Event.color_of(event.city) %>">
-              <%= event.class_name %>
-            </span>
+          <div class="mobile-event-container event-detail-btn" data-event-url="<%= event_detail_path(event) %>">
+            <div class="mobile-event-time" style="<%= event.css_style %>"><%= event.date.strftime('%l:%M %p') %></div>
+            <div href="<%= show_event_path(event) %>" class="day-btn mobile-event-name"><%= event.class_name %></div>
           </div>
         <% end %>
       </div>

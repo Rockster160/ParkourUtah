@@ -43,14 +43,13 @@
                 </br>
                 <p><%= link_to 'Edit Event', edit_event_path(id: event.id), class: "calendar-link" %></p>
                 <p><%= link_to 'Destroy Event', destroy_event_path(id: event.id), method: :delete, class: "calendar-link", data: {confirm: "Are you sure?"} %></p>
-                <p><%= link_to 'Destroy all future occurrences', destroy_event_path(future: "all", id: event.id), method: :delete, class: "calendar-link",
-                data:{confirm: "Are you sure? This will delete this and all future events tied to this one."} if event.token %></p>
+                <p><%= link_to 'Destroy all future occurrences', destroy_event_path(future: "all", id: event.id), method: :delete, class: "calendar-link", data:{confirm: "Are you sure? This will delete this and all future events tied to this one."} if event.token %></p>
               <% end %>
             </div>
           </div>
         </div>
       <% if event.class_name == "special" || (@selected_classes.include?(event.class_name.parameterize) && @selected_cities.include?(event.city.parameterize)) %>
-        <li class="event-color calendar-event color-<%= event.color %> clickme forceOpen" onclick="" alt="..." data-toggle="modal" data-target="#city<%= event.id %>_modal">
+        <li class="calendar-event clickme forceOpen" style="<%= event.css_style %>" onclick="" alt="..." data-toggle="modal" data-target="#city<%= event.id %>_modal">
           <span class="hidden-xs">&nbsp;<%= event.class_name %></span>
           <span class="visible-xs mobile-name"><%= event.class_name %></span>
         </li>

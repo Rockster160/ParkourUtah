@@ -9,6 +9,13 @@ class EventController < ApplicationController
     @event = Event.find(params[:id])
   end
 
+  def detail
+    @event = Event.find(params[:id])
+    respond_to do |format|
+      format.html { render layout: !request.xhr? }
+    end
+  end
+
   def cancel
     if params[:should_happen] == "true"
       Event.find(params[:id]).uncancel!

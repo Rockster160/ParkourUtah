@@ -6,6 +6,15 @@ var mobile_calendar = function () {
     return check;
   };
 
+  $('.mobile-view-container').on('click tap', '.event-detail-btn', function(e) {
+    $('.event-detail-container').html('<div class="text-center"><i class="fa fa-spinner fa-spin fa-3x"/></div>');
+    var url = $(this).attr('data-event-url')
+    $.get(url, {}).success(function(data) {
+      $('.event-detail-container').html(data);
+    })
+    $('#event-detail-modal').modal('show');
+  })
+
   if ($('.mobile-view-container').length > 0) {
     is_loading = true, load_period = 'next', can_update = true, scroll_timer = 0;
 

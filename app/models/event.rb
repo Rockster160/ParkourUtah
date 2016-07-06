@@ -56,6 +56,10 @@ class Event < ActiveRecord::Base
     :white
   ]
 
+  def css_style
+    
+  end
+
   # Event.all.to_a.group_by { |event| event.city }.keys.each_with_index { |city, pos| Event.set_class_color(city, Event.colors.keys[pos]) }
   def self.cities
     Event.all.to_a.group_by { |event| event.city }.keys

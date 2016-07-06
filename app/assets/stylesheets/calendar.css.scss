@@ -15,6 +15,39 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
     text-align: center;
   }
   .week-container {
+    .day-label {
+      text-align: left;
+      padding: 10px 5px;
+      margin: 0;
+      margin-top: 10px;
+      border-top: 1px solid gray;
+      border-bottom: 1px solid gray;
+      background: #E7ECF9;
+    }
+    .mobile-events-container {
+      width: 100%;
+      .event-detail-btn {
+        width: 100%;
+        line-height: 1;
+        .mobile-event-time {
+          display: table-cell;
+          line-height: 50px;
+          text-align: center;
+          width: 70px;
+          background: red;
+          vertical-align: middle;
+        }
+        .mobile-event-name {
+          display: table-cell;
+          vertical-align: middle;
+          padding-left: 10px;
+        }
+        &:hover {
+          background: #DDD;
+          cursor: pointer;
+        }
+      }
+    }
   }
 }
 
@@ -24,14 +57,6 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
     margin-top: 10px;
   }
 }
-
-// .calendar-search-boxes {
-//   padding-top: 30px;
-//   .class-name-search, .city-name-search {
-//     width: 100%;
-//     margin: 20px 0;
-//   }
-// }
 
 .date-controller { margin-top: 10px; margin-bottom: 10px; }
 
@@ -205,92 +230,6 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
   .mobile-name {
     text-overflow: ellipsis;
     overflow: hidden;
-  }
-}
-
-$default: rgb(128, 128, 128);
-
-// $color-: rgb(255, 255, 255);
-$color-red: rgb(220, 0, 0);
-$color-orange: rgb(220, 128, 0);
-$color-yellow: rgb(220, 220, 0);
-$color-yellowgreen: rgb(128, 220, 0);
-$color-green: rgb(0, 220, 0);
-$color-cyan: rgb(0, 220, 220);
-$color-azure: rgb(0, 128, 220);
-$color-blue: rgb(0, 0, 220);
-$color-babyblue: rgb(0, 160, 255);
-$color-pink: rgb(255, 60, 60);
-$color-lightpurple: rgb(162, 97, 255);
-$color-violet: rgb(128, 0, 220);
-$color-magenta: rgb(220, 0, 220);
-$color-rose: rgb(220, 0, 100);
-
-.event-color {
-  background: lighten($default, 25%);
-  &:hover { background: $default; }
-  &.color-red {
-    background: lighten($color-red, 25%);
-    &:hover { background: $color-red; }
-  }
-  &.color-babyblue {
-    background: lighten($color-babyblue, 25%);
-    &:hover { background: $color-babyblue; }
-  }
-  &.color-pink {
-    background: lighten($color-pink, 25%);
-    &:hover { background: $color-pink; }
-  }
-  &.color-lightpurple {
-    background: lighten($color-lightpurple, 25%);
-    &:hover { background: $color-lightpurple; }
-  }
-  &.color-orange {
-    background: lighten($color-orange, 25%);
-    &:hover { background: $color-orange; }
-  }
-  &.color-yellow {
-    background: lighten($color-yellow, 25%);
-    &:hover { background: $color-yellow; }
-  }
-  &.color-yellowgreen {
-    background: lighten($color-yellowgreen, 25%);
-    &:hover { background: $color-yellowgreen; }
-  }
-  &.color-green {
-    background: lighten($color-green, 25%);
-    &:hover { background: $color-green; }
-  }
-  &.color-cyan {
-    background: lighten($color-cyan, 25%);
-    &:hover { background: $color-cyan; }
-  }
-  &.color-azure {
-    background: lighten($color-azure, 25%);
-    &:hover { background: $color-azure; }
-  }
-  &.color-blue {
-    background: lighten($color-blue, 25%);
-    &:hover { background: $color-blue; }
-  }
-  &.color-violet {
-    background: lighten($color-violet, 25%);
-    &:hover { background: $color-violet; }
-  }
-  &.color-magenta {
-    background: lighten($color-magenta, 25%);
-    &:hover { background: $color-magenta; }
-  }
-  &.color-rose {
-    background: lighten($color-rose, 25%);
-    &:hover { background: $color-rose; }
-  }
-  &.color-white {
-    background: white;
-    &:hover { background: rgba(0, 0, 0, 0.25); }
-  }
-  &.color-gray {
-    // Defaults
   }
 }
 

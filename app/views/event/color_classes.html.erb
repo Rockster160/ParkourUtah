@@ -15,7 +15,7 @@
           <div class="relative row">
             <% Event.colors.keys.each do |color| %>
               <%= link_to color_class_path(color: color, class_name: class_name), method: :post do %>
-                <p class="col-xs-6 event-color color-<%= color %>"><%= color %></p>
+                <p class="col-xs-6" style="<%= event.css_style %>"><%= color %></p>
               <% end %>
             <% end %>
           </div>
