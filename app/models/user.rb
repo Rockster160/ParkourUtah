@@ -112,6 +112,13 @@ class User < ActiveRecord::Base
   def self.admins; select{|u|u.is_admin?}; end
   def self.[](id); find(id); end; #User[4]
 
+  def self.doit
+    while true
+      sleep 1
+      Automator.open? ? "\e[32mOPEN\e[0m" : "\e[32mCLOSED\e[0m"
+    end
+  end
+
   def self.by_signed_in
     all.select { |u| u.last_sign_in_at }.sort_by { |u| u.last_sign_in_at }.reverse
   end
@@ -127,6 +134,15 @@ class User < ActiveRecord::Base
   def self.every(&block)
     return self.all.to_enum unless block_given?
     self.all.each {|user| block.call(user)}
+  end
+
+  def self.remove_number_from_texting(num)
+    if user = find_by_phone_number(num)
+      user.notifications.update(sms_receivable: false)
+      "Success!"
+    else
+      "Fail."
+    end
   end
 
   def self.update_instructor_positions
@@ -212,7 +228,7 @@ class User < ActiveRecord::Base
   def charge(price, athlete)
     if athlete.has_unlimited_access?
       athlete.subscription.use!
-      "Unlimited Subscription"
+      'Unlimited Subscription'
     elsif athlete.has_trial?
       athlete.trial.use!
       'Trial Class'

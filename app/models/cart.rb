@@ -6,6 +6,7 @@
 #  user_id    :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  email      :string
 #
 
 class Cart < ActiveRecord::Base
@@ -16,9 +17,23 @@ class Cart < ActiveRecord::Base
   def items
     items = []
     self.transactions.each do |order|
-      items <<  LineItem.find(order.item_id)
+      order.amount.times do
+        items <<  LineItem.find(order.item_id)
+      end
     end
     items
+  end
+
+  def add_items(*item_ids)
+    item_ids.flatten.each do |item_id|
+      order = transactions.where(item_id: item_id).first
+      if order
+        order.increment!(:amount)
+      else
+        item = LineItem.find(item_id)
+        transactions.create(item_id: item_id, order_name: item.title, amount: 1)
+      end
+    end
   end
 
   def price
@@ -32,7 +47,7 @@ class Cart < ActiveRecord::Base
   def shipping
     cost = 0
     self.transactions.each do |order|
-      cost += (order.amount * 200) unless %w( Class Coupon Other ).include?(order.item.category)
+      cost += (order.amount * 200) unless %w( Class Coupon Redemption Other Gift\ Card ).include?(order.item.category)
     end
     cost += (cost > 0 ? 300 : 0)
     cost

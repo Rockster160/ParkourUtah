@@ -1,5 +1,6 @@
 class SmsMailerWorker
   include Sidekiq::Worker
+  sidekiq_options :retry => false
 
   def perform(num, msg)
     api = Twilio::REST::Client.new(ENV['PKUT_TWILIO_ACCOUNT_SID'], ENV['PKUT_TWILIO_AUTH_TOKEN'])
@@ -24,5 +25,6 @@ class SmsMailerWorker
         end
       end
     end
+
   end
 end

@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-
 gem 'rails', '4.2.0'
 gem 'pg'
 gem 'sass-rails', '~> 5.0'
@@ -33,7 +32,6 @@ gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 gem 'twitter-typeahead-rails'
 gem 'jquery-tablesorter'
 gem 'maskedinput-rails'
-gem 'annotate', '~> 2.6.6'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem "dotimeout-rails"
 gem 'kaminari'
@@ -44,6 +42,7 @@ gem 'geocoder'
 gem 'browser'
 
 group :development, :test do
+  gem 'annotate'
   gem 'byebug'
   gem 'pry-nav'
   gem 'pry-rails'

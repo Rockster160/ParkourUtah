@@ -11,7 +11,7 @@
           <%= text_field_tag "athlete[#{token}][name]", '', placeholder: 'Full Name', class: "pkut-textbox formatName" %>
         </div>
         <div class="col-sm-6">
-          <%= telephone_field_tag "athlete[#{token}][dob]", '', placeholder: 'MM/DD/YYYY', class: "pkut-textbox sm-textbox formatDOB" %><span class='show-required'><a alt="..." data-toggle="modal" data-target="#what_is" class="hover-btn forceOpen what-is-pin"><sup>(What is this?)</sup></a><%= telephone_field_tag "athlete[#{token}][code]", '', placeholder: 'ex:1234', class: "pkut-textbox xs-textbox formatPin" %></span> <%= icon("times-circle-o", '', class: 'fa-2x kill-athlete hover-btn') %>
+          <%= telephone_field_tag "athlete[#{token}][dob]", '', placeholder: 'MM/DD/YYYY', class: "pkut-textbox sm-textbox formatDOB" %><span class="show-required"><a alt="..." data-toggle="modal" data-target="#what_is" class="hover-btn forceOpen what-is-pin"><sup>(What is this?)</sup></a><%= telephone_field_tag "athlete[#{token}][code]", '', placeholder: 'ex:1234', class: "pkut-textbox xs-textbox formatPin" %></span> <%= icon("times-circle-o", '', class: 'fa-2x kill-athlete hover-btn') %>
         </div>
       </div>
     </div>

@@ -11,6 +11,8 @@
     <%= f.text_field :color, placeholder: 'Blue, Green, Grey, Black', class: 'pkut-textbox' %>
     <h5>Description</h5>
     <%= f.text_area :description, placeholder: 'Description', required: true, autocomplete: "off", class: 'pkut-textarea' %><br/>
+    <h5>If Gift Card, generate a Redemption Code for:</h5>
+    <%= f.select :redemption_item_id, @hidden_items, {include_blank: "Not a Gift Card"}, class: 'pkut-textbox' %>
     <h5>Category</h5>
     <%= f.select :category, @categories, class: 'pkut-textbox' %>
     <br/>

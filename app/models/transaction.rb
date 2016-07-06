@@ -26,7 +26,7 @@ class Transaction < ActiveRecord::Base
   def verify_amount_is_not_nil
     self.amount ||= 0
     self.redeemed_token ||= ""
-    self.order_name ||= LineItem.find(self.item_id).title
+    self.order_name ||= item.title
   end
 
 end

@@ -1,3 +1,4 @@
+require 'net/http'
 class Scheduled < ActiveRecord::Base
 
   def self.send_class_text
@@ -58,7 +59,7 @@ class Scheduled < ActiveRecord::Base
           instructors[event.host]["pay"] = 15
         end
         instructors.each do |instructor|
-          pay = instructor[1]["pay"] < 15 ? 15 : instructor[1]["pay"]
+          pay = event.attendances.count > 5 ? instructor[1]["pay"] : 15
           instructor[1]["pay"] = pay
           payment[instructor[0]] ||= 0
           payment[instructor[0]] += pay
@@ -224,6 +225,69 @@ class Scheduled < ActiveRecord::Base
       is_subscription: true,
       category: "Other"
     )
+  end
+
+  # {
+  #     "apps_url": "https://api.venmo.com/v1/apps{/app_id}",
+  #     "current_user_url": "https://api.venmo.com/v1/me",
+  #     "errors_url": "https://api.venmo.com/v1/error_messages",
+  #     "payments_url": "https://api.venmo.com/v1/payments{/payment_id}",
+  #     "sandbox_payments_url": "https://sandbox-api.venmo.com/payments",
+  #     "user_url": "https://api.venmo.com/v1/users{/user_id}",
+  #     "user_friends_url": "https://api.venmo.com/v1/users{/user_id}/friends"
+  # }
+
+  def self.refresh_venmo
+    response = Net::HTTP.post_form(URI.parse("https://api.venmo.com/v1/oauth/access_token"),
+      {
+        "client_id" => ENV["PKUT_VENMO_ID"],
+        "client_secret" => ENV["PKUT_VENMO_SECRET"],
+        "refresh_token" => Venmo.first.refresh_token
+      }
+    )
+    if response.body["access_token"] && response.body["refresh_token"] && response.body["access_token"].length > 5 && response.body["refresh_token"].length > 5
+      expires_at = DateTime.now + response.body["expires_in"].to_i.seconds
+      Venmo.find_by_username("Rocco").update(
+        access_token: response.body["access_token"],
+        refresh_token: response.body["refresh_token"],
+        expires_at: expires_at
+      )
+      SmsMailerWorker.perform_async('3852599640', "Success: #{response.body['access_token']}")
+    else
+      SmsMailerWorker.perform_async('3852599640', "Failed to update: #{response.body}")
+    end
+  end
+
+  def self.make_charge(to, amount, note)
+    SmsMailerWorker.perform_async('3852599640', "Charge to #{to} - #{amount} - #{note}.")
+    refresh_venmo if Venmo.first.expired?
+
+    response = Net::HTTP.post_form(URI.parse("https://api.venmo.com/v1/payments"),
+      {
+        "access_token" => Venmo.first.access_token,
+        "phone" => to,
+        "note" => note,
+        "amount" => amount
+      }
+    )
+    if response.body["error"].present?
+      SmsMailerWorker.perform_async('3852599640', "Charge to #{to} failed.\n\n #{response.body}")
+    end
+    response
+  end
+
+  def self.request_charges
+    make_charge('8018089455', -60, "👧 🚙")
+    make_charge('8017924442', -60, "👧 🚙")
+    make_charge('8016041947', -60, "👧 🚙")
+  end
+
+  def self.give_charges
+    make_charge('8017924442', 150, "🚲")
+  end
+
+  def self.test_charge(amount)
+    make_charge('8019317892', amount, "🚲")
   end
 
 end

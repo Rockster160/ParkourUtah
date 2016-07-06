@@ -2,15 +2,17 @@
 <br/>
 <p>If you bought class credits, they have already been added to your account and your athletes are ready to attend class!</p>
 <p>If you bought physical items, your order has been saved and is now in the process of getting put together, packaged, and shipped directly to your home!</p>
-<br/>
-<br/>
-<h3>Shipping information</h3>
-<p><%= @user.email %></p>
-<p><%= @address.line1 %></p>
-<p><%= @address.line2 %></p>
-<p><%= @address.city %></p>
-<p><%= @address.state %></p>
-<p><%= @address.zip %></p>
+<% if @user %>
+  <br/>
+  <br/>
+  <h3>Shipping information</h3>
+  <p><%= @user.email %></p>
+  <p><%= @address.line1 %></p>
+  <p><%= @address.line2 %></p>
+  <p><%= @address.city %></p>
+  <p><%= @address.state %></p>
+  <p><%= @address.zip %></p>
+<% end %>
 <br/>
 <br/>
 <h3>Order information</h3>

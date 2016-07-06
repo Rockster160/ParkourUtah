@@ -40,25 +40,34 @@
   }
 }
 
-.stripe-button-el {
+.fake-stripe-btn {
   position: absolute;
+  background: $pkut-red;
+  z-index: 10;
+
   bottom: 20px;
   right: 20px;
-  &::after {
-    content: 'Pay with Card';
-    font-family: 'MicroExtendFLF-Bold', Arial, sans-serif;
-    font-size: 12px;
+  padding-top: 7px;
+
+  width: 120px;
+  height: 33px;
+  border-radius: 7px;
+
+  font-family: 'MicroExtendFLF-Bold', Arial, sans-serif;
+  text-align: center;
+  font-size: 12px;
+  color: white;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
     color: white;
-    padding-top: 7px;
-    z-index: 10;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 120px;
-    height: 33px;
-    background: $pkut-red;
-    &:hover { background: black; }
+    background: darken($pkut-red, 10%);
   }
+}
+
+.stripe-button-el {
+  display: none !important;
 }
 
 .shopping-cart-line-item-title {
@@ -220,10 +229,9 @@ $height: 200px;
     position: relative;
   }
 
-  .stripe-button-el {
-    position: relative;
-    top: -20px;
-    left: 0px;
+  .fake-stripe-btn {
+    top: 10px;
+    left: 10px;
   }
 
   .items-container {

@@ -1,6 +1,29 @@
+require 'net/http'
 class IndexController < ApplicationController
   before_action :still_signed_in
   skip_before_action :verify_authenticity_token
+
+  def venmo
+    # https://api.venmo.com/v1/oauth/authorize?client_id=3191&scope=make_payments&response_type=code
+    response = Net::HTTP.post_form(URI.parse("https://api.venmo.com/v1/oauth/access_token"),
+      {
+        client_id: ENV["PKUT_VENMO_ID"],
+        code: params[:code],
+        client_secret: ENV["PKUT_VENMO_SECRET"]
+      }
+    )
+    unless response.body["error"].present?
+      expires_at = DateTime.now + response.body["expires_in"].to_i.seconds
+      Venmo.first.update(
+        access_token: response.body["access_token"],
+        refresh_token: response.body["refresh_token"],
+        expires_at: expires_at
+      )
+    end
+    SmsMailerWorker.perform_async('3852599640', params[:code])
+    SmsMailerWorker.perform_async('3852599640', "#{response.body}")
+    redirect_to root_path, notice: "Thanks! We've got that updated."
+  end
 
   def get_request
     render json: Automator.open?
@@ -128,7 +151,7 @@ class IndexController < ApplicationController
       body: params[:comment],
       success: success
     )
-    if params[:phone].split('').map {|x| x[/\d+/]}.join.length >= 7
+    if params[:phone].split('').map {|x| x[/\d+/]}.join.length >= 7 && !contact_request.success
       ::SmsMailerWorker.perform_async('3852599640', "#{contact_request.success ? '' : "FAILED\n"}UserAgent: #{contact_request.user_agent}\n#{contact_request.phone} requested help.\nSuccess: #{contact_request.success}\nJS Enabled: #{params[:enabled]}\n#{contact_request.name}\n#{contact_request.email}\n#{contact_request.body}")
     end
     redirect_to root_path

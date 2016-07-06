@@ -29,8 +29,8 @@ class Event < ActiveRecord::Base
   # "#{address}"
   # "#{city}, #{state.abbreviate_state} #{zip}"
 
-  has_many :attendances
-  has_many :spot_events
+  has_many :attendances, dependent: :destroy
+  has_many :spot_events, dependent: :destroy
   accepts_nested_attributes_for :spot_events, allow_destroy: true
   has_many :subscriptions, dependent: :destroy
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150924232713) do
+ActiveRecord::Schema.define(version: 20160705232709) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,6 +66,7 @@ ActiveRecord::Schema.define(version: 20150924232713) do
     t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "email"
   end
 
   add_index "carts", ["user_id"], name: "index_carts_on_user_id", using: :btree
@@ -156,6 +157,7 @@ ActiveRecord::Schema.define(version: 20150924232713) do
     t.boolean  "taxable",              default: true
     t.string   "color"
     t.boolean  "is_full_image",        default: false
+    t.integer  "redemption_item_id"
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -167,6 +169,8 @@ ActiveRecord::Schema.define(version: 20150924232713) do
     t.boolean "email_waiver_expiring", default: false
     t.boolean "text_waiver_expiring",  default: false
     t.boolean "sms_receivable"
+    t.boolean "text_class_cancelled",  default: false
+    t.boolean "email_class_cancelled", default: false
   end
 
   add_index "notifications", ["user_id"], name: "index_notifications_on_user_id", using: :btree
@@ -313,6 +317,15 @@ ActiveRecord::Schema.define(version: 20150924232713) do
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+
+  create_table "venmos", force: :cascade do |t|
+    t.string   "access_token"
+    t.string   "refresh_token"
+    t.datetime "expires_at"
+    t.string   "username"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
 
   create_table "waivers", force: :cascade do |t|
     t.integer  "dependent_id"

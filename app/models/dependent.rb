@@ -27,6 +27,7 @@ class Dependent < ActiveRecord::Base
   has_many :waivers, dependent: :destroy
   has_many :trial_classes, dependent: :destroy
   has_many :athlete_subscriptions, dependent: :destroy
+  has_many :attendances, dependent: :destroy
 
   has_attached_file :athlete_photo,
                :styles => { :medium => "300", :thumb => "100x100#" },
@@ -87,7 +88,7 @@ class Dependent < ActiveRecord::Base
 
   def subscription
     subs = self.athlete_subscriptions
-    return nil unless subs && subs.first
+    return nil unless subs.any?
 
     subs.select {|s| !(s.expires_at.nil?) }.sort_by { |s| s.created_at }.last
   end

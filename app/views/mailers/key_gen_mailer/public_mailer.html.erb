@@ -1,0 +1,41 @@
+<style>
+  .connect-box:hover { color: white; text-decoration: none; }
+  .facebook-color:hover { background: #2D4473; }
+  .twitter-color:hover { background: #0087BB; }
+  .youtube-color:hover { background-color: #CC0000; }
+  a:hover {
+    cursor: pointer;
+    color: darken(#2BA6CB, 5%);
+    text-decoration: none;
+  }
+</style>
+<div class="mailer-container" style="width: 580px; color: #222222; font-family: 'Helvetica', 'Arial', sans-serif; font-weight: normal; padding:0; margin: 0; text-align: justify; line-height: 1.3;">
+  <h1 style="font-size: 40px; font-weight: normal;">Congrats!</h1>
+  <p style="font-size: 18px; line-height: 21px;">Your gift card has been purchased! All you need to do is provide the below "Redemption Code" to whomever you're giving the gift to!</p>
+  <div class="gray-container center" style="text-align: center; position: relative; width: 100%; height: 200px; background: #E9E9E9; padding-bottom: 30px;">
+    <h1 style="line-height: 140px; font-size: 40px; font-weight: normal;"><%= @key.key %></h1>
+    <% credits = @key.line_item.credits / 12 %>
+    <span class="small" style="">This code is worth <span style="font-size: 50px"><%= credits %></span> class<%= credits == 1 ? '' : 'es' %>.</span>
+  </div>
+  <h2 style="font-size: 32px; font-weight: normal;">To Use the Redemption Code:</h2>
+  <p class="small" style="font-size: 14px; line-height: 19px;">Log into your <a href="http://parkourutah.com" style="color: #2BA6CB; text-decoration: none;">parkourutah.com</a> account and click on <a href="http://parkourutah.com/store" style="color: #2BA6CB; text-decoration: none;">STORE</a> in the navigation bar at the top of the page. Once in the store click on the Coupon Code section in the cart and enter the above "Redemption Code". Click Pay with Card on the bottom and the 5 free classes will be added to your account automatically!</p>
+  <table style="width: 100%; background: #E9E9E9; min-height: 200px; padding-left: 20px;">
+    <thead>
+      <th style="margin-top: 0; font-size: 32px; font-weight: normal;">Connect With Us:</th>
+      <th style="margin-top: 0; font-size: 32px; font-weight: normal;">Problems?</th>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="width: 290px; padding: 10px 20px 0 10px;">
+          <a href="https://www.facebook.com/ParkourUtah/" style="color: #2BA6CB; text-decoration: none;"><div class="connect-box facebook-color" style="margin: 15px auto; height: 30px; line-height: 30px; width: 100%; text-align: center; color: white; text-decoration: none; background-color: #3B5998 !important; border-color: #2D4473;">Facebook</div></a>
+          <a href="https://twitter.com/parkourutah" style="color: #2BA6CB; text-decoration: none;"><div class="connect-box twitter-color" style="margin: 15px auto; height: 30px; line-height: 30px; width: 100%; text-align: center; color: white; text-decoration: none; background-color: #00ACEE !important; border-color: #0087BB;">Twitter</div></a>
+          <a href="https://www.youtube.com/user/parkourutah" style="color: #2BA6CB; text-decoration: none;"><div class="connect-box youtube-color" style="margin: 15px auto; height: 30px; line-height: 30px; width: 100%; text-align: center; color: white; text-decoration: none; background-color: #DB4A39 !important; border-color: #CC0000;">Youtube</div></a>
+        </td>
+        <td style="width: 290px; vertical-align: top;">
+          <p style="font-size: 18px; line-height: 21px;">Phone: 801.669.7743</p>
+          <p style="font-size: 18px; line-height: 21px;">Email: <a href="mailto:parkourutah@gmail.com" target="_blank">parkourutah@gmail.com</a></p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

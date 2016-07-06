@@ -11,8 +11,10 @@
     <%= f.text_field :color, placeholder: 'Blue, Green, Grey, Black', class: 'pkut-textbox' %>
     <h5>Description</h5>
     <%= f.text_area :description, placeholder: 'Marvelous skills sewn with godly thread.', class: 'customRequired pkut-textarea' %>
+    <h5>If Gift Card, generate a Redemption Code for:</h5>
+    <%= f.select :redemption_item_id, @hidden_items, {include_blank: "Not a Gift Card"}, class: 'pkut-textbox' %>
     <h5>Category</h5>
-    <%= f.select :category, @categories, class: 'pkut-textbox' %>
+    <%= f.select :category, @categories, {}, class: 'pkut-textbox' %>
     <br/>
     <br/>
     <%= f.check_box :hidden %>
@@ -20,6 +22,9 @@
     <br/>
     <%= f.check_box :taxable %>
     <%= f.label :taxable, 'Taxable?' %>
+    <br/>
+    <%= f.check_box :is_full_image %>
+    <%= f.label :is_full_image, 'Image takes up entire box?' %>
     <h5>Credits given to user after purchase (1 class = 12)</h5>
     <%= f.text_field :credits, class: 'pkut-textbox restrictNumeric' %>
     <h5>Display image</h5>
