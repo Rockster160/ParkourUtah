@@ -40,6 +40,7 @@ gem 'gmaps4rails'
 gem 'underscore-rails'
 gem 'geocoder'
 gem 'browser'
+gem 'chroma'
 
 group :development, :test do
   gem 'annotate'

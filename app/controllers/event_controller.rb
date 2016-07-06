@@ -163,6 +163,7 @@ class EventController < ApplicationController
       :description,
       :city,
       :token,
+      :color,
       :zip,
       :date,
       :address,

@@ -23,6 +23,8 @@
     <%= f.label 'Spot' %><br/>
     <% old_spot = @event.spot_events.first %>
     <%= select_tag(:spot_id, options_for_select(Spot.all.collect { |k, v| [k.title, k.id] }, (old_spot ? old_spot.spot.id : 'Select') ), include_blank: 'Select Spot') %> <br />
+    <%= f.label :color %> <br>
+    <%= f.text_field :color, class: 'jscolor' %> <br>
     <%= f.label :description, 'A description of the event' %><br/>
     <%= f.text_area :description, placeholder: 'Our weekly Draper fundamentals class. Wear comfortable clothing that is easy to move in and a water bottle. Class runs for an hour and a half and involves moving all around the park. Make sure to bring your punch card or $12 via Credit Card for a single class. If you haven''t ever been before a WAIVER will need to be signed by you (if you\'re 18+) or a parent. If you have any questions about the class feel free to contact the teacher, Justin Spencer, via text or call 801-580-9274.', class: 'pkut-textarea' %><br/>
     <%= f.label :host %><br/>

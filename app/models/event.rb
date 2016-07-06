@@ -17,7 +17,7 @@
 #  updated_at            :datetime         not null
 #  zip                   :string
 #  state                 :string           default("Utah")
-#  color                 :integer
+#  color                 :string
 #  cancelled_text        :boolean          default(FALSE)
 #
 
@@ -35,29 +35,27 @@ class Event < ActiveRecord::Base
   has_many :subscriptions, dependent: :destroy
 
   before_save :format_fields
+  before_save :add_hash_to_colors
   after_create :set_color
 
-  enum color: [
-    :red,
-    :orange,
-    :yellow,
-    :yellowgreen,
-    :green,
-    :cyan,
-    :babyblue,
-    :pink,
-    :lightpurple,
-    :azure,
-    :blue,
-    :violet,
-    :magenta,
-    :rose,
-    :gray,
-    :white
-  ]
-
   def css_style
-    
+    "background-color: #{color.presence || '#FFF'} !important; color: #{color_contrast} !important; background-image: none !important;"
+  end
+
+  def add_hash_to_colors
+    color.prepend('#') if color.present? && (color.length == 3 || color.length == 6)
+  end
+
+  def color_contrast(contrasted_color=color)
+    contrasted_color = contrasted_color.presence || '#FFF'
+    black, white = '#000', '#FFF'
+    return white unless contrasted_color.present?
+    color = contrasted_color.gsub('#', '')
+    return white unless color.length == 6 || color.length == 3
+    r_255, g_255, b_255 = color.chars.in_groups(3).map { |hex_val| (hex_val.many? ? hex_val : hex_val*2).join.to_i(16) }
+    r_lum, g_lum, b_lum = r_255 * 299, g_255 * 587, b_255 * 114
+    luminescence = ((r_lum + g_lum + b_lum) / 1000)
+    return luminescence > 150 ? black : white
   end
 
   # Event.all.to_a.group_by { |event| event.city }.keys.each_with_index { |city, pos| Event.set_class_color(city, Event.colors.keys[pos]) }
@@ -76,7 +74,7 @@ class Event < ActiveRecord::Base
   def self.color_of(class_name)
     classes = where(class_name: class_name)
     if classes.any?
-      color = classes.first.color
+      color = classes.last.color
       (color.nil? || color.empty?) ? self.set_class_color(class_name) : color
     else
       ""
@@ -120,7 +118,7 @@ class Event < ActiveRecord::Base
   end
 
   def set_color
-    self.color = Event.color_of(self.city)
+    self.color ||= Event.color_of(self.city)
     self.save
   end
 
