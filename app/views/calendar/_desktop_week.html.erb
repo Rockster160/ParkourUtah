@@ -50,7 +50,7 @@
         </div>
       <% if event.class_name == "special" || (@selected_classes.include?(event.class_name.parameterize) && @selected_cities.include?(event.city.parameterize)) %>
         <li class="calendar-event clickme forceOpen" style="<%= event.css_style %>" onclick="" alt="..." data-toggle="modal" data-target="#city<%= event.id %>_modal">
-          <span class="hidden-xs">&nbsp;<%= event.class_name %></span>
+          <span class="hidden-xs">&nbsp;<%= event.date.strftime('%l:%M %p') %> <%= event.class_name %></span>
           <span class="visible-xs mobile-name"><%= event.class_name %></span>
         </li>
       <% end %>

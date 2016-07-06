@@ -58,7 +58,7 @@ class IndexController < ApplicationController
   def index
     @instructors = User.where("role > ?", 0).sort_by { |u| u.instructor_position }
 
-    all_events = Event.where("date > ?", Date.today)
+    all_events = Event.where('date > ?', Date.today)
     @events = all_events.group_by { |event| [event.date.month, event.date.day] }
     @cities = all_events.group_by { |event| event.city }.keys.sort
     @classes = all_events.group_by { |event| event.class_name }.keys

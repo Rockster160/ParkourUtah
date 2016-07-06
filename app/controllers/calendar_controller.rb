@@ -7,7 +7,7 @@ class CalendarController < ApplicationController
     @date = params[:date] ? rails_time_from(params[:date]) : Date.today
     @week = (@date.beginning_of_week(:monday)..@date.end_of_week(:sunday))
 
-    all_events = Event.all.to_a
+    all_events = Event.where('date > ?', Date.today).to_a
     @events = all_events.group_by { |event| [event.date.year, event.date.month, event.date.day] }
     @cities = all_events.group_by { |event| event.city }.keys.sort.map(&:parameterize)
     @classes = all_events.group_by { |event| event.class_name }.keys.sort.map(&:parameterize)
@@ -22,14 +22,14 @@ class CalendarController < ApplicationController
     else
       params[:date] ? (rails_time_from(params[:date]) || Date.today) : Date.today
     end
-    
+
     @date -= 1.week if params[:direction] == 'previous'
     @date += 1.week if params[:direction] == 'next'
     @date += 1.day if @date.wday == 0
 
     @week = (@date.beginning_of_week(:monday)..@date.end_of_week(:sunday))
 
-    all_events = Event.all.to_a
+    all_events = Event.where('date > ?', Date.today).to_a
     @events = all_events.group_by { |event| [event.date.year, event.date.month, event.date.day] }
     @cities = all_events.group_by { |event| event.city }.keys.sort.map(&:parameterize)
     @classes = all_events.group_by { |event| event.class_name }.keys.sort.map(&:parameterize)

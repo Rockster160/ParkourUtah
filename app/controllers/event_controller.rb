@@ -40,28 +40,19 @@ class EventController < ApplicationController
 
   def new
     @event = Event.new
-    all_events = Event.all.to_a
+    all_events = Event.where('date > ?', Date.today).to_a
     @cities = all_events.group_by { |event| event.city }.keys.sort
     @classes = all_events.group_by { |event| event.class_name }.keys.sort
     @instructors = User.where("role > ?", 0)
   end
 
   def cities
-    @cities = Event.cities
+    @cities = Event.where('date > ?', Date.today).cities
   end
 
   def city
     @city = params[:city]
-    @events = Event.sort_by_token.select { |e| e.city == @city }
-  end
-
-  def color_class
-    Event.set_class_color(params[:class_name], params[:color])
-    redirect_to edit_colors_path
-  end
-
-  def color_classes
-    @classes = Event.all.group_by { |e| e.class_name }.keys
+    @events = Event.where('date > ?', Date.today).sort_by_token.select { |e| e.city == @city }
   end
 
   def create

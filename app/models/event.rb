@@ -38,6 +38,10 @@ class Event < ActiveRecord::Base
   before_save :add_hash_to_colors
   after_create :set_color
 
+  def findit
+    Event.all.each {|e|e.update(class_name: e.class_name.gsub(/(\d{1,2}:\d{2})( )?((a|p)m)?( )?/i, ''))}
+  end
+
   def css_style
     "background-color: #{color.presence || '#FFF'} !important; color: #{color_contrast} !important; background-image: none !important;"
   end
