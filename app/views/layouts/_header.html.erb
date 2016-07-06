@@ -34,7 +34,7 @@
           <% else %>
             <li><a alt="..." class="hover-btn" data-toggle="modal" data-target="#modal_contact">Contact Us</a></li>
             <li><%= link_to "Store", store_path %></li>
-            <li><%= link_to "Calendar", calendar_show_path('all') %></li>
+            <li><%= link_to "Calendar", calendar_show_path %></li>
             <li><%= link_to "Sign In", new_user_session_path %></li>
           <% end %>
         </ul>
@@ -78,11 +78,11 @@
               <hr>
               <li><%= link_to "Contact Us", contact_page_path %></li>
               <li><%= link_to "Store", store_path %></li>
-              <li><%= link_to "Calendar", calendar_show_path('all') %></li>
+              <li><%= link_to "Calendar", calendar_show_path %></li>
             <% else %>
               <li><a alt="..." class="hover-btn" data-toggle="modal" data-target="#modal_contact">Contact Us</a></li>
               <li><%= link_to "Store", store_path %></li>
-              <li><%= link_to "Calendar", calendar_show_path('all') %></li>
+              <li><%= link_to "Calendar", calendar_show_path %></li>
               <li><%= link_to "Sign In", new_user_session_path %></li>
             <% end %>
           </li>

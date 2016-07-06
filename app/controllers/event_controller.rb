@@ -76,7 +76,7 @@ class EventController < ApplicationController
       params[:event][:date] = date
       Event.create(event_params)
     end
-    redirect_to calendar_show_path("all")
+    redirect_to calendar_show_path
   end
 
   def edit
@@ -119,7 +119,7 @@ class EventController < ApplicationController
     else
       Event.find(params[:id]).destroy
     end
-    redirect_to calendar_show_path("all")
+    redirect_to calendar_show_path
   end
 
   def subscribe
