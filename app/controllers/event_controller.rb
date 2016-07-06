@@ -24,7 +24,9 @@ class EventController < ApplicationController
     event = Event.find(params[:id])
     users = event.subscribed_users
     users.each do |user|
-      ::SmsMailerWorker.perform_async(user.phone_number, params[:message])
+      if user.notifications.text_class_cancelled? && user.notifications.sms_receivable?
+        ::SmsMailerWorker.perform_async(user.phone_number, params[:message])
+      end
     end
     redirect_to :back, notice: 'Your message has been sent.'
   end

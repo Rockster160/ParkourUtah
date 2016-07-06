@@ -54,6 +54,24 @@
 
       <div class="row">
         <div class="col-xs-4">
+          Class Cancelled Message
+        </div>
+        <div class="col-xs-4">
+          <div class="pkut-checkbox">
+            <%= check_box_tag "notify[email_class_cancelled]", '', current_user.notifications.email_class_cancelled? %>
+            <%= label_tag "notify[email_class_cancelled]", '' %>
+          </div>
+        </div>
+        <div class="col-xs-4">
+          <div class="pkut-checkbox">
+            <%= check_box_tag "notify[text_class_cancelled]", '', current_user.notifications.text_class_cancelled? %>
+            <%= label_tag "notify[text_class_cancelled]", '' %>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-4">
           Low on credits
         </div>
         <div class="col-xs-4">

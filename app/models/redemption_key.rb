@@ -40,7 +40,7 @@ class RedemptionKey < ActiveRecord::Base
     nums = (0..9).to_a
 
     key = 20.times.map {(caps + down + nums).sample}.join('')
-    if RedemptionKey.all.where(key: key).count == 0
+    if RedemptionKey.where(key: key).count == 0
       self.update(key: key)
     else
       self.generate_key
@@ -54,5 +54,5 @@ class RedemptionKey < ActiveRecord::Base
   def self.keys_redeemed
     self.select { |key| key.redeemed }.count
   end
-  
+
 end

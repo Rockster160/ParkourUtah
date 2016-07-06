@@ -23,7 +23,7 @@ class StoreController < ApplicationController
   end
 
   def generate_keys
-    @hidden = LineItem.select { |l| l.hidden == true }.sort_by { |s| s.created_at }.reverse
+    @hidden = LineItem.where(hidden: true).reorder(created_at: :desc)
   end
 
   def unsubscribe

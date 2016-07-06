@@ -11,6 +11,8 @@
 #  email_waiver_expiring :boolean          default(FALSE)
 #  text_waiver_expiring  :boolean          default(FALSE)
 #  sms_receivable        :boolean
+#  text_class_cancelled  :boolean          default(FALSE)
+#  email_class_cancelled :boolean          default(FALSE)
 #
 
 class Notifications < ActiveRecord::Base
@@ -25,6 +27,8 @@ class Notifications < ActiveRecord::Base
     self.text_low_credits = false
     self.text_waiver_expiring = false
     self.sms_receivable = true
+    self.text_class_cancelled = true
+    self.email_class_cancelled = true
     self.save!
   end
 
@@ -36,15 +40,18 @@ class Notifications < ActiveRecord::Base
       change_all_text_to(false)
       change_all_email_to(false)
     end
+    save
   end
 
   def change_all_email_to(bool)
     self.email_class_reminder = bool
     self.email_low_credits = bool
     self.email_waiver_expiring = bool
+    self.text_class_cancelled = bool
   end
 
   def change_all_text_to(bool)
+    self.email_class_cancelled = bool
     self.text_class_reminder = bool
     self.text_low_credits = bool
     self.text_waiver_expiring = bool

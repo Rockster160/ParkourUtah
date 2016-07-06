@@ -8,4 +8,5 @@ class WelcomeMailer < ApplicationMailer
   def temp_mail(email)
     mail(to: email, subject: "Open Gym cancelled April 22")
   end
+
 end
