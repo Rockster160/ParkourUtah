@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   match '422', to: 'index#page_not_found', via: :all
   match '500', to: 'index#page_broken', via: :all
 
+  get "/calendar/all", to: redirect("/calendar")
+
   get 'talk' => 'index#get_request'
   post 'listen' => 'index#give_request'
   get 'secret' => 'peeps#secret', as: 'secret'
