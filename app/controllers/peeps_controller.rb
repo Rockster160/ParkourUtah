@@ -6,6 +6,20 @@ class PeepsController < ApplicationController
     @user = User[params[:id]]
   end
 
+  def bought_classes
+    line_items = if params[:line_item_id].present?
+      [LineItem.find(params[:line_item_id])]
+    else
+      LineItem.where('lower(title) ILIKE ?', '%flip%'.downcase)
+    end
+    @items_with_users = line_items.map do |line_item|
+      {
+        line_item_id: line_item.id,
+        users: line_item.users_who_purchased
+      }
+    end
+  end
+
   def attendance_page
     @athletes = User[params[:id]].athletes
   end

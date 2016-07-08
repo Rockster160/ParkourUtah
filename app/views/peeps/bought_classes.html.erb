@@ -1,0 +1,14 @@
+<div class="central-container form-offset">
+  <% @items_with_users.each do |item_with_users| %>
+    <% item = LineItem.find(item_with_users[:line_item_id]) %>
+    <% users = item_with_users[:users] %>
+    <h1><%= item.title %></h1>
+    <ul>
+      <% users.each do |user| %>
+        <a href="<%= user_show_path(user) %>">
+          <li><%= user.id %>: <%= user.email %></li>
+        </a>
+      <% end %>
+    </ul>
+  <% end %>
+</div>

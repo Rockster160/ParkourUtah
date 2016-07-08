@@ -41,6 +41,12 @@ class LineItem < ActiveRecord::Base
 
   default_scope { order('item_order ASC') }
 
+  def users_who_purchased
+    carts_containing_item = Cart.select { |cart| cart.items.map(&:id).include?(id) }
+    purchased_carts_containing_item = carts_containing_item.select { |cart| cart.user.try(:cart) != cart }
+    purchased_carts_containing_item.map(&:user).compact
+  end
+
   def redemption_item
     LineItem.find(redemption_item_id)
   end

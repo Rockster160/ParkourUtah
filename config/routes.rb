@@ -42,6 +42,7 @@ Rails.application.routes.draw do
   patch 'charge_class/:id' => 'peeps#validate_pin'
 
   get 'peeps/edit' => 'peeps#edit', as: 'edit_peeps'
+  get 'peeps/bought_classes' => 'peeps#bought_classes'
   get 'peeps/edit_peep/:id' => 'peeps#edit_peep', as: 'edit_peep'
   put 'peeps/update_position/:id' => 'peeps#update_peep_position', as: 'update_peep_position'
   patch 'peeps/update/:id' => 'peeps#update', as: 'update_peep'
