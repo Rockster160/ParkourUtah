@@ -1,21 +1,42 @@
 <h2>Thank you for your purchase from ParkourUtah!</h2>
 <br/>
-<p>If you bought class credits, they have already been added to your account and your athletes are ready to attend class!</p>
-<p>If you bought physical items, your order has been saved and is now in the process of getting put together, packaged, and shipped directly to your home!</p>
-<% if @user %>
+<% if @is_gift_card %>
+  <p>Your gift card has been purchased! You should be receiving an email shortly containing the "Redemption Code".</p>
+  <p>Forward that email to the receiver of your Gift Card, or simply provide to them the "Redemption Code" with the instructions listed.</p>
+  <br>
+<% end %>
+<% if @is_physical %>
+  <p>Your order will be processed shortly and we will get your items to you as soon as possible!</p>
+  <br>
+<% end %>
+<% if @adds_credits %>
+  <p>Your credits have already been added to your account and your athletes are ready to attend class!</p>
+  <br>
+<% end %>
+<% if @is_subscription %>
+  <h3 style="color: red">You aren't done yet!</h3>
+  <p>Before you can use the subscription, you must assign it to your Athlete.</p>
+  <p>To do this, go to your <a href="<%= edit_user_registration_url %>">Account Page</a>. At the top of the page, click the button "Assign subscriptions to students!".</p>
+  <p>Finally, click the star next to the Athlete who will be using the subscription.</p>
+  <p>Done! Your student will now be able to attend class without charging credits from your account.</p>
+  <br>
+<% end %>
+<% if @user && @is_physical %>
   <br/>
   <br/>
   <h3>Shipping information</h3>
-  <p><%= @user.email %></p>
   <p><%= @address.line1 %></p>
   <p><%= @address.line2 %></p>
   <p><%= @address.city %></p>
   <p><%= @address.state %></p>
   <p><%= @address.zip %></p>
+  <br/>
+  <br/>
 <% end %>
-<br/>
-<br/>
 <h3>Order information</h3>
+<% if @user.present? %>
+  <p><%= @user.email %></p>
+<% end %>
 <table>
   <thead>
     <tr>

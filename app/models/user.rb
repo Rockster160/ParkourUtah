@@ -102,7 +102,6 @@ class User < ActiveRecord::Base
     joins('LEFT OUTER JOIN dependents ON users.id = dependents.user_id')
       .where('email ILIKE ? OR CAST(users.id AS TEXT) ILIKE ? OR dependents.full_name ILIKE ? OR CAST(dependents.athlete_id AS TEXT) ILIKE ?', text, text, text, text).uniq
   }
-#
 
   def is_instructor?; self.role >= 1; end
   def self.instructors; select{ |u| u.is_instructor? }.sort_by { |s| s.instructor_position }; end
