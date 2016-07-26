@@ -1,8 +1,18 @@
 <div class="central-container form-offset">
+  <p>Filter items:</p>
+  <%= form_tag peeps_bought_classes_path, method: :get do %>
+    <% LineItem.all.each do |item| %>
+      <%= check_box_tag 'line_item_ids[]', item.id, @line_item_ids.include?(item.id), id: "line_item_id_#{item.id}" %>
+      <%= label_tag "line_item_id_#{item.id}", "#{item.hidden? ? '-Hidden- ' : ''}#{item.title}" %>
+      <br>
+    <% end %>
+    <%= submit_tag 'Go', class: 'pkut-btn' %>
+  <% end %>
+
   <% @items_with_users.each do |item_with_users| %>
     <% item = LineItem.find(item_with_users[:line_item_id]) %>
     <% users = item_with_users[:users] %>
-    <h1><%= item.title %></h1>
+    <h3><%= item.title %></h3>
     <ul>
       <% users.each do |user| %>
         <a href="<%= user_show_path(user) %>">

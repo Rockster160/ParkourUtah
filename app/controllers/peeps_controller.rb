@@ -7,8 +7,8 @@ class PeepsController < ApplicationController
   end
 
   def bought_classes
-    line_item_ids = params[:line_item_ids] || [26, 27, 29, 30, 24]
-    line_items = LineItem.where(id: line_item_ids)
+    @line_item_ids = params[:line_item_ids].present? ? params[:line_item_ids].compact.map(&:to_i) : [2, 26, 27, 29, 30, 24]
+    line_items = LineItem.where(id: @line_item_ids)
     @items_with_users = line_items.map do |line_item|
       {
         line_item_id: line_item.id,
