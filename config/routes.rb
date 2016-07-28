@@ -86,7 +86,7 @@ Rails.application.routes.draw do
   post 'events/create' => 'event#create'
   get 'events/edit/:id' => 'event#edit', as: 'edit_event'
   get 'event/:id' => 'event#show', as: 'show_event'
-  post 'event/:id/edit' => 'event#send_message_to_subscribers', as: 'message_subscribers'
+  post 'event/:id/cancel_message' => 'event#send_message_to_subscribers', as: 'message_subscribers'
   post 'event/:id/cancel' => 'event#cancel', as: 'cancel_event'
   get 'events/:id/details' => 'event#detail', as: 'event_detail'
 
