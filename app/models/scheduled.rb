@@ -148,7 +148,7 @@ class Scheduled < ActiveRecord::Base
           ::ExpiringWaiverMailerWorker.perform_async(athlete.id)
         end
         if user.notifications.text_waiver_expiring && user.notifications.sms_receivable
-          ::SmsMailerWorker.perform_async('user.phone_number', "The waiver belonging to #{athlete.full_name} is no longer active as of #{athlete.waiver.exp_date.strftime('%B %e')}. Head up to ParkourUtah.com to get it renewed!")
+          ::SmsMailerWorker.perform_async(user.phone_number, "The waiver belonging to #{athlete.full_name} is no longer active as of #{athlete.waiver.exp_date.strftime('%B %e')}. Head up to ParkourUtah.com to get it renewed!")
         end
       end
     end
