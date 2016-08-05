@@ -38,7 +38,7 @@ Rails.application.routes.draw do
   get 'class/:id' => 'peeps#pin_user', as: 'begin_class'
   get 'pin/:id' => 'peeps#show_user'
   get 'logs/:id' => 'peeps#class_logs', as: 'class_logs'
-  put 'password/:id' => 'peeps#pin_password'
+  get 'password/:id' => 'peeps#pin_password', as: 'pin_password'
   patch 'charge_class/:id' => 'peeps#validate_pin'
 
   get 'peeps/edit' => 'peeps#edit', as: 'edit_peeps'

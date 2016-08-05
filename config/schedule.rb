@@ -17,11 +17,3 @@ end
 every :saturday, at: "9:30 pm" do
   runner "Scheduled.send_summary(7)"
 end
-
-every '0 11 5 * *' do
-  runner "Scheduled.request_charges"
-end
-
-every '0 11 7 * *' do
-  runner "Scheduled.give_charges"
-end

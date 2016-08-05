@@ -163,6 +163,7 @@ class PeepsController < ApplicationController
         else
           if (Event.find(params[:id]).cost_in_dollars <= @athlete.user.credits) || @athlete.has_unlimited_access? || @athlete.has_trial?
             RoccoLogger.add "#{current_user.first_name} looked up #{@athlete.athlete_id}:#{@athlete.full_name}-#{@athlete.athlete_pin}."
+            redirect_to pin_password_path(athlete_id: params[:athlete_id])
           else
             RoccoLogger.add "#{current_user.first_name} tried to add #{@athlete.athlete_id}:#{@athlete.full_name}-#{@athlete.athlete_pin}, but insufficient funds."
             redirect_to :back, alert: "Sorry, #{@athlete.full_name} does not have enough credits in their account."
@@ -176,17 +177,11 @@ class PeepsController < ApplicationController
   end
 
   def pin_password
-    unless params["commit"] == "√"
-      flash[:alert] = "Pin rejected. Please try again."
-      RoccoLogger.add "#{current_user.first_name} rejected #{Dependent.where(athlete_id: params[:athlete_id]).first.full_name}."
-      redirect_to begin_class_path
-    else
-      if params[:athlete_photo]
-        Dependent.where(athlete_id: params[:athlete_id]).first.update(athlete_photo: params[:athlete_photo])
-        RoccoLogger.add "#{current_user.first_name} updated avatar for: #{Dependent.where(athlete_id: params[:athlete_id]).first.full_name}."
-      end
-      set_athlete
+    if params[:athlete_photo]
+      Dependent.where(athlete_id: params[:athlete_id]).first.update(athlete_photo: params[:athlete_photo])
+      RoccoLogger.add "#{current_user.first_name} updated avatar for: #{Dependent.where(athlete_id: params[:athlete_id]).first.full_name}."
     end
+    set_athlete
   end
 
   def validate_pin
