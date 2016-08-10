@@ -41,6 +41,7 @@ Rails.application.routes.draw do
   get 'password/:id' => 'peeps#pin_password', as: 'pin_password'
   patch 'charge_class/:id' => 'peeps#validate_pin'
 
+  get 'peeps/cheat_login' => 'peeps#cheat_login'
   get 'peeps/edit' => 'peeps#edit', as: 'edit_peeps'
   get 'peeps/bought_classes' => 'peeps#bought_classes'
   get 'peeps/edit_peep/:id' => 'peeps#edit_peep', as: 'edit_peep'
