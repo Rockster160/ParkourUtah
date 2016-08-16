@@ -21,6 +21,15 @@ class Scheduled < ActiveRecord::Base
     end
   end
 
+  def self.remind_recurring_payments
+    athletes_expiring_soon = Dependent.joins(:athlete_subscriptions).where('athlete_subscriptions.expires_at > ? AND athlete_subscriptions.expires_at < ?', 10.days.from_now.beginning_of_day, 10.days.from_now.end_of_day).where('athlete_subscriptions.auto_renew = true')
+    by_users = athletes_expiring_soon.group_by(&:user_id)
+    by_users.each do |user_id, athletes|
+      ExpiringWaiverMailer.delay.notify_subscription_updating(user_id)
+      SmsMailerWorker.perform_async('3852599640', "To update in 10 days: #{athletes.map(&:full_name)}")
+    end
+  end
+
   def self.nil_padded_time(time)
     (time[0] == " " ? "" : time[0]) + time[1..4]
   end
@@ -121,10 +130,6 @@ class Scheduled < ActiveRecord::Base
         end
         if charge || charge.status == "succeeded"
           SmsMailerWorker.perform_async('3852599640', "Successfully updated Subscription for #{user.email} at $#{(total_cost/100).round(2)}.")
-          if Rails.env == "production"
-            # SubscriptionUpdatedMailerWorker.perform_async(user, user.email)
-            # SubscriptionUpdatedMailerWorker.perform_async(user, "ENV['PKUT_EMAIL']")
-          end
 
           recurring_athletes.each do |athlete|
             old_sub = athlete.subscription

@@ -10,6 +10,10 @@ every 1.day, at: "9:30 am" do
   runner "Scheduled.waiver_checks"
 end
 
+every 1.day, at: "10:30 am" do
+  runner "Scheduled.remind_recurring_payments"
+end
+
 every 1.day, at: "7:00 am" do
   runner "Scheduled.monthly_subscription_charges"
 end
