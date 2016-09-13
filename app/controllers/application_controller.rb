@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_filter :configure_permitted_parameters, if: :devise_controller?
   before_action :merge_carts
+  before_action :logit
 
   def after_sign_in_path_for(resource)
     step_2_path
@@ -19,6 +20,10 @@ class ApplicationController < ActionController::Base
       current_user.cart.add_items(items_to_add)
       session.delete("cart_id")
     end
+  end
+
+  def logit
+    CustomLogger.log_request(request, current_user)
   end
 
   protected
