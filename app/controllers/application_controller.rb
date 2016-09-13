@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
   end
 
   def logit
-    CustomLogger.log_request(request, current_user)
+    CustomLogger.log_request(request, current_user, session['cart_id'])
   end
 
   protected
