@@ -12,4 +12,14 @@ class ContactMailer < ApplicationMailer
   def party_mail(email)
     mail(to: email, subject: "Open Gym!")
   end
+
+  def email(email, subject, body)
+    @body = body.html_safe
+
+    mail({
+      to: email,
+      subject: subject
+    })
+  end
+
 end

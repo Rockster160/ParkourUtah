@@ -1,5 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: ENV['PKUT_GMAIL']
-  # default from: "service@parkourutah.com"
+  default from: 'parkourutah@gmail.com'
   layout 'mailer'
 end

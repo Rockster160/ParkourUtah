@@ -58,6 +58,10 @@ Rails.application.routes.draw do
   delete 'user/:id' => 'peeps#destroy_user', as: 'user'
   delete 'unsubscribe_monthly/:id' => 'store#unsubscribe', as: 'unsubscribe_monthly_subscription'
 
+  get :email_body, controller: 'peeps'
+  get :batch_emailer, controller: 'peeps'
+  post :send_batch_emailer, controller: 'peeps'
+
   get 'athletes/new' => 'dependents#new', as: 'new_athlete'
   post 'athletes/new' => 'dependents#create'
   # post 'athletes/create' => 'dependents#create'

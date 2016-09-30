@@ -1,9 +1,39 @@
 class PeepsController < ApplicationController
+  include EmailHelper
   before_action :still_signed_in
   before_action :validate_instructor, except: [:return]
 
+  EmailBody = Struct.new(:identifier, :subject, :body)
+
   def user_page
     @user = User[params[:id]]
+  end
+
+  def email_body
+    @email = EmailBody.new(*decoded_email_params)
+
+    raw_html = html(@email.body)
+
+    email_source = ContactMailer.email(@email.identifier || '', @email.subject || '', raw_html || '').body.raw_source
+
+    respond_to do |format|
+      if valid_html?(raw_html)
+        format.json { render json: {email_body: email_source} }
+      else
+        format.json { render nothing: true, status: 422 }
+      end
+    end
+  end
+
+  def batch_emailer
+    @email = EmailBody.new(*decoded_email_params)
+  end
+
+  def send_batch_emailer
+    @email = EmailBody.new(*decoded_email_params)
+    raw_html = html(@email.body)
+    BatchEmailerWorker.perform_async(@email.subject, raw_html)
+    redirect_to dashboard_path, notice: 'Sweet! I will send that out to everyone!'
   end
 
   def cheat_login
@@ -266,4 +296,13 @@ class PeepsController < ApplicationController
   def still_signed_in
     current_user.still_signed_in! if current_user
   end
+
+  def decoded_email_params
+    if params[:encoded] == 'true'
+      [Base64.urlsafe_decode64(params[:identifier] || ''), Base64.urlsafe_decode64(params[:subject] || ''), Base64.urlsafe_decode64(params[:body] || '')]
+    else
+      [params[:identifier], params[:subject], params[:body]]
+    end
+  end
+
 end

@@ -1,0 +1,74 @@
+.content-box {
+  padding: 30px;
+}
+
+.mkdown-preview-container {
+  display: table;
+  .mkdown-preview-row {
+    display: table-row;
+    .mkdown-preview-container {
+      vertical-align: top;
+      display: table-cell;
+      width: 600px;
+      height: 1000px;
+    }
+    .write-email-container {
+      vertical-align: top;
+      display: table-cell;
+    }
+  }
+}
+
+.preview-container {
+  display: inline-block;
+  margin: 20px;
+  width: 140px;
+  padding: 10px;
+  background: black;
+  .content-image {
+    height: 150px;
+    text-align: center;
+    img {
+      display: inline-block;
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+  .text-container {
+    background: white;
+    color: black;
+    font-size: 14px;
+    text-align: center;
+    line-height: 150px;
+    height: 150px;
+    width: 100%;
+  }
+  .controls {
+    width: 100%;
+    font-size: 0;
+    input {
+      width: 50%;
+      font-size: 12px;
+      color: black;
+    }
+    a {
+      display: block;
+      text-align: center;
+      width: 100%;
+      font-size: 12px;
+      line-height: 20px;
+      background: gray;
+      color: black;
+    }
+  }
+  .text-submit {
+    background: white;
+    text-align: center;
+    font-size: 12px;
+    line-height: 24px;
+    a {
+      display: block;
+      color: red;
+    }
+  }
+}
