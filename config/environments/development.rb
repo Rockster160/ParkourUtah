@@ -55,3 +55,15 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 end
+
+
+Rails.application.config.middleware.use ExceptionNotification::Rack,
+  :slack => {
+    :webhook_url => 'https://hooks.slack.com/services/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',
+    :channel => '#pkut-errors',
+    :additional_parameters => {
+      mrkdwn: true,
+      icon_emoji: ':zygy:',
+      username: 'Zygy-Bot'
+    }
+  }

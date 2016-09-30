@@ -42,6 +42,7 @@ gem 'geocoder'
 gem 'browser'
 gem 'chroma'
 gem 'exception_notification'
+gem 'slack-notifier'
 
 group :development, :test do
   gem 'annotate'
