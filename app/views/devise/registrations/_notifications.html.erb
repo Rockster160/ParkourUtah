@@ -88,6 +88,19 @@
         </div>
       </div>
 
+      <div class="row">
+        <div class="col-xs-4">
+          Newsletter
+        </div>
+        <div class="col-xs-4">
+          <div class="pkut-checkbox">
+            <%= check_box_tag "notify[email_newsletter]", '', current_user.notifications.email_newsletter? %>
+            <%= label_tag "notify[email_newsletter]", '' %>
+          </div>
+        </div>
+        <div class="col-xs-4"></div>
+      </div>
+
       <% unless current_user.notifications.sms_receivable %>
         <div class="row" style="color: orange">
           <h4>You have blacklisted text notifications from ParkourUtah! You will not receive any text alerts.</h4>

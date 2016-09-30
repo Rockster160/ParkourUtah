@@ -13,6 +13,7 @@
 #  sms_receivable        :boolean
 #  text_class_cancelled  :boolean          default(FALSE)
 #  email_class_cancelled :boolean          default(FALSE)
+#  email_newsletter      :boolean          default(TRUE)
 #
 
 class Notifications < ActiveRecord::Base
@@ -20,6 +21,7 @@ class Notifications < ActiveRecord::Base
   after_create :set_defaults
 
   def set_defaults
+    self.email_newsletter = true
     self.email_class_reminder = true
     self.email_low_credits = true
     self.email_waiver_expiring = true
@@ -44,6 +46,7 @@ class Notifications < ActiveRecord::Base
   end
 
   def change_all_email_to(bool)
+    self.email_newsletter = bool
     self.email_class_reminder = bool
     self.email_low_credits = bool
     self.email_waiver_expiring = bool
