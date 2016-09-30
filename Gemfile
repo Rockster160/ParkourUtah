@@ -41,6 +41,7 @@ gem 'underscore-rails'
 gem 'geocoder'
 gem 'browser'
 gem 'chroma'
+gem 'exception_notification'
 
 group :development, :test do
   gem 'annotate'
