@@ -1,3 +1,6 @@
+Rails.application.routes.default_url_options[:host] = 'parkourutah.com'
+Rails.application.routes.default_url_options[:protocol] = 'http://'
+Rails.application.routes.default_url_options[:port] = nil
 Rails.application.configure do
 
   config.cache_classes = true
