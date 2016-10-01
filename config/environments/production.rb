@@ -11,6 +11,8 @@ Rails.application.configure do
   config.action_controller.perform_caching = true
 
   config.action_mailer.default_url_options   = { :host => 'parkourutah.com' }
+  config.action_mailer.default_url_options = { host: 'parkourutah.com', port: nil }
+  config.action_mailer.asset_host = 'http://parkourutah.com'
   ActionMailer::Base.delivery_method = :smtp
   ActionMailer::Base.smtp_settings = {
     :address              => 'email-smtp.us-west-2.amazonaws.com',
@@ -60,7 +62,7 @@ Rails.application.configure do
   # when problems arise.
   config.log_level = :info
   RAILS_DEFAULT_LOGGER = Logger.new('log/production.log')
-  config.logger = Logger.new('log/production.log')
+  # config.logger = Logger.new('log/production.log')
   config.log_formatter = ::Logger::Formatter.new
 
   # config.log_formatter = ::Logger::Formatter.new
