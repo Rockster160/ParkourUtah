@@ -124,7 +124,8 @@ class EventController < ApplicationController
   end
 
   def unsubscribe
-    if Subscription.where(user_id: current_user.id, event_id: params[:id]).first.destroy
+    subcription = Subscription.where(user_id: current_user.id, event_id: params[:id]).first
+    if subcription.present? && subcription.destroy
       redirect_to :back, notice: "You have successfully unsubscribed from this event."
     else
       redirect_to :back, alert: "There was an error. Try again later."

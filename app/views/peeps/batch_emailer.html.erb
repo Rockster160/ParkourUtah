@@ -1,4 +1,3 @@
-
 <div class="content-box">
   <div class="mkdown-preview-container">
     <div class="mkdown-preview-row">
@@ -7,7 +6,7 @@
           <%= label_tag :subject %> <br>
           <%= text_field_tag :subject, @email.subject %> <br>
           <%= label_tag :body %> <br>
-          <%= text_area_tag :body, @email.body, rows: 10, style: 'width: 600px', class: 'pkut-text-box js-markdown' %> <br>
+          <%= text_area_tag :body, @email.body, rows: 10, style: "width: 600px; font-family: 'monospace';", class: 'pkut-textarea js-markdown' %> <br>
           <%= submit_tag 'Send!', class: 'pkut-btn' %>
         <% end %>
         <div class="preview-container">
@@ -31,7 +30,7 @@
         <a href="" class="reload-mailer pkut-btn">Preview frozen? Reload!</a>
       </div>
       <div class="mkdown-preview-container">
-        <iframe id="mkdown-preview" width="632" height="1000" style="background: white;" data-load-url="http://parkourutah.com/<%= email_body_path %>"></iframe>
+        <iframe id="mkdown-preview" width="632" height="1000" style="background: white;" data-load-url="<%= email_body_path %>"></iframe>
       </div>
     </div>
   </div>
