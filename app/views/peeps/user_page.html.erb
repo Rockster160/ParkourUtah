@@ -6,11 +6,11 @@
   <% end %>
   <%= link_to 'Back', :back, class: 'pkut-btn' %><br/><br/>
   <% if @user.stripe_subscription? %>
-    <h3 style="color: green;"><%= @user.id %>: <%= @user.email %>*</h3>
+    <h3 style="color: green;"><%= @user.id %>: <%= '!' unless user.notifications.email_newsletter? %><%= @user.email %>*</h3>
   <% else %>
-    <h3><%= @user.id %>: <%= @user.email %></h3>
+    <h3><%= @user.id %>: <%= '!' unless user.notifications.email_newsletter? %><%= @user.email %></h3>
   <% end %>
-  <p><strong><%= @user.show_phone_number %></strong></p>
+  <p><strong><%= '!' unless user.notifications.sms_receivable? %><%= @user.show_phone_number %></strong></p>
   <% if current_user.is_admin? %>
     <p>Credits: <%= @user.credits %> -- <a data-toggle="modal" data-target="#adjust-<%= @user.id %>" class="forceOpen">Adjust</a></p>
     <p><a href="<%= attendance_page_path(@user) %>">Attendance History</a></p>
