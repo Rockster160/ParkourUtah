@@ -134,11 +134,13 @@ class StoreController < ApplicationController
 
   def redeem
     key = RedemptionKey.where(key: params[:redemption_key]).first
-    item = key.item if key.redeemed == false
-    if item && @cart.transactions.map { |items| items.redeemed_token }.exclude?(params[:redemption_key])
-      @cart.transactions << @order = Transaction.create(item_id: item.id, redeemed_token: params[:redemption_key])
-    else
-      @order = nil
+    if key.present?
+      item = key.item if key.redeemed == false
+      if item && @cart.transactions.map { |items| items.redeemed_token }.exclude?(params[:redemption_key])
+        @cart.transactions << @order = Transaction.create(item_id: item.id, redeemed_token: params[:redemption_key])
+      else
+        @order = nil
+      end
     end
 
     respond_to do |format|

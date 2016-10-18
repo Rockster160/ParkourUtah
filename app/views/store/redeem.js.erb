@@ -1,4 +1,6 @@
 <% if @order %>
   $('.redemption-key-container').val('');
   $('.orders-placeholder').append('<div class="hidden-holder"><%= j render partial: "shopping_cart_item", locals: {order: @order} %></div>');
+<% else %>
+  $('.redemption-key-container').val('').attr('placeholder', 'Invalid Code');
 <% end %>
