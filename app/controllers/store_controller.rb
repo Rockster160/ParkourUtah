@@ -224,6 +224,9 @@ class StoreController < ApplicationController
           current_user.update(unassigned_subscriptions_count: current_user.unassigned_subscriptions_count + order.amount)
         end
       end
+    else
+      @stripe_error = stripe_charge.try(:failure_message)
+      CustomLogger.log("Stripe Error: \e[31m#{stripe_charge}\e[0m", current_user, nil)
     end
     return order_success
   end
@@ -240,7 +243,7 @@ class StoreController < ApplicationController
           current_user.carts.create
           flash[:notice] = "Cart was successfully purchased."
         else
-          flash[:alert] = "There was an error with your request."
+          flash[:alert] = @stripe_error.presence || "There was an error with your request."
         end
       else
         flash[:alert] = "Please fill out your shipping information before making an order."
@@ -253,7 +256,7 @@ class StoreController < ApplicationController
         session["cart_id"] = Cart.create.id
         flash[:notice] = "Cart was successfully purchased."
       else
-        flash[:alert] = "There was an error with your request."
+        flash[:alert] = @stripe_error.presence || "There was an error with your request."
       end
     end
 
