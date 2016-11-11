@@ -1,4 +1,4 @@
-   class DependentsController < ApplicationController
+class DependentsController < ApplicationController
   layout 'application', except: [:secret]
 
   def new

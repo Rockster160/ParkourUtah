@@ -50,11 +50,11 @@ class Notifications < ActiveRecord::Base
     self.email_class_reminder = bool
     self.email_low_credits = bool
     self.email_waiver_expiring = bool
-    self.text_class_cancelled = bool
+    self.email_class_cancelled = bool
   end
 
   def change_all_text_to(bool)
-    self.email_class_cancelled = bool
+    self.text_class_cancelled = bool
     self.text_class_reminder = bool
     self.text_low_credits = bool
     self.text_waiver_expiring = bool
