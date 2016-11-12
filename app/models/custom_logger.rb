@@ -6,6 +6,10 @@ class CustomLogger
       log("#{request.env["REQUEST_METHOD"]} - #{request.env['REQUEST_PATH']} #{filtered_params}", user, cart_id)
     end
 
+    def log_blip!
+      File.open("log/custom_logger.txt", "a+") { |f| f << "." }
+    end
+
     def log(message, user=nil, cart_id)
       display_name = user.present? ? "#{user.try(:id)}: #{user.try(:email)}\n" : ''
       display_cart = cart_id.present? ? "Cart: #{cart_id}\n" : ''

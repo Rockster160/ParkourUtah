@@ -23,6 +23,7 @@ class ApplicationController < ActionController::Base
   end
 
   def logit
+    return CustomLogger.log_blip! if params[:checker]
     CustomLogger.log_request(request, current_user, session['cart_id'])
   end
 
