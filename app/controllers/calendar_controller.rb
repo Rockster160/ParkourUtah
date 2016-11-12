@@ -1,5 +1,6 @@
 class CalendarController < ApplicationController
   include ApplicationHelper
+  skip_before_action :verify_authenticity_token
 
   def show
     redirect_to calendar_mobile_path if mobile_check && params[:desktop] != 'true'
