@@ -11,7 +11,6 @@
   <div class="items-container col-sm-9 relative">
 
     <% [:other, :classes, :clothing, :accessories, :gift_card].each do |category| %>
-      <%# next if category != :gift_card && !user_signed_in? %>
       <% if @items[category].present? %>
         <div class="row">
           <h2 class="pkut-header title pull-left hidden-xs"><%= category.to_s.split('_').map(&:capitalize).join(' ') %></h2>
