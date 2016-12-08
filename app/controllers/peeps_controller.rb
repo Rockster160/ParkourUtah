@@ -25,6 +25,21 @@ class PeepsController < ApplicationController
     end
   end
 
+  def send_batch_texts
+    phone_numbers = params[:recipients].gsub(/[^\d|,]/, '').split(",").map(&:squish)
+    @success = []
+    @failed = []
+    phone_numbers.each do |phone_number|
+      if phone_number.length == 10
+        SmsMailerWorker.perform_async(phone_number, params[:message])
+        @success << phone_number
+      else
+        @failed << phone_number
+      end
+    end
+    render :admin_texter
+  end
+
   def batch_emailer
     @email = EmailBody.new(*decoded_email_params)
   end

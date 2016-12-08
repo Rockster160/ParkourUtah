@@ -62,6 +62,8 @@ Rails.application.routes.draw do
   get :email_body, controller: 'peeps'
   get :batch_emailer, controller: 'peeps'
   post :send_batch_emailer, controller: 'peeps'
+  get :admin_texter, controller: 'peeps'
+  post :send_batch_texts, controller: 'peeps'
 
   get 'athletes/new' => 'dependents#new', as: 'new_athlete'
   post 'athletes/new' => 'dependents#create'

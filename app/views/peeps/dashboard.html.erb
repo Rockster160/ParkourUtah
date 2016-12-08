@@ -9,6 +9,7 @@
     <%= link_to "Testing Session", begin_class_path(83788378), class: 'pkut-btn' %><br/><br/>
     <% if current_user.is_admin? %>
       <h2>Admin Abilities</h2><br/>
+      <%= link_to "Send Text Messages", admin_texter_path, class: 'pkut-btn' %><br/></br>
       <%= link_to "Send Batch Email", batch_emailer_path, class: 'pkut-btn' %><br/></br>
       <%= link_to "View Item Purchases", peeps_bought_classes_path, class: 'pkut-btn' %><br/></br>
       <%= link_to "View Recent Users", recent_users_path, class: 'pkut-btn' %><br/></br>
