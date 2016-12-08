@@ -48,7 +48,8 @@
   </div>
   <div class="row internal-center">
     <h4>How did you hear about us? If you were referred by a person, please tell us their name.</h4>
-    <%= text_field_tag 'user[referrer]', '', placeholder: 'John Smith', class: "pkut-textbox" %>
+    <%= select_tag "user[referrer_dropdown]", options_for_select(["Billboard", "Facebook", "Google Search", "Flyer", "Word of Mouth"]), class: 'pkut-dropdown show-referral-text-box' %>
+    <%= text_field_tag 'user[referrer_text]', '', placeholder: 'John Smith', class: "pkut-textbox referral-text-field hidden" %>
   </div>
 
 

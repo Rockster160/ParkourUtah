@@ -37,6 +37,7 @@ class RegistrationsController < ApplicationController
 
   def user_params
     params[:user][:phone_number] = params[:user][:phone]
+    params[:user][:referrer] = params[:user][:referrer_dropdown] == "Word of Mouth" ? params[:user][:referrer_text] : params[:user][:referrer_dropdown]
     params.require(:user).permit(:phone_number, :email, :referrer)
   end
 

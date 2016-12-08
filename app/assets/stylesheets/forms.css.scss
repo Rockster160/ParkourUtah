@@ -23,6 +23,12 @@
   background: $pkut-grey-white;
 }
 
+.pkut-dropdown {
+  line-height: 30px;
+  font-size: 21px;
+  width: 350px;
+}
+
 .text-field-height {
   height: 30px;
   margin: 10px 0;
@@ -35,7 +41,7 @@
   padding: 4px 0 0 10px;
   height: 30px;
 
-  font-size: 1.5em;
+  font-size: 21px;
   color: black;
 
   border: 2px solid $pkut-grey-dark;
@@ -257,7 +263,7 @@ font-size: 1em;
         content: "\2713 ";
         position: absolute;
         color: $pkut-grey-dark;
-        font-size: 1.5em;
+        font-size: 21px;
         top: -18px;
         left: -35px;
       }
@@ -272,7 +278,7 @@ font-size: 1em;
       text-shadow: 1px 1px $pkut-grey-dark;
       position: absolute;
       color: $pkut-red;
-      font-size: 1.5em;
+      font-size: 21px;
       top: -20px;
       left: -35px;
     }
