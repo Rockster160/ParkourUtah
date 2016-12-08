@@ -96,6 +96,19 @@ class Event < ActiveRecord::Base
     where(token: token)
   end
 
+  def self.next_class_by_token(token)
+    where('date > ?', DateTime.current).where(token: token).order(date: :asc).first
+  end
+
+  def self.names_with_tokens
+    tokens = Event.order(:date).pluck(:token).uniq
+    tokens.map do |token|
+      event = next_class_by_token(token)
+      next unless event.present?
+      ["#{event.date.strftime('%A %l:%M')} #{event.class_name}", event.id]
+    end.compact
+  end
+
   def cancel!
     update(cancelled_text: true)
   end
@@ -189,7 +202,7 @@ class Event < ActiveRecord::Base
   end
 
   def set_default_values
-    self.color = random_color
+    self.color ||= random_color
   end
 
 end

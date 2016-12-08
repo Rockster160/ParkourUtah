@@ -1,5 +1,9 @@
 var ready = function() {
 
+  $('.subscribe-to-selected-btn').click(function() {
+    $(this).attr('href', $(this).attr('data-new-href').replace("--event_id--", $('.subscribe-to-event-dropdown').val()))
+  })
+
   $(':submit').click(function(e) {
     var form = $(this).closest('form')[0];
     var invalid = [];

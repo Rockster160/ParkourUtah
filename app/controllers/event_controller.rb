@@ -114,9 +114,10 @@ class EventController < ApplicationController
   end
 
   def subscribe
-    if current_user.phone_number_is_valid?
+    user = params[:user_id].present? ? User.find(params[:user_id]) : current_user
+    if user.phone_number_is_valid?
       event = Event.find(params[:id])
-      current_user.subscriptions.create(event_id: event.id, token: event.token)
+      user.subscriptions.create(event_id: event.id, token: event.token)
       redirect_to :back, notice: "You have successfully subscribed to this event."
     else
       redirect_to edit_user_registration_path, alert: "You must have an associated phone number to subscribe to events."
