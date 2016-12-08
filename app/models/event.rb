@@ -34,13 +34,13 @@ class Event < ActiveRecord::Base
   accepts_nested_attributes_for :spot_events, allow_destroy: true
   has_many :subscriptions, dependent: :destroy
 
+  after_initialize :set_default_values
   before_save :format_fields
   before_save :add_hash_to_colors
-  after_create :set_color
 
-  def findit
-    Event.all.each {|e|e.update(class_name: e.class_name.gsub(/(\d{1,2}:\d{2})( )?((a|p)m)?( )?/i, ''))}
-  end
+  scope :today, -> { by_date(DateTime.current) }
+  scope :by_date, -> (date) { in_date_range(date, date) }
+  scope :in_date_range, -> (first_day, last_day) { where(date: first_day.beginning_of_day..last_day.end_of_day) }
 
   def css_style
     "background-color: #{color.presence || '#FFF'} !important; color: #{color_contrast} !important; background-image: none !important;"
@@ -62,35 +62,30 @@ class Event < ActiveRecord::Base
     return luminescence > 150 ? black : white
   end
 
-  # Event.all.to_a.group_by { |event| event.city }.keys.each_with_index { |city, pos| Event.set_class_color(city, Event.colors.keys[pos]) }
   def self.cities
-    Event.all.to_a.group_by { |event| event.city }.keys
+    pluck(:city).uniq
   end
 
   def recurring?
     Event.by_token(token).count > 1
   end
 
-  def self.by_date(date=DateTime.current)
-    select { |event| event.date.to_date == date.to_date }
-  end
-
   def self.color_of(class_name)
     classes = where(class_name: class_name)
     if classes.any?
       color = classes.last.color
-      (color.nil? || color.empty?) ? self.set_class_color(class_name) : color
+      return color.presence || random_color
     else
-      ""
+      random_color
     end
   end
 
   def self.future_classes_in(city)
-    where(city: city).where("date >= ?", Time.now.to_date)
+    where(city: city).where("date >= ?", DateTime.current)
   end
 
   def self.sort_by_token
-    self.where("date > ?", Time.now.to_date).group_by do |all_events|
+    self.where("date > ?", DateTime.current).group_by do |all_events|
       all_events.token
     end.map do |keys, values|
       values.sort_by {|v| v.id}.first
@@ -119,23 +114,6 @@ class Event < ActiveRecord::Base
 
   def cost_in_dollars
     self.cost.to_f / 100
-  end
-
-  def set_color
-    self.color ||= Event.color_of(self.city)
-    self.save
-  end
-
-  def self.set_class_color(class_name, color=:white)
-    new_color = color == "rand" ? self.colors.keys.sample : color
-    where(class_name: class_name).each do |event|
-      event.update(color: new_color)
-    end
-    new_color
-  end
-
-  def host_by_id
-    User.find(host)
   end
 
   def abbreviate_state
@@ -197,13 +175,21 @@ class Event < ActiveRecord::Base
 
   private
 
+  def self.random_color
+    "##{3.times.map { rand(256).to_s(16) }.join('')}"
+  end
+  def random_color; self.class.random_color; end
+
   def format_fields
     format_city_name
-    # self.color = Event.color_of(self.city)
   end
 
   def format_city_name
     self.city = self.city.squish.split.map(&:capitalize).join(' ')
+  end
+
+  def set_default_values
+    self.color = random_color
   end
 
 end

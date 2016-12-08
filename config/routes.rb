@@ -55,6 +55,7 @@ Rails.application.routes.draw do
   get 'user/:id/attendance' => 'peeps#attendance_page', as: 'attendance_page'
   get 'athlete/:id/trial' => 'peeps#edit_trial', as: 'edit_trial'
   post 'peeps/users/:id' => 'peeps#adjust_credits', as: 'adjust_credits'
+  post 'peeps/users/:id/notifications' => 'peeps#edit_user_notifications', as: 'edit_user_notifications'
   delete 'user/:id' => 'peeps#destroy_user', as: 'user'
   delete 'unsubscribe_monthly/:id' => 'store#unsubscribe', as: 'unsubscribe_monthly_subscription'
 

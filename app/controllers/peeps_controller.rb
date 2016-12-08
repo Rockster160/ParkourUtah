@@ -33,7 +33,7 @@ class PeepsController < ApplicationController
     @email = EmailBody.new(*decoded_email_params)
     raw_html = html(@email.body)
     BatchEmailerWorker.perform_async(@email.subject, raw_html)
-    redirect_to dashboard_path, notice: 'Sweet! I will send that out to everyone!'
+    redirect_to dashboard_path, notice: 'Sweet! I will send that out to them!'
   end
 
   def cheat_login
@@ -90,6 +90,15 @@ class PeepsController < ApplicationController
     end
   end
 
+  def edit_user_notifications
+    user = User.find(params[:id])
+    user.notifications.blow!
+    params[:notify].each do |attribute, value|
+      user.notifications.update(attribute => true)
+    end
+    redirect_to :back
+  end
+
   def adjust_credits
     user = User[params[:id]]
     user.credits += params[:adjust].to_i
@@ -98,13 +107,6 @@ class PeepsController < ApplicationController
     else
       redirect_to :back, alert: 'There was a problem updating the user.'
     end
-  end
-
-  def post_secret
-    if params[:secret_code].to_i == 9
-      Automator.activate!
-    end
-    redirect_to secret_path
   end
 
   def dashboard
