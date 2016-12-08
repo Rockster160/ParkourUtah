@@ -3,7 +3,7 @@ class PeepsController < ApplicationController
   before_action :still_signed_in
   before_action :validate_instructor, except: [:return]
 
-  EmailBody = Struct.new(:identifier, :subject, :body)
+  EmailBody = Struct.new(:subject, :body, :recipients, :email_type)
 
   def user_page
     @user = User[params[:id]]
@@ -14,7 +14,7 @@ class PeepsController < ApplicationController
 
     raw_html = html(@email.body)
 
-    email_source = ContactMailer.email(@email.identifier || '', @email.subject || '', raw_html || '').body.raw_source
+    email_source = ContactMailer.email('', @email.subject || '', raw_html || '').body.raw_source
 
     respond_to do |format|
       if valid_html?(raw_html)
@@ -32,7 +32,7 @@ class PeepsController < ApplicationController
   def send_batch_emailer
     @email = EmailBody.new(*decoded_email_params)
     raw_html = html(@email.body)
-    BatchEmailerWorker.perform_async(@email.subject, raw_html)
+    BatchEmailerWorker.perform_async(@email.subject, raw_html, @email.recipients, @email.email_type)
     redirect_to dashboard_path, notice: 'Sweet! I will send that out to them!'
   end
 
@@ -301,9 +301,9 @@ class PeepsController < ApplicationController
 
   def decoded_email_params
     if params[:encoded] == 'true'
-      [Base64.urlsafe_decode64(params[:identifier] || ''), Base64.urlsafe_decode64(params[:subject] || ''), Base64.urlsafe_decode64(params[:body] || '')]
+      [Base64.urlsafe_decode64(params[:subject] || ''), Base64.urlsafe_decode64(params[:body] || ''), Base64.urlsafe_decode64(params[:recipients] || ''), Base64.urlsafe_decode64(params[:email_type] || '')]
     else
-      [params[:identifier], params[:subject], params[:body]]
+      [params[:subject], params[:body], params[:recipients], params[:email_type]]
     end
   end
 

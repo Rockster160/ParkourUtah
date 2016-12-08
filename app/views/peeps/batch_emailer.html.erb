@@ -3,6 +3,13 @@
     <div class="mkdown-preview-row">
       <div class="write-email-container" style="padding-right: 5px;">
         <%= form_tag send_batch_emailer_path do %>
+          <div style="max-width: 300px; font-size: 10px;">
+            Leave recipients blank to send to ALL users. Add comma-separated emails to send a 'personal' email to those users. If the email is 'personal', it will send to that user regardless of their Notification preferences.
+          </div>
+          <%= label_tag :recipients %> <br>
+          <%= text_field_tag :recipients, @email.recipients %> <br>
+          <%= label_tag :email_type %> <br>
+          <%= select_tag :email_type, options_for_select(["class_reminder", "low_credits", "waiver_expiring", "class_cancelled", "newsletter"], @email.email_type || "newsletter") %> <br>
           <%= label_tag :subject %> <br>
           <%= text_field_tag :subject, @email.subject %> <br>
           <%= label_tag :body %> <br>
