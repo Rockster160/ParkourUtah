@@ -40,7 +40,12 @@ class Event < ActiveRecord::Base
 
   scope :today, -> { by_date(DateTime.current) }
   scope :by_date, -> (date) { in_date_range(date, date) }
-  scope :in_date_range, -> (first_day, last_day) { where(date: first_day.in_time_zone(Time.zone).beginning_of_day..last_day.in_time_zone(Time.zone).end_of_day) }
+  scope :in_date_range, -> (first_day, last_day) {
+    time_zone = Time.zone
+    first_date = time_zone.local(first_day.year, first_day.month, first_day.day).beginning_of_day
+    last_date = time_zone.local(last_day.year, last_day.month, last_day.day).end_of_day
+    where(date: first_date..last_date)
+  }
 
   def css_style
     "background-color: #{color.presence || '#FFF'} !important; color: #{color_contrast} !important; background-image: none !important;"
