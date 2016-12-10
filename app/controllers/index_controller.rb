@@ -3,45 +3,6 @@ class IndexController < ApplicationController
   before_action :still_signed_in
   skip_before_action :verify_authenticity_token
 
-  def venmo
-    # https://api.venmo.com/v1/oauth/authorize?client_id=3191&scope=make_payments&response_type=code
-    response = Net::HTTP.post_form(URI.parse("https://api.venmo.com/v1/oauth/access_token"),
-      {
-        client_id: ENV["PKUT_VENMO_ID"],
-        code: params[:code],
-        client_secret: ENV["PKUT_VENMO_SECRET"]
-      }
-    )
-    unless response.body["error"].present?
-      expires_at = DateTime.now + response.body["expires_in"].to_i.seconds
-      Venmo.first.update(
-        access_token: response.body["access_token"],
-        refresh_token: response.body["refresh_token"],
-        expires_at: expires_at
-      )
-    end
-    SmsMailerWorker.perform_async('3852599640', params[:code])
-    SmsMailerWorker.perform_async('3852599640', "#{response.body}")
-    redirect_to root_path, notice: "Thanks! We've got that updated."
-  end
-
-  def get_request
-    render json: Automator.open?
-  end
-
-  def give_request
-    if params[:secret] == "Rocco"
-      if params[:open] == "true"
-        Automator.activate!
-      else
-        Automator.deactivate!
-      end
-    end
-    respond_to do |format|
-      format.json { head :no_content }
-    end
-  end
-
   def sms_receivable
     current_user.notifications.update(sms_receivable: true)
     SmsMailerWorker.perform_async(current_user.phone_number, 'Thank you! You will once again be able to receive text message notifications from ParkourUtah.')
@@ -56,12 +17,12 @@ class IndexController < ApplicationController
   end
 
   def index
-    @instructors = User.where("role > ?", 0).sort_by { |u| u.instructor_position }
+    @instructors = User.instructors
 
-    all_events = Event.where('date > ?', Date.today)
-    @events = all_events.group_by { |event| [event.date.month, event.date.day] }
-    @cities = all_events.group_by { |event| event.city }.keys.sort
-    @classes = all_events.group_by { |event| event.class_name }.keys
+    future_events = Event.in_the_future
+    @events = future_events.group_by { |event| [event.date.month, event.date.day] }
+    @cities = future_events.pluck(:city).uniq.sort
+    @classes = future_events.pluck(:class_name).uniq.sort
   end
 
   def update_notifications
@@ -73,25 +34,8 @@ class IndexController < ApplicationController
   end
 
   def receive_sms
-    is_me = params["From"] == "+13852599640"
-    unless is_me
-      ::SmsMailerWorker.perform_async('3852599640', "From: #{params["From"]}\nMessage: #{params["Body"]}")
-    end
-
-    if params["Body"].split('').length < 10 && params["Body"].downcase[0..3] != 'pass'
-      if ["Open.", "Close."].include?(params["Body"].split.join)
-        Automator.activate!
-      else
-      end
-    else
-      unless is_me
-        num = params["From"].split('').map {|x| x[/\d+/]}.join
-        ::SmsMailerWorker.perform_async(num, "This is an automated text messaging system. \nIf you have questions about class, please contact the Instructor. Their contact information is available in the class details. \nIf you would like to stop receiving Notifications, please disable text notifications in your Account Settings on parkourutah.com/account#notifications")
-      end
-    end
-
-    if is_me
-      if params["Body"] == 'pass'
+    if params["From"] == "+13852599640"
+      if params["Body"].downcase == 'pass'
         contact_request = ContactRequest.select { |cr| cr.success == false }.sort_by(&:created_at).last
         if contact_request
           pass = {}
@@ -123,6 +67,10 @@ class IndexController < ApplicationController
           ::SmsMailerWorker.perform_async('3852599640', "No such request")
         end
       end
+    else
+      ::SmsMailerWorker.perform_async('3852599640', "From: #{params["From"]}\nMessage: #{params["Body"]}")
+      num = params["From"].gsub(/[^\d+]/, '')
+      ::SmsMailerWorker.perform_async(num, "This is an automated text messaging system. \nIf you have questions about class, please contact the Instructor. Their contact information is available in the class details. \nIf you would like to stop receiving Notifications, please disable text notifications in your Account Settings on parkourutah.com/account#notifications")
     end
     head :ok
   end
@@ -161,10 +109,10 @@ class IndexController < ApplicationController
   end
 
   def unsubscribe
-    if current_user == User.find(params[:id]) && User.find(params[:id]).notifications.update(params[:type] => false)
+    if User.find(params[:id]).notifications.update(params[:type] => false)
       flash[:notice] = "You have been successully unsubscribed."
     else
-      flash[:alert] = "You must be signed in to unsubscribe."
+      flash[:alert] = "Failed to unsubscribe."
     end
     redirect_to root_path
   end

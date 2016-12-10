@@ -102,13 +102,13 @@ class User < ActiveRecord::Base
     joins('LEFT OUTER JOIN dependents ON users.id = dependents.user_id')
       .where('email ILIKE ? OR CAST(users.id AS TEXT) ILIKE ? OR dependents.full_name ILIKE ? OR CAST(dependents.athlete_id AS TEXT) ILIKE ?', text, text, text, text).uniq
   }
+  scope :instructors, -> { where("role > 0").order(:instructor_position) }
+  scope :mods, -> { where("role > 1") }
+  scope :admins, -> { where("role > 2") }
 
-  def is_instructor?; self.role >= 1; end
-  def self.instructors; select{ |u| u.is_instructor? }.sort_by { |s| s.instructor_position }; end
-  def is_mod?; self.role >= 2; end
-  def self.mods; select{|u|u.is_mod?}; end
-  def is_admin?; self.role >= 3; end
-  def self.admins; select{|u|u.is_admin?}; end
+  def is_instructor?; role >= 1; end
+  def is_mod?; role >= 2; end
+  def is_admin?; role >= 3; end
   def self.[](id); find(id); end; #User[4]
 
   def self.doit
