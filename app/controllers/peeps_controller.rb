@@ -14,7 +14,7 @@ class PeepsController < ApplicationController
 
     raw_html = html(@email.body)
 
-    email_source = ContactMailer.email('', @email.subject || '', raw_html || '').body.raw_source
+    email_source = ApplicationMailer.email('', @email.subject || '', raw_html || '').body.raw_source
 
     respond_to do |format|
       if valid_html?(raw_html)

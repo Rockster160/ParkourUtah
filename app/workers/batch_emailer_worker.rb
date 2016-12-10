@@ -5,7 +5,7 @@ class BatchEmailerWorker
     emails = recipients.to_s.downcase.split(",").map(&:squish)
     if emails.any?
       emails.each do |email|
-        ContactMailer.email(email, subject, body).deliver_now
+        ApplicationMailer.email(email, subject, body).deliver_now
         puts "Emailing non-user #{email}"
         sleep 0.1
       end
@@ -14,7 +14,7 @@ class BatchEmailerWorker
       notification_type = Notifications.column_names.include?(notification_type) ? notification_type : "email_newsletter"
       User.joins(:notifications).where(notifications: {notification_type => true}).each do |user|
         puts "Emailing #{user.email}"
-        ContactMailer.email(user.email, subject, body).deliver_now
+        ApplicationMailer.email(user.email, subject, body).deliver_now
         sleep 0.1
       end
     end

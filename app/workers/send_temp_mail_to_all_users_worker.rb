@@ -5,7 +5,7 @@ class SendTempMailToAllUsersWorker
   def perform
     count = User.count
     User.all.each do |u|
-      WelcomeMailer.delay.temp_mail(u.email)
+      ApplicationMailer.delay.temp_mail(u.email)
       puts "Emailed: #{u.email}. #{count -= 1} users to go."
       sleep 5
     end

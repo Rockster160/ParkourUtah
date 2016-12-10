@@ -8,7 +8,7 @@ class ItemsPurchasedMailerWorker
       email ||= user.email
       email ||= cart.email
     end
-    ItemsPurchasedMailer.customer_purchase_mail(cart_id, email).deliver_now
+    ApplicationMailer.customer_purchase_mail(cart_id, email).deliver_now
   end
 
 end

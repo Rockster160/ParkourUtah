@@ -264,7 +264,7 @@ class StoreController < ApplicationController
     redemption_items = items_with_redemption.map(&:redemption_item)
     redemption_keys = redemption_items.each do |item|
       key = item.redemption_keys.create
-      KeyGenMailer.delay.public_mailer(key.id, @cart.email)
+      ApplicationMailer.delay.public_mailer(key.id, @cart.email)
     end
 
     if user_signed_in?
