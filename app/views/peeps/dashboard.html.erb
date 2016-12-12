@@ -3,7 +3,7 @@
     <h2>Dashboard</h2><br/>
     <h2>Begin a Class</h2><br/>
     <% @classes.each do |event| %>
-      <%= link_to "#{event.date.strftime('%l:%M')} #{event.class_name}", begin_class_path(event.id), class: 'pkut-btn' %><br/><br/>
+      <%= link_to "#{event.date.strftime('%l:%M')} #{event.title}", begin_class_path(event.id), class: 'pkut-btn' %><br/><br/>
     <% end %>
     <%= link_to "Private Class", begin_class_path(1), class: 'pkut-btn' %><br/><br/>
     <%= link_to "Testing Session", begin_class_path(83788378), class: 'pkut-btn' %><br/><br/>

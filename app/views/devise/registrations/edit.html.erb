@@ -27,7 +27,7 @@
     <%
       has_subscriptions = current_user.subscribed_athletes.any? ||
       current_user.athletes_with_unlimited_access.count > 0 ||
-      current_user.class_subscriptions.any?
+      current_user.subscribed_events.any?
     %>
     <% if has_subscriptions %>
       <br/>

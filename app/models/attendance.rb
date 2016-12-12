@@ -13,19 +13,15 @@
 #  sent           :boolean          default(FALSE)
 #
 
+# TODO Rename associations to be better
 class Attendance < ActiveRecord::Base
 
   belongs_to :dependent
   belongs_to :user
   belongs_to :event
 
-  def athlete
-    Dependent.find_by_athlete_id(self.dependent_id)
-  end
-
-  def instructor
-    User.find(user_id)
-  end
+  def athlete; dependent; end
+  def instructor; user; end
 
   def sent!
     self.update(sent: true)

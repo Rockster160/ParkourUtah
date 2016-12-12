@@ -2,42 +2,25 @@
 #
 # Table name: events
 #
-#  id                    :integer          not null, primary key
-#  date                  :datetime
-#  token                 :integer
-#  title                 :string
-#  host                  :string
-#  cost                  :float
-#  description           :text
-#  city                  :string
-#  address               :string
-#  location_instructions :string
-#  class_name            :string
-#  created_at            :datetime         not null
-#  updated_at            :datetime         not null
-#  zip                   :string
-#  state                 :string           default("Utah")
-#  color                 :string
-#  cancelled_text        :boolean          default(FALSE)
+#  id                :integer          not null, primary key
+#  date              :datetime
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  event_schedule_id :integer
+#  is_cancelled      :boolean          default(FALSE)
 #
-
-# Unused
-# city address location_instructions zip state
 
 class Event < ActiveRecord::Base
 
+  belongs_to :event_schedule
   has_many :attendances, dependent: :destroy
-  has_many :spot_events, dependent: :destroy
-  accepts_nested_attributes_for :spot_events, allow_destroy: true
-  has_many :subscriptions, dependent: :destroy
-  has_many :subscribed_users, through: :subscriptions
 
   after_initialize :set_default_values
   before_save :format_fields
   before_save :add_hash_to_colors
 
-  scope :in_the_future, -> { where("date > ?", DateTime.current) }
-  scope :today, -> { by_date(DateTime.current) }
+  scope :in_the_future, -> { where("date > ?", Time.zone.now) }
+  scope :today, -> { by_date(Time.zone.now) }
   scope :by_date, -> (date) { in_date_range(date, date) }
   scope :in_date_range, -> (first_day, last_day) {
     time_zone = Time.zone
@@ -45,6 +28,20 @@ class Event < ActiveRecord::Base
     last_date = time_zone.local(last_day.year, last_day.month, last_day.day).end_of_day
     where(date: first_date..last_date)
   }
+
+  delegate :instructor,      to: :event_schedule, allow_nil: true
+  delegate :spot,            to: :event_schedule, allow_nil: true
+  delegate :hour_of_day,     to: :event_schedule, allow_nil: true
+  delegate :minute_of_day,   to: :event_schedule, allow_nil: true
+  delegate :day_of_week,     to: :event_schedule, allow_nil: true
+  delegate :cost_in_pennies, to: :event_schedule, allow_nil: true
+  delegate :title,           to: :event_schedule, allow_nil: true
+  delegate :description,     to: :event_schedule, allow_nil: true
+  delegate :full_address,    to: :event_schedule, allow_nil: true
+  delegate :city,            to: :event_schedule, allow_nil: true
+  delegate :color,           to: :event_schedule, allow_nil: true
+  delegate :time_of_day,     to: :event_schedule, allow_nil: true
+  delegate :host_name,       to: :event_schedule, allow_nil: true
 
   def css_style
     "background-color: #{color.presence || '#FFF'} !important; color: #{color_contrast} !important; background-image: none !important;"
@@ -70,12 +67,12 @@ class Event < ActiveRecord::Base
     pluck(:city).uniq
   end
 
-  def recurring?
-    Event.by_token(token).count > 1
+  def self.random_color
+    "##{6.times.map { rand(16).to_s(16) }.join('')}"
   end
 
-  def self.color_of(class_name)
-    classes = where(class_name: class_name)
+  def self.color_of(title)
+    classes = where(title: title)
     if classes.any?
       color = classes.last.color
       return color.presence || random_color
@@ -85,11 +82,11 @@ class Event < ActiveRecord::Base
   end
 
   def self.future_classes_in(city)
-    where(city: city).where("date >= ?", DateTime.current)
+    where(city: city).where("date >= ?", Time.zone.now)
   end
 
   def self.sort_by_token
-    self.where("date > ?", DateTime.current).group_by do |all_events|
+    self.where("date > ?", Time.zone.now).group_by do |all_events|
       all_events.token
     end.map do |keys, values|
       values.sort_by {|v| v.id}.first
@@ -101,7 +98,7 @@ class Event < ActiveRecord::Base
   end
 
   def self.next_class_by_token(token)
-    where('date > ?', DateTime.current).where(token: token).order(date: :asc).first
+    where('date > ?', Time.zone.now).where(token: token).order(date: :asc).first
   end
 
   def self.names_with_tokens
@@ -109,7 +106,7 @@ class Event < ActiveRecord::Base
     tokens.map do |token|
       event = next_class_by_token(token)
       next unless event.present?
-      ["#{event.date.strftime('%A %l:%M')} #{event.class_name}", event.id]
+      ["#{event.date.strftime('%A %l:%M')} #{event.title}", event.id]
     end.compact
   end
 
@@ -131,9 +128,6 @@ class Event < ActiveRecord::Base
 
   private
 
-  def self.random_color
-    "##{3.times.map { rand(256).to_s(16) }.join('')}"
-  end
   def random_color; self.class.random_color; end
 
   def format_fields

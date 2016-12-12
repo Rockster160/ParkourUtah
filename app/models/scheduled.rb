@@ -9,12 +9,12 @@ class Scheduled < ActiveRecord::Base
           if user.notifications.text_class_reminder && user.notifications.sms_receivable
             num = user.phone_number
             if num.length == 10
-              msg = "Hope to see you at our #{event.class_name} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!"
+              msg = "Hope to see you at our #{event.title} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!"
               ::SmsMailerWorker.perform_async(num, msg)
             end
           end
           if user.notifications.email_class_reminder
-            ::ClassReminderMailerWorker.perform_async(user.id, "Hope to see you at our #{event.class_name} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!")
+            ::ClassReminderMailerWorker.perform_async(user.id, "Hope to see you at our #{event.title} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!")
           end
         end
       end
@@ -57,15 +57,15 @@ class Scheduled < ActiveRecord::Base
             instructors[instructor.full_name]["pay"] ||= 0
 
             instructors[instructor.full_name]["students"] << "#{athlete.full_name} - #{attendance.type_of_charge}"
-            pay = event.class_name == "Test" ? 15 : instructor.payment_multiplier
+            pay = event.title == "Test" ? 15 : instructor.payment_multiplier
             instructors[instructor.full_name]["pay"] += pay
 
             attendance.sent!
           end
         else
-          instructors[event.host] ||= {}
-          instructors[event.host]["students"] = ["None"]
-          instructors[event.host]["pay"] = 15
+          instructors[event.host_name] ||= {}
+          instructors[event.host_name]["students"] = ["None"]
+          instructors[event.host_name]["pay"] = 15
         end
         instructors.each do |instructor|
           pay = event.attendances.count > 5 ? instructor[1]["pay"] : 15
@@ -74,10 +74,10 @@ class Scheduled < ActiveRecord::Base
           payment[instructor[0]] += pay
         end
         summary["#{(Time.now - day.days).to_date.strftime("%A %B %-d, %Y")}"] ||= {}
-        if event.class_name == "Test"
+        if event.title == "Test"
           summary["#{(Time.now - day.days).to_date.strftime("%A %B %-d, %Y")}"]["Private Class"] = instructors
         else
-          summary["#{(Time.now - day.days).to_date.strftime("%A %B %-d, %Y")}"]["#{event.class_name} - #{event.city} - #{event.date.strftime('%l:%M%p')}"] = instructors
+          summary["#{(Time.now - day.days).to_date.strftime("%A %B %-d, %Y")}"]["#{event.title} - #{event.city} - #{event.date.strftime('%l:%M%p')}"] = instructors
         end
       end
     end

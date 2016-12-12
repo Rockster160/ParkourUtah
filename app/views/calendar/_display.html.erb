@@ -1,6 +1,6 @@
 <% week ||= @week %>
 <div class="row month-container">
-  <h3><%= DateTime.current.strftime('%B %Y') %></h3>
+  <h3><%= Time.zone.now.strftime('%B %Y') %></h3>
 </div>
 <div class="row">
   <div class="col-sm-12 calendar-partial">

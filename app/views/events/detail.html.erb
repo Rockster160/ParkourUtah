@@ -1,0 +1,31 @@
+<div class="event_schedule-details">
+  <h3 class="pkut-header"><%= @event_schedule.title %></h3>
+  <div class="relative">
+    <% spot = @event_schedule.spot %>
+    <% if spot %>
+      <p>Spot: <br/> <%= link_to  "#{spot.title} (Click/tap for more details)", spot_path(spot) %></p>
+      <p><%= spot.location %></p>
+    <% else %>
+      <p><%= @event_schedule.address %></p>
+    <% end %>
+    <p><%= @event_schedule.time_of_day %></p>
+    <p><%=  %></p>
+    <p><%= @event_schedule.description.gsub("\n", "<br/>").gsub('  ', " &nbsp;").html_safe %></p>
+    <p><%=  %></p>
+    <p>Instructor: <%= @event_schedule.host_name %></p>
+    <p>
+      <% if current_user %>
+        <% unless current_user.is_subscribed_to?(@event_schedule) %>
+          <%= link_to 'Click to receive text alerts for this Event.', subscribe_event_schedule_path(@event_schedule), class: "calendar-link", method: :post %><br/>
+        <% else %>
+          <%= link_to 'Unsubscribe from this Event.', unsubscribe_event_schedule_path(@event_schedule), class: "calendar-link", method: :delete %><br/>
+        <% end %>
+      <% end %>
+    </p>
+    <% if current_user && current_user.is_mod? %>
+      </br>
+      <p><%= link_to 'Edit only this Event', edit_event_path(id: @event.id || "new", event_schedule_id: @event.event_schedule_id, date: @event.date), class: "calendar-link" %></p>
+      <p><%= link_to 'Edit Recurring Event', edit_event_schedule_path(@event_schedule), class: "calendar-link" %></p>
+    <% end %>
+  </div>
+</div>

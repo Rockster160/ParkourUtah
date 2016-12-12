@@ -36,7 +36,7 @@
         <% @user.class_subscriptions.map{|s|s.event}.each do |event| %>
           <div class="row">
             <div class="col-xs-6">
-              <%= event.city %> <%= event.class_name.capitalize %> <%= event.date.strftime('%l:%M') %>
+              <%= event.city %> <%= event.title.capitalize %> <%= event.date.strftime('%l:%M') %>
             </div>
             <div class="col-xs-6">
               <%= link_to 'Unsubscribe', unsubscribe_path(id: event.id), class: 'pkut-btn', method: :delete %>

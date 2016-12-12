@@ -9,13 +9,6 @@
 #  updated_at :datetime         not null
 #
 
+# TODO Remove me in a later migration
 class SpotEvent < ActiveRecord::Base
-  belongs_to :spot
-  belongs_to :event
-
-  validates :spot_id, :event_id, presence: true
-
-  def validate_ids
-
-  end
 end

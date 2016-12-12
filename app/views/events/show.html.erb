@@ -1,0 +1,33 @@
+<div class="central-container form-offset">
+  <h1><%= @event.title %></h1>
+  <h4>Instructor: <%= @event.host_name %></h4>
+  <h6><%= @event.recurring? ? @event.date.strftime('%As at %l:%M %p') : @event.date.strftime('%A, %B %-d at %-l:%M %p') %></h6>
+  <p>Cost: <%= @event.cost_in_dollars > 0 ? "#{@event.cost_in_dollars.round} credits" : 'Free' %></p>
+  <br/>
+  <p><%= @event.description %></p>
+
+  <% if spot = @event.spot %>
+  <h2>Spot:</h2>
+    <h3><%= spot.title %></h3>
+    <div class="">
+      <%= spot.description %>
+    </div>
+    <div class="">
+      <a href="http://maps.google.com/maps?z=15&t=m&q=loc:<%= spot.lat %>+<%= spot.lon %>" target="_blank"><%= spot.location %><br/>Click here to open in Google Maps</a>
+      <br/>
+      <br/>
+    </div>
+
+    <div style="width: 400px;" class="gmap" data-lat="<%= spot.lat %>" data-lng="<%= spot.lon %>" data-zoom="17">
+      <div id="map" style="width: 400px; height: 400px;"></div>
+      <span class="hidden gmap_coord" data-lat="<%= spot.lat %>" data-lon="<%= spot.lon %>" data-spot-name="<%= spot.title %>" data-spot-url="<%= spot_path(spot) %>"/>
+    </div>
+
+    <div class="">
+      <% spot.images.each do |image| %>
+        <%= image_tag image.file %>
+      <% end %>
+    </div>
+  <% end %>
+
+</div>

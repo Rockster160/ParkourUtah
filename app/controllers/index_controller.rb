@@ -19,10 +19,8 @@ class IndexController < ApplicationController
   def index
     @instructors = User.instructors
 
-    future_events = Event.in_the_future
-    @events = future_events.group_by { |event| [event.date.month, event.date.day] }
+    future_events = EventSchedule.in_the_future
     @cities = future_events.pluck(:city).uniq.sort
-    @classes = future_events.pluck(:class_name).uniq.sort
   end
 
   def update_notifications

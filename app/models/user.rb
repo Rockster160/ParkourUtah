@@ -67,6 +67,8 @@ class User < ActiveRecord::Base
   has_many :dependents, dependent: :destroy
   has_many :transactions, through: :cart
   has_many :subscriptions, dependent: :destroy
+  has_many :subscribed_events, through: :subscriptions, source: "event_schedule"
+  has_many :classes_to_teach, class_name: "EventSchedule", foreign_key: "instructor_id"
   has_many :emergency_contacts, dependent: :destroy
 
   after_create :assign_cart
@@ -164,14 +166,8 @@ class User < ActiveRecord::Base
   end
 
   def still_signed_in!
-    self.last_sign_in_at = DateTime.current
+    self.last_sign_in_at = Time.zone.now
     self.save!
-  end
-
-  def class_subscriptions
-    self.subscriptions.each do |subscribed|
-      subscribed.event
-    end
   end
 
   def full_name
@@ -220,8 +216,8 @@ class User < ActiveRecord::Base
     dependents.select { |d| !(d.waiver) || d.waiver.expires_soon? || !(d.waiver.is_active?) }
   end
 
-  def is_subscribed_to?(event)
-    Subscription.where(user_id: self.id, token: event.token).count > 0
+  def is_subscribed_to?(event_schedule_id)
+    Subscription.where(user_id: self.id, event_schedule_id: event_schedule_id || 0).any?
   end
 
   def charge(price, athlete)

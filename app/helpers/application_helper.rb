@@ -4,7 +4,7 @@ module ApplicationHelper
     month, day, year = str.first(10).split('-').map(&:to_i)
     return nil unless year && month && day
     begin
-      DateTime.new(year, month, day)
+      Time.zone.local(year, month, day)
     rescue ArgumentError
       nil
     end

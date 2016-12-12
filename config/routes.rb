@@ -26,6 +26,17 @@ Rails.application.routes.draw do
   post 'register/step_5' => 'registrations#post_step_5'
 
   resources :spots
+  resources :events do
+    member do
+      get :detail
+    end
+  end
+  resources :event_schedules do
+    member do
+      post :subscribe
+      delete :unsubscribe
+    end
+  end
 
   get 'test' => 'index#index'
   post 'contact' => 'index#contact'
@@ -89,22 +100,6 @@ Rails.application.routes.draw do
   get 'calendar/week' => 'calendar#get_week', as: 'week'
   get 'm/calendar' => 'calendar#mobile', as: 'calendar_mobile'
   get 'calendar/week' => 'calendar#get_week', as: 'calendar_week'
-
-  get 'events/new' => 'event#new', as: 'add_event'
-  post 'events/create' => 'event#create'
-  get 'events/edit/:id' => 'event#edit', as: 'edit_event'
-  get 'event/:id' => 'event#show', as: 'show_event'
-  post 'event/:id/cancel_message' => 'event#send_message_to_subscribers', as: 'message_subscribers'
-  post 'event/:id/cancel' => 'event#cancel', as: 'cancel_event'
-  get 'events/:id/details' => 'event#detail', as: 'event_detail'
-
-  get 'events/cities' => 'event#cities', as: 'cities'
-  get 'events/cities/:city' => 'event#city', as: 'city'
-
-  patch 'events/update/:id' => 'event#update'
-  delete 'events/destroy' => 'event#destroy', as: 'destroy_event'
-  post 'events/subscribe/:id' => 'event#subscribe', as: 'subscribe'
-  delete 'events/unsubscribe/:id' => 'event#unsubscribe', as: 'unsubscribe'
 
   get 'dashboard' => 'peeps#dashboard', as: 'dashboard'
   get 'peeps/return' => 'peeps#return'

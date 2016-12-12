@@ -20,7 +20,7 @@ class UnlimitedSubscription < ActiveRecord::Base
   end
 
   def active?
-    self.expires_at > DateTime.current.to_date
+    self.expires_at > Time.zone.now.to_date
   end
 
   def use!

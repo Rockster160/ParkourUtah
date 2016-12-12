@@ -7,8 +7,8 @@
   <div class="full-calendar-container">
     <div class="calendar-controls col-md-8 col-md-offset-2 col-xs-12 text-center">
       <select class="select-dropbox class-name-search col-sm-4 col-sm-offset-0 col-xs-6 col-xs-offset-3" multiple="multiple" placeholder="All Events(Default)">
-        <% @classes.each do |class_name| %>
-          <option value="<%= class_name %>"><%= class_name %></option>
+        <% @classes.each do |event_name| %>
+          <option value="<%= event_name %>"><%= event_name %></option>
         <% end %>
       </select>
       <span class="date-controller col-sm-4 col-sm-offset-0 col-xs-10 col-xs-offset-1">

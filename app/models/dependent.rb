@@ -21,6 +21,7 @@
 #  verified                   :boolean          default(FALSE)
 #
 
+# TODO Rename to 'Athlete'
 class Dependent < ActiveRecord::Base
 
   belongs_to :user

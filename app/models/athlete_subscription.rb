@@ -28,8 +28,8 @@ class AthleteSubscription < ActiveRecord::Base
     self.save
   end
 
-  def active?; self.expires_at.to_date > DateTime.current.to_date; end
-  def inactive?; self.expires_at.to_date <= DateTime.current.to_date; end
+  def active?; self.expires_at.to_date > Time.zone.now.to_date; end
+  def inactive?; self.expires_at.to_date <= Time.zone.now.to_date; end
 
   def use!
     return false unless active?
