@@ -42,8 +42,8 @@ class EventsController < ApplicationController
   def new
     @event = Event.new
     all_events = EventSchedule.in_the_future.order(:start_date)
-    @cities = all_events.pluck(:city)
-    @classes = all_events.pluck(:title)
+    @cities = all_events.pluck(:city).uniq
+    @classes = all_events.pluck(:title).uniq
     @instructors = User.where("role > ?", 0)
   end
 
@@ -86,26 +86,6 @@ class EventsController < ApplicationController
       Event.find(params[:id]).destroy
     end
     redirect_to calendar_show_path
-  end
-
-  def subscribe
-    user = params[:user_id].present? ? User.find(params[:user_id]) : current_user
-    if user.phone_number_is_valid?
-      event = Event.find(params[:id])
-      user.subscriptions.create(event_schedule_id: params[:event_schedule_id])
-      redirect_to :back, notice: "You have successfully subscribed to this event."
-    else
-      redirect_to edit_user_registration_path, alert: "You must have an associated phone number to subscribe to events."
-    end
-  end
-
-  def unsubscribe
-    subcription = Subscription.where(user_id: current_user.id, event_schedule_id: params[:event_schedule_id]).first
-    if subcription.present? && subcription.destroy
-      redirect_to :back, notice: "You have successfully unsubscribed from this event."
-    else
-      redirect_to :back, alert: "There was an error. Try again later."
-    end
   end
 
   private

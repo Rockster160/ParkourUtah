@@ -29,6 +29,11 @@ class EventSchedule < ActiveRecord::Base
   has_many :subscriptions, dependent: :destroy
   has_many :subscribed_users, through: :subscriptions, class_name: "User"
 
+  before_save :add_hash_to_colors
+
+  validates :instructor_id, :start_date, :hour_of_day, :minute_of_day, :day_of_week, :cost_in_pennies, :title, :city, presence: true
+  validate :has_either_address_or_spot
+
   scope :in_the_future, -> { where("start_date < :now AND (end_date IS NULL OR end_date > :now)", now: Time.zone.now) }
 
   enum day_of_week: {
@@ -59,7 +64,30 @@ class EventSchedule < ActiveRecord::Base
     end.flatten.compact
   end
 
+  def cost=(amount_in_dollars)
+    self.cost_in_pennies = amount_in_dollars.to_f / 100
+  end
+  def cost; cost_in_dollars; end
+  def cost_in_dollars; cost_in_pennies.to_f * 100.to_f; end
+
+  def start_str_date; start_date.present? ? start_date.strftime('%b %d, %Y') : nil; end
+  def start_str_date=(new_date)
+    self.start_date = Time.zone.parse(new_date) rescue nil
+  end
+  def end_str_date; end_date.present? ? end_date.strftime('%b %d, %Y') : nil; end
+  def end_str_date=(new_date)
+    self.end_date = Time.zone.parse(new_date) rescue nil
+  end
+
+  def time_of_day=(new_time_str)
+    return nil if new_time_str.split(":")[0].to_i <= 12 && (new_time_str =~ /(a|p)m/i).nil?
+    time = Time.zone.parse(new_time_str)
+    self.hour_of_day = time.try(:hour)
+    self.minute_of_day = time.try(:min)
+  end
   def time_of_day
+    hour_of_day ||= 17
+    minute_of_day ||= 0
     meridiam = hour_of_day > 12 ? "PM" : "AM"
     adjusted_hour = hour_of_day > 12 ? hour_of_day - 12 : hour_of_day
     "#{adjusted_hour.to_s}:#{minute_of_day.to_s.rjust(2, '0')} #{meridiam}"
@@ -81,7 +109,8 @@ class EventSchedule < ActiveRecord::Base
 
   def new_events_for_time_range(first_date=start_date, last_date=end_date)
     raise 'Must have an end date' unless last_date.present?
-    current_date = (first_date + days_until_next_week_day_from(first_date))
+    first_date_with_time = Time.zone.local(first_date.year, first_date.month, first_date.day, hour_of_day, minute_of_day)
+    current_date = (first_date_with_time + days_until_next_week_day_from(first_date))
     new_events = []
     until current_date > last_date
       new_events << events.new(date: current_date)
@@ -94,6 +123,18 @@ class EventSchedule < ActiveRecord::Base
     to_week_day = EventSchedule.day_of_weeks[day_of_week]
     day_count = (to_week_day - from_date.wday) % 7
     day_count.days
+  end
+
+  private
+
+  def add_hash_to_colors
+    color.prepend('#') if color.present? && (color.length == 3 || color.length == 6)
+  end
+
+  def has_either_address_or_spot
+    if spot_id.nil? && full_address.blank?
+      errors.add(:base, "Event must have either an Address of a Spot attached.")
+    end
   end
 
 end

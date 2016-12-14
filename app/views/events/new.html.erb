@@ -2,8 +2,6 @@
   <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br/><br/>
   <%= form_for @event, url: {action: "create"} do |f| %>
     <h4>Select a starting date</h4>
-    <div class="date-picker"></div><br/>
-    <span class="date-placeholder">--/--/----</span><br/>
     <h5>Example text:</h5>
     <%= f.label :title, 'Hope to see you at our {city} {class} class today at {time}!' %><br/>
     <%#= f.text_field :title, placeholder: 'Title', class: 'customRequired pkut-textbox' %><br/>
@@ -36,7 +34,6 @@
     <h4>This will copy the event every week on the same day for 1 year.</h4>
     <%= label_tag :repeat, "Repeat Weekly?" %>
     <%= check_box_tag :repeat %>
-    <%= hidden_field_tag :date, "", class: "datepicker-placeholder customRequired" %>
     <br/>
     <%= submit_tag "√", class: "btn btn-success" %>
   <% end %>
