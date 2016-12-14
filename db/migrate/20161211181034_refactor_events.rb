@@ -39,7 +39,7 @@ class RefactorEvents < ActiveRecord::Migration
         hour_of_day: next_event.date.to_datetime.hour,
         minute_of_day: next_event.date.to_datetime.minute,
         day_of_week: next_event.date.wday,
-        cost_in_pennies: next_event.cost,
+        cost_in_pennies: next_event.cost_in_pennies,
         title: db_attrs["class_name"],
         description: db_attrs["description"],
         full_address: db_attrs["address"],

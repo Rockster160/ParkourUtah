@@ -86,8 +86,8 @@ class EventSchedule < ActiveRecord::Base
     self.minute_of_day = time.try(:min)
   end
   def time_of_day
-    hour_of_day ||= 17
-    minute_of_day ||= 0
+    hour_of_day = self.hour_of_day || 17
+    minute_of_day = self.minute_of_day || 0
     meridiam = hour_of_day > 12 ? "PM" : "AM"
     adjusted_hour = hour_of_day > 12 ? hour_of_day - 12 : hour_of_day
     "#{adjusted_hour.to_s}:#{minute_of_day.to_s.rjust(2, '0')} #{meridiam}"

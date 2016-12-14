@@ -1,4 +1,5 @@
 <div class="central-container">
+  <%= link_to "New Event Schedule", new_event_schedule_path, class: 'pkut-btn' %>
   <% @event_schedules.group_by(&:city).each do |city, schedules| %>
     <h3><a href="<%= new_event_schedule_path(city: city) %>" class="pkut-btn"><i class="fa fa-plus"></i></a> <%= city %></h3>
     <% schedules.each do |schedule| %>
