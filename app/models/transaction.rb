@@ -8,7 +8,7 @@
 #  amount         :integer          default(1)
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  redeemed_token :string
+#  redeemed_token :string           default("")
 #  order_name     :string
 #
 

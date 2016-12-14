@@ -239,9 +239,9 @@ ActiveRecord::Schema.define(version: 20160930004923) do
     t.integer  "cart_id"
     t.integer  "item_id"
     t.integer  "amount",         default: 1
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.string   "redeemed_token"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.string   "redeemed_token", default: ""
     t.string   "order_name"
   end
 
