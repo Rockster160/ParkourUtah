@@ -254,7 +254,7 @@ class PeepsController < ApplicationController
     @user = @athlete.user
     charge = event.cost_in_dollars
 
-    charge_type = if [1].include?(event.id) #83788378 - test class
+    charge_type = if [1].include?(event.id) # 83788378 - test class
       @user.charge_credits(charge)
     else
       @user.charge(charge, @athlete)
@@ -287,7 +287,7 @@ class PeepsController < ApplicationController
 
   def class_logs
     @event = Event.find(params[:id])
-    @athletes = Attendance.where(event_id: params[:id]).map { |a| a.athlete }
+    @athletes = @event.attendances.map(&:athlete)
   end
 
   private

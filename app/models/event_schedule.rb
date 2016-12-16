@@ -21,17 +21,20 @@
 #
 
 class EventSchedule < ActiveRecord::Base
+  include Defaults
 
   belongs_to :instructor, class_name: "User"
   belongs_to :spot
   has_many :events
   has_many :attendances, through: :events
   has_many :subscriptions, dependent: :destroy
-  has_many :subscribed_users, through: :subscriptions, class_name: "User"
+  has_many :subscribed_users, through: :subscriptions, source: :user
 
   before_save :add_hash_to_colors
 
-  validates :instructor_id, :start_date, :hour_of_day, :minute_of_day, :day_of_week, :cost_in_pennies, :title, :city, presence: true
+  default :color, "##{6.times.map { rand(16).to_s(16) }.join('')}"
+
+  validates :start_date, :hour_of_day, :minute_of_day, :day_of_week, :cost_in_pennies, :title, :city, presence: true
   validate :has_either_address_or_spot
 
   scope :in_the_future, -> { where("start_date < :now AND (end_date IS NULL OR end_date > :now)", now: Time.zone.now) }
@@ -65,10 +68,10 @@ class EventSchedule < ActiveRecord::Base
   end
 
   def cost=(amount_in_dollars)
-    self.cost_in_pennies = amount_in_dollars.to_f / 100
+    self.cost_in_pennies = amount_in_dollars * 100
   end
   def cost; cost_in_dollars; end
-  def cost_in_dollars; cost_in_pennies.to_f * 100.to_f; end
+  def cost_in_dollars; cost_in_pennies.to_f / 100.to_f; end
 
   def start_str_date; start_date.present? ? start_date.strftime('%b %d, %Y') : nil; end
   def start_str_date=(new_date)
@@ -100,8 +103,8 @@ class EventSchedule < ActiveRecord::Base
   def event_by_id(new_or_id, options={})
     if new_or_id == "new"
       options[:additional_params] ||= {}
-      options[:additional_params][:date] = Time.zone.local(*options[:with_date].split('-').map(&:to_i)) if options[:with_date]
-      events.new(date: options.merge(options[:additional_params] || {}))
+      options[:additional_params][:date] = Time.zone.parse(options[:with_date]) if options[:with_date]
+      events.new(options[:additional_params])
     else
       events.find(new_or_id)
     end

@@ -99,10 +99,12 @@ class User < ActiveRecord::Base
 
   validate :valid_phone_number
 
+  scope :online, -> { where('last_sign_in_at > ?', 10.minutes.ago) }
+  scope :by_signed_in, -> { order(last_sign_in_at: :desc) }
   scope :by_fuzzy_text, lambda { |text|
     text = "%#{text}%"
     joins('LEFT OUTER JOIN dependents ON users.id = dependents.user_id')
-      .where('email ILIKE ? OR CAST(users.id AS TEXT) ILIKE ? OR dependents.full_name ILIKE ? OR CAST(dependents.athlete_id AS TEXT) ILIKE ?', text, text, text, text).uniq
+      .where("email ILIKE ? OR concat(users.first_name, ' ', users.last_name) ILIKE ? OR CAST(users.id AS TEXT) ILIKE ? OR dependents.full_name ILIKE ? OR CAST(dependents.athlete_id AS TEXT) ILIKE ?", text, text, text, text, text).uniq
   }
   scope :instructors, -> { where("role > 0").order(:instructor_position) }
   scope :mods, -> { where("role > 1") }
@@ -113,23 +115,8 @@ class User < ActiveRecord::Base
   def is_admin?; role >= 3; end
   def self.[](id); find(id); end; #User[4]
 
-  def self.doit
-    while true
-      sleep 1
-      Automator.open? ? "\e[32mOPEN\e[0m" : "\e[32mCLOSED\e[0m"
-    end
-  end
-
-  def self.by_signed_in
-    all.select { |u| u.last_sign_in_at }.sort_by { |u| u.last_sign_in_at }.reverse
-  end
-
   def self.last_signed_in
     by_signed_in.first
-  end
-
-  def self.signed_in
-    all.select { |u| u.signed_in? }
   end
 
   def self.every(&block)
@@ -263,7 +250,7 @@ class User < ActiveRecord::Base
   end
 
   def cart
-    self.carts.sort_by { |cart| cart.created_at }.last
+    self.carts.order(created_at: :desc).first
   end
 
   def show_phone_number

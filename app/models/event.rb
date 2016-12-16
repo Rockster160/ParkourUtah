@@ -15,10 +15,6 @@ class Event < ActiveRecord::Base
   belongs_to :event_schedule
   has_many :attendances, dependent: :destroy
 
-  after_initialize :set_default_values
-  before_save :format_fields
-  before_save :add_hash_to_colors
-
   scope :in_the_future, -> { where("date > ?", Time.zone.now) }
   scope :today, -> { by_date(Time.zone.now) }
   scope :by_date, -> (date) { in_date_range(date, date) }
@@ -29,26 +25,24 @@ class Event < ActiveRecord::Base
     where(date: first_date..last_date)
   }
 
-  delegate :instructor,      to: :event_schedule, allow_nil: true
-  delegate :spot,            to: :event_schedule, allow_nil: true
-  delegate :hour_of_day,     to: :event_schedule, allow_nil: true
-  delegate :minute_of_day,   to: :event_schedule, allow_nil: true
-  delegate :day_of_week,     to: :event_schedule, allow_nil: true
-  delegate :cost_in_pennies, to: :event_schedule, allow_nil: true
-  delegate :title,           to: :event_schedule, allow_nil: true
-  delegate :description,     to: :event_schedule, allow_nil: true
-  delegate :full_address,    to: :event_schedule, allow_nil: true
-  delegate :city,            to: :event_schedule, allow_nil: true
-  delegate :color,           to: :event_schedule, allow_nil: true
-  delegate :time_of_day,     to: :event_schedule, allow_nil: true
-  delegate :host_name,       to: :event_schedule, allow_nil: true
+  delegate :instructor,       to: :event_schedule, allow_nil: true
+  delegate :spot,             to: :event_schedule, allow_nil: true
+  delegate :hour_of_day,      to: :event_schedule, allow_nil: true
+  delegate :minute_of_day,    to: :event_schedule, allow_nil: true
+  delegate :day_of_week,      to: :event_schedule, allow_nil: true
+  delegate :cost_in_pennies,  to: :event_schedule, allow_nil: true
+  delegate :title,            to: :event_schedule, allow_nil: true
+  delegate :description,      to: :event_schedule, allow_nil: true
+  delegate :full_address,     to: :event_schedule, allow_nil: true
+  delegate :city,             to: :event_schedule, allow_nil: true
+  delegate :color,            to: :event_schedule, allow_nil: true
+  delegate :time_of_day,      to: :event_schedule, allow_nil: true
+  delegate :host_name,        to: :event_schedule, allow_nil: true
+  delegate :subscribed_users, to: :event_schedule, allow_nil: true
+  delegate :cost_in_dollars,  to: :event_schedule, allow_nil: true
 
   def css_style
     "background-color: #{color.presence || '#FFF'} !important; color: #{color_contrast} !important; background-image: none !important;"
-  end
-
-  def add_hash_to_colors
-    color.prepend('#') if color.present? && (color.length == 3 || color.length == 6)
   end
 
   def color_contrast(contrasted_color=color)
@@ -63,83 +57,16 @@ class Event < ActiveRecord::Base
     return luminescence > 150 ? black : white
   end
 
-  def self.cities
-    pluck(:city).uniq
-  end
-
-  def self.random_color
-    "##{6.times.map { rand(16).to_s(16) }.join('')}"
-  end
-
-  def self.color_of(title)
-    classes = where(title: title)
-    if classes.any?
-      color = classes.last.color
-      return color.presence || random_color
-    else
-      random_color
-    end
-  end
-
-  def self.future_classes_in(city)
-    where(city: city).where("date >= ?", Time.zone.now)
-  end
-
-  def self.sort_by_token
-    self.where("date > ?", Time.zone.now).group_by do |all_events|
-      all_events.token
-    end.map do |keys, values|
-      values.sort_by {|v| v.id}.first
-    end.sort_by { |event| event.city }
-  end
-
-  def self.by_token(token)
-    where(token: token)
-  end
-
-  def self.next_class_by_token(token)
-    where('date > ?', Time.zone.now).where(token: token).order(date: :asc).first
-  end
-
-  def self.names_with_tokens
-    tokens = Event.order(:date).pluck(:token).uniq
-    tokens.map do |token|
-      event = next_class_by_token(token)
-      next unless event.present?
-      ["#{event.date.strftime('%A %l:%M')} #{event.title}", event.id]
-    end.compact
-  end
-
   def cancel!
-    update(cancelled_text: true)
+    update(is_cancelled: true)
   end
 
   def uncancel!
-    update(cancelled_text: false)
+    update(is_cancelled: false)
   end
 
   def cancelled?
-    cancelled_text
-  end
-
-  def cost_in_dollars
-    self.cost.to_f / 100
-  end
-
-  private
-
-  def random_color; self.class.random_color; end
-
-  def format_fields
-    format_city_name
-  end
-
-  def format_city_name
-    self.city = self.city.squish.split.map(&:capitalize).join(' ')
-  end
-
-  def set_default_values
-    self.color ||= random_color
+    is_cancelled?
   end
 
 end

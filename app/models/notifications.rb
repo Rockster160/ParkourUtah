@@ -17,22 +17,20 @@
 #
 
 class Notifications < ActiveRecord::Base
-  belongs_to :user
-  after_create :set_defaults
+  include Defaults
 
-  def set_defaults
-    self.email_newsletter = true
-    self.email_class_reminder = true
-    self.email_low_credits = true
-    self.email_waiver_expiring = true
-    self.text_class_reminder = false
-    self.text_low_credits = false
-    self.text_waiver_expiring = false
-    self.sms_receivable = true
-    self.text_class_cancelled = true
-    self.email_class_cancelled = true
-    self.save!
-  end
+  belongs_to :user
+
+  default :email_newsletter, true
+  default :email_class_reminder, true
+  default :email_low_credits, true
+  default :email_waiver_expiring, true
+  default :text_class_reminder, false
+  default :text_low_credits, false
+  default :text_waiver_expiring, false
+  default :sms_receivable, true
+  default :text_class_cancelled, true
+  default :email_class_cancelled, true
 
   def blow!(str="all")
     case str

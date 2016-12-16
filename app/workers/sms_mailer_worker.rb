@@ -25,9 +25,9 @@ class SmsMailerWorker
             SmsMailerWorker.perform_async('+13852599640', "SMS failed: #{num}: #{e.message}")
           end
         end
-      else
-        puts "\e[31m DEV: Text Message to #{num}:\n#{msg} \e[0m"
       end
+    else
+      puts "\e[31m DEV: Text Message to #{num}:\n#{msg} \e[0m"
     end
 
   end

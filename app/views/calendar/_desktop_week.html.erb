@@ -16,6 +16,7 @@
   <div class="make-td <%= to_display_today %> <%= to_display_month %> day-container" data-date="<%= day.strftime('%m-%d-%Y') %>" data-month="<%= display_month %>">
     <div class="calendar-date-link date"><%= day.day %></div>
     <% events.each do |event| %>
+      <% next if event.cancelled? && !current_user.try(:is_instructor?) %>
       <% next unless @selected_classes.include?(event.title.parameterize) && @selected_cities.include?(event.city.parameterize) %>
       <div class="modal fade" id="event_schedule_modal_<%= event.event_schedule_id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="central-container modal-dialog pkut-box">
@@ -44,14 +45,18 @@
             </p>
             <% if user_signed_in? && current_user.is_mod? %>
               </br>
-              <p><%= link_to 'Edit only this Event', edit_event_path(id: event.id || "new", event_schedule_id: event.event_schedule_id), class: "calendar-link" %></p>
+              <% if event.cancelled? %>
+                <p><%= link_to 'Uncancel this Event', cancel_event_path(id: event.id, event_schedule_id: event.event_schedule_id, date: event.date, should_happen: true), method: :post, class: "calendar-link" %></p>
+              <% else %>
+                <p><%= link_to 'Cancel this Event', cancel_event_path(id: event.id || "new", event_schedule_id: event.event_schedule_id, date: event.date), method: :post, class: "calendar-link" %></p>
+              <% end %>
               <p><%= link_to 'Edit Recurring Event', edit_event_schedule_path(event.event_schedule_id), class: "calendar-link" %></p>
             <% end %>
           </div>
         </div>
       </div>
       <li class="calendar-event clickme forceOpen" style="<%= event.css_style %>" onclick="" alt="..." data-toggle="modal" data-target="#event_schedule_modal_<%= event.event_schedule_id %>">
-        <span class="hidden-xs">&nbsp;<%= event.date.strftime('%l:%M %p') %> <br> <%= event.title %></span>
+        <span class="hidden-xs">&nbsp;<%= "[CANCELLED]<br>".html_safe if event.cancelled? %><%= event.date.strftime('%l:%M %p') %> <br> <%= event.title %></span>
         <span class="visible-xs mobile-name"><%= event.title %></span>
       </li>
     <% end %>

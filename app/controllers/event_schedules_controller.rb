@@ -47,6 +47,19 @@ class EventSchedulesController < ApplicationController
     redirect_to :back
   end
 
+  def send_message_to_subscribers
+    event_schedule = EventSchedule.find(params[:id])
+    event_schedule.subscribed_users.each do |user|
+      if user.notifications.text_class_cancelled? && user.notifications.sms_receivable?
+        ::SmsMailerWorker.perform_async(user.phone_number, params[:message])
+      end
+      if user.notifications.email_class_cancelled?
+        ApplicationMailer.email(user.email, "Message regarding the #{event_schedule.title} class today", params[:message]).deliver_now
+      end
+    end
+    redirect_to :back, notice: 'Your message has been sent.'
+  end
+
   private
 
   def validate_user

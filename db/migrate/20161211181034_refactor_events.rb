@@ -30,6 +30,8 @@ class RefactorEvents < ActiveRecord::Migration
       next_event = events.sort_by(&:date).first
       last_event = events.sort_by(&:date).last
       possibles = User.instructors.by_fuzzy_text(next_event.host)
+      possibles = User.instructors.by_fuzzy_text(next_event.host.to_s.split(" ").last) if possibles.empty? || possibles.many?
+      possibles = User.instructors.by_fuzzy_text(next_event.host.to_s.split(" ").first) if possibles.empty? || possibles.many?
       instructor = possibles.one? ? possibles.first : nil
       db_attrs = next_event.attributes
       event_schedule = EventSchedule.create(
@@ -39,7 +41,7 @@ class RefactorEvents < ActiveRecord::Migration
         hour_of_day: next_event.date.to_datetime.hour,
         minute_of_day: next_event.date.to_datetime.minute,
         day_of_week: next_event.date.wday,
-        cost_in_pennies: next_event.cost_in_pennies,
+        cost_in_pennies: next_event.cost,
         title: db_attrs["class_name"],
         description: db_attrs["description"],
         full_address: db_attrs["address"],
@@ -47,7 +49,9 @@ class RefactorEvents < ActiveRecord::Migration
         color: db_attrs["color"]
       )
       Event.where(token: token).update_all(event_schedule_id: event_schedule.id)
-      print "."
+      puts "\nHost: #{next_event.host}" if event_schedule.instructor_id.nil?
+      binding.pry unless event_schedule.persisted?
+      print event_schedule.persisted? ? "\e[32m.\e[0m" : "\e[31mF\e[0m"
     end
 
     puts "\nAdd subscriptions to schedules (#{Subscription.count})"

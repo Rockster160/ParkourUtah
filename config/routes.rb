@@ -26,15 +26,17 @@ Rails.application.routes.draw do
   post 'register/step_5' => 'registrations#post_step_5'
 
   resources :spots
-  resources :events do
+  resources :events, only: [ :show ] do
     member do
+      post :cancel
       get :detail
     end
   end
-  resources :event_schedules do
+  resources :event_schedules, except: [ :show ] do
     member do
       post :subscribe
       delete :unsubscribe
+      post :send_message_to_subscribers
     end
   end
 

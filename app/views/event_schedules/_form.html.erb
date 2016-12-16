@@ -31,7 +31,7 @@
         <%= f.text_field :start_str_date, value: @event_schedule.start_str_date || Time.zone.now.strftime('%b %d, %Y'), class: 'pkut-textbox customRequired datepicker-field' %>
       </div>
       <div class="form-field">
-        <%= f.label :end_str_date, "End Date (Optional)" %> <br>
+        <%= f.label :end_str_date, "End Date (Leave empty to repeat forever)" %> <br>
         <%= f.text_field :end_str_date, value: @event_schedule.end_str_date, class: 'pkut-textbox datepicker-field' %>
       </div>
       <div class="form-field">
