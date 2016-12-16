@@ -39,8 +39,6 @@ class LineItem < ActiveRecord::Base
   before_save :assign_item_position_if_nil
   before_destroy :destroy_keys
 
-  default_scope { order('item_order ASC') }
-
   def users_who_purchased
     carts_containing_item = Cart.select { |cart| cart.items.map(&:id).include?(id) }
     purchased_carts_containing_item = carts_containing_item.select { |cart| cart.user.try(:cart) != cart }
@@ -74,6 +72,9 @@ class LineItem < ActiveRecord::Base
     self.cost_in_pennies
   end
 
+  def cost_in_dollars=(new_dollar_cost)
+    self.cost_in_pennies = new_dollar_cost * 100
+  end
   def cost_in_dollars
     self.cost_in_pennies.to_f / 100
   end

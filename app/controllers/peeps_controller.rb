@@ -59,7 +59,7 @@ class PeepsController < ApplicationController
   end
 
   def bought_classes
-    @line_item_ids = params[:line_item_ids].present? ? params[:line_item_ids].compact.map(&:to_i) : [2, 26, 27, 29, 30, 24]
+    @line_item_ids = (params[:line_item_ids].try(:compact) || []).map(&:to_i)
     line_items = LineItem.where(id: @line_item_ids)
     @items_with_users = line_items.map do |line_item|
       {
@@ -125,7 +125,7 @@ class PeepsController < ApplicationController
   end
 
   def dashboard
-    @classes = Event.all.select {|event| event.date.to_date == Time.now.to_date }
+    @classes = EventSchedule.events_today
   end
 
   def pin_user

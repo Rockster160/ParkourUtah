@@ -3,15 +3,7 @@
 <div class="central-container form-offset">
   <%= form_for @event_schedule do |f| %>
     <div class="form-container">
-      <% if @event_schedule.errors.any? %>
-        <div class="errors-container">
-          <ul>
-            <% @event_schedule.errors.full_messages.each do |error| %>
-              <li><%= error %></li>
-            <% end %>
-          </ul>
-        </div>
-      <% end %>
+      <%= render partial: 'layouts/error_container', locals: { resource: @event_schedule } %>
       <h3>Event Details</h3>
       <div class="form-field">
         <%= f.label :instructor_id, "Instructor" %> <br>

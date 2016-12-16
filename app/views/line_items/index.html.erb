@@ -1,15 +1,19 @@
 <div class="central-container form-offset">
-  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br/><br/>
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %> <br>
+  <%= link_to new_line_item_path, class: 'pkut-btn' do %>
+    <i class="fa fa-plus"></i> New Store Item
+  <% end %>
   <h4>Click and Drag to change Line Item order. Click to edit Line Item info.</h4>
   <h5>Items that say &lt;Hidden&gt; will not appear in the store.</h5><br/>
+  <hr>
   <table class="sortable" id="line-item-table">
   <% @items.each do |item| %>
       <tr class="sortable-row">
-        <td class="hidden sortable-url">/store/update_position/<%= item.id %></td>
+        <td class="hidden sortable-url"><%= update_position_line_item_path(item) %></td>
         <td>
-          <%= link_to edit_item_path(item.id), class: 'pkut-btn' do %>
+          <%= link_to edit_line_item_path(item.id), class: 'pkut-btn' do %>
             <%= icon('arrows', '', class: 'fa-lg')  %>
-            <% if item.hidden %>
+            <% if item.hidden? %>
               <span style="color:white;">&lt;Hidden&gt;</span>
             <% end %>
             <%= item.title %>

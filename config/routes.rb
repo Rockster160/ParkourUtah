@@ -13,8 +13,6 @@ Rails.application.routes.draw do
   get 'secret' => 'peeps#secret', as: 'secret'
   post 'post_secret' => 'peeps#post_secret'
 
-  get 'venmo' => 'index#venmo'
-
   get 'register/step_2' => 'registrations#step_2', as: 'step_2'
   get 'register/step_3' => 'registrations#step_3', as: 'step_3'
   get 'register/step_4' => 'registrations#step_4', as: 'step_4'
@@ -37,6 +35,12 @@ Rails.application.routes.draw do
       post :subscribe
       delete :unsubscribe
       post :send_message_to_subscribers
+    end
+  end
+
+  resources :line_items, except: [ :show ] do
+    member do
+      put :update_position
     end
   end
 
@@ -111,13 +115,6 @@ Rails.application.routes.draw do
   post 'store/charge' => 'store#charge', as: 'charge'
   get 'store' => 'store#index', as: 'store'
   post 'store/redeem' => 'store#redeem'
-  get 'store/new' => 'store#new', as: 'add_item'
-  get 'store/edit/:id' => 'store#edit', as: 'edit_item'
-  get 'store/index' => 'store#items', as: 'edit_items'
-  patch 'store/update/:id' => 'store#update'
-  post 'store/create' => 'store#create'
-  delete 'store/item/:id/destroy' => 'store#destroy', as: 'destroy_item'
-  put 'store/update_position/:id' => 'store#update_item_position', as: 'update_item_position'
 
   get 'store/admin/generate_keys' => 'store#generate_keys', as: 'generate_keys'
   post 'store/admin/generate_keys' => 'store#email_keys'
