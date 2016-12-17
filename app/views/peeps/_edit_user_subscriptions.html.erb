@@ -29,17 +29,17 @@
         </div>
       <% end %>
     <% end %>
-    <% if @user.class_subscriptions.any? %>
+    <% if @user.subscribed_events.any? %>
       <hr>
       <div class="row">
         <p>Classes subscribed to:</p>
-        <% @user.class_subscriptions.map{|s|s.event}.each do |event| %>
+        <% @user.subscribed_events.each do |schedule| %>
           <div class="row">
             <div class="col-xs-6">
-              <%= event.city %> <%= event.title.capitalize %> <%= event.date.strftime('%l:%M') %>
+              <%= schedule.city %> <%= schedule.title.capitalize %> <%= schedule.time_of_day %>
             </div>
             <div class="col-xs-6">
-              <%= link_to 'Unsubscribe', unsubscribe_path(id: event.id), class: 'pkut-btn', method: :delete %>
+              <%= link_to 'Unsubscribe', unsubscribe_event_schedule_path(id: schedule.id, user_id: @user.id), class: 'pkut-btn', method: :delete %>
             </div>
           </div>
           <br/>
@@ -48,8 +48,8 @@
     <% end %>
     <% if @user.phone_number_is_valid? %>
       <h3>Subscribe to class:</h3>
-      <%= select_tag "event_token", options_for_select(Event.names_with_tokens), class: "pkut-dropdown subscribe-to-event-dropdown" %>
-      <%= link_to 'Subscribe!', '', class: 'pkut-btn subscribe-to-selected-btn', method: :post, data: { new_href: subscribe_path(id: "--event_id--", user_id: @user.id) } %>
+      <%= select_tag "event_token", options_for_select(EventSchedule.all.map { |es| [es.title, es.id] }), class: "pkut-dropdown subscribe-to-event-dropdown" %>
+      <%= link_to 'Subscribe!', '', class: 'pkut-btn subscribe-to-selected-btn', method: :post, data: { new_href: subscribe_event_schedule_path(id: "--schedule_id--", user_id: @user.id) } %>
     <% else %>
       <p>Cannot subscribe to classes until User adds a valid phone number.</p>
     <% end %>

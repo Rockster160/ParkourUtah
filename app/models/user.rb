@@ -167,11 +167,11 @@ class User < ActiveRecord::Base
   end
 
   def athletes_with_unlimited_access
-    athletes.select { |athlete| athlete.has_unlimited_access? }
+    athletes.joins(:athlete_subscriptions).where("athlete_subscriptions.expires_at > ?", Time.zone.now)
   end
 
   def subscribed_athletes
-    athletes.select { |athlete| athlete.subscription && athlete.subscription.auto_renew }
+    athletes.joins(:athlete_subscriptions).where(athlete_subscriptions: { auto_renew: true })
   end
 
   def athlete_subscriptions
@@ -311,7 +311,7 @@ class User < ActiveRecord::Base
   end
 
   def positive_credits
-    if self.credits <= 0
+    if self.credits < 0
       errors.add(:credits, "cannot be negative.")
     end
   end

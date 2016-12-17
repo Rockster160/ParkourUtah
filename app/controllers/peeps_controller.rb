@@ -114,7 +114,7 @@ class PeepsController < ApplicationController
   def adjust_credits
     user = User[params[:id]]
     user.credits += params[:adjust].to_i
-    if user.save!
+    if user.save
       redirect_to :back, notice: 'User successfully updated.'
     else
       redirect_to :back, alert: 'There was a problem updating the user.'
@@ -133,7 +133,6 @@ class PeepsController < ApplicationController
   end
 
   def recent_users
-    @all_users_count = User.count
     @users = User.order(created_at: :desc)
     @users = @users.by_fuzzy_text(params[:by_fuzzy_text]) if params[:by_fuzzy_text]
     @users = @users.page(params[:page] || 1)

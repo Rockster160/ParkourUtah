@@ -17,6 +17,9 @@ class AthleteSubscription < ActiveRecord::Base
   belongs_to :dependent
   after_create :set_default_expiration_date
 
+  scope :active, -> { where("expires_at > ?", Time.zone.now) }
+  scope :inactive, -> { where("expires_at <= ?", Time.zone.now) }
+
   def set_default_expiration_date
     extended_time = if dependent.has_unlimited_access?
       dependent.has_access_until + 1.month

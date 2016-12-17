@@ -29,12 +29,13 @@
     </p>
     <p>Signed up: <strong><%= (@user.created_at - 6.hours).strftime('%B %e, %Y at %I:%M %p') %></strong></p>
   <% end %>
+  <%= render partial: "athletes_container", locals: { athletes: [] } %>
   <h4>Athletes:</h4>
   <% @user.athletes_by_waiver_expiration.each do |athlete| %>
     <% if athlete.has_unlimited_access? %>
       <span style="color: green;">--Has unlimited access until: <%= athlete.has_access_until.strftime('%B %e, %Y') %></span><br/>
     <% end %>
-      --<%= athlete.id %>: <strong><%= athlete.full_name %></strong> - ID: <%= athlete.zero_padded(athlete.athlete_id, 4) %><%= athlete.subscription.try(:auto_renew) ? '*' : '' %><br/>
+    --<%= athlete.id %>: <strong><%= athlete.full_name %></strong> - ID: <%= athlete.zero_padded(athlete.athlete_id, 4) %><%= athlete.current_subscription.try(:auto_renew) ? '*' : '' %><br/>
     --<a alt="..." class="forceOpen" data-toggle="modal" data-target="#image<%= athlete.id %>">View/Edit Athlete Image</a><br/>
     <div class="modal fade" id="image<%= athlete.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="central-container">

@@ -67,12 +67,6 @@ Rails.application.routes.draw do
   get 'unsubscribe' => 'index#unsubscribe', as: 'unsubscribe_email'
   post 'sms_receivable' => 'index#sms_receivable', as: 'make_sms_receivable'
 
-  get 'class/:id' => 'peeps#pin_user', as: 'begin_class'
-  get 'pin/:id' => 'peeps#show_user'
-  get 'logs/:id' => 'peeps#class_logs', as: 'class_logs'
-  get 'password/:id' => 'peeps#pin_password', as: 'pin_password'
-  patch 'charge_class/:id' => 'peeps#validate_pin'
-
   get 'peeps/cheat_login' => 'peeps#cheat_login'
   get 'peeps/edit' => 'peeps#edit', as: 'edit_peeps'
   get 'peeps/bought_classes' => 'peeps#bought_classes'
