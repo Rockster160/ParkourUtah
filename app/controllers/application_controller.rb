@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   before_action :logit
 
   def after_sign_in_path_for(resource)
-    step_2_path
+    edit_user_registration_path
   end
 
   def after_sign_up_path_for(resource)
@@ -35,5 +35,27 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.for(:account_update) << :bio
     devise_parameter_sanitizer.for(:account_update) << :phone_number
     devise_parameter_sanitizer.for(:sign_up) << :first_name
+  end
+
+  def still_signed_in
+    current_user.still_signed_in! if current_user
+  end
+
+  def validate_instructor
+    unless current_user && current_user.is_instructor?
+      redirect_to edit_user_registration_path, alert: "You are not authorized to view this page."
+    end
+  end
+
+  def validate_mod
+    unless current_user && current_user.is_mod?
+      redirect_to edit_user_registration_path, alert: "You are not authorized to view this page."
+    end
+  end
+
+  def validate_admin
+    unless current_user && current_user.is_admin?
+      redirect_to edit_user_registration_path, alert: "You are not authorized to view this page."
+    end
   end
 end

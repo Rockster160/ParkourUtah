@@ -30,29 +30,20 @@ class RedemptionKey < ActiveRecord::Base
     true
   end
 
-  def item
-    self.line_item || LineItem.first
-  end
+  def item; self.line_item; end
 
   def generate_key
     caps = ('A'..'Z').to_a
     down = ('a'..'z').to_a
     nums = (0..9).to_a
 
-    key = 20.times.map {(caps + down + nums).sample}.join('')
-    if RedemptionKey.where(key: key).count == 0
-      self.update(key: key)
-    else
-      self.generate_key
+    loop do
+      key = 20.times.map {(caps + down + nums).sample}.join('')
+      if RedemptionKey.where(key: key).count == 0
+        self.update(key: key)
+        break
+      end
     end
-  end
-
-  def self.keys_created
-    self.count
-  end
-
-  def self.keys_redeemed
-    self.select { |key| key.redeemed }.count
   end
 
 end

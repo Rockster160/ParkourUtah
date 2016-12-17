@@ -44,6 +44,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :redemption_keys, except: [ :show, :edit, :update, :destroy ] do
+    member do
+      get :redeem
+    end
+  end
+
   get 'test' => 'index#index'
   post 'contact' => 'index#contact'
   post 'receive_sms' => 'index#receive_sms'
@@ -108,16 +114,12 @@ Rails.application.routes.draw do
   get 'calendar/week' => 'calendar#get_week', as: 'calendar_week'
 
   get 'dashboard' => 'peeps#dashboard', as: 'dashboard'
-  get 'peeps/return' => 'peeps#return'
 
   get 'comingsoon' => 'index#coming_soon', as: 'coming_soon'
 
   post 'store/charge' => 'store#charge', as: 'charge'
   get 'store' => 'store#index', as: 'store'
   post 'store/redeem' => 'store#redeem'
-
-  get 'store/admin/generate_keys' => 'store#generate_keys', as: 'generate_keys'
-  post 'store/admin/generate_keys' => 'store#email_keys'
 
   post 'cart/update' => 'store#update_cart', as: 'update_cart'
   post 'cart/purchase' => 'store#purchase', as: 'purchase'

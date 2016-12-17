@@ -61,12 +61,6 @@ class ApplicationMailer < ActionMailer::Base
     mail(to: email, subject: "Order confirmation")
   end
 
-  def key_gen_mail(keys, topic)
-    @keys = keys
-    # mail(to: ENV['PKUT_EMAIL'], subject: "Requested keys for: #{topic}")
-    mail(to: 'rocco11nicholls@gmail.com', subject: "Requested keys for: #{topic}")
-  end
-
   def public_mailer(key_id, email)
     @key = RedemptionKey.find(key_id)
     mail(to: email, subject: "Your ParkourUtah Gift Card")

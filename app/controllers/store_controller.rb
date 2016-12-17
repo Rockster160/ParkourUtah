@@ -29,17 +29,6 @@ class StoreController < ApplicationController
     end
   end
 
-  def email_keys
-    keys = []
-    item = LineItem.find(params[:key_type])
-    while keys.length < params[:how_many].first.to_i
-      keys << item.redemption_keys.create.key
-      keys.compact
-    end
-    ::KeyGenMailerWorker.perform_async(keys, item.title)
-    redirect_to dashboard_path, notice: "Got it! An email will be sent to you shortly containing the requested keys."
-  end
-
   def update_cart
     if params[:delete_all]
       @cart.transactions.destroy_all
@@ -82,12 +71,9 @@ class StoreController < ApplicationController
 
   def redeem
     key = RedemptionKey.where(key: params[:redemption_key]).first
-    if key.present?
-      item = key.item if key.redeemed == false
-      if item && @cart.transactions.map { |items| items.redeemed_token }.exclude?(params[:redemption_key])
-        @cart.transactions << @order = Transaction.create(item_id: item.id, redeemed_token: params[:redemption_key])
-      else
-        @order = nil
+    if key.present? && key.redeemed == false
+      if key.item.present? && @cart.transactions.where(redeemed_token: params[:redemption_key]).none?
+        @order = Transaction.create(item_id: key.item_id, redeemed_token: params[:redemption_key], cart_id: @cart.try(:id))
       end
     end
 

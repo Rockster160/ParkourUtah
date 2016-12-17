@@ -1,0 +1,9 @@
+<div class="central-container">
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %> <br>
+  <%= link_to "Generate Keys", new_redemption_key_path, class: 'pkut-btn' %>
+  <div style="margin-top: 20px;">
+    <% @keys.each do |key| %>
+      <p><%= key.line_item.title %> - <%= key.key %></p>
+    <% end %>
+  </div>
+</div>

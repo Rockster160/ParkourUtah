@@ -140,8 +140,4 @@ class IndexController < ApplicationController
     end
   end
 
-  def still_signed_in
-    current_user.still_signed_in! if current_user
-  end
-
 end

@@ -1,7 +1,6 @@
 class PeepsController < ApplicationController
   include EmailHelper
-  before_action :still_signed_in
-  before_action :validate_instructor, except: [:return]
+  before_action :still_signed_in, :validate_instructor
 
   EmailBody = Struct.new(:subject, :body, :recipients, :email_type)
 
@@ -85,12 +84,6 @@ class PeepsController < ApplicationController
       end
     end
     redirect_to :back
-  end
-
-  def return
-    current_user.get_payment_id
-    current_user.get_shipping_id
-    redirect_to edit_user_registration_path
   end
 
   def secret
@@ -296,22 +289,12 @@ class PeepsController < ApplicationController
     @athlete = Dependent.where("athlete_id = ?", params[:athlete_id]).first
   end
 
-  def validate_instructor
-    unless current_user && current_user.is_instructor?
-      redirect_to new_user_session_path, alert: "You must be an Instructor to view this page."
-    end
-  end
-
   def instructor_params
     params.require(:user).permit(
       :email, :first_name, :last_name, :nickname,
       :stats, :payment_multiplier, :title, :bio,
       :avatar, :avatar_2, :role
     )
-  end
-
-  def still_signed_in
-    current_user.still_signed_in! if current_user
   end
 
   def decoded_email_params
