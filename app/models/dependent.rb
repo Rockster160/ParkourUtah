@@ -42,10 +42,7 @@ class Dependent < ActiveRecord::Base
   def self.find_or_create_by_name_and_dob(param, user)
     name = param["name"]
     dob = param["dob"]
-    athlete = Dependent.where(
-                full_name: name.squish.split(' ').map(&:capitalize).join(' '),
-                user_id: user.id
-    ).first
+    athlete = Dependent.where(full_name: name.squish.split(' ').map(&:capitalize).join(' '), user_id: user.id).first
     if athlete.nil?
       dob = format_dob(dob)
       athlete = if dob
@@ -58,23 +55,44 @@ class Dependent < ActiveRecord::Base
     athlete
   end
 
+  def valid_athlete_pin?(check_athlete_pin)
+    return false unless check_athlete_pin.present?
+    self.athlete_pin == check_athlete_pin
+  end
+
+  def attend_class(event)
+    event_cost = event.cost_in_dollars.to_i
+    charge_type = charge_class(event_cost)
+    if charge_type.present? && charge_type.is_a?(String)
+      attendance = attendances.create(user_id: user.id, event_id: event.id, type_of_charge: charge_type)
+    end
+    attendance.try(:persisted?) || false
+  end
+
+  def charge_class(event_cost)
+    if has_unlimited_access?
+      'Unlimited Subscription' if current_subscription.use!
+    elsif has_trial?
+      'Trial Class' if trial.use!
+    elsif user.credits >= event_cost
+      'Credits' if user.charge_credits(event_cost)
+    end
+  end
+
   def trial
-    trial_classes.select { |trial| trial.used == false }.first
+    trials.first
   end
 
   def trials
-    trial_classes.select { |trial| trial.used == false }
+    trial_classes.where(used: false)
   end
 
   def has_trial?
-    return false unless trial
-    !(trial.used)
+    trial.try(:use!) || false
   end
 
   def has_unlimited_access?
-    return false unless self.subscription
-
-    self.subscription.active?
+    current_subscription.try(:active?) || false
   end
 
   def has_access_until
@@ -82,20 +100,13 @@ class Dependent < ActiveRecord::Base
   end
 
   def subscribed?
-    return false unless subscription
+    return false unless current_subscription
 
-    subscription.auto_renew
+    current_subscription.auto_renew
   end
 
-  def subscription
-    subs = self.athlete_subscriptions
-    return nil unless subs.any?
-
-    subs.select {|s| !(s.expires_at.nil?) }.sort_by { |s| s.created_at }.last
-  end
-
-  def attendances
-    Attendance.where(dependent_id: athlete_id)
+  def current_subscription
+    athlete_subscriptions.where("expires_at IS NULL OR expires_at < ?", Time.zone.now).order(created_at: :desc).first
   end
 
   def signed_waiver?

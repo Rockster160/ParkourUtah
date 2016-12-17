@@ -15,6 +15,8 @@ class Event < ActiveRecord::Base
   belongs_to :event_schedule
   has_many :attendances, dependent: :destroy
 
+  validates_presence_of :date
+
   scope :in_the_future, -> { where("date > ?", Time.zone.now) }
   scope :today, -> { by_date(Time.zone.now) }
   scope :by_date, -> (date) { in_date_range(date, date) }

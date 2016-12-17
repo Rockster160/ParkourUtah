@@ -58,16 +58,26 @@ class RefactorEvents < ActiveRecord::Migration
     add_column :subscriptions, :event_schedule_id, :integer, foreign_key: true, index: true
     Subscription.all.each do |subscription|
       event = Event.find(subscription.event_id)
-      subscription.update(event_schedule_id: event.event_schedule_id)
-      print "."
+      print subscription.update(event_schedule_id: event.event_schedule_id) ? "\e[32m.\e[0m" : "\e[31mF\e[0m"
     end
 
     puts "\nAdding Spots to Schedules (#{Spot.count})"
     Spot.all.each do |spot|
       spot_events = SpotEvent.where(spot_id: spot.id)
       event_schedule_ids = Event.where(id: spot_events.map(&:event_id)).group_by(&:event_schedule_id).keys
-      EventSchedule.where(id: event_schedule_ids).update_all(spot_id: spot.id)
-      print "."
+      print EventSchedule.where(id: event_schedule_ids).update_all(spot_id: spot.id) ? "\e[32m.\e[0m" : "\e[31mF\e[0m"
+    end
+
+    puts "\nFixing Attendance association ID's: #{Attendance.count}"
+    Attendance.find_each do |attendance|
+      athlete = Dependent.find_by_athlete_id(attendance.dependent_id)
+      attendance.skip_validations = true
+      if athlete.nil?
+        print "\e[31mF\e[0m"
+        attendance.update(dependent_id: nil)
+      else
+        print attendance.update(dependent_id: athlete.id) ? "\e[32m.\e[0m" : "\e[31mF\e[0m"
+      end
     end
 
     puts "\nRemoving SpotEvents"

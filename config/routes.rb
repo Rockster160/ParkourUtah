@@ -50,6 +50,15 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :class_handlers, path: 'class', only: [] do
+    member do
+      get :athlete_id
+      get :athlete_pin
+      get :logs
+      post :join_class
+    end
+  end
+
   get 'test' => 'index#index'
   post 'contact' => 'index#contact'
   post 'receive_sms' => 'index#receive_sms'

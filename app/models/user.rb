@@ -98,6 +98,7 @@ class User < ActiveRecord::Base
   validates_attachment_content_type :avatar_2, :content_type => /\Aimage\/.*\Z/
 
   validate :valid_phone_number
+  validate :positive_credits
 
   scope :online, -> { where('last_sign_in_at > ?', 10.minutes.ago) }
   scope :by_signed_in, -> { order(last_sign_in_at: :desc) }
@@ -223,8 +224,8 @@ class User < ActiveRecord::Base
 
   def charge_credits(price)
     self.credits -= price
+    send_alert_for_low_credits if self.credits < 30
     self.save!
-    'Credits'
   end
 
   def assign_cart
@@ -263,6 +264,15 @@ class User < ActiveRecord::Base
 
   protected
 
+  def send_alert_for_low_credits
+    if self.notifications.email_low_credits
+      ::LowCreditsMailerWorker.perform_async(self.id)
+    end
+    if self.notifications.text_low_credits && self.notifications.sms_receivable
+      ::SmsMailerWorker.perform_async(self.phone_number, "You are low on Credits! Head up to ParkourUtah.com/store to get some more so you have some for next time.")
+    end
+  end
+
   def clear_associations
     self.carts.destroy_all
     self.address.destroy
@@ -298,6 +308,12 @@ class User < ActiveRecord::Base
 
   def confirmation_required?
     false # Leave this- it bypasses Devise's confirmable method
+  end
+
+  def positive_credits
+    if self.credits <= 0
+      errors.add(:credits, "cannot be negative.")
+    end
   end
 
 end

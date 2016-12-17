@@ -1,10 +1,5 @@
 class EventsController < ApplicationController
   before_action :set_event_schedule
-  before_action :validate_mod, only: [ :edit, :update, :index ]
-
-  def index
-    @events = Event.sort_by_token
-  end
 
   def show
     @event = @event_schedule.event_by_id(params[:id], with_date: params[:date])

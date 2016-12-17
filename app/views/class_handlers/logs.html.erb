@@ -1,10 +1,8 @@
-<div class="central-container form-offset">
-  <%= link_to "Back to PIN entry", begin_class_path(params[:id]), class: 'pkut-btn' %>
+<div class="central-container form-offset" style="margin-bottom: 500px;">
+  <%= link_to "Back to PIN entry", athlete_id_class_handler_path(@event), class: 'pkut-btn' %> <br>
   <% if current_user.is_admin? %>
-    <%= form_tag message_subscribers_path do %>
-      <%= text_area_tag :message, "Our #{@event.title} class today is cancelled! Sorry for the inconvenience.", class: 'pkut-textarea' %>
-      <%= submit_tag "Send to #{@event.subscribed_users.count} user(s).", class: 'pkut-btn' %>
-    <% end %>
+    <% recipients = @event.subscribed_users %>
+    <%= link_to "Send message to #{recipients.count} subscribed users", admin_texter_path(user_ids: recipients.pluck(:id), message: "Our #{@event.title} class today is cancelled! Sorry for the inconvenience."), class: 'pkut-btn' %> <br>
     <% if @event.cancelled? %>
       <%= link_to 'Uncancel Event', cancel_event_path(@event.id, should_happen: true), method: :post, class: 'pkut-btn' %>
     <% else %>
@@ -16,8 +14,10 @@
   <br/>
   <div><%= text_field_tag(:by_fuzzy_text, 'Search', id: 'user_index_search_field', class: 'form-control', autocomplete: "off", autofocus: true) %></div>
   <br/>
-  <% @athletes.each do |athlete| %>
-    <a href="<%= user_show_path(athlete.user) %>"><h3><%= athlete.full_name %></h3></a>
+  <% @attendances.each do |attendance| %>
+    <% athlete = attendance.athlete %>
+    <% next if athlete.nil? %>
+    <a href="<%= user_show_path(athlete.user) %>"><h3><%= athlete.full_name %> - <%= attendance.type_of_charge %></h3></a>
     <p>Guardian phone: <%= athlete.guardian_phone %></p>
     <% athlete.user.emergency_contacts.each do |ec| %>
       <p>Emergency Contact: <strong><%= ec.name %> <%= athlete.format_phone(ec.number) %></strong></p>

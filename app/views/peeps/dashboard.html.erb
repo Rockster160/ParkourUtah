@@ -1,22 +1,20 @@
-<% if current_user && current_user.is_instructor? %>
-  <div class="central-container form-offset">
-    <h2>Dashboard</h2><br/>
-    <h2>Begin a Class</h2><br/>
-    <% @classes.each do |event| %>
-      <%= link_to "#{event.date.strftime('%l:%M')} #{event.title}", begin_class_path(event.id || "new"), class: 'pkut-btn' %> <br>
-    <% end %>
-    <%= link_to "Private Class", begin_class_path(1), class: 'pkut-btn' %> <br>
-    <%= link_to "Testing Session", begin_class_path(83788378), class: 'pkut-btn' %> <br>
-    <% if current_user.is_admin? %>
-      <h2>Admin Abilities</h2><br/>
-      <%= link_to "Users", recent_users_path, class: 'pkut-btn' %> <br>
-      <%= link_to "Send Text Message", admin_texter_path, class: 'pkut-btn' %> <br>
-      <%= link_to "Send Batch Email", batch_emailer_path, class: 'pkut-btn' %> <br>
-      <%= link_to "Purchase History", peeps_bought_classes_path, class: 'pkut-btn' %> <br>
-      <%= link_to "Redemption Keys", redemption_keys_path, class: 'pkut-btn' %> <br>
-      <%= link_to "Items", line_items_path, class: 'pkut-btn' %> <br>
-      <%= link_to "Events", event_schedules_path, class: 'pkut-btn' %> <br>
-      <%= link_to "Instructors", edit_peeps_path, class: 'pkut-btn' %> <br>
-    <% end %>
-  </div>
-<% end %>
+<div class="central-container form-offset">
+  <h2>Dashboard</h2>
+  <h2>Begin a Class</h2>
+  <% @classes.each do |event| %>
+    <%= link_to "#{event.date.strftime('%l:%M')} #{event.title}", athlete_id_class_handler_path(event.id || "new",  event_schedule_id: event.event_schedule, date: event.date), class: 'pkut-btn' %> <br>
+  <% end %>
+  <%= link_to "Private Class", athlete_id_class_handler_path(1), class: 'pkut-btn' %> <br>
+  <%= link_to "Testing Session", athlete_id_class_handler_path(83788378), class: 'pkut-btn' %> <br>
+  <% if current_user.is_admin? %>
+    <h2>Admin Abilities</h2>
+    <%= link_to "Users", recent_users_path, class: 'pkut-btn' %> <br>
+    <%= link_to "Send Text Message", admin_texter_path, class: 'pkut-btn' %> <br>
+    <%= link_to "Send Batch Email", batch_emailer_path, class: 'pkut-btn' %> <br>
+    <%= link_to "Purchase History", peeps_bought_classes_path, class: 'pkut-btn' %> <br>
+    <%= link_to "Redemption Keys", redemption_keys_path, class: 'pkut-btn' %> <br>
+    <%= link_to "Items", line_items_path, class: 'pkut-btn' %> <br>
+    <%= link_to "Events", event_schedules_path, class: 'pkut-btn' %> <br>
+    <%= link_to "Instructors", edit_peeps_path, class: 'pkut-btn' %> <br>
+  <% end %>
+</div>

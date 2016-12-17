@@ -24,6 +24,10 @@ class PeepsController < ApplicationController
     end
   end
 
+  def admin_texter
+    @users = User.where(id: params[:user_ids])
+  end
+
   def send_batch_texts
     phone_numbers = params[:recipients].gsub(/[^\d|,]/, '').split(",").map(&:squish)
     @success = []
@@ -195,99 +199,7 @@ class PeepsController < ApplicationController
     redirect_to dashboard_path
   end
 
-  def show_user
-    if params[:athlete_id].to_i == 0
-      redirect_to dashboard_path
-    elsif params[:athlete_id] == ENV["PKUT_PIN"]
-      redirect_to class_logs_path(params[:id])
-      RoccoLogger.add "#{current_user.first_name} accessed the logs."
-    else
-      set_athlete
-      if @athlete
-        if Attendance.where(dependent_id: @athlete.athlete_id, event_id: params[:id]).count > 0
-          redirect_to :back, alert: "Athlete already attending class."
-          RoccoLogger.add "#{current_user.first_name} tried to add #{@athlete.athlete_id}:#{@athlete.full_name}-#{@athlete.athlete_pin}, but they are already in class."
-        else
-          if (Event.find(params[:id]).cost_in_dollars <= @athlete.user.credits) || @athlete.has_unlimited_access? || @athlete.has_trial?
-            RoccoLogger.add "#{current_user.first_name} looked up #{@athlete.athlete_id}:#{@athlete.full_name}-#{@athlete.athlete_pin}."
-            redirect_to pin_password_path(athlete_id: params[:athlete_id])
-          else
-            RoccoLogger.add "#{current_user.first_name} tried to add #{@athlete.athlete_id}:#{@athlete.full_name}-#{@athlete.athlete_pin}, but insufficient funds."
-            redirect_to :back, alert: "Sorry, #{@athlete.full_name} does not have enough credits in their account."
-          end
-        end
-      else
-        redirect_to :back, alert: "Athlete not found."
-        RoccoLogger.add "#{current_user.first_name} bad lookup - #{params[:athlete_id]}"
-      end
-    end
-  end
-
-  def pin_password
-    if params[:athlete_photo]
-      Dependent.where(athlete_id: params[:athlete_id]).first.update(athlete_photo: params[:athlete_photo])
-      RoccoLogger.add "#{current_user.first_name} updated avatar for: #{Dependent.where(athlete_id: params[:athlete_id]).first.full_name}."
-    end
-    set_athlete
-  end
-
-  def validate_pin
-    set_athlete
-    pin = params[:pin].to_i
-    if pin == @athlete.athlete_pin
-      charge_class(Event.find(params[:id]))
-    # elsif pin == ENV["PKUT_PIN"].to_i
-    #   charge_class(0, "Cash")
-    else
-      redirect_to begin_class_path, alert: "Invalid Pin. Re-enter Athlete ID."
-    end
-  end
-
-  def charge_class(event)
-    @user = @athlete.user
-    charge = event.cost_in_dollars
-
-    charge_type = if [1].include?(event.id) # 83788378 - test class
-      @user.charge_credits(charge)
-    else
-      @user.charge(charge, @athlete)
-    end
-
-    if charge_type
-      Attendance.create(
-        dependent_id: @athlete.athlete_id,
-        user_id: current_user.id,
-        event_id: params[:id],
-        type_of_charge: charge_type
-      )
-      if @user.credits < 30 && @athlete.has_unlimited_access? == false
-        if @user.notifications.email_low_credits
-          ::LowCreditsMailerWorker.perform_async(@user.id)
-        end
-        if @user.notifications.text_low_credits && @user.notifications.sms_receivable
-          ::SmsMailerWorker.perform_async(@user.phone_number, "You are low on Credits! Head up to ParkourUtah.com/store to get some more so you have some for next time.")
-        end
-      end
-      RoccoLogger.add "#{current_user.first_name} successfully added #{@athlete.athlete_id}:#{@athlete.full_name}-#{@athlete.athlete_pin} to class."
-      flash[:notice] = "Success! Welcome to class."
-      redirect_to begin_class_path
-    else
-      RoccoLogger.add "#{current_user.first_name} tried to add #{@athlete.athlete_id}:#{@athlete.full_name}-#{@athlete.athlete_pin}, but insufficient funds."
-      flash[:alert] = "Sorry, #{@athlete.full_name} does not have enough credits in their account."
-      redirect_to begin_class_path
-    end
-  end
-
-  def class_logs
-    @event = Event.find(params[:id])
-    @athletes = @event.attendances.map(&:athlete)
-  end
-
   private
-
-  def set_athlete
-    @athlete = Dependent.where("athlete_id = ?", params[:athlete_id]).first
-  end
 
   def instructor_params
     params.require(:user).permit(

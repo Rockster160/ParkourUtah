@@ -1,14 +1,7 @@
-<% content_for :body do %>
-  <style>
-    html, body { background: black; }
-  </style>
-<% end %>
-
-<h2 class="secret-title pass-field"><%= @athlete.full_name %></h2>
-<div class="secret-field pass-field">
-  <%= form_tag({controller: "peeps", action: "validate_pin", id: params[:id]}, method: "patch") do |f| %>
-    <%= text_field_tag :pin, nil, class: 'secret-input-field', readonly: true %><br/>
-    <%= hidden_field_tag :athlete_id, @athlete.athlete_id %>
+<h2 class="secret-title">Athlete ID</h2>
+<div class="secret-field">
+  <%= form_tag({controller: "class_handlers", action: "athlete_pin", id: @event.id}, method: "get") do |f| %>
+    <%= text_field_tag :athlete_id, nil, class: 'secret-input-field', readonly: true %><br/>
     <div class="secret-btn-container col-xs-4"><a href="#" class="secret-input-btn no-zoom secret-field-btn">1</a></div>
     <div class="secret-btn-container col-xs-4"><a href="#" class="secret-input-btn no-zoom secret-field-btn">2</a></div>
     <div class="secret-btn-container col-xs-4"><a href="#" class="secret-input-btn no-zoom secret-field-btn">3</a></div>
@@ -20,6 +13,6 @@
     <div class="secret-btn-container col-xs-4"><a href="#" class="secret-input-btn no-zoom secret-field-btn">9</a></div>
     <div class="secret-btn-container col-xs-4"><a href="#" class="secret-input-btn no-zoom secret-field-btn"><</a></div>
     <div class="secret-btn-container col-xs-4"><a href="#" class="secret-input-btn no-zoom secret-field-btn">0</a></div>
-    <div class="secret-btn-container col-xs-4"><%= submit_tag "", class: "pass-secret-button" %></div>
+    <div class="secret-btn-container col-xs-4"><%= submit_tag "", class: "submit-secret-button secret-field-btn" %></div>
   <% end %>
 </div>
