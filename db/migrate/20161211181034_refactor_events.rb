@@ -26,7 +26,7 @@ class RefactorEvents < ActiveRecord::Migration
 
     events_by_token = Event.where.not(token: nil).group_by(&:token)
     puts "\nBackfilling EventSchedules (#{events_by_token.count})"
-    events_by_token.find_each do |token, events|
+    events_by_token.each do |token, events|
       next_event = events.sort_by(&:date).first
       last_event = events.sort_by(&:date).last
       possibles = User.instructors.by_fuzzy_text(next_event.host)
@@ -85,6 +85,24 @@ class RefactorEvents < ActiveRecord::Migration
     puts "\nRemoving RoccoLogger"
     drop_table :rocco_loggers
 
+    puts "\nRename Transactions table to Cart Items"
+    rename_table :transactions, :cart_items
+    puts "\nFix cart_items foreign key"
+    rename_column :cart_items, :item_id, :line_item_id
+
+    puts "\nAdd 'purchased_at' to Carts #{Cart.count}"
+    add_column :carts, :purchased_at, :datetime
+    Cart.find_each do |cart|
+      user = cart.user
+      next unless user.present?
+      if user.cart.id == cart.id
+        print "."
+      else
+        print cart.update(purchased_at: cart.updated_at) ? "\e[32m.\e[0m" : "\e[31mF\e[0m"
+      end
+    end
+
+    puts "\nRemove old attributes from Events"
     Event.in_the_future.where.not(token: nil).destroy_all
     add_column :events, :is_cancelled, :boolean, default: false
     remove_column :events, :token, :integer

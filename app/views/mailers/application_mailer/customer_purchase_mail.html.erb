@@ -52,11 +52,11 @@
     </tr>
   </thead>
   <tbody>
-    <% @order_items.each do |transaction| %>
+    <% @order_items.each do |cart_item| %>
       <tr>
-        <td><%= transaction.order_name %></td>
-        <td><%= transaction.amount %></td>
-        <td><%= number_to_currency(transaction.item.cost_in_dollars) %></td>
+        <td><%= cart_item.order_name %></td>
+        <td><%= cart_item.amount %></td>
+        <td><%= number_to_currency(cart_item.item.cost_in_dollars) %></td>
       </tr>
     <% end %>
     <tr>

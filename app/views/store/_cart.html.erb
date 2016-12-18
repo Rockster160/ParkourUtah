@@ -2,7 +2,7 @@
   <div class="shopping-cart-container">
     <div class="shopping-cart">
       <div class="orders-placeholder">
-        <% @cart.transactions.where("amount > ?", 0).each do |order| %>
+        <% @cart.cart_items.where("amount > ?", 0).each do |order| %>
           <%= render partial: 'shopping_cart_item', locals: {order: order} %>
         <% end %>
       </div>
@@ -46,7 +46,7 @@
         <%= link_to "Checkout", charge_path, class: 'fake-stripe-btn', method: :post %>
           <br>
           <div class="orders-placeholder">
-            <% @cart.transactions.where("amount > ?", 0).each do |order| %>
+            <% @cart.cart_items.where("amount > ?", 0).each do |order| %>
               <%= render partial: 'shopping_cart_item', locals: {order: order} %>
             <% end %>
           </div>

@@ -62,11 +62,24 @@ ActiveRecord::Schema.define(version: 20161211181034) do
     t.datetime "updated_at",                 null: false
   end
 
+  create_table "cart_items", force: :cascade do |t|
+    t.integer  "cart_id"
+    t.integer  "line_item_id"
+    t.integer  "amount",         default: 1
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.string   "redeemed_token", default: ""
+    t.string   "order_name"
+  end
+
+  add_index "cart_items", ["cart_id"], name: "index_cart_items_on_cart_id", using: :btree
+
   create_table "carts", force: :cascade do |t|
     t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
     t.string   "email"
+    t.datetime "purchased_at"
   end
 
   add_index "carts", ["user_id"], name: "index_carts_on_user_id", using: :btree
@@ -206,12 +219,6 @@ ActiveRecord::Schema.define(version: 20161211181034) do
 
   add_index "redemption_keys", ["line_item_id"], name: "index_redemption_keys_on_line_item_id", using: :btree
 
-  create_table "rocco_loggers", force: :cascade do |t|
-    t.text     "logs"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "spots", force: :cascade do |t|
     t.string   "title"
     t.text     "description"
@@ -232,18 +239,6 @@ ActiveRecord::Schema.define(version: 20161211181034) do
   end
 
   add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
-
-  create_table "transactions", force: :cascade do |t|
-    t.integer  "cart_id"
-    t.integer  "item_id"
-    t.integer  "amount",         default: 1
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-    t.string   "redeemed_token", default: ""
-    t.string   "order_name"
-  end
-
-  add_index "transactions", ["cart_id"], name: "index_transactions_on_cart_id", using: :btree
 
   create_table "trial_classes", force: :cascade do |t|
     t.integer  "dependent_id"
@@ -338,13 +333,13 @@ ActiveRecord::Schema.define(version: 20161211181034) do
   add_index "waivers", ["dependent_id"], name: "index_waivers_on_dependent_id", using: :btree
 
   add_foreign_key "athlete_subscriptions", "dependents"
+  add_foreign_key "cart_items", "carts"
   add_foreign_key "carts", "users"
   add_foreign_key "emergency_contacts", "users"
   add_foreign_key "images", "spots"
   add_foreign_key "notifications", "users"
   add_foreign_key "ratings", "spots"
   add_foreign_key "spots", "events"
-  add_foreign_key "transactions", "carts"
   add_foreign_key "trial_classes", "dependents"
   add_foreign_key "unlimited_subscriptions", "users"
 end

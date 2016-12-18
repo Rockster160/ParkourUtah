@@ -63,6 +63,10 @@ Rails.application.routes.draw do
     end
   end
 
+  resource :admin, only: [] do
+    get :purchase_history
+  end
+
   get 'test' => 'index#index'
   post 'contact' => 'index#contact'
   post 'receive_sms' => 'index#receive_sms'
@@ -72,7 +76,6 @@ Rails.application.routes.draw do
   post 'sms_receivable' => 'index#sms_receivable', as: 'make_sms_receivable'
 
   get 'peeps/cheat_login' => 'peeps#cheat_login'
-  get 'peeps/bought_classes' => 'peeps#bought_classes'
   get 'peeps/users' => 'peeps#recent_users', as: 'recent_users'
   get 'user/:id' => 'peeps#user_page', as: 'user_show'
   get 'user/:id/attendance' => 'peeps#attendance_page', as: 'attendance_page'

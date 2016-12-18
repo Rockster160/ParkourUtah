@@ -1,6 +1,7 @@
 <div class="central-container form-offset">
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
   <p>Filter items:</p>
-  <%= form_tag peeps_bought_classes_path, method: :get do %>
+  <%= form_tag purchase_history_admin_path, method: :get do %>
     <% LineItem.all.each do |item| %>
       <%= check_box_tag 'line_item_ids[]', item.id, @line_item_ids.include?(item.id), id: "line_item_id_#{item.id}" %>
       <%= label_tag "line_item_id_#{item.id}", "#{item.hidden? ? '-Hidden- ' : ''}#{item.title}" %>

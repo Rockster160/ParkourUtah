@@ -65,7 +65,7 @@ class User < ActiveRecord::Base
   has_many :unlimited_subscriptions, dependent: :destroy
   has_many :carts, dependent: :destroy
   has_many :dependents, dependent: :destroy
-  has_many :transactions, through: :cart
+  has_many :cart_items, through: :cart
   has_many :subscriptions, dependent: :destroy
   has_many :subscribed_events, through: :subscriptions, source: "event_schedule"
   has_many :classes_to_teach, class_name: "EventSchedule", foreign_key: "instructor_id"

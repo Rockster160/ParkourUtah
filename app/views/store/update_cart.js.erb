@@ -9,7 +9,7 @@ $('.stripe-button').attr('data-amount', '<%= j number_to_currency(@cart.total) %
 $('.shopping-cart-line-item-quantity-input').each(function() {
   $(this).val(0);
 })
-<% @cart.transactions.each do |order| %>
+<% @cart.cart_items.each do |order| %>
   var amount = "<%= order.amount %>";
   $('.value-selector-<%= order.order_name.parameterize %>').val(amount);
 <% end %>

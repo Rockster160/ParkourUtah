@@ -61,17 +61,6 @@ class PeepsController < ApplicationController
     redirect_to edit_user_registration_path
   end
 
-  def bought_classes
-    @line_item_ids = (params[:line_item_ids].try(:compact) || []).map(&:to_i)
-    line_items = LineItem.where(id: @line_item_ids)
-    @items_with_users = line_items.map do |line_item|
-      {
-        line_item_id: line_item.id,
-        users: line_item.users_who_purchased
-      }
-    end
-  end
-
   def attendance_page
     @athletes = User[params[:id]].athletes
   end

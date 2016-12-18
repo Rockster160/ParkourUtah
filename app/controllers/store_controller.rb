@@ -31,7 +31,7 @@ class StoreController < ApplicationController
 
   def update_cart
     if params[:delete_all]
-      @cart.transactions.destroy_all
+      @cart.cart_items.destroy_all
     else
       item_title = if params[:item_id]
         item = LineItem.find(params[:item_id])
@@ -43,7 +43,7 @@ class StoreController < ApplicationController
       color = params[:color] ? "#{params[:color]} " : ""
       name = "#{size}#{color}#{item_title}"
 
-      orders = @cart.transactions
+      orders = @cart.cart_items
       order = orders.where(order_name: name).first
       if params[:new_amount]
         params[:new_amount] ||= "0"
@@ -56,7 +56,7 @@ class StoreController < ApplicationController
         if order
           order.increment!(:amount)
         else
-          order = Transaction.create(item_id: item.id, order_name: name)
+          order = CartItem.create(item_id: item.id, order_name: name)
           orders << order
           @order = order
         end
@@ -72,8 +72,8 @@ class StoreController < ApplicationController
   def redeem
     key = RedemptionKey.where(key: params[:redemption_key]).first
     if key.present? && key.redeemed == false
-      if key.item.present? && @cart.transactions.where(redeemed_token: params[:redemption_key]).none?
-        @order = Transaction.create(item_id: key.item_id, redeemed_token: params[:redemption_key], cart_id: @cart.try(:id))
+      if key.item.present? && @cart.cart_items.where(redeemed_token: params[:redemption_key]).none?
+        @order = CartItem.create(item_id: key.item_id, redeemed_token: params[:redemption_key], cart_id: @cart.try(:id))
       end
     end
 
@@ -148,7 +148,7 @@ class StoreController < ApplicationController
     end
     order_success = stripe_charge.nil? || stripe_charge.try(:status) == "succeeded"
     if order_success
-      @cart.transactions.each do |order|
+      @cart.cart_items.each do |order|
         line_item = LineItem.find(order.item_id)
         if RedemptionKey.redeem(order.redeemed_token)
           current_user.update(credits: (current_user.credits + (order.amount * line_item.credits))) if user_signed_in?

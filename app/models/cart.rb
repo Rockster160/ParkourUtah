@@ -2,21 +2,26 @@
 #
 # Table name: carts
 #
-#  id         :integer          not null, primary key
-#  user_id    :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  email      :string
+#  id           :integer          not null, primary key
+#  user_id      :integer
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  email        :string
+#  purchased_at :datetime
 #
 
 class Cart < ActiveRecord::Base
 
   belongs_to :user
-  has_many :transactions, dependent: :destroy
+  has_many :cart_items, dependent: :destroy
+
+  def purchased?
+    purchased_at?
+  end
 
   def items
     items = []
-    self.transactions.each do |order|
+    self.cart_items.each do |order|
       order.amount.times do
         items <<  LineItem.find(order.item_id)
       end
@@ -26,19 +31,19 @@ class Cart < ActiveRecord::Base
 
   def add_items(*item_ids)
     item_ids.flatten.each do |item_id|
-      order = transactions.where(item_id: item_id).first
+      order = cart_items.where(item_id: item_id).first
       if order
         order.increment!(:amount)
       else
         item = LineItem.find(item_id)
-        transactions.create(item_id: item_id, order_name: item.title, amount: 1)
+        cart_items.create(item_id: item_id, order_name: item.title, amount: 1)
       end
     end
   end
 
   def price
     cost = 0
-    self.transactions.each do |order|
+    self.cart_items.each do |order|
       cost += (order.item.cost * order.amount)
     end
     cost <= 0 ? 0 : cost
@@ -46,7 +51,7 @@ class Cart < ActiveRecord::Base
 
   def shipping
     cost = 0
-    self.transactions.each do |order|
+    self.cart_items.each do |order|
       cost += (order.amount * 200) unless %w( Class Coupon Redemption Other Gift\ Card ).include?(order.item.category)
     end
     cost += (cost > 0 ? 300 : 0)
@@ -55,7 +60,7 @@ class Cart < ActiveRecord::Base
 
   def taxes
     cost = 0
-    self.transactions.each do |order|
+    self.cart_items.each do |order|
       cost += (order.item.tax * order.amount)
     end
     cost
