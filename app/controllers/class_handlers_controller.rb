@@ -36,7 +36,7 @@ class ClassHandlersController < ApplicationController
       elsif @athlete.user.credits <= @event.cost_in_dollars
         flash[:alert] = "Insufficient credits in account."
       else
-        # TODO SLACK - Tell me details on why it failed!
+        SlackNotifier.notify("Failed to add athlete: #{@athlete.id}: #{@athlete.full_name}", "#server-errors")
         flash[:alert] = "Failed to add Athlete to class."
       end
     else
