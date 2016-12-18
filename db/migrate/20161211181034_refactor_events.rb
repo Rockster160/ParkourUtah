@@ -23,6 +23,7 @@ class RefactorEvents < ActiveRecord::Migration
     end
     puts "\nAdding event -> schedule relationship"
     add_column :events, :event_schedule_id, :integer, foreign_key: true, index: true
+    add_column :events, :original_date, :datetime
 
     events_by_token = Event.where.not(token: nil).group_by(&:token)
     puts "\nBackfilling EventSchedules (#{events_by_token.count})"
@@ -48,6 +49,9 @@ class RefactorEvents < ActiveRecord::Migration
         city: db_attrs["city"],
         color: db_attrs["color"]
       )
+      events.each do |event|
+        print event.update(original_date: event.date) ? "\e[33m.\e[0m" : "\e[31m.\e[0m"
+      end
       Event.where(token: token).update_all(event_schedule_id: event_schedule.id)
       puts "\nHost: #{next_event.host}" if event_schedule.instructor_id.nil?
       binding.pry unless event_schedule.persisted?

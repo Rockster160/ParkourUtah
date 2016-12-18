@@ -7,15 +7,19 @@
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  event_schedule_id :integer
+#  original_date     :datetime
 #  is_cancelled      :boolean          default(FALSE)
 #
 
 class Event < ActiveRecord::Base
+  include Defaults
 
   belongs_to :event_schedule
   has_many :attendances, dependent: :destroy
 
   validates_presence_of :date
+
+  after_initialize :set_original_date
 
   scope :in_the_future, -> { where("date > ?", Time.zone.now) }
   scope :today, -> { by_date(Time.zone.now) }
@@ -43,6 +47,21 @@ class Event < ActiveRecord::Base
   delegate :subscribed_users, to: :event_schedule, allow_nil: true
   delegate :cost_in_dollars,  to: :event_schedule, allow_nil: true
 
+  def update_date(new_date_params)
+    new_date = Time.zone.parse(new_date_params[:str_date]) rescue nil
+    return if new_date.nil?
+    new_time_str = new_date_params[:current_time_of_day]
+    return if new_time_str.split(":")[0].to_i <= 12 && (new_time_str =~ /(a|p)m/i).nil?
+    time = Time.zone.parse(new_time_str) rescue nil
+    new_datetime = Time.zone.local(new_date.year, new_date.month, new_date.day, time.try(:hour), time.try(:min)) rescue nil
+    return if new_datetime.nil?
+    self.date = new_datetime
+    self.save
+  end
+
+  def str_date; date.strftime('%b %d, %Y'); end
+  def current_time_of_day; date.strftime("%-l:%M %p"); end
+
   def css_style
     "background-color: #{color.presence || '#FFF'} !important; color: #{color_contrast} !important; background-image: none !important;"
   end
@@ -69,6 +88,11 @@ class Event < ActiveRecord::Base
 
   def cancelled?
     is_cancelled?
+  end
+
+  def set_original_date
+    return unless original_date.nil?
+    self.original_date = self.date
   end
 
 end

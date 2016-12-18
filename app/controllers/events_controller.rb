@@ -5,6 +5,20 @@ class EventsController < ApplicationController
     @event = @event_schedule.event_by_id(params[:id], with_date: params[:date])
   end
 
+  def edit
+    @event = @event_schedule.event_by_id(params[:id], with_date: params[:date])
+    @event.save
+  end
+
+  def update
+    @event = Event.find(params[:id])
+    if @event.update_date(event_params)
+      redirect_to calendar_show_path(date: @event.date.strftime("%m-%d-%Y")), notice: "Successfully updated event date."
+    else
+      redirect_to calendar_show_path(date: @event.date.strftime("%m-%d-%Y")), alert: "Failed to update Event."
+    end
+  end
+
   def detail
     @event = @event_schedule.event_by_id(params[:id], with_date: params[:date])
     respond_to do |format|
@@ -26,6 +40,10 @@ class EventsController < ApplicationController
   end
 
   private
+
+  def event_params
+    params.require(:event).permit(:str_date, :current_time_of_day)
+  end
 
   def set_event_schedule
     @event_schedule = EventSchedule.find(params[:event_schedule_id]) if params[:event_schedule_id].present?

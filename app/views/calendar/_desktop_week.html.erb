@@ -50,6 +50,7 @@
               <% else %>
                 <p><%= link_to 'Cancel this Event', cancel_event_path(id: event.id || "new", event_schedule_id: event.event_schedule_id, date: event.date), method: :post, class: "calendar-link" %></p>
               <% end %>
+              <p><%= link_to "Edit this Event's Date/Time", edit_event_path(id: event.id || "new", event_schedule_id: event.event_schedule_id, date: event.date), class: "calendar-link" %></p>
               <p><%= link_to 'Edit Recurring Event', edit_event_schedule_path(event.event_schedule_id), class: "calendar-link" %></p>
             <% end %>
           </div>

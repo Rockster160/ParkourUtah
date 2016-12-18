@@ -1,6 +1,6 @@
 module Defaults
   extend ActiveSupport::Concern
-  
+
   # Added to instance of object
   included do
     after_initialize :apply_default_values

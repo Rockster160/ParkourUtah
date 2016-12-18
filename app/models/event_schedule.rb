@@ -62,8 +62,8 @@ class EventSchedule < ActiveRecord::Base
     last_date = time_zone.local(last_day.year, last_day.month, last_day.day, last_day.hour, last_day.minute).end_of_day
     scheduled = where("start_date < :first_date AND (end_date IS NULL OR end_date > :last_date)", first_date: first_date, last_date: last_date)
     scheduled.map do |schedule|
-      scheduled_events = schedule.events.where(date: first_date..last_date)
-      scheduled_events.empty? ? schedule.new_events_for_time_range(first_date, last_date) : scheduled_events
+      scheduled_events = schedule.events.where(original_date: first_date..last_date)
+      scheduled_events.empty? ? schedule.new_events_for_time_range(first_date, last_date) : scheduled_events.where(date: first_date..last_date)
     end.flatten.compact
   end
 
@@ -84,7 +84,7 @@ class EventSchedule < ActiveRecord::Base
 
   def time_of_day=(new_time_str)
     return nil if new_time_str.split(":")[0].to_i <= 12 && (new_time_str =~ /(a|p)m/i).nil?
-    time = Time.zone.parse(new_time_str)
+    time = Time.zone.parse(new_time_str) rescue nil
     self.hour_of_day = time.try(:hour)
     self.minute_of_day = time.try(:min)
   end

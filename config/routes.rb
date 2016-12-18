@@ -28,7 +28,7 @@ Rails.application.routes.draw do
   end
 
   resources :spots
-  resources :events, only: [ :show ] do
+  resources :events, only: [ :show, :edit, :update ] do
     member do
       post :cancel
       get :detail
@@ -92,12 +92,6 @@ Rails.application.routes.draw do
   get 'unsubscribe' => 'index#unsubscribe', as: 'unsubscribe_email'
   post 'sms_receivable' => 'index#sms_receivable', as: 'make_sms_receivable'
 
-  # get 'peeps/cheat_login' => 'peeps#cheat_login'
-  # get 'user/:id/attendance' => 'peeps#attendance_page', as: 'attendance_page'
-  # get 'athlete/:id/trial' => 'peeps#edit_trial', as: 'edit_trial'
-  # post 'peeps/users/:id' => 'peeps#adjust_credits', as: 'adjust_credits'
-  # post 'peeps/users/:id/notifications' => 'peeps#edit_user_notifications', as: 'edit_user_notifications'
-  # delete 'user/:id' => 'peeps#destroy_user', as: 'user'
   delete 'unsubscribe_monthly/:id' => 'store#unsubscribe', as: 'unsubscribe_monthly_subscription'
 
   get 'athletes/new' => 'dependents#new', as: 'new_athlete'
