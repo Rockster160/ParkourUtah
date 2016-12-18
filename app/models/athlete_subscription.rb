@@ -12,6 +12,8 @@
 #  updated_at      :datetime         not null
 #
 
+# Rename to RecurringSubscription
+# Add Stripe ID here, and attempt to charge using that customer instead
 class AthleteSubscription < ActiveRecord::Base
 
   belongs_to :dependent

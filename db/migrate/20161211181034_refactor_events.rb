@@ -84,14 +84,11 @@ class RefactorEvents < ActiveRecord::Migration
       end
     end
 
-    puts "\nRemoving SpotEvents"
     drop_table :spot_events
-    puts "\nRemoving RoccoLogger"
     drop_table :rocco_loggers
 
-    puts "\nRename Transactions table to Cart Items"
     rename_table :transactions, :cart_items
-    puts "\nFix cart_items foreign key"
+
     rename_column :cart_items, :item_id, :line_item_id
 
     puts "\nAdd 'purchased_at' to Carts #{Cart.count}"

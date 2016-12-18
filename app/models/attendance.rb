@@ -19,7 +19,7 @@ class Attendance < ActiveRecord::Base
   attr_accessor :skip_validations
 
   belongs_to :dependent
-  belongs_to :user # Remove this, becomes has_many through
+  belongs_to :user # Instructor
   belongs_to :event
 
   validate :one_per_athlete
