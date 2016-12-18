@@ -10,7 +10,7 @@
     <% end %>
     <p><%= @event_schedule.time_of_day %></p>
     <p><%=  %></p>
-    <p><%= @event_schedule.description.gsub("\n", "<br/>").gsub('  ', " &nbsp;").html_safe %></p>
+    <p class="no-format"><%= @event_schedule.description %></p>
     <p><%=  %></p>
     <p>Instructor: <%= @event_schedule.host_name %></p>
     <p>
