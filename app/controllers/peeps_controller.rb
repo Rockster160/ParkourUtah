@@ -4,10 +4,6 @@ class PeepsController < ApplicationController
 
   EmailBody = Struct.new(:subject, :body, :recipients, :email_type)
 
-  def user_page
-    @user = User[params[:id]]
-  end
-
   def email_body
     @email = EmailBody.new(*decoded_email_params)
 
@@ -61,24 +57,6 @@ class PeepsController < ApplicationController
     redirect_to edit_user_registration_path
   end
 
-  def attendance_page
-    @athletes = User[params[:id]].athletes
-  end
-
-  def edit_trial
-    athlete = Dependent.find(params[:id])
-    if params[:num].to_i < 0
-      params[:num].to_i.abs.times do
-        athlete.trial.use!
-      end
-    else
-      params[:num].to_i.abs.times do
-        athlete.trial_classes.create
-      end
-    end
-    redirect_to :back
-  end
-
   def destroy_user
     if params[:confirmation] == "DELETE"
       User.find(params[:id]).destroy
@@ -86,50 +64,6 @@ class PeepsController < ApplicationController
     else
       redirect_to recent_users_path, notice: "Sorry, DELETE was not entered correctly. User still exists."
     end
-  end
-
-  def edit_user_notifications
-    user = User.find(params[:id])
-    user.notifications.blow!
-    params[:notify].each do |attribute, value|
-      user.notifications.update(attribute => true)
-    end
-    redirect_to :back
-  end
-
-  def adjust_credits
-    user = User[params[:id]]
-    user.credits += params[:adjust].to_i
-    if user.save
-      redirect_to :back, notice: 'User successfully updated.'
-    else
-      redirect_to :back, alert: 'There was a problem updating the user.'
-    end
-  end
-
-  def dashboard
-    @classes = EventSchedule.events_today
-  end
-
-  def recent_users
-    @users = User.order(created_at: :desc)
-    @users = @users.by_fuzzy_text(params[:by_fuzzy_text]) if params[:by_fuzzy_text]
-    @users = @users.page(params[:page] || 1)
-
-    respond_to do |format|
-      format.json { render json: @users.to_json(include: :dependents) }
-      format.html
-    end
-  end
-
-  def demotion
-    if User.find(params[:id]).update(role: 0)
-      flash[:notice] = "Instructor successfully removed."
-    else
-      flash[:alert] = "There was an error updating the instructor."
-    end
-    User.update_instructor_positions
-    redirect_to dashboard_path
   end
 
   private

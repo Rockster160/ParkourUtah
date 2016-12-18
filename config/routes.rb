@@ -63,8 +63,18 @@ Rails.application.routes.draw do
     end
   end
 
+  get :dashboard, controller: :admins
   resource :admin, only: [] do
     get :purchase_history
+
+    resources :users do
+      member do
+        get :attendance
+        post :update_trials
+        post :update_credits
+        post :update_notifications
+      end
+    end
   end
 
   get 'test' => 'index#index'
@@ -75,14 +85,12 @@ Rails.application.routes.draw do
   get 'unsubscribe' => 'index#unsubscribe', as: 'unsubscribe_email'
   post 'sms_receivable' => 'index#sms_receivable', as: 'make_sms_receivable'
 
-  get 'peeps/cheat_login' => 'peeps#cheat_login'
-  get 'peeps/users' => 'peeps#recent_users', as: 'recent_users'
-  get 'user/:id' => 'peeps#user_page', as: 'user_show'
-  get 'user/:id/attendance' => 'peeps#attendance_page', as: 'attendance_page'
-  get 'athlete/:id/trial' => 'peeps#edit_trial', as: 'edit_trial'
-  post 'peeps/users/:id' => 'peeps#adjust_credits', as: 'adjust_credits'
-  post 'peeps/users/:id/notifications' => 'peeps#edit_user_notifications', as: 'edit_user_notifications'
-  delete 'user/:id' => 'peeps#destroy_user', as: 'user'
+  # get 'peeps/cheat_login' => 'peeps#cheat_login'
+  # get 'user/:id/attendance' => 'peeps#attendance_page', as: 'attendance_page'
+  # get 'athlete/:id/trial' => 'peeps#edit_trial', as: 'edit_trial'
+  # post 'peeps/users/:id' => 'peeps#adjust_credits', as: 'adjust_credits'
+  # post 'peeps/users/:id/notifications' => 'peeps#edit_user_notifications', as: 'edit_user_notifications'
+  # delete 'user/:id' => 'peeps#destroy_user', as: 'user'
   delete 'unsubscribe_monthly/:id' => 'store#unsubscribe', as: 'unsubscribe_monthly_subscription'
 
   get :email_body, controller: 'peeps'
@@ -115,10 +123,6 @@ Rails.application.routes.draw do
   get 'calendar/week' => 'calendar#get_week', as: 'week'
   get 'm/calendar' => 'calendar#mobile', as: 'calendar_mobile'
   get 'calendar/week' => 'calendar#get_week', as: 'calendar_week'
-
-  get 'dashboard' => 'peeps#dashboard', as: 'dashboard'
-
-  get 'comingsoon' => 'index#coming_soon', as: 'coming_soon'
 
   post 'store/charge' => 'store#charge', as: 'charge'
   get 'store' => 'store#index', as: 'store'

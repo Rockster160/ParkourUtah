@@ -43,6 +43,7 @@ class InstructorsController < ApplicationController
   def destroy
     @instructor = User.instructors.find(params[:id])
     if @instructor.update(role: 0)
+      User.update_instructor_positions
       redirect_to instructors_path, notice: "Successfully demoted Instructor"
     else
       redirect_to instructors_path, alert: "There was an error demoting that Instructor."

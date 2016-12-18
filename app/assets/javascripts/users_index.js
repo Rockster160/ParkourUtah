@@ -3,7 +3,7 @@ $(document).ready(function(){
   var users = new Bloodhound({
     limit: 5,
     remote: {
-      url: '/peeps/users?by_fuzzy_text=%QUERY',
+      url: '/admin/users?by_fuzzy_text=%QUERY',
       filter: function(x) {
         return $.map(x, function(item) {
           return { user: item }
@@ -42,6 +42,6 @@ $(document).ready(function(){
   });
 
   $('#user_index_search_field').on('typeahead:selected', function(obj, datum, name) {
-    window.location.href = "/user/" + datum.user.id
+    window.location.href = "/admin/users/" + datum.user.id
   });
 });

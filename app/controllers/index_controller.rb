@@ -77,9 +77,6 @@ class IndexController < ApplicationController
     redirect_to edit_user_registration_path
   end
 
-  def coming_soon
-  end
-
   def contact
     success = false
     if /\(\d{3}\) \d{3}-\d{4}/ =~ params[:phone]

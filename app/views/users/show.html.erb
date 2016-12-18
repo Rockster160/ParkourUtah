@@ -1,0 +1,90 @@
+<div class="col-sm-offset-4">
+  <br/>
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br/>
+  <% if current_user.is_admin? %>
+    <%= link_to "Back to Users Page", admin_users_path, class: 'pkut-btn' %><br/>
+  <% end %>
+  <%= link_to 'Back', :back, class: 'pkut-btn' %><br/>
+  <% if @user.stripe_subscription? %>
+    <h3 style="color: green;"><%= @user.id %>: <%= '!' unless @user.notifications.email_newsletter? %><%= @user.email %>*</h3>
+  <% else %>
+    <h3><%= @user.id %>: <%= '!' unless @user.notifications.email_newsletter? %><%= @user.email %></h3>
+  <% end %>
+  <p><strong><%= '!' unless @user.notifications.sms_receivable? %><%= @user.show_phone_number %></strong></p>
+  <% if current_user.is_admin? %>
+    <p>Credits: <%= @user.credits %> -- <a data-toggle="modal" data-target="#adjust-<%= @user.id %>" class="forceOpen">Adjust</a></p>
+    <p><a data-toggle="modal" data-target="#edit_user_notifications" class="forceOpen">Edit Notifications</a></p>
+    <p><a data-toggle="modal" data-target="#edit_user_subscriptions" class="forceOpen">Edit Subscriptions</a></p>
+    <p><a href="<%= attendance_admin_user_path(@user) %>">Attendance History</a></p>
+    <p>Last seen:
+      <% if @user.signed_in? %>
+        <span style="color:green;">Online Now!</span>
+      <% else %>
+        <% if @user.last_sign_in_at? %>
+          <span style="color:yellow;"><%= (@user.last_sign_in_at - 6.hours).strftime('%B %e, %Y at %I:%M %p') %></span>
+        <% else %>
+          <span style="color:red;">Never</span>
+        <% end %>
+      <% end %>
+    </p>
+    <p>Signed up: <strong><%= (@user.created_at - 6.hours).strftime('%B %e, %Y at %I:%M %p') %></strong></p>
+  <% end %>
+  <h4>Athletes:</h4>
+  <% @user.athletes_by_waiver_expiration.each do |athlete| %>
+    <% if athlete.has_unlimited_access? %>
+      <span style="color: green;">--Has unlimited access until: <%= athlete.has_access_until.strftime('%B %e, %Y') %></span><br/>
+    <% end %>
+    --<%= athlete.id %>: <strong><%= athlete.full_name %></strong> - ID: <%= athlete.zero_padded(athlete.athlete_id, 4) %><%= athlete.current_subscription.try(:auto_renew) ? '*' : '' %><br/>
+    --<a alt="..." class="forceOpen" data-toggle="modal" data-target="#image<%= athlete.id %>">View/Edit Athlete Image</a><br/>
+    <div class="modal fade" id="image<%= athlete.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="central-container">
+        <div class="error-container center-block">
+          <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
+          <h3 class="pkut-header"><%= athlete.full_name %></h3>
+          <% if athlete.athlete_photo_file_size %>
+            <%= link_to 'View current', athlete.athlete_photo.url, target: '_blank', class: 'pkut-btn' %><br/><br/>
+          <% end %>
+          <%= form_for athlete, url: {controller: "dependents", action: "update_photo", id: athlete.id}, html: {multipart: true}, method: :patch do %>
+            <%= file_field_tag 'athlete_photo', accept: 'image/*', capture: 'camera', class: 'upload-image-btn' %>
+            <%= submit_tag 'Submit', class: 'pkut-btn' %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <% if athlete.trials.count > 0 %>
+      --Has <%= athlete.trials.count %> trial class(es) remaining. <%= link_to 'Remove 1 Trial', update_trials_admin_user_path(@user, athlete_id: athlete.id, num: '-1'), method: :post if current_user.is_admin? %>
+      <br/>
+    <% end %>
+    <% if current_user.is_admin? %>
+      --<%= link_to 'Add Trial Class', update_trials_admin_user_path(@user, athlete_id: athlete.id, num: '1'), method: :post %><br/>
+    <% end %>
+    <div class="modal fade" id="edit<%= athlete.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="central-container">
+        <div class="error-container center-block">
+          <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
+          <h3 class="pkut-header"><%= athlete.full_name %></h3>
+            <p>This will permanently delete this athlete. Are you sure? This action cannot be undone.<p>
+            <%= link_to "Delete", destroy_athlete_path(athlete.id), class: 'pkut-btn', method: :delete %>
+        </div>
+      </div>
+    </div>
+    --Birthday: <%= athlete.date_of_birth %><br/>
+    --Waiver expires: <%= athlete.waiver ? athlete.waiver.exp_date.strftime('%B %e, %Y') : "No waiver signed" %><br/>
+    <% if current_user.is_admin? %>
+      --<a alt="..." class="pkut-header forceOpen" data-toggle="modal" data-target="#edit<%= athlete.id %>">Delete Athlete</a><br/><br/>
+    <% end %>
+    --<%= link_to 'Curriculum', '' %><br>
+    <br>
+  <% end %>
+  <br/>
+  <br/>
+  <br/>
+  <% if current_user.is_admin? %>
+    <a data-toggle="modal" data-target="#delete-<%= @user.id %>" class="pkut-btn forceOpen">Delete User</a>
+  <% end %>
+</div>
+<hr>
+<%= render partial: 'destroy_user', locals: {user: @user} %>
+<%= render partial: 'adjust_credits', locals: {user: @user} %>
+<%= render partial: 'edit_user_notifications', locals: {user: @user} %>
+<%= render partial: 'edit_user_subscriptions', locals: {user: @user} %>

@@ -6,7 +6,7 @@
       <p class="error-message">Are you positive you want to destroy <strong><%= user.full_name %></strong>?</p>
       <p class="error-message">This is permanent and cannot be undone.</p>
       <p class="error-message">If you are sure, enter `DELETE`(all caps, no quotes) below and then click delete user.</p>
-      <%= form_for user, method: :delete do %>
+      <%= form_for [:admin, user], method: :delete do %>
         <%= text_field_tag :confirmation, '', class: 'delete-user-field'  %>
         <%= submit_tag "Delete User", class: 'delete-user-btn' %>
       <% end %>

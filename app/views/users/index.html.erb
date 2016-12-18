@@ -9,10 +9,10 @@
     <% else %>
       <h3><%= user.id %>: <%= '!' unless user.notifications.email_newsletter? %><%= user.email %></h3>
     <% end %>
-    <%= link_to 'View User Management Page', user_show_path(user) %>
+    <%= link_to 'View User Management Page', admin_user_path(user) %>
     <p><strong><%= '!' unless user.notifications.sms_receivable? %><%= user.show_phone_number %></strong></p>
     <p>Credits: <%= user.credits %>
-    <p><a href="<%= attendance_page_path(user) %>">Attendance History</a></p>
+    <p><a href="<%= attendance_admin_user_path(user) %>">Attendance History</a></p>
     <p>Last seen:
       <% if user.signed_in? %>
         <span style="color:green;">Online Now!</span>

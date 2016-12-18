@@ -1,8 +1,14 @@
 class AdminsController < ApplicationController
   include EmailHelper
-  before_action :still_signed_in, :validate_admin
+  before_action :still_signed_in
+  before_action :validate_admin, except: [ :dashboard ]
+  before_action :validate_instructor, only: [ :dashboard ]
 
   EmailBody = Struct.new(:subject, :body, :recipients, :email_type)
+
+  def dashboard
+    @classes = EventSchedule.events_today
+  end
 
   def purchase_history
     @line_item_ids = (params[:line_item_ids].try(:compact) || []).map(&:to_i)

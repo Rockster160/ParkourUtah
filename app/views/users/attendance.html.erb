@@ -1,6 +1,6 @@
 <div class="central-container form-offset">
   <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br><br>
-  <%= link_to "Back to User Page", user_show_path(params[:id]), class: 'pkut-btn' %>
+  <%= link_to "Back to User Page", admin_user_path(params[:id]), class: 'pkut-btn' %>
   <h1>History</h1>
   <% @athletes.each do |athlete| %>
     <div class="athlete-history-container">
