@@ -47,8 +47,6 @@ class IndexController < ApplicationController
         else
           ::SmsMailerWorker.perform_async('3852599640', "No previous request")
         end
-      elsif params["Body"].downcase =~ /talk/
-        ::SmsMailerWorker.perform_async('3852599640', RoccoLogger.by_date.logs)
       elsif params["Body"].downcase =~ /pass/
         name = params["Body"].gsub('pass ', '')
         contact_request = ContactRequest.select { |cr| cr.success == false && cr.name == name }.last

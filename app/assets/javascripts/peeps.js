@@ -18,7 +18,6 @@ var ready = function() {
       var params = {};
       params[resource] = {}
       params[resource][position_attribute] = new_position;
-      params["_method"] = "put";
       $.post(url, params);
     });
   };

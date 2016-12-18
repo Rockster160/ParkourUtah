@@ -26,7 +26,7 @@ class RefactorEvents < ActiveRecord::Migration
 
     events_by_token = Event.where.not(token: nil).group_by(&:token)
     puts "\nBackfilling EventSchedules (#{events_by_token.count})"
-    events_by_token.each do |token, events|
+    events_by_token.find_each do |token, events|
       next_event = events.sort_by(&:date).first
       last_event = events.sort_by(&:date).last
       possibles = User.instructors.by_fuzzy_text(next_event.host)
@@ -56,13 +56,13 @@ class RefactorEvents < ActiveRecord::Migration
 
     puts "\nAdd subscriptions to schedules (#{Subscription.count})"
     add_column :subscriptions, :event_schedule_id, :integer, foreign_key: true, index: true
-    Subscription.all.each do |subscription|
+    Subscription.all.find_each do |subscription|
       event = Event.find(subscription.event_id)
       print subscription.update(event_schedule_id: event.event_schedule_id) ? "\e[32m.\e[0m" : "\e[31mF\e[0m"
     end
 
     puts "\nAdding Spots to Schedules (#{Spot.count})"
-    Spot.all.each do |spot|
+    Spot.all.find_each do |spot|
       spot_events = SpotEvent.where(spot_id: spot.id)
       event_schedule_ids = Event.where(id: spot_events.map(&:event_id)).group_by(&:event_schedule_id).keys
       print EventSchedule.where(id: event_schedule_ids).update_all(spot_id: spot.id) ? "\e[32m.\e[0m" : "\e[31mF\e[0m"
@@ -82,6 +82,8 @@ class RefactorEvents < ActiveRecord::Migration
 
     puts "\nRemoving SpotEvents"
     drop_table :spot_events
+    puts "\nRemoving RoccoLogger"
+    drop_table :rocco_loggers
 
     Event.in_the_future.where.not(token: nil).destroy_all
     add_column :events, :is_cancelled, :boolean, default: false

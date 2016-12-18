@@ -10,8 +10,6 @@ Rails.application.routes.draw do
 
   get 'talk' => 'index#get_request'
   post 'listen' => 'index#give_request'
-  get 'secret' => 'peeps#secret', as: 'secret'
-  post 'post_secret' => 'peeps#post_secret'
 
   get 'register/step_2' => 'registrations#step_2', as: 'step_2'
   get 'register/step_3' => 'registrations#step_3', as: 'step_3'
@@ -22,6 +20,12 @@ Rails.application.routes.draw do
   post 'register/step_4' => 'registrations#post_step_4'
   post 'register/step_4/fix' => 'registrations#fix_step_4', as: 'fix_review_page'
   post 'register/step_5' => 'registrations#post_step_5'
+
+  resources :instructors do
+    member do
+      post :update_position
+    end
+  end
 
   resources :spots
   resources :events, only: [ :show ] do
@@ -68,14 +72,7 @@ Rails.application.routes.draw do
   post 'sms_receivable' => 'index#sms_receivable', as: 'make_sms_receivable'
 
   get 'peeps/cheat_login' => 'peeps#cheat_login'
-  get 'peeps/edit' => 'peeps#edit', as: 'edit_peeps'
   get 'peeps/bought_classes' => 'peeps#bought_classes'
-  get 'peeps/edit_peep/:id' => 'peeps#edit_peep', as: 'edit_peep'
-  put 'peeps/update_position/:id' => 'peeps#update_peep_position', as: 'update_peep_position'
-  patch 'peeps/update/:id' => 'peeps#update', as: 'update_peep'
-  get 'peeps/promote' => 'peeps#promote', as: 'promote'
-  post 'peeps/promote' => 'peeps#promotion', as: 'promotion'
-  post 'peeps/demotion/:id' => 'peeps#demotion', as: 'demotion'
   get 'peeps/users' => 'peeps#recent_users', as: 'recent_users'
   get 'user/:id' => 'peeps#user_page', as: 'user_show'
   get 'user/:id/attendance' => 'peeps#attendance_page', as: 'attendance_page'
