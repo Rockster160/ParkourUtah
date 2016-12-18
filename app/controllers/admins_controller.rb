@@ -21,6 +21,52 @@ class AdminsController < ApplicationController
     end
   end
 
+  def batch_text_message
+    @users = User.where(id: params[:user_ids])
+  end
+
+  def send_batch_texts
+    phone_numbers = params[:recipients].gsub(/[^\d|,]/, '').split(",").map(&:squish)
+    @success = []
+    @failed = []
+    phone_numbers.each do |phone_number|
+      if phone_number.length == 10
+        SmsMailerWorker.perform_async(phone_number, params[:message])
+        @success << phone_number
+      else
+        @failed << phone_number
+      end
+    end
+    render :batch_text_message
+  end
+
+  def batch_email
+    @email = EmailBody.new(*decoded_email_params)
+  end
+
+  def send_batch_emailer
+    @email = EmailBody.new(*decoded_email_params)
+    raw_html = html(@email.body)
+    BatchEmailerWorker.perform_async(@email.subject, raw_html, @email.recipients, @email.email_type)
+    redirect_to dashboard_path, notice: 'Sweet! I will send that out to them!'
+  end
+
+  def email_body
+    @email = EmailBody.new(*decoded_email_params)
+
+    raw_html = html(@email.body)
+
+    email_source = ApplicationMailer.email('', @email.subject || '', raw_html || '').body.raw_source
+
+    respond_to do |format|
+      if valid_html?(raw_html)
+        format.json { render json: {email_body: email_source} }
+      else
+        format.json { render nothing: true, status: 422 }
+      end
+    end
+  end
+
   private
 
   def decoded_email_params

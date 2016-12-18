@@ -56,4 +56,13 @@ class UsersController < ApplicationController
     redirect_to :back
   end
 
+  def destroy
+    if params[:confirmation] == "DELETE"
+      User.find(params[:id]).destroy
+      redirect_to recent_users_path, notice: "User successfully deleted."
+    else
+      redirect_to recent_users_path, notice: "Sorry, DELETE was not entered correctly. User still exists."
+    end
+  end
+
 end

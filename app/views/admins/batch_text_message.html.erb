@@ -1,6 +1,7 @@
 <% users = @users || [] %>
 <div class="content-box text-center">
-  <%= form_tag send_batch_texts_path do %>
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
+  <%= form_tag send_batch_texts_admin_path do %>
     <div class="form-container">
       <% if @success.present? || @failed.present? %>
         <table class="table table-bordered">

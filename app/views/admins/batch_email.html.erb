@@ -1,8 +1,9 @@
 <div class="content-box">
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
   <div class="mkdown-preview-container">
     <div class="mkdown-preview-row">
       <div class="write-email-container" style="padding-right: 5px;">
-        <%= form_tag send_batch_emailer_path do %>
+        <%= form_tag send_batch_emailer_admin_path do %>
           <div style="max-width: 300px; font-size: 10px;">
             Leave recipients blank to send to ALL users. Add comma-separated emails to send a 'personal' email to those users. If the email is 'personal', it will send to that user regardless of their Notification preferences.
           </div>
@@ -37,7 +38,7 @@
         <a href="" class="reload-mailer pkut-btn">Preview frozen? Reload!</a>
       </div>
       <div class="mkdown-preview-container">
-        <iframe id="mkdown-preview" width="632" height="1000" style="background: white;" data-load-url="<%= email_body_path %>"></iframe>
+        <iframe id="mkdown-preview" width="632" height="1000" style="background: white;" data-load-url="<%= email_body_admin_path %>"></iframe>
       </div>
     </div>
   </div>

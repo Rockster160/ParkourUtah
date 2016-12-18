@@ -67,6 +67,13 @@ Rails.application.routes.draw do
   resource :admin, only: [] do
     get :purchase_history
 
+    get :batch_text_message
+    post :send_batch_texts
+
+    get :email_body
+    get :batch_email
+    post :send_batch_emailer
+
     resources :users do
       member do
         get :attendance
@@ -92,12 +99,6 @@ Rails.application.routes.draw do
   # post 'peeps/users/:id/notifications' => 'peeps#edit_user_notifications', as: 'edit_user_notifications'
   # delete 'user/:id' => 'peeps#destroy_user', as: 'user'
   delete 'unsubscribe_monthly/:id' => 'store#unsubscribe', as: 'unsubscribe_monthly_subscription'
-
-  get :email_body, controller: 'peeps'
-  get :batch_emailer, controller: 'peeps'
-  post :send_batch_emailer, controller: 'peeps'
-  get :admin_texter, controller: 'peeps'
-  post :send_batch_texts, controller: 'peeps'
 
   get 'athletes/new' => 'dependents#new', as: 'new_athlete'
   post 'athletes/new' => 'dependents#create'
