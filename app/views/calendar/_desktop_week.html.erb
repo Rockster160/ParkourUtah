@@ -16,50 +16,16 @@
   <div class="make-td <%= to_display_today %> <%= to_display_month %> day-container" data-date="<%= day.strftime('%m-%d-%Y') %>" data-month="<%= display_month %>">
     <div class="calendar-date-link date"><%= day.day %></div>
     <% events.each do |event| %>
+
       <% next if event.cancelled? && !current_user.try(:is_instructor?) %>
       <% next unless @selected_classes.include?(event.title.parameterize) && @selected_cities.include?(event.city.parameterize) %>
-      <div class="modal fade" id="event_schedule_modal_<%= event.event_schedule_id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="central-container modal-dialog pkut-box">
-          <button type="button" class="close-btn contact-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
-          <h3 class="pkut-header"><%= event.title %></h3>
-          <div class="relative">
-            <% if spot = event.spot %>
-              <p>Spot: <br/> <%= link_to  "#{spot.title} (Click/tap for more details)", spot_path(spot) %></p>
-              <p><%= spot.location %></p>
-            <% else %>
-              <p><%= event.full_address %></p>
-            <% end %>
-            <p><%= event.date.strftime('%l:%M %p') %></p>
-            <p><%=  %></p>
-            <p class="no-format"><%= event.description.html_safe %></p>
-            <p><%=  %></p>
-            <p>Instructor: <%= event.host_name %></p>
-            <p>
-              <% if user_signed_in? %>
-                <% if current_user.is_subscribed_to?(event.event_schedule_id) %>
-                  <%= link_to "Unsubscribe from this Event.", unsubscribe_event_schedule_path(event.event_schedule_id), class: "calendar-link", method: :delete %><br/>
-                <% else %>
-                  <%= link_to 'Click here to subscribe to this Event.', subscribe_event_schedule_path(event.event_schedule_id), class: "calendar-link", method: :post %><br/>
-                <% end %>
-              <% end %>
-            </p>
-            <% if user_signed_in? && current_user.is_mod? %>
-              </br>
-              <% if event.cancelled? %>
-                <p><%= link_to 'Uncancel this Event', cancel_event_path(id: event.id, event_schedule_id: event.event_schedule_id, date: event.date, should_happen: true), method: :post, class: "calendar-link" %></p>
-              <% else %>
-                <p><%= link_to 'Cancel this Event', cancel_event_path(id: event.id || "new", event_schedule_id: event.event_schedule_id, date: event.date), method: :post, class: "calendar-link" %></p>
-              <% end %>
-              <p><%= link_to "Edit this Event's Date/Time", edit_event_path(id: event.id || "new", event_schedule_id: event.event_schedule_id, date: event.date), class: "calendar-link" %></p>
-              <p><%= link_to 'Edit Recurring Event', edit_event_schedule_path(event.event_schedule_id), class: "calendar-link" %></p>
-            <% end %>
-          </div>
-        </div>
-      </div>
-      <li class="calendar-event clickme forceOpen" style="<%= event.css_style %>" onclick="" alt="..." data-toggle="modal" data-target="#event_schedule_modal_<%= event.event_schedule_id %>">
+
+      <% event_params = event.id || 'new', {event_schedule_id: event.event_schedule_id, date: day.strftime('%Y-%m-%d')} %>
+      <li class="calendar-event event-detail-btn" style="<%= event.css_style %>" data-event-url="<%= detail_event_path(*event_params) %>">
         <span class="hidden-xs">&nbsp;<%= "[CANCELLED]<br>".html_safe if event.cancelled? %><%= event.date.strftime('%l:%M %p') %> <br> <%= event.title %></span>
         <span class="visible-xs mobile-name"><%= event.title %></span>
       </li>
+
     <% end %>
   </div>
 <% end %>

@@ -1,3 +1,8 @@
+<% content_for :head do %>
+  <script src="//maps.google.com/maps/api/js?v=3.23&key=<%= ENV['PKUT_GMAPS_KEY'] %>"></script>
+  <script src="//cdn.rawgit.com/mahnunchik/markerclustererplus/master/dist/markerclusterer.min.js"></script>
+<% end %>
+<%= render partial: 'event_details_container' %>
 <div class="row">
   <div class="date-picker-container">
     <span class="calendar-date-picker"></span>
@@ -20,6 +25,7 @@
       </select>
     </div>
     <div class="col-md-8 col-md-offset-2 col-xs-12 text-center calendar-container">
-      <%= render partial: 'display' %>
+      <%= render partial: 'desktop_calendar_controls' %>
     </div>
   </div>
+</div>
