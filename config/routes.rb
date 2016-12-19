@@ -34,7 +34,7 @@ Rails.application.routes.draw do
       get :detail
     end
   end
-  resources :event_schedules, except: [ :show ] do
+  resources :event_schedules, except: [ :destroy ] do
     member do
       post :subscribe
       delete :unsubscribe

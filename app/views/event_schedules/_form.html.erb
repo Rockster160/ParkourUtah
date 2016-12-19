@@ -1,6 +1,9 @@
-<%= link_to "Event List", event_schedules_path, class: 'pkut-btn' %>
 
 <div class="central-container form-offset">
+  <%= link_to "Event List", event_schedules_path, class: 'pkut-btn' %> <br>
+  <% if @event_schedule.persisted? %>
+    <%= link_to "View Attendances for Event", event_schedule_path(@event_schedule), class: 'pkut-btn' %>
+  <% end %>
   <%= form_for @event_schedule do |f| %>
     <div class="form-container">
       <%= render partial: 'layouts/error_container', locals: { resource: @event_schedule } %>

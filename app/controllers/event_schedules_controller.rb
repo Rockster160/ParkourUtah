@@ -5,6 +5,11 @@ class EventSchedulesController < ApplicationController
     @event_schedules = EventSchedule.in_the_future
   end
 
+  def show
+    @event_schedule = EventSchedule.find(params[:id])
+    @attendances_by_date = @event_schedule.attendances.order(:created_at).group_by { |a| a.event.date }
+  end
+
   def new
     @event_schedule = EventSchedule.new(city: params[:city])
   end
