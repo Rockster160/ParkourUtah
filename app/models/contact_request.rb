@@ -14,4 +14,13 @@
 #
 
 class ContactRequest < ActiveRecord::Base
+
+  def notify_slack
+    email_url = Rails.application.routes.url_helpers.batch_email_admin_url(recipients: email)
+    text_url = Rails.application.routes.url_helpers.batch_text_message_admin_url(recipients: phone.gsub(/[^0-9]/, ''))
+    escaped_body = body.split("\n").map { |line| "\n>#{line}" }.join("")
+    contact_message = "*#{name}* has requested Contact!\n#{escaped_body}\nReach out by contacting: <#{email_url}|Via Email> or <#{text_url}|Via Text>"
+    SlackNotifier.notify(contact_message, "#support")
+  end
+
 end

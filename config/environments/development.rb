@@ -1,3 +1,6 @@
+Rails.application.routes.default_url_options[:host] = 'localhost'
+Rails.application.routes.default_url_options[:protocol] = 'http://'
+Rails.application.routes.default_url_options[:port] = '7545'
 Rails.application.configure do
 
   config.cache_classes = false

@@ -32,42 +32,13 @@ class IndexController < ApplicationController
   end
 
   def receive_sms
-    if params["From"] == "+13852599640"
-      if params["Body"].downcase == 'pass'
-        contact_request = ContactRequest.select { |cr| cr.success == false }.sort_by(&:created_at).last
-        if contact_request
-          pass = {}
-          pass["name"] = contact_request.name
-          pass["email"] = contact_request.email
-          pass["phone"] = contact_request.phone
-          pass["comment"] = contact_request.body
-          ::ContactMailerWorker.perform_async(pass)
-          contact_request.update(success: true)
-          ::SmsMailerWorker.perform_async('3852599640', "Allowed contact request from: #{contact_request.name}.")
-        else
-          ::SmsMailerWorker.perform_async('3852599640', "No previous request")
-        end
-      elsif params["Body"].downcase =~ /pass/
-        name = params["Body"].gsub('pass ', '')
-        contact_request = ContactRequest.select { |cr| cr.success == false && cr.name == name }.last
-        if contact_request
-          pass = {}
-          pass["name"] = contact_request.name
-          pass["email"] = contact_request.email
-          pass["phone"] = contact_request.phone
-          pass["comment"] = contact_request.body
-          ::ContactMailerWorker.perform_async(pass)
-          contact_request.update(success: true)
-          ::SmsMailerWorker.perform_async('3852599640', "Allowed contact request from: #{contact_request.name}.")
-        else
-          ::SmsMailerWorker.perform_async('3852599640', "No such request")
-        end
-      end
-    else
-      ::SmsMailerWorker.perform_async('3852599640', "From: #{params["From"]}\nMessage: #{params["Body"]}")
-      num = params["From"].gsub(/[^\d+]/, '')
-      ::SmsMailerWorker.perform_async(num, "This is an automated text messaging system. \nIf you have questions about class, please contact the Instructor. Their contact information is available in the class details. \nIf you would like to stop receiving Notifications, please disable text notifications in your Account Settings on parkourutah.com/account#notifications")
-    end
+    raw_number = params["From"].gsub(/[^0-9]/, "").last(10)
+    user = User.where("phone_number ILIKE ?", "%#{raw_number}%").first
+    escaped_body = params["Body"].split("\n").map { |line| "\n>#{line}" }.join("")
+    default_message = "*Received text message from: #{params["From"]}*\n>#{escaped_body}"
+    user_message = user.present? ? "\nPhone Number seems to match: <#{admin_user_url(user)}|#{user.id} - #{user.email}>" : ""
+    respond_message = "\n<#{batch_text_message_admin_url(recipients: raw_number)}|Click here to respond!>"
+    SlackNotifier.notify(default_message + user_message + respond_message, "#support")
     head :ok
   end
 
@@ -81,7 +52,6 @@ class IndexController < ApplicationController
     success = false
     if /\(\d{3}\) \d{3}-\d{4}/ =~ params[:phone]
       flash[:notice] = "Thanks! We'll have somebody get in contact with you shortly."
-      ::ContactMailerWorker.perform_async(params)
       success = true
     end
     contact_request = ContactRequest.create(
@@ -92,8 +62,8 @@ class IndexController < ApplicationController
       body: params[:comment],
       success: success
     )
-    if params[:phone].split('').map {|x| x[/\d+/]}.join.length >= 7 && !contact_request.success
-      ::SmsMailerWorker.perform_async('3852599640', "#{contact_request.success ? '' : "FAILED\n"}UserAgent: #{contact_request.user_agent}\n#{contact_request.phone} requested help.\nSuccess: #{contact_request.success}\nJS Enabled: #{params[:enabled]}\n#{contact_request.name}\n#{contact_request.email}\n#{contact_request.body}")
+    if params[:phone].split('').map {|x| x[/\d+/]}.join.length >= 7 || success
+      contact_request.notify_slack
     end
     redirect_to root_path
   end

@@ -23,6 +23,10 @@ class AdminsController < ApplicationController
 
   def batch_text_message
     @users = User.where(id: params[:user_ids])
+    case params[:template]
+    when "default-response"
+      params[:message] = "This is an automated text messaging system. \nIf you have questions about class, please contact the Instructor. Their contact information is available in the class details. \nIf you would like to stop receiving Notifications, please disable text notifications in your Account Settings on parkourutah.com/account#notifications"
+    end
   end
 
   def send_batch_texts
