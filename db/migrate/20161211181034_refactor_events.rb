@@ -38,7 +38,7 @@ class RefactorEvents < ActiveRecord::Migration
       event_schedule = EventSchedule.create(
         instructor: instructor,
         start_date: next_event.date.to_datetime.beginning_of_day,
-        end_date: last_event.date > DateTime.current ? nil : last_event.date.to_datetime.end_of_day,
+        end_date: last_event.date > 2.weeks.ago ? nil : last_event.date.to_datetime.end_of_day,
         hour_of_day: next_event.date.to_datetime.hour,
         minute_of_day: next_event.date.to_datetime.minute,
         day_of_week: next_event.date.wday,
