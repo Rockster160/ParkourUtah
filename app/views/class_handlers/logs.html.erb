@@ -2,7 +2,7 @@
   <%= link_to "Back to PIN entry", athlete_id_class_handler_path(@event), class: 'pkut-btn' %> <br>
   <% if current_user.is_admin? %>
     <% recipients = @event.subscribed_users %>
-    <%= link_to "Send message to #{recipients.count} subscribed users", admin_texter_path(user_ids: recipients.pluck(:id), message: "Our #{@event.title} class today is cancelled! Sorry for the inconvenience."), class: 'pkut-btn' %> <br>
+    <%= link_to "Send message to #{recipients.count} subscribed users", batch_text_message_admin_path(user_ids: recipients.pluck(:id), message: "Our #{@event.title} class today is cancelled! Sorry for the inconvenience."), class: 'pkut-btn' %> <br>
     <% if @event.cancelled? %>
       <%= link_to 'Uncancel Event', cancel_event_path(@event.id, should_happen: true), method: :post, class: 'pkut-btn' %>
     <% else %>
