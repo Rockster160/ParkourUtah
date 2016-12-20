@@ -8,7 +8,7 @@
       <h5 class="day-label"><%= day.strftime('%A %B %d, %Y') %></h5>
       <div class="mobile-events-container">
         <% events.each do |event| %>
-          <% event_params = {id: event.id || 'new', event_schedule_id: event.event_schedule_id, date: day.strftime('%Y-%m-%d')} %>
+          <% event_params = event.id || 'new', {event_schedule_id: event.event_schedule_id, date: day.strftime('%Y-%m-%d')} %>
           <div class="mobile-event-container event-detail-btn" data-event-url="<%= detail_event_path(*event_params) %>">
             <div class="mobile-event-time" style="<%= event.css_style %>"><%= event.time_of_day %></div>
             <div href="<%= event_path(*event_params) %>" class="day-btn mobile-event-name"><%= event.title %></div>
