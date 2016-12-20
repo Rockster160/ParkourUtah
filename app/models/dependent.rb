@@ -106,7 +106,7 @@ class Dependent < ActiveRecord::Base
   end
 
   def current_subscription
-    athlete_subscriptions.where("expires_at < ?", Time.zone.now).order(created_at: :desc).first
+    athlete_subscriptions.active.order(:expires_at).last
   end
 
   def signed_waiver?
