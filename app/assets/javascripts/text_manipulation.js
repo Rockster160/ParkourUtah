@@ -1,7 +1,7 @@
 var ready = function() {
 
   $('.subscribe-to-selected-btn').click(function() {
-    $(this).attr('href', $(this).attr('data-new-href').replace("--event_id--", $('.subscribe-to-event-dropdown').val()))
+    $(this).attr('href', $(this).attr('data-new-href').replace("--schedule_id--", $('.subscribe-to-event-dropdown').val()))
   })
 
   $(':submit').click(function(e) {

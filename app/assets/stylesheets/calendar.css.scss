@@ -26,7 +26,7 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
     }
     .mobile-events-container {
       width: 100%;
-      .event-detail-btn {
+      .mobile-event-container {
         width: 100%;
         line-height: 1;
         .mobile-event-time {

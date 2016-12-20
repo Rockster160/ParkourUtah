@@ -1,12 +1,9 @@
 class StoreController < ApplicationController
   before_action :set_cart
-  before_action :set_categories, only: [:edit, :new]
-  before_action :set_hidden, only: [:edit, :new]
-  before_action :validate_admin, only: [:generate_keys, :email_keys]
 
   def index
-    @items = {}
-    LineItem.select { |item| !(item.hidden) }.each do |item|
+    @items_by_category = {}
+    LineItem.where.not(hidden: true).order(item_order: :asc).each do |item|
       dest = case item.category
       when "Class" then :classes
       when "Clothing" then :clothing
@@ -14,12 +11,9 @@ class StoreController < ApplicationController
       when "Gift Card" then :gift_card
       else :other
       end
-      @items[dest] ||= []
-      @items[dest] << item
+      @items_by_category[dest] ||= []
+      @items_by_category[dest] << item
     end
-  end
-
-  def show_cart
   end
 
   def generate_keys
@@ -35,66 +29,9 @@ class StoreController < ApplicationController
     end
   end
 
-  def email_keys
-    keys = []
-    item = LineItem.find(params[:key_type])
-    while keys.length < params[:how_many].first.to_i
-      keys << item.redemption_keys.create.key
-      keys.compact
-    end
-    ::KeyGenMailerWorker.perform_async(keys, item.title)
-    redirect_to dashboard_path, notice: "Got it! An email will be sent to you shortly containing the requested keys."
-  end
-
-  def destroy
-    LineItem.find(params[:id]).destroy
-    redirect_to dashboard_path, notice: "Item successfully destroyed."
-  end
-
-  def new
-    @item = LineItem.new
-  end
-
-  def edit
-    @item = LineItem.find(params[:id])
-  end
-
-  def items
-    @items = LineItem.all
-  end
-
-  def update
-    if LineItem.find(params[:id]).update(item_params)
-      flash[:notice] = "Item successfully updated."
-    else
-      flash[:alert] = "There was an error updating the item."
-    end
-    redirect_to dashboard_path
-  end
-
-  def update_item_position
-    @item = LineItem.find(params[:id])
-    @item.update(item_order: params["line_item"]["line_item_position"].to_i)
-    respond_to do |format|
-      format.json { render json: @item }
-    end
-  end
-
-  def create
-    if item = LineItem.create(item_params)
-      flash[:notice] = "Item successfully created."
-    else
-      flash[:alert] = "There was an error creating the item."
-    end
-    redirect_to dashboard_path
-  end
-
-  def payment
-  end
-
   def update_cart
     if params[:delete_all]
-      @cart.transactions.destroy_all
+      @cart.cart_items.destroy_all
     else
       item_title = if params[:item_id]
         item = LineItem.find(params[:item_id])
@@ -106,7 +43,7 @@ class StoreController < ApplicationController
       color = params[:color] ? "#{params[:color]} " : ""
       name = "#{size}#{color}#{item_title}"
 
-      orders = @cart.transactions
+      orders = @cart.cart_items
       order = orders.where(order_name: name).first
       if params[:new_amount]
         params[:new_amount] ||= "0"
@@ -119,7 +56,7 @@ class StoreController < ApplicationController
         if order
           order.increment!(:amount)
         else
-          order = Transaction.create(item_id: item.id, order_name: name)
+          order = CartItem.create(item_id: item.id, order_name: name)
           orders << order
           @order = order
         end
@@ -134,12 +71,9 @@ class StoreController < ApplicationController
 
   def redeem
     key = RedemptionKey.where(key: params[:redemption_key]).first
-    if key.present?
-      item = key.item if key.redeemed == false
-      if item && @cart.transactions.map { |items| items.redeemed_token }.exclude?(params[:redemption_key])
-        @cart.transactions << @order = Transaction.create(item_id: item.id, redeemed_token: params[:redemption_key])
-      else
-        @order = nil
+    if key.present? && key.redeemed == false
+      if key.item.present? && @cart.cart_items.where(redeemed_token: params[:redemption_key]).none?
+        @order = CartItem.create(item_id: key.item_id, redeemed_token: params[:redemption_key], cart_id: @cart.try(:id))
       end
     end
 
@@ -207,7 +141,7 @@ class StoreController < ApplicationController
     end
     order_success = stripe_charge.nil? || stripe_charge.try(:status) == "succeeded"
     if order_success
-      @cart.transactions.each do |order|
+      @cart.cart_items.each do |order|
         line_item = LineItem.find(order.item_id)
         if RedemptionKey.redeem(order.redeemed_token)
           current_user.update(credits: (current_user.credits + (order.amount * line_item.credits))) if user_signed_in?
@@ -267,33 +201,6 @@ class StoreController < ApplicationController
     end
   end
 
-  def item_params
-    params[:line_item][:cost_in_pennies] = (params[:line_item][:cost_in_dollars].to_f * 100).round.to_s
-    params.require(:line_item).permit(
-      :description,
-      :title,
-      :display,
-      :cost_in_pennies,
-      :category,
-      :hidden,
-      :credits,
-      :color,
-      :size,
-      :is_subscription,
-      :taxable,
-      :is_full_image,
-      :redemption_item_id
-    )
-  end
-
-  def set_categories
-    @categories = ["Class", "Clothing", "Accessories", "Gift Card", "Other", "Coupon", "Redemption"]
-  end
-
-  def set_hidden
-    @hidden_items = LineItem.where(hidden: true).reorder(created_at: :desc).map { |item| [item.title, item.id] }
-  end
-
   def set_cart
     if user_signed_in?
       @cart = current_user.cart
@@ -308,21 +215,4 @@ class StoreController < ApplicationController
     end
   end
 
-  def validate_signed_in
-    unless current_user
-      redirect_to new_user_session_path, alert: "Store is currently only available to signed in users. Sorry!"
-    end
-  end
-
-  def validate_admin
-    unless current_user && current_user.is_admin?
-      redirect_to root_path, alert: "You do not have permission to access this page."
-    end
-  end
-
-  def publicly_unavailable
-    unless current_user && current_user.is_admin?
-      redirect_to coming_soon_path
-    end
-  end
 end

@@ -1,0 +1,51 @@
+<div class="central-container form-offset">
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
+  <%= form_for @instructor, url: instructors_path do |f| %>
+    <div class="form-container">
+      <div class="form-field">
+        <%= f.label :email, "Enter an existing users email or a new account will be created for them." %> <br>
+        <%= f.text_field :email, placeholder: 'justin@parkourutah.com', class: 'pkut-textbox' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :first_name %> <br>
+        <%= f.text_field :first_name, placeholder: 'Justin', class: 'pkut-textbox' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :last_name %> <br>
+        <%= f.text_field :last_name, placeholder: 'Spencer', class: 'pkut-textbox' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :nickname %>(Optional) <br>
+        <%= f.text_field :nickname, placeholder: 'Captain Awesome', class: 'pkut-textbox' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :title %> <br>
+        <%= f.text_field :title, placeholder: 'Instructor', class: 'pkut-textbox' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :stats %> <br>
+        <%= f.text_field :stats, placeholder: '5\'10" 180 lbs', class: 'pkut-textbox' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :payment_multiplier, 'How much paid per student?' %> <br>
+        <%= f.text_field :payment_multiplier, class: 'pkut-textbox restrictNumeric' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :bio %> <br>
+        <%= f.text_area :bio, rows: '12', maxlength: '550', class: 'pkut-textarea restrictBio' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :avatar, 'Front Image' %> <br>
+        <%= f.file_field :avatar %>
+      </div>
+      <div class="form-field">
+        <%= f.label :avatar_2, 'Back Image' %> <br>
+        <%= f.file_field :avatar_2 %>
+      </div>
+      <%= f.submit "Submit", class: 'btn btn-success' %>
+      <% if @instructor.is_instructor? %>
+        <%= link_to "Demote", instructor_path(@instructor), class: 'btn btn-danger', method: :delete %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

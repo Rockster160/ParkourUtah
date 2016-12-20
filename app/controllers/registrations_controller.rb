@@ -1,21 +1,12 @@
 class RegistrationsController < ApplicationController
   before_action :verify_user_signed_in
-
-  def step_2
-    redirect_user_to_correct_step(2)
-  end
-
-  def step_3
-    redirect_user_to_correct_step(3)
-  end
+  before_action :redirect_user_to_correct_step
 
   def step_4
-    redirect_user_to_correct_step(4)
     @athletes = current_user.dependents.select {|athlete| athlete.signed_waiver? == false }
   end
 
   def step_5
-    redirect_user_to_correct_step(5)
     if current_user.registration_step == 5
       current_user.update(registration_complete: true)
     end
@@ -151,7 +142,11 @@ class RegistrationsController < ApplicationController
       end
     end
 
-    def redirect_user_to_correct_step(current_step)
+    def current_step
+      params[:action].gsub(/[^0-9]/, '').to_i
+    end
+
+    def redirect_user_to_correct_step
       unless current_step == current_user.registration_step
         redirect_to case current_user.registration_step
         when 2 then step_2_path

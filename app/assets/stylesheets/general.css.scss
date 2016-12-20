@@ -40,6 +40,10 @@
   transform: scale(2);
 }
 
+.no-format {
+  white-space: pre-wrap;
+}
+
 .standard-modal {
   padding: 10px;
   background: white;

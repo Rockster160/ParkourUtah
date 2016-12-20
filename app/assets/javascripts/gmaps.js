@@ -1,4 +1,4 @@
-var ready = function() {
+var initializeGmaps = function() {
   if ($('.gmap').length > 0) {
 
     var gmap = $('.gmap');
@@ -77,5 +77,5 @@ var ready = function() {
 }
 
 
-$(document).ready(ready);
-$(document).on('page:load', ready);
+$(document).ready(initializeGmaps);
+$(document).on('page:load', initializeGmaps);

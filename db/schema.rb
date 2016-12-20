@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160930004923) do
+ActiveRecord::Schema.define(version: 20161211181034) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -62,11 +62,24 @@ ActiveRecord::Schema.define(version: 20160930004923) do
     t.datetime "updated_at",                 null: false
   end
 
+  create_table "cart_items", force: :cascade do |t|
+    t.integer  "cart_id"
+    t.integer  "line_item_id"
+    t.integer  "amount",         default: 1
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.string   "redeemed_token", default: ""
+    t.string   "order_name"
+  end
+
+  add_index "cart_items", ["cart_id"], name: "index_cart_items_on_cart_id", using: :btree
+
   create_table "carts", force: :cascade do |t|
     t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
     t.string   "email"
+    t.datetime "purchased_at"
   end
 
   add_index "carts", ["user_id"], name: "index_carts_on_user_id", using: :btree
@@ -111,23 +124,34 @@ ActiveRecord::Schema.define(version: 20160930004923) do
 
   add_index "emergency_contacts", ["user_id"], name: "index_emergency_contacts_on_user_id", using: :btree
 
+  create_table "event_schedules", force: :cascade do |t|
+    t.integer  "instructor_id"
+    t.integer  "spot_id"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.integer  "hour_of_day"
+    t.integer  "minute_of_day"
+    t.integer  "day_of_week"
+    t.integer  "cost_in_pennies"
+    t.string   "title"
+    t.text     "description"
+    t.string   "full_address"
+    t.string   "city"
+    t.string   "color"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "event_schedules", ["instructor_id"], name: "index_event_schedules_on_instructor_id", using: :btree
+  add_index "event_schedules", ["spot_id"], name: "index_event_schedules_on_spot_id", using: :btree
+
   create_table "events", force: :cascade do |t|
     t.datetime "date"
-    t.integer  "token"
-    t.string   "title"
-    t.string   "host"
-    t.float    "cost"
-    t.text     "description"
-    t.string   "city"
-    t.string   "address"
-    t.string   "location_instructions"
-    t.string   "class_name"
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
-    t.string   "zip"
-    t.string   "state",                 default: "Utah"
-    t.string   "color"
-    t.boolean  "cancelled_text",        default: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+    t.integer  "event_schedule_id"
+    t.datetime "original_date"
+    t.boolean  "is_cancelled",      default: false
   end
 
   create_table "images", force: :cascade do |t|
@@ -196,22 +220,6 @@ ActiveRecord::Schema.define(version: 20160930004923) do
 
   add_index "redemption_keys", ["line_item_id"], name: "index_redemption_keys_on_line_item_id", using: :btree
 
-  create_table "rocco_loggers", force: :cascade do |t|
-    t.text     "logs"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "spot_events", force: :cascade do |t|
-    t.integer  "spot_id"
-    t.integer  "event_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "spot_events", ["event_id"], name: "index_spot_events_on_event_id", using: :btree
-  add_index "spot_events", ["spot_id"], name: "index_spot_events_on_spot_id", using: :btree
-
   create_table "spots", force: :cascade do |t|
     t.string   "title"
     t.text     "description"
@@ -228,24 +236,10 @@ ActiveRecord::Schema.define(version: 20160930004923) do
 
   create_table "subscriptions", force: :cascade do |t|
     t.integer "user_id"
-    t.integer "event_id"
-    t.integer "token"
+    t.integer "event_schedule_id"
   end
 
-  add_index "subscriptions", ["event_id"], name: "index_subscriptions_on_event_id", using: :btree
   add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
-
-  create_table "transactions", force: :cascade do |t|
-    t.integer  "cart_id"
-    t.integer  "item_id"
-    t.integer  "amount",         default: 1
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-    t.string   "redeemed_token", default: ""
-    t.string   "order_name"
-  end
-
-  add_index "transactions", ["cart_id"], name: "index_transactions_on_cart_id", using: :btree
 
   create_table "trial_classes", force: :cascade do |t|
     t.integer  "dependent_id"
@@ -340,15 +334,13 @@ ActiveRecord::Schema.define(version: 20160930004923) do
   add_index "waivers", ["dependent_id"], name: "index_waivers_on_dependent_id", using: :btree
 
   add_foreign_key "athlete_subscriptions", "dependents"
+  add_foreign_key "cart_items", "carts"
   add_foreign_key "carts", "users"
   add_foreign_key "emergency_contacts", "users"
   add_foreign_key "images", "spots"
   add_foreign_key "notifications", "users"
   add_foreign_key "ratings", "spots"
-  add_foreign_key "spot_events", "events"
-  add_foreign_key "spot_events", "spots"
   add_foreign_key "spots", "events"
-  add_foreign_key "transactions", "carts"
   add_foreign_key "trial_classes", "dependents"
   add_foreign_key "unlimited_subscriptions", "users"
 end

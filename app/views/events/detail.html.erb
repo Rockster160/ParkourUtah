@@ -1,0 +1,51 @@
+<div class="event-details">
+  <h3 class="pkut-header"><%= @event.title %></h3>
+  <div class="relative">
+
+    <% if user_signed_in? && current_user.is_mod? %>
+      <p>
+        <% if @event.cancelled? %>
+          <%= link_to 'Uncancel this Event', cancel_event_path(id: @event.id, event_schedule_id: @event.event_schedule_id, date: @event.date, should_happen: true), method: :post, class: "calendar-link" %><br>
+        <% else %>
+          <%= link_to 'Cancel this Event', cancel_event_path(id: @event.id || "new", event_schedule_id: @event.event_schedule_id, date: @event.date), method: :post, class: "calendar-link" %><br>
+        <% end %>
+        <%= link_to "Edit this Event's Date/Time", edit_event_path(id: @event.id || "new", event_schedule_id: @event.event_schedule_id, date: @event.date), class: "calendar-link" %><br>
+        <%= link_to 'Edit Recurring Event', edit_event_schedule_path(@event.event_schedule_id), class: "calendar-link" %><br>
+      </p>
+    <% end %>
+
+    <p><strong>Instructor: <%= @event.host_name %></strong></p>
+
+    <p><%= @event.date.strftime('%l:%M %p') %></p>
+
+    <% if user_signed_in? %>
+      <p>
+        <% if current_user.is_subscribed_to?(@event.event_schedule_id) %>
+          <%= link_to "Unsubscribe", unsubscribe_event_schedule_path(@event.event_schedule_id), class: "pkut-btn", method: :delete %><br/>
+        <% else %>
+          <%= link_to 'Subscribe', subscribe_event_schedule_path(@event.event_schedule_id), class: "pkut-btn", method: :post %><br/>
+        <% end %>
+      </p>
+    <% end %>
+
+    <% spot = @event.spot %>
+    <% if spot.present? %>
+      <p><%= link_to "#{spot.title} (Click/tap for more details)", spot_path(spot) %></p>
+      <p><%= spot.location %></p>
+    <% else %>
+      <p><%= @event.full_address %></p>
+    <% end %>
+
+    <p class="no-format"><%= @event.description.html_safe %></p>
+
+    <% if spot %>
+      <h3><%= spot.title %></h3>
+      <div style="width: 100%; max-width: 400px; margin: 0 auto;" class="gmap" data-lat="<%= spot.lat %>" data-lng="<%= spot.lon %>" data-zoom="17">
+        <div id="map" style="width: 100%; height: 400px;"></div>
+        <span class="hidden gmap_coord" data-lat="<%= spot.lat %>" data-lon="<%= spot.lon %>" data-spot-name="<%= spot.title %>" data-spot-url="<%= spot_path(spot) %>"/>
+      </div>
+      <p><%= spot.description %></p>
+    <% end %>
+
+  </div>
+</div>

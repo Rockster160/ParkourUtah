@@ -1,0 +1,63 @@
+
+<div class="central-container form-offset">
+  <%= link_to "Event List", event_schedules_path, class: 'pkut-btn' %> <br>
+  <% if @event_schedule.persisted? %>
+    <%= link_to "View Attendances for Event", event_schedule_path(@event_schedule), class: 'pkut-btn' %>
+  <% end %>
+  <%= form_for @event_schedule do |f| %>
+    <div class="form-container">
+      <%= render partial: 'layouts/error_container', locals: { resource: @event_schedule } %>
+      <h3>Event Details</h3>
+      <div class="form-field">
+        <%= f.label :instructor_id, "Instructor" %> <br>
+        <%= f.select :instructor_id, User.instructors.map { |instructor| [instructor.full_name, instructor.id] }, {selected: @event_schedule.instructor_id || current_user.id}, class: "pkut-dropdown customRequired" %>
+      </div>
+      <div class="form-field">
+        <%= f.label :title %> <br>
+        <%= f.text_field :title, class: 'pkut-textbox customRequired' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :cost %> <br>
+        <%= f.text_field :cost, class: 'pkut-textbox customRequired' %>
+      </div>
+      <h3>Date</h3>
+      <div class="form-field">
+        <%= f.label :start_str_date, "Start Date" %> <br>
+        <%= f.text_field :start_str_date, value: @event_schedule.start_str_date || Time.zone.now.strftime('%b %d, %Y'), class: 'pkut-textbox customRequired datepicker-field' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :end_str_date, "End Date (Leave empty to repeat forever)" %> <br>
+        <%= f.text_field :end_str_date, value: @event_schedule.end_str_date, class: 'pkut-textbox datepicker-field' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :time_of_day, "Date/Time" %> <br>
+        <div style="max-width: 350px; text-align: justify">
+          <div style="width: 45%; display: inline-block;"><%= f.select :day_of_week, EventSchedule.day_of_weeks.map { |d,v| [d.capitalize, d] }, {selected: @event_schedule.day_of_week || Date::DAYNAMES[Time.zone.now.wday].downcase}, class: 'pkut-dropdown customRequired' %></div>
+          <div style="width: 45%; display: inline-block; float: right;"><%= f.text_field :time_of_day, class: 'pkut-textbox customRequired' %></div>
+        </div>
+      </div>
+      <h3>Additional Info</h3>
+      <div class="form-field">
+        <%= f.label :description %> <br>
+        <%= f.text_area :description, class: 'pkut-textarea' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :city %> <br>
+        <%= f.text_field :city, class: 'pkut-textbox customRequired' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :full_address, "Address (Either a Spot or enter the address manually here)" %> <br>
+        <%= f.text_field :full_address, class: 'pkut-textbox' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :spot_id, "Spot" %> <br>
+        <%= f.select :spot_id, Spot.all.map { |spot| [spot.title, spot.id] }, {include_blank: true}, class: "pkut-dropdown" %>
+      </div>
+      <div class="form-field">
+        <%= f.label :color %> <br>
+        <%= f.text_field :color, class: 'jscolor pkut-textbox' %>
+      </div>
+      <%= f.submit class: 'pkut-btn' %>
+    </div>
+  <% end %>
+</div>

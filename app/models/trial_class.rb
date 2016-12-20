@@ -15,7 +15,7 @@ class TrialClass < ActiveRecord::Base
 
   def use!
     self.used = true
-    self.used_at = DateTime.current
+    self.used_at = Time.zone.now
     self.save
   end
 end

@@ -1,3 +1,6 @@
+Rails.application.routes.default_url_options[:host] = 'localhost'
+Rails.application.routes.default_url_options[:protocol] = 'http://'
+Rails.application.routes.default_url_options[:port] = '7545'
 Rails.application.configure do
 
   config.cache_classes = false
@@ -8,19 +11,17 @@ Rails.application.configure do
   config.action_controller.perform_caching = false
 
   config.action_mailer.default_url_options   = { :host => 'localhost:7545' }
-  ActionMailer::Base.delivery_method = :smtp
-  ActionMailer::Base.smtp_settings = {
-    :address              => 'email-smtp.us-west-2.amazonaws.com',
-    :port                 => 587,
-    :user_name            => ENV['PKUT_AWS_EMAILNAME'],
-    :password             => ENV['PKUT_AWS_EMAIL_PASS'],
-    :authentication       => :plain,
-    :enable_starttls_auto => true
-  }
-  config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.perform_deliveries = true
-  # config.action_mailer.raise_delivery_errors = false
-  # config.action_mailer.perform_deliveries = false
+  # ActionMailer::Base.delivery_method = :smtp
+  # ActionMailer::Base.smtp_settings = {
+  #   :address              => 'email-smtp.us-west-2.amazonaws.com',
+  #   :port                 => 587,
+  #   :user_name            => ENV['PKUT_AWS_EMAILNAME'],
+  #   :password             => ENV['PKUT_AWS_EMAIL_PASS'],
+  #   :authentication       => :plain,
+  #   :enable_starttls_auto => true
+  # }
+  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.perform_deliveries = false
 
   Paperclip.options[:command_path] = "/usr/local/bin/"
   config.paperclip_defaults = {
@@ -56,14 +57,5 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 end
 
-
-Rails.application.config.middleware.use ExceptionNotification::Rack,
-  :slack => {
-    :webhook_url => 'https://hooks.slack.com/services/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',
-    :channel => '#pkut-errors',
-    :additional_parameters => {
-      mrkdwn: true,
-      icon_emoji: ':zygy:',
-      username: 'Zygy-Bot'
-    }
-  }
+require "#{Rails.root}/lib/custom_notifier"
+Rails.application.config.middleware.use ExceptionNotification::Rack, custom: {}

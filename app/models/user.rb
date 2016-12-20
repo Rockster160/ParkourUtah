@@ -65,8 +65,10 @@ class User < ActiveRecord::Base
   has_many :unlimited_subscriptions, dependent: :destroy
   has_many :carts, dependent: :destroy
   has_many :dependents, dependent: :destroy
-  has_many :transactions, through: :cart
+  has_many :cart_items, through: :cart
   has_many :subscriptions, dependent: :destroy
+  has_many :subscribed_events, through: :subscriptions, source: "event_schedule"
+  has_many :classes_to_teach, class_name: "EventSchedule", foreign_key: "instructor_id"
   has_many :emergency_contacts, dependent: :destroy
 
   after_create :assign_cart
@@ -96,11 +98,14 @@ class User < ActiveRecord::Base
   validates_attachment_content_type :avatar_2, :content_type => /\Aimage\/.*\Z/
 
   validate :valid_phone_number
+  validate :positive_credits
 
+  scope :online, -> { where('last_sign_in_at > ?', 10.minutes.ago) }
+  scope :by_signed_in, -> { order(last_sign_in_at: :desc) }
   scope :by_fuzzy_text, lambda { |text|
     text = "%#{text}%"
     joins('LEFT OUTER JOIN dependents ON users.id = dependents.user_id')
-      .where('email ILIKE ? OR CAST(users.id AS TEXT) ILIKE ? OR dependents.full_name ILIKE ? OR CAST(dependents.athlete_id AS TEXT) ILIKE ?', text, text, text, text).uniq
+      .where("email ILIKE ? OR concat(users.first_name, ' ', users.last_name) ILIKE ? OR CAST(users.id AS TEXT) ILIKE ? OR dependents.full_name ILIKE ? OR CAST(dependents.athlete_id AS TEXT) ILIKE ?", text, text, text, text, text).uniq
   }
   scope :instructors, -> { where("role > 0").order(:instructor_position) }
   scope :mods, -> { where("role > 1") }
@@ -111,23 +116,8 @@ class User < ActiveRecord::Base
   def is_admin?; role >= 3; end
   def self.[](id); find(id); end; #User[4]
 
-  def self.doit
-    while true
-      sleep 1
-      Automator.open? ? "\e[32mOPEN\e[0m" : "\e[32mCLOSED\e[0m"
-    end
-  end
-
-  def self.by_signed_in
-    all.select { |u| u.last_sign_in_at }.sort_by { |u| u.last_sign_in_at }.reverse
-  end
-
   def self.last_signed_in
     by_signed_in.first
-  end
-
-  def self.signed_in
-    all.select { |u| u.signed_in? }
   end
 
   def self.every(&block)
@@ -164,14 +154,8 @@ class User < ActiveRecord::Base
   end
 
   def still_signed_in!
-    self.last_sign_in_at = DateTime.current
+    self.last_sign_in_at = Time.zone.now
     self.save!
-  end
-
-  def class_subscriptions
-    self.subscriptions.each do |subscribed|
-      subscribed.event
-    end
   end
 
   def full_name
@@ -183,11 +167,11 @@ class User < ActiveRecord::Base
   end
 
   def athletes_with_unlimited_access
-    athletes.select { |athlete| athlete.has_unlimited_access? }
+    athletes.joins(:athlete_subscriptions).where("athlete_subscriptions.expires_at > ?", Time.zone.now)
   end
 
   def subscribed_athletes
-    athletes.select { |athlete| athlete.subscription && athlete.subscription.auto_renew }
+    athletes.joins(:athlete_subscriptions).where(athlete_subscriptions: { auto_renew: true })
   end
 
   def athlete_subscriptions
@@ -220,8 +204,8 @@ class User < ActiveRecord::Base
     dependents.select { |d| !(d.waiver) || d.waiver.expires_soon? || !(d.waiver.is_active?) }
   end
 
-  def is_subscribed_to?(event)
-    Subscription.where(user_id: self.id, token: event.token).count > 0
+  def is_subscribed_to?(event_schedule_id)
+    Subscription.where(user_id: self.id, event_schedule_id: event_schedule_id || 0).any?
   end
 
   def charge(price, athlete)
@@ -240,8 +224,8 @@ class User < ActiveRecord::Base
 
   def charge_credits(price)
     self.credits -= price
+    send_alert_for_low_credits if self.credits < 30
     self.save!
-    'Credits'
   end
 
   def assign_cart
@@ -267,7 +251,7 @@ class User < ActiveRecord::Base
   end
 
   def cart
-    self.carts.sort_by { |cart| cart.created_at }.last
+    self.carts.order(created_at: :desc).first
   end
 
   def show_phone_number
@@ -279,6 +263,15 @@ class User < ActiveRecord::Base
   end
 
   protected
+
+  def send_alert_for_low_credits
+    if self.notifications.email_low_credits
+      ::LowCreditsMailerWorker.perform_async(self.id)
+    end
+    if self.notifications.text_low_credits && self.notifications.sms_receivable
+      ::SmsMailerWorker.perform_async(self.phone_number, "You are low on Credits! Head up to ParkourUtah.com/store to get some more so you have some for next time.")
+    end
+  end
 
   def clear_associations
     self.carts.destroy_all
@@ -315,6 +308,12 @@ class User < ActiveRecord::Base
 
   def confirmation_required?
     false # Leave this- it bypasses Devise's confirmable method
+  end
+
+  def positive_credits
+    if self.credits < 0
+      errors.add(:credits, "cannot be negative.")
+    end
   end
 
 end

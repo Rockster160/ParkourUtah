@@ -13,7 +13,7 @@ class CustomLogger
     def log(message, user=nil, cart_id)
       display_name = user.present? ? "#{user.try(:id)}: #{user.try(:email)}\n" : ''
       display_cart = cart_id.present? ? "Cart: #{cart_id}\n" : ''
-      formatted_time = DateTime.current.in_time_zone('America/Denver').strftime('%b %d, %Y %H:%M:%S.%L')
+      formatted_time = Time.zone.now.in_time_zone('America/Denver').strftime('%b %d, %Y %H:%M:%S.%L')
       File.open("log/custom_logger.txt", "a+"){|f| f << "\n#{formatted_time} - #{message}\n#{display_name}#{display_cart}" }
     end
 

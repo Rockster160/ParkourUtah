@@ -1,0 +1,2 @@
+class StripeCharger
+end

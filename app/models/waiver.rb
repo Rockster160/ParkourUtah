@@ -22,11 +22,11 @@ class Waiver < ActiveRecord::Base
   end
 
   def expires_soon?
-    (Date.today >= (self.exp_date.to_date - 1.week) && self.signed)
+    (Time.zone.now >= (self.exp_date.to_date - 1.week) && self.signed)
   end
 
   def is_active?
-    (Date.today < self.exp_date.to_date && self.signed?)
+    (Time.zone.now < self.exp_date.to_date && self.signed?)
   end
 
   def has_matching_name_as_athlete

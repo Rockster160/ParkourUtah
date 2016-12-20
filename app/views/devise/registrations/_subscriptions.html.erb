@@ -29,22 +29,24 @@
         </div>
       <% end %>
     <% end %>
-    <% if current_user.class_subscriptions.any? %>
+    <% if current_user.subscribed_events.any? %>
       <hr>
       <div class="row">
         <p>Classes subscribed to:</p>
-        <% current_user.class_subscriptions.map{|s|s.event}.each do |event| %>
+        <% current_user.subscribed_events.each do |event_schedule| %>
           <div class="row">
             <div class="col-xs-6">
-              <%= event.city %> <%= event.class_name.capitalize %> <%= event.date.strftime('%l:%M') %>
+              <%= event_schedule.time_of_day %> <%= event_schedule.city %> <%= event_schedule.title.capitalize %>
             </div>
             <div class="col-xs-6">
-              <%= link_to 'Unsubscribe', unsubscribe_path(id: event.id), class: 'pkut-btn', method: :delete %>
+              <%= link_to 'Unsubscribe', unsubscribe_event_schedule_path(event_schedule), class: 'pkut-btn', method: :delete %>
             </div>
           </div>
           <br/>
         <% end %>
       </div>
+    <% else %>
+      <h3>You aren't subscribed to any classes.</h3>
     <% end %>
   </div>
 </div>

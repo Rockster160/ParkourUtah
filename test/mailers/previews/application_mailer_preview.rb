@@ -8,7 +8,7 @@ class ApplicationMailerPreview < ActionMailer::Preview
   def class_reminder_mail
     user_id = 4
     event = Event.first
-    msg = "Hope to see you at our #{event.class_name} class today at #{event.date.strftime('%l:%M')}!"
+    msg = "Hope to see you at our #{event.title} class today at #{event.date.strftime('%l:%M')}!"
     ApplicationMailer.class_reminder_mail(user_id, msg)
   end
 

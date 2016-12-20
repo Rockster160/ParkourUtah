@@ -1,0 +1,60 @@
+<div class="central-container form-offset">
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br/><br/>
+  <%= form_for @item do |f| %>
+    <div class="form-container">
+      <%= render partial: 'layouts/error_container', locals: { resource: @item } %>
+      <div class="form-field">
+        <%= f.label :title %>
+        <%= f.text_field :title, placeholder: 'Green Parachute Pants', class: 'customRequired pkut-textbox' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :cost_in_dollars %>
+        <%= f.number_field :cost_in_dollars, placeholder: '3000.99', class: 'customRequired pkut-textbox' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :size %>
+        <%= f.text_field :size, placeholder: 'S, M, L / 38.5, 39, 43', class: 'pkut-textbox' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :color %>
+        <%= f.text_field :color, placeholder: 'Blue, Green, Grey, Black', class: 'pkut-textbox' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :description %>
+        <%= f.text_area :description, placeholder: 'Marvelous skills sewn with godly thread.', class: 'customRequired pkut-textarea' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :redemption_item_id %>
+        <%= f.select :redemption_item_id, @hidden_items, {include_blank: "Not a Gift Card"}, class: 'pkut-textbox' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :category %>
+        <%= f.select :category, @categories, {}, class: 'pkut-textbox' %>
+      </div>
+      <div class="form-field">
+        <%= f.check_box :hidden %>
+        <%= f.label :hidden, 'Hidden? (Hidden items are only purchasable with a redemption key)' %>
+      </div>
+      <div class="form-field">
+        <%= f.check_box :taxable %>
+        <%= f.label :taxable, 'Taxable?' %>
+      </div>
+      <div class="form-field">
+        <%= f.check_box :is_full_image %>
+        <%= f.label :is_full_image, 'Image takes up entire box?' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :credits %>
+        <%= f.text_field :credits, class: 'pkut-textbox restrictNumeric' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :display %>
+        <%= f.file_field :display %>
+      </div>
+      <%= submit_tag "Submit", class: "btn btn-success" %>
+      <% if @item.persisted? %>
+      <%= link_to "Destroy", line_item_path(@item.id), method: :delete, class: "btn btn-danger" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

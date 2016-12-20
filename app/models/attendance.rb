@@ -13,22 +13,33 @@
 #  sent           :boolean          default(FALSE)
 #
 
+# TODO Rename associations to be better
 class Attendance < ActiveRecord::Base
 
+  attr_accessor :skip_validations
+
   belongs_to :dependent
-  belongs_to :user
+  belongs_to :user # Instructor
   belongs_to :event
 
-  def athlete
-    Dependent.find_by_athlete_id(self.dependent_id)
-  end
+  validate :one_per_athlete
 
-  def instructor
-    User.find(user_id)
-  end
+  def athlete; dependent; end
+  def instructor; user; end
 
   def sent!
     self.update(sent: true)
+  end
+
+  private
+
+  def one_per_athlete
+    unless skip_validations
+      matching_attendances = self.class.where(dependent_id: self.dependent_id, event_id: self.event_id)
+      if matching_attendances.any? { |a| a.id != self.id }
+        errors.add(:base, "Athlete already attended this event.")
+      end
+    end
   end
 
 end

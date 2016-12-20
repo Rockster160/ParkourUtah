@@ -5,24 +5,14 @@ class CalendarController < ApplicationController
   def show
     redirect_to calendar_mobile_path if mobile_check && params[:desktop] != 'true'
 
-    @date = params[:date] ? rails_time_from(params[:date]) : Date.today
-    @week = (@date.beginning_of_week(:monday)..@date.end_of_week(:sunday))
+    @date = rails_time_from(params[:date])
+    @week = (@date.beginning_of_week(:sunday)..@date.end_of_week(:sunday))
 
-    all_events = Event.where('date > ?', Date.today).to_a
-    @events = all_events.group_by { |event| [event.date.year, event.date.month, event.date.day] }
-    @cities = all_events.group_by { |event| event.city }.keys.sort.map(&:parameterize)
-    @classes = all_events.group_by { |event| event.class_name }.keys.sort.map(&:parameterize)
-
-    @selected_cities = params[:cities] ? params[:cities] : @cities
-    @selected_classes = params[:classes] ? params[:classes] : @classes
+    set_city_lists
   end
 
   def get_week
-    @date = if params[:date] == 'undefined'
-      Date.today
-    else
-      params[:date] ? (rails_time_from(params[:date]) || Date.today) : Date.today
-    end
+    @date = rails_time_from(params[:date])
 
     @date -= 1.week if params[:direction] == 'previous'
     @date += 1.week if params[:direction] == 'next'
@@ -30,13 +20,7 @@ class CalendarController < ApplicationController
 
     @week = (@date.beginning_of_week(:monday)..@date.end_of_week(:sunday))
 
-    all_events = Event.where('date > ?', Date.today).to_a
-    @events = all_events.group_by { |event| [event.date.year, event.date.month, event.date.day] }
-    @cities = all_events.group_by { |event| event.city }.keys.sort.map(&:parameterize)
-    @classes = all_events.group_by { |event| event.class_name }.keys.sort.map(&:parameterize)
-
-    @selected_cities = params[:cities] ? params[:cities] : @cities
-    @selected_classes = params[:classes] ? params[:classes] : @classes
+    set_city_lists
 
     respond_to do |format|
       if params[:size] == 'mobile'
@@ -48,19 +32,34 @@ class CalendarController < ApplicationController
   end
 
   def mobile
-    @date = parse_date(params[:date]) || Date.today
+    @date = parse_date(params[:date]) || Time.zone.now
     @week = (@date.beginning_of_week(:sunday)..@date.end_of_week(:sunday))
   end
 
   # mm-dd-yyyy : From Rails
   # yyyy-mm-dd : From Javascript
   def rails_time_from(date)
+    return Time.zone.now if date == 'undefined' || date.blank?
     a, b, c = date.split('-')
     day, month, year = a.length == 4 ? [c, b, a] : [b, a, c]
-    DateTime.new(year.to_i, month.to_i, day.to_i)
+    begin
+      Time.zone.local(year.to_i, month.to_i, day.to_i)
+    rescue
+      Time.zone.now
+    end
   end
 
   private
+
+  def set_city_lists
+    all_events = EventSchedule.in_the_future.order(:start_date)
+    @events = all_events
+    @cities = all_events.pluck(:city).uniq.map(&:parameterize)
+    @classes = all_events.pluck(:title).uniq.map(&:parameterize)
+
+    @selected_cities = params[:cities].blank? ? @cities : params[:cities]
+    @selected_classes = params[:classes].blank? ? @classes : params[:classes]
+  end
 
   def mobile_check
     browser = Browser.new

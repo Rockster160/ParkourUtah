@@ -2,20 +2,19 @@ require 'net/http'
 class Scheduled < ActiveRecord::Base
 
   def self.send_class_text
-    Subscription.all.each do |subscriber|
+    Subscription.find_each do |subscriber|
       user = subscriber.user
-      Event.by_token(subscriber.token).select { |e| e.date.to_date == Time.now.to_date && e.date.hour == (Time.now + 2.hours).hour }.each do |event|
-        unless event.cancelled?
-          if user.notifications.text_class_reminder && user.notifications.sms_receivable
-            num = user.phone_number
-            if num.length == 10
-              msg = "Hope to see you at our #{event.class_name} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!"
-              ::SmsMailerWorker.perform_async(num, msg)
-            end
+      user.subscribed_events.where(date: 100.from_now..130.minutes.from_now).each do |event|
+        next if event.cancelled?
+        if user.notifications.text_class_reminder && user.notifications.sms_receivable
+          num = user.phone_number
+          if num.length == 10
+            msg = "Hope to see you at our #{event.title} class today at #{event.date.strftime('%-l:%M')}!"
+            ::SmsMailerWorker.perform_async(num, msg)
           end
-          if user.notifications.email_class_reminder
-            ::ClassReminderMailerWorker.perform_async(user.id, "Hope to see you at our #{event.class_name} class today at #{nil_padded_time(event.date.strftime('%l:%M'))}!")
-          end
+        end
+        if user.notifications.email_class_reminder?
+          ::ClassReminderMailerWorker.perform_async(user.id, "Hope to see you at our #{event.title} class today at #{event.date.strftime('%-l:%M')}!")
         end
       end
     end
@@ -30,81 +29,59 @@ class Scheduled < ActiveRecord::Base
     end
   end
 
-  def self.nil_padded_time(time)
-    (time[0] == " " ? "" : time[0]) + time[1..4]
-  end
-
   def self.send_summary(days)
     summary = {}
     payment = {}
 
-    (0..(days - 1)).each do |day|
-      events = Event.select {|e| e.date.to_date == (Time.now - day.days).to_date}
-      special = Attendance.select do |attendance|
-        (attendance.created_at - 7.hours).to_date == (Time.now - day.days).to_date && attendance.event_id == 1
-      end.map {|attendance| attendance.event} - [[]]
-      events += special if special.any?
-      events.each do |event|
+    (0..(days - 1)).each do |days_ago|
+      date = (Time.zone.now - days_ago.days).to_datetime
+      first_date = date.beginning_of_day
+      last_date = date.end_of_day
+
+      events = Event.by_date(date)
+      special = Attendance.where(event_id: 1).where(created_at: first_date..last_date).map(&:event)
+      events += special
+      events.flatten.compact.each do |event|
         instructors = {}
-        return if event == []
-        unless event.attendances.count == 0
+        if event.attendances.any?
           event.attendances.each do |attendance|
-            instructor = User.find(attendance.user_id)
-            athlete = Dependent.where(athlete_id: attendance.dependent_id).first
+            instructor = attendance.user
+            athlete = attendance.athlete
 
             instructors[instructor.full_name] ||= {}
             instructors[instructor.full_name]["students"] ||= []
             instructors[instructor.full_name]["pay"] ||= 0
 
             instructors[instructor.full_name]["students"] << "#{athlete.full_name} - #{attendance.type_of_charge}"
-            pay = event.class_name == "Test" ? 15 : instructor.payment_multiplier
+            pay = event.title == "Test" ? 15 : instructor.payment_multiplier
             instructors[instructor.full_name]["pay"] += pay
 
             attendance.sent!
           end
         else
-          instructors[event.host] ||= {}
-          instructors[event.host]["students"] = ["None"]
-          instructors[event.host]["pay"] = 15
+          instructors[event.host_name] ||= {}
+          instructors[event.host_name]["students"] = ["None"]
+          instructors[event.host_name]["pay"] = 15
         end
+
         instructors.each do |instructor|
           pay = event.attendances.count > 5 ? instructor[1]["pay"] : 15
           instructor[1]["pay"] = pay
           payment[instructor[0]] ||= 0
           payment[instructor[0]] += pay
         end
-        summary["#{(Time.now - day.days).to_date.strftime("%A %B %-d, %Y")}"] ||= {}
-        if event.class_name == "Test"
-          summary["#{(Time.now - day.days).to_date.strftime("%A %B %-d, %Y")}"]["Private Class"] = instructors
+        summary["#{date.strftime("%A %B %-d, %Y")}"] ||= {}
+        if event.title == "Test"
+          summary["#{date.strftime("%A %B %-d, %Y")}"]["Private Class"] = instructors
         else
-          summary["#{(Time.now - day.days).to_date.strftime("%A %B %-d, %Y")}"]["#{event.class_name} - #{event.city} - #{event.date.strftime('%l:%M%p')}"] = instructors
+          summary["#{date.strftime("%A %B %-d, %Y")}"]["#{event.title} - #{event.city} - #{event.date.strftime('%l:%M%p')}"] = instructors
         end
       end
     end
 
-    total_summary = [summary, payment]
+    total_summary_json = [summary, payment]
 
-    ::SummaryMailerWorker.perform_async(total_summary)
-  end
-
-  def self.attend_random_classes(days=1)
-    instructors = User.instructors.shuffle
-    days.times do |day|
-      events = Event.all.select {|e| e.date.to_date == (Time.now - day.days).to_date }
-      if events.any?
-        Dependent.all.each do |d|
-          unless rand(3) == 0
-            Attendance.create(
-              dependent_id: d.athlete_id,
-              user_id: instructors.sample.id,
-              event_id: events.sample.id,
-              type_of_charge: (rand(3) == 0 ? "Cash" : "Credits")
-            )
-            puts "#{d.full_name} attended class!"
-          end
-        end
-      end
-    end
+    ::SummaryMailerWorker.perform_async(total_summary_json)
   end
 
   def self.monthly_subscription_charges
@@ -148,7 +125,7 @@ class Scheduled < ActiveRecord::Base
   def self.waiver_checks
     Dependent.all.each do |athlete|
       user = athlete.user
-      if athlete.waiver.exp_date.to_date == (Time.now + 1.week).to_date
+      if athlete.waiver.exp_date.to_date == (Time.zone.now + 1.week).to_date
         if user.notifications.email_waiver_expiring
           ::ExpiringWaiverMailerWorker.perform_async(athlete.id)
         end
@@ -157,73 +134,6 @@ class Scheduled < ActiveRecord::Base
         end
       end
     end
-  end
-
-  def self.seed
-    # self.update_users
-    self.reset_classes
-    self.reset_store
-  end
-
-  def self.update_users
-  end
-
-  def self.reset_classes
-    self.clear_classes
-    self.create_classes
-  end
-
-  def self.reset_store
-    self.clear_store
-    self.create_store
-  end
-
-  def self.clear_classes
-    self.clear_subscriptions
-    puts "Removing all events"
-    Event.all.each do |e|
-      e.destroy
-      print "\e[31m-\e[0m"
-    end
-    puts "\nEvents removed"
-  end
-
-  def self.clear_subscriptions
-    puts "Removing all Subscriptions"
-    Subscription.all.each do |s|
-      s.destroy
-      print "\e[31m-\e[0m"
-    end
-    puts "\nSubscriptions removed"
-  end
-
-  def self.create_classes
-  end
-
-  def self.clear_store
-    puts "Removing all store items"
-    LineItem.all.each do |l|
-      l.destroy
-      print "\e[31m-\e[0m"
-    end
-    puts "\nLine Items removed"
-  end
-
-  def self.create_store
-  end
-
-  def self.update_store
-  end
-
-  def self.create_subscription_line_item
-    LineItem.create(
-      title: "Monthly Subscription",
-      description: 'This is a recurring transaction. Your account will be charged automatically unless you unsubscribe via the Notifications button on your Profile. This allows your students to have unlimited access to classes for 1 month.',
-      taxable: false,
-      cost_in_pennies: 5000,
-      is_subscription: true,
-      category: "Other"
-    )
   end
 
 end

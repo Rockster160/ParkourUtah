@@ -1,0 +1,20 @@
+<div class="central-container">
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
+  <h1><%= @event_schedule.title %></h1>
+  <h3>Attendances</h3>
+  <% @attendances_by_date.sort_by {|k,v|-k.to_i}.each do |date, attendances| %>
+    <p><%= date.strftime("%-d %b, %Y") %></p>
+    <ul>
+      <% attendances.each do |attendance| %>
+        <% athlete = attendance.athlete %>
+        <% guardian = athlete.user %>
+        <li>
+          <div class="">
+            <%= athlete.athlete_id %> <%= attendance.athlete.full_name %> <br>
+            <strong>Guardian:</strong> <%= guardian.email %> <%= link_to "Click to view User Page", admin_user_path(guardian) %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>

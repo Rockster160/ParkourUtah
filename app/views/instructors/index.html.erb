@@ -1,0 +1,20 @@
+<div class="central-container form-offset">
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br/>
+  <%= link_to new_instructor_path, class: 'pkut-btn' do %>
+    <i class="fa fa-plus"></i> New Instructor
+  <% end %>
+  <h4>Click and Drag to change Instructor order. Click to edit Instructor info.</h4>
+  <table class="sortable" id="instructor-table">
+    <% @instructors.each do |instructor| %>
+      <tr class="sortable-row">
+        <td class="hidden sortable-url"><%= update_position_instructor_path(instructor) %></td>
+        <td>
+          <%= link_to edit_instructor_path(instructor), class: 'pkut-btn' do %>
+            <i class="fa fa-arrows fa-lg"></i>
+            <%= instructor.full_name %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+</div>

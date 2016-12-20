@@ -39,12 +39,8 @@ class LineItem < ActiveRecord::Base
   before_save :assign_item_position_if_nil
   before_destroy :destroy_keys
 
-  default_scope { order('item_order ASC') }
-
   def users_who_purchased
-    carts_containing_item = Cart.select { |cart| cart.items.map(&:id).include?(id) }
-    purchased_carts_containing_item = carts_containing_item.select { |cart| cart.user.try(:cart) != cart }
-    purchased_carts_containing_item.map(&:user).compact
+    User.joins(carts: [cart_items: [:line_item]]).where(line_items: {id: self.id}).where.not(carts: {purchased_at: nil}).distinct
   end
 
   def redemption_item
@@ -52,7 +48,7 @@ class LineItem < ActiveRecord::Base
   end
 
   def destroy_keys
-    Transaction.all.select { |t| t.item.id == self.id }.each { |order| order.destroy }
+    CartItem.all.select { |t| t.item.id == self.id }.each { |order| order.destroy }
     self.redemption_keys.each do |key|
       key.destroy
     end
@@ -74,6 +70,9 @@ class LineItem < ActiveRecord::Base
     self.cost_in_pennies
   end
 
+  def cost_in_dollars=(new_dollar_cost)
+    self.cost_in_pennies = new_dollar_cost * 100
+  end
   def cost_in_dollars
     self.cost_in_pennies.to_f / 100
   end

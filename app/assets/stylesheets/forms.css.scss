@@ -8,6 +8,32 @@
   margin-bottom: 50px;
 }
 
+.form-field {
+  .pkut-textbox {
+    margin-top: -5px;
+  }
+}
+
+.form-container {
+  width: 100%;
+  max-width: 350px;
+  margin:  0 auto;
+
+  h3 { margin-top: 20px; }
+  .pkut-dropdown, .pkut-textarea { margin-bottom: 10px;}
+}
+
+.errors-container {
+  background: pink;
+  border-radius: 8px;
+  border-width: 3px;
+  border-style: outset;
+  border-color: red;
+  padding: 10px;
+  text-align: left;
+  margin-bottom: 30px;
+}
+
 .recaptcha-container {
   margin: 0 auto;
   width: 300px;
@@ -26,7 +52,8 @@
 .pkut-dropdown {
   line-height: 30px;
   font-size: 21px;
-  width: 350px;
+  max-width: 350px;
+  width: 100%;
 }
 
 .text-field-height {
@@ -91,29 +118,29 @@
 
 .arrow-required {
   &:before {
-content: '';
-position: absolute;
-width: 0;
-height: 0;
-border-top: 16px solid transparent;
-border-right: 20px solid red;
-border-bottom: 16px solid transparent;
-margin-top: -6px;
-margin-left: 20px;
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 16px solid transparent;
+    border-right: 20px solid red;
+    border-bottom: 16px solid transparent;
+    margin-top: -6px;
+    margin-left: 20px;
   }
   &:after {
-content: 'Required';
-position: absolute;
-margin-left: 0px;
-margin-top: 2px;
-width: 80px;
-height:17px;
-padding-top: 0px;
-padding-left: 7px;
-background: red;
-color: black;
-font-weight: bold;
-font-size: 1em;
+    content: 'Required';
+    position: absolute;
+    margin-left: 0px;
+    margin-top: 2px;
+    width: 80px;
+    height:17px;
+    padding-top: 0px;
+    padding-left: 7px;
+    background: red;
+    color: black;
+    font-weight: bold;
+    font-size: 1em;
   }
 }
 
@@ -131,16 +158,22 @@ font-size: 1em;
 }
 
 .pkut-btn {
+  display: inline-block;
+
+  padding: 8px 12px;
+  line-height: 1;
+  font-size: 16px;
+  text-decoration: none;
+
   z-index: 10000;
   transition: 0.3s;
-  margin: 20px;
-  max-width: 250px;
+  margin: 8px 20px;
+  max-width: 300px;
 
   text-decoration: none;
-  padding: 3px 20px;
+  padding: 5px 20px;
   font-family: 'MicroExtendFLF-Bold', Arial, sans-serif;
-  font-size: 1.2em;
-  white-space: nowrap;
+  font-size: 18px;
 
   border: none;
   border-radius: 5px / 10px;

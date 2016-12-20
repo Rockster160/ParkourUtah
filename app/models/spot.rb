@@ -15,7 +15,8 @@
 #
 
 class Spot < ActiveRecord::Base
-  has_many :spot_events
+  
+  has_many :event_schedules
   has_many :images
   has_many :ratings
 

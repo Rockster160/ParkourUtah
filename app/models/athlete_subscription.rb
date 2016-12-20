@@ -12,10 +12,15 @@
 #  updated_at      :datetime         not null
 #
 
+# Rename to RecurringSubscription
+# Add Stripe ID here, and attempt to charge using that customer instead
 class AthleteSubscription < ActiveRecord::Base
 
   belongs_to :dependent
   after_create :set_default_expiration_date
+
+  scope :active, -> { where("expires_at > ?", Time.zone.now) }
+  scope :inactive, -> { where("expires_at <= ?", Time.zone.now) }
 
   def set_default_expiration_date
     extended_time = if dependent.has_unlimited_access?
@@ -28,8 +33,8 @@ class AthleteSubscription < ActiveRecord::Base
     self.save
   end
 
-  def active?; self.expires_at.to_date > DateTime.current.to_date; end
-  def inactive?; self.expires_at.to_date <= DateTime.current.to_date; end
+  def active?; self.expires_at.to_date > Time.zone.now.to_date; end
+  def inactive?; self.expires_at.to_date <= Time.zone.now.to_date; end
 
   def use!
     return false unless active?

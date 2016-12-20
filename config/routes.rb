@@ -10,10 +10,6 @@ Rails.application.routes.draw do
 
   get 'talk' => 'index#get_request'
   post 'listen' => 'index#give_request'
-  get 'secret' => 'peeps#secret', as: 'secret'
-  post 'post_secret' => 'peeps#post_secret'
-
-  get 'venmo' => 'index#venmo'
 
   get 'register/step_2' => 'registrations#step_2', as: 'step_2'
   get 'register/step_3' => 'registrations#step_3', as: 'step_3'
@@ -25,7 +21,68 @@ Rails.application.routes.draw do
   post 'register/step_4/fix' => 'registrations#fix_step_4', as: 'fix_review_page'
   post 'register/step_5' => 'registrations#post_step_5'
 
+  resources :instructors do
+    member do
+      post :update_position
+    end
+  end
+
   resources :spots
+  resources :events, only: [ :show, :edit, :update ] do
+    member do
+      post :cancel
+      get :detail
+    end
+  end
+  resources :event_schedules, except: [ :destroy ] do
+    member do
+      post :subscribe
+      delete :unsubscribe
+      post :send_message_to_subscribers
+    end
+  end
+
+  resources :line_items, except: [ :show ] do
+    member do
+      put :update_position
+    end
+  end
+
+  resources :redemption_keys, except: [ :show, :edit, :update, :destroy ] do
+    member do
+      get :redeem
+    end
+  end
+
+  resources :class_handlers, path: 'class', only: [] do
+    member do
+      get :athlete_id
+      get :athlete_pin
+      get :logs
+      post :join_class
+    end
+  end
+
+  get :dashboard, controller: :admins
+  resource :admin, only: [] do
+    get :purchase_history
+
+    get :batch_text_message
+    post :send_batch_texts
+
+    get :email_body
+    get :batch_email
+    post :send_batch_emailer
+
+    resources :users do
+      member do
+        get :attendance
+        post :update_trials
+        post :update_credits
+        post :update_notifications
+      end
+    end
+  end
 
   get 'test' => 'index#index'
   post 'contact' => 'index#contact'
@@ -35,35 +92,7 @@ Rails.application.routes.draw do
   get 'unsubscribe' => 'index#unsubscribe', as: 'unsubscribe_email'
   post 'sms_receivable' => 'index#sms_receivable', as: 'make_sms_receivable'
 
-  get 'class/:id' => 'peeps#pin_user', as: 'begin_class'
-  get 'pin/:id' => 'peeps#show_user'
-  get 'logs/:id' => 'peeps#class_logs', as: 'class_logs'
-  get 'password/:id' => 'peeps#pin_password', as: 'pin_password'
-  patch 'charge_class/:id' => 'peeps#validate_pin'
-
-  get 'peeps/cheat_login' => 'peeps#cheat_login'
-  get 'peeps/edit' => 'peeps#edit', as: 'edit_peeps'
-  get 'peeps/bought_classes' => 'peeps#bought_classes'
-  get 'peeps/edit_peep/:id' => 'peeps#edit_peep', as: 'edit_peep'
-  put 'peeps/update_position/:id' => 'peeps#update_peep_position', as: 'update_peep_position'
-  patch 'peeps/update/:id' => 'peeps#update', as: 'update_peep'
-  get 'peeps/promote' => 'peeps#promote', as: 'promote'
-  post 'peeps/promote' => 'peeps#promotion', as: 'promotion'
-  post 'peeps/demotion/:id' => 'peeps#demotion', as: 'demotion'
-  get 'peeps/users' => 'peeps#recent_users', as: 'recent_users'
-  get 'user/:id' => 'peeps#user_page', as: 'user_show'
-  get 'user/:id/attendance' => 'peeps#attendance_page', as: 'attendance_page'
-  get 'athlete/:id/trial' => 'peeps#edit_trial', as: 'edit_trial'
-  post 'peeps/users/:id' => 'peeps#adjust_credits', as: 'adjust_credits'
-  post 'peeps/users/:id/notifications' => 'peeps#edit_user_notifications', as: 'edit_user_notifications'
-  delete 'user/:id' => 'peeps#destroy_user', as: 'user'
   delete 'unsubscribe_monthly/:id' => 'store#unsubscribe', as: 'unsubscribe_monthly_subscription'
-
-  get :email_body, controller: 'peeps'
-  get :batch_emailer, controller: 'peeps'
-  post :send_batch_emailer, controller: 'peeps'
-  get :admin_texter, controller: 'peeps'
-  post :send_batch_texts, controller: 'peeps'
 
   get 'athletes/new' => 'dependents#new', as: 'new_athlete'
   post 'athletes/new' => 'dependents#create'
@@ -90,40 +119,9 @@ Rails.application.routes.draw do
   get 'm/calendar' => 'calendar#mobile', as: 'calendar_mobile'
   get 'calendar/week' => 'calendar#get_week', as: 'calendar_week'
 
-  get 'events/new' => 'event#new', as: 'add_event'
-  post 'events/create' => 'event#create'
-  get 'events/edit/:id' => 'event#edit', as: 'edit_event'
-  get 'event/:id' => 'event#show', as: 'show_event'
-  post 'event/:id/cancel_message' => 'event#send_message_to_subscribers', as: 'message_subscribers'
-  post 'event/:id/cancel' => 'event#cancel', as: 'cancel_event'
-  get 'events/:id/details' => 'event#detail', as: 'event_detail'
-
-  get 'events/cities' => 'event#cities', as: 'cities'
-  get 'events/cities/:city' => 'event#city', as: 'city'
-
-  patch 'events/update/:id' => 'event#update'
-  delete 'events/destroy' => 'event#destroy', as: 'destroy_event'
-  post 'events/subscribe/:id' => 'event#subscribe', as: 'subscribe'
-  delete 'events/unsubscribe/:id' => 'event#unsubscribe', as: 'unsubscribe'
-
-  get 'dashboard' => 'peeps#dashboard', as: 'dashboard'
-  get 'peeps/return' => 'peeps#return'
-
-  get 'comingsoon' => 'index#coming_soon', as: 'coming_soon'
-
   post 'store/charge' => 'store#charge', as: 'charge'
   get 'store' => 'store#index', as: 'store'
   post 'store/redeem' => 'store#redeem'
-  get 'store/new' => 'store#new', as: 'add_item'
-  get 'store/edit/:id' => 'store#edit', as: 'edit_item'
-  get 'store/index' => 'store#items', as: 'edit_items'
-  patch 'store/update/:id' => 'store#update'
-  post 'store/create' => 'store#create'
-  delete 'store/item/:id/destroy' => 'store#destroy', as: 'destroy_item'
-  put 'store/update_position/:id' => 'store#update_item_position', as: 'update_item_position'
-
-  get 'store/admin/generate_keys' => 'store#generate_keys', as: 'generate_keys'
-  post 'store/admin/generate_keys' => 'store#email_keys'
 
   post 'cart/update' => 'store#update_cart', as: 'update_cart'
   post 'cart/purchase' => 'store#purchase', as: 'purchase'

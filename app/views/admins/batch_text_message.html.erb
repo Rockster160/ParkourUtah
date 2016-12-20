@@ -1,0 +1,38 @@
+<% users = @users || [] %>
+<div class="content-box text-center">
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
+  <%= form_tag send_batch_texts_admin_path do %>
+    <div class="form-container">
+      <% if @success.present? || @failed.present? %>
+        <table class="table table-bordered">
+          <thead>
+            <th>Success</th>
+            <th>Failed</th>
+          </thead>
+          <tbody>
+            <% [@success.count, @failed.count].max.times do |idx| %>
+              <tr>
+                <td><%= @success[idx] %></td>
+                <td><%= @failed[idx] %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
+      <div class="text-left">
+        <% users.each do |user| %>
+        <p><%= user.id %> - <%= user.email %> - <%= user.phone_number %></p>
+        <% end %>
+      </div>
+      <div class="form-field">
+        <%= label_tag :recipients, "Enter comma-separated 10 digit phone numbers" %> <br>
+        <%= text_field_tag :recipients, "#{[params[:recipients], users.map(&:phone_number)].compact.flatten.join(",")}", class: 'pkut-textbox' %> <br>
+      </div>
+      <div class="form-field">
+        <%= label_tag :message %> <br>
+        <%= text_area_tag :message, params[:message], class: 'pkut-textarea', style: 'max-width: 350px;' %> <br>
+      </div>
+      <%= submit_tag "Send!", class: 'pkut-btn' %>
+    </div>
+  <% end %>
+</div>

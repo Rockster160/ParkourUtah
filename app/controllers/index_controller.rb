@@ -19,10 +19,8 @@ class IndexController < ApplicationController
   def index
     @instructors = User.instructors
 
-    future_events = Event.in_the_future
-    @events = future_events.group_by { |event| [event.date.month, event.date.day] }
+    future_events = EventSchedule.in_the_future
     @cities = future_events.pluck(:city).uniq.sort
-    @classes = future_events.pluck(:class_name).uniq.sort
   end
 
   def update_notifications
@@ -34,44 +32,21 @@ class IndexController < ApplicationController
   end
 
   def receive_sms
-    if params["From"] == "+13852599640"
-      if params["Body"].downcase == 'pass'
-        contact_request = ContactRequest.select { |cr| cr.success == false }.sort_by(&:created_at).last
-        if contact_request
-          pass = {}
-          pass["name"] = contact_request.name
-          pass["email"] = contact_request.email
-          pass["phone"] = contact_request.phone
-          pass["comment"] = contact_request.body
-          ::ContactMailerWorker.perform_async(pass)
-          contact_request.update(success: true)
-          ::SmsMailerWorker.perform_async('3852599640', "Allowed contact request from: #{contact_request.name}.")
-        else
-          ::SmsMailerWorker.perform_async('3852599640', "No previous request")
-        end
-      elsif params["Body"].downcase =~ /talk/
-        ::SmsMailerWorker.perform_async('3852599640', RoccoLogger.by_date.logs)
-      elsif params["Body"].downcase =~ /pass/
-        name = params["Body"].gsub('pass ', '')
-        contact_request = ContactRequest.select { |cr| cr.success == false && cr.name == name }.last
-        if contact_request
-          pass = {}
-          pass["name"] = contact_request.name
-          pass["email"] = contact_request.email
-          pass["phone"] = contact_request.phone
-          pass["comment"] = contact_request.body
-          ::ContactMailerWorker.perform_async(pass)
-          contact_request.update(success: true)
-          ::SmsMailerWorker.perform_async('3852599640', "Allowed contact request from: #{contact_request.name}.")
-        else
-          ::SmsMailerWorker.perform_async('3852599640', "No such request")
-        end
-      end
+    raw_number = params["From"].gsub(/[^0-9]/, "").last(10)
+    user = User.where("phone_number ILIKE ?", "%#{raw_number}%").first
+    if %w(STOP STOPALL UNSUBSCRIBE CANCEL END QUIT).include?(params["Body"].squish.upcase)
+      user.notifications.update(sms_receivable: false) if user.present? && user.notifications.present?
+      default_message = "#{params["From"]} has opted out of text messages from PKUT.\nThey will no longer receive text messages from us (Including messages sent from the admin text messaging page).\nIn order to re-enable messages, they must send a text message saying \"START\" to us, and then log in to their account, Home, then click Notifications, then the button that says 'Text Me!'\nIf the message sends successfully, they will be able to receive text messages from us again."
+      user_message = user.present? ? "\nPhone Number seems to match: <#{admin_user_url(user)}|#{user.id} - #{user.email}>" : ""
+      slack_message = default_message + user_message
     else
-      ::SmsMailerWorker.perform_async('3852599640', "From: #{params["From"]}\nMessage: #{params["Body"]}")
-      num = params["From"].gsub(/[^\d+]/, '')
-      ::SmsMailerWorker.perform_async(num, "This is an automated text messaging system. \nIf you have questions about class, please contact the Instructor. Their contact information is available in the class details. \nIf you would like to stop receiving Notifications, please disable text notifications in your Account Settings on parkourutah.com/account#notifications")
+      escaped_body = params["Body"].split("\n").map { |line| "\n>#{line}" }.join("")
+      default_message = "*Received text message from: #{params["From"]}*\n>#{escaped_body}"
+      user_message = user.present? ? "\nPhone Number seems to match: <#{admin_user_url(user)}|#{user.id} - #{user.email}>" : ""
+      respond_message = "\n<#{batch_text_message_admin_url(recipients: raw_number)}|Click here to respond!>"
+      slack_message = default_message + user_message + respond_message
     end
+    SlackNotifier.notify(slack_message, "#support")
     head :ok
   end
 
@@ -81,14 +56,10 @@ class IndexController < ApplicationController
     redirect_to edit_user_registration_path
   end
 
-  def coming_soon
-  end
-
   def contact
     success = false
     if /\(\d{3}\) \d{3}-\d{4}/ =~ params[:phone]
       flash[:notice] = "Thanks! We'll have somebody get in contact with you shortly."
-      ::ContactMailerWorker.perform_async(params)
       success = true
     end
     contact_request = ContactRequest.create(
@@ -99,8 +70,8 @@ class IndexController < ApplicationController
       body: params[:comment],
       success: success
     )
-    if params[:phone].split('').map {|x| x[/\d+/]}.join.length >= 7 && !contact_request.success
-      ::SmsMailerWorker.perform_async('3852599640', "#{contact_request.success ? '' : "FAILED\n"}UserAgent: #{contact_request.user_agent}\n#{contact_request.phone} requested help.\nSuccess: #{contact_request.success}\nJS Enabled: #{params[:enabled]}\n#{contact_request.name}\n#{contact_request.email}\n#{contact_request.body}")
+    if params[:phone].split('').map {|x| x[/\d+/]}.join.length >= 7 || success
+      contact_request.notify_slack
     end
     redirect_to root_path
   end
@@ -140,10 +111,6 @@ class IndexController < ApplicationController
         flash[:alert] = "There was an error saving your address."
       end
     end
-  end
-
-  def still_signed_in
-    current_user.still_signed_in! if current_user
   end
 
 end

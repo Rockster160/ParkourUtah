@@ -1,0 +1,18 @@
+<div class="central-container form-offset">
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br/><br/>
+  <%= form_for RedemptionKey.new do |f| %>
+    <div class="form-container">
+      <h2>Generate Keys</h2>
+      <p>Keys can only be generated for hidden items</p>
+      <div class="form-field">
+        <%= label_tag :line_item_id, "Type of Key:" %> <br/>
+        <%= select_tag :line_item_id, options_from_collection_for_select(@hidden, "id", "title"), class: 'pkut-dropdown' %>
+      </div>
+      <div class="form-field">
+        <%= label_tag :how_many %> <br>
+        <%= number_field :how_many, '', step: 1, class: 'pkut-textbox restrictNumeric' %>
+      </div>
+      <h4><%= submit_tag "Generate!", class: 'pkut-btn' %></h4>
+    </div>
+  <% end %>
+</div>
