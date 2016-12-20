@@ -16,7 +16,7 @@
 
     <p><strong>Instructor: <%= @event.host_name %></strong></p>
 
-    <p><%= @event.date.time_of_day %></p>
+    <p><%= @event.time_of_day %></p>
 
     <% if user_signed_in? %>
       <p>
