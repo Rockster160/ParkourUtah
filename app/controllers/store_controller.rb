@@ -98,16 +98,15 @@ class StoreController < ApplicationController
       purchase_cart
     else
       if user_signed_in?
-        unless current_user.stripe_id
+        @cart_is_subscription = @cart.items.any?(&:is_subscription)
+        if @cart_is_subscription
           customer = create_customer
           current_user.update(stripe_id: customer.id) if customer
         end
-        purchase_cart if current_user.stripe_id
+        purchase_cart
       else
         categories = @cart.items.map(&:category).uniq
         if categories.count == 1 && categories.first == "Gift Card"
-          customer = create_customer
-          session["stripe_id"] = customer.id
           purchase_cart
         else
           redirect_to store_path, alert: "You must be registered and signed in to purchase accessories or credits."
@@ -131,19 +130,13 @@ class StoreController < ApplicationController
   def create_charge
     stripe_charge = nil
     if @cart.price > 0
-      if user_signed_in?
-        stripe_id = current_user.stripe_id
-      else
-        stripe_id = session["stripe_id"]
-      end
       begin
-        stripe_charge = Stripe::Charge.create(
-          :amount   => @cart.total,
-          :currency => "usd",
-          :customer => stripe_id
-        )
+        stripe_charge = Stripe::Charge.create({
+          amount: @cart.total,
+          currency: "usd"
+        }.merge(@cart_is_subscription ? {customer: current_user.stripe_id} : {source: params[:stripeToken]}))
       rescue
-        stripe_charge = false
+        stripe_charge = {failure_message: "Failed to Charge"}
       end
     end
     order_success = stripe_charge.nil? || stripe_charge.try(:status) == "succeeded"
