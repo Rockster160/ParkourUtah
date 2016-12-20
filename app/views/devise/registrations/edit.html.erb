@@ -13,13 +13,13 @@
     <% if current_user.non_verified_athletes.count > 0 %>
       <div class="pkut-btn big-btn orange-btn-glowing forceOpen" data-toggle="modal" data-target="#verify_athletes">
         Click here to receive 2 trial classes!
-      </div>
+      </div> <br>
       <%= render partial: 'dependents/verify_athletes' %>
     <% end %>
     <% if current_user.unassigned_subscriptions_count > 0 %>
       <div class="pkut-btn big-btn forceOpen" data-toggle="modal" data-target="#assign_subscriptions">
         Assign subscriptions to students!
-      </div>
+      </div> <br>
     <% end %>
     <%= render partial: 'dependents/assign_subscriptions' %>
     <a class="pkut-btn text-center forceOpen" data-toggle="modal" data-target="#notification_modal">Edit Notifications</a><br/>
