@@ -56,7 +56,7 @@ class StoreController < ApplicationController
         if order
           order.increment!(:amount)
         else
-          order = CartItem.create(item_id: item.id, order_name: name)
+          order = CartItem.create(line_item_id: item.id, order_name: name)
           orders << order
           @order = order
         end
