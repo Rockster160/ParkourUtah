@@ -2,9 +2,11 @@ require 'net/http'
 class Scheduled < ActiveRecord::Base
 
   def self.send_class_text
+    date_range = 100.minutes.from_now..130.minutes.from_now
     Subscription.find_each do |subscriber|
       user = subscriber.user
-      user.subscribed_events.where(date: 100.from_now..130.minutes.from_now).each do |event|
+      user.subscribed_events.joins(:events).where(events: {date: date_range}).each do |schedule|
+        event = schedule.events.where(date: date_range).first
         next if event.cancelled?
         if user.notifications.text_class_reminder && user.notifications.sms_receivable
           num = user.phone_number
