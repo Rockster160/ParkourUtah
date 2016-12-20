@@ -23,7 +23,7 @@ class Cart < ActiveRecord::Base
     items = []
     self.cart_items.each do |order|
       order.amount.times do
-        items <<  LineItem.find(order.item_id)
+        items <<  LineItem.find(order.line_item_id)
       end
     end
     items
@@ -31,12 +31,12 @@ class Cart < ActiveRecord::Base
 
   def add_items(*item_ids)
     item_ids.flatten.each do |item_id|
-      order = cart_items.where(item_id: item_id).first
+      order = cart_items.where(line_item_id: item_id).first
       if order
         order.increment!(:amount)
       else
         item = LineItem.find(item_id)
-        cart_items.create(item_id: item_id, order_name: item.title, amount: 1)
+        cart_items.create(line_item_id: item_id, order_name: item.title, amount: 1)
       end
     end
   end

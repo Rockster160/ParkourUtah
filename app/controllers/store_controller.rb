@@ -73,7 +73,7 @@ class StoreController < ApplicationController
     key = RedemptionKey.where(key: params[:redemption_key]).first
     if key.present? && key.redeemed == false
       if key.item.present? && @cart.cart_items.where(redeemed_token: params[:redemption_key]).none?
-        @order = CartItem.create(item_id: key.item_id, redeemed_token: params[:redemption_key], cart_id: @cart.try(:id))
+        @order = CartItem.create(line_item_id: key.line_item_id, redeemed_token: params[:redemption_key], cart_id: @cart.try(:id))
       end
     end
 
@@ -142,7 +142,7 @@ class StoreController < ApplicationController
     order_success = stripe_charge.nil? || stripe_charge.try(:status) == "succeeded"
     if order_success
       @cart.cart_items.each do |order|
-        line_item = LineItem.find(order.item_id)
+        line_item = LineItem.find(order.line_item_id)
         if RedemptionKey.redeem(order.redeemed_token)
           current_user.update(credits: (current_user.credits + (order.amount * line_item.credits))) if user_signed_in?
         end

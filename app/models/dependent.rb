@@ -96,7 +96,7 @@ class Dependent < ActiveRecord::Base
   end
 
   def has_access_until
-    athlete_subscriptions.select {|s| !(s.expires_at.nil?) }.sort_by(&:expires_at).last.expires_at
+    athlete_subscriptions.active.order(:expires_at).last.expires_at
   end
 
   def subscribed?
@@ -106,7 +106,7 @@ class Dependent < ActiveRecord::Base
   end
 
   def current_subscription
-    athlete_subscriptions.where("expires_at IS NULL OR expires_at < ?", Time.zone.now).order(created_at: :desc).first
+    athlete_subscriptions.where("expires_at < ?", Time.zone.now).order(created_at: :desc).first
   end
 
   def signed_waiver?
