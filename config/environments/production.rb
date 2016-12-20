@@ -10,8 +10,8 @@ Rails.application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
-  config.action_mailer.default_url_options   = { :host => 'parkourutah.com' }
-  config.action_mailer.default_url_options = { host: 'parkourutah.com', port: nil }
+  routes.default_url_options = { host: 'parkourutah.com', protocol: 'http://', port: nil }
+  config.action_mailer.default_url_options = { host: 'parkourutah.com', protocol: 'http://', port: nil }
   config.action_mailer.asset_host = 'http://parkourutah.com'
   ActionMailer::Base.delivery_method = :smtp
   ActionMailer::Base.smtp_settings = {
