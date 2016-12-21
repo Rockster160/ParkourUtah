@@ -2,7 +2,11 @@ class EventsController < ApplicationController
   before_action :set_event_schedule
 
   def show
-    @event = @event_schedule.event_by_id(params[:id], with_date: params[:date])
+    if params[:event_schedule_id].present?
+      @event = @event_schedule.event_by_id(params[:id], with_date: params[:date])
+    else
+      @event = Event.find(params[:id])
+    end
   end
 
   def edit
