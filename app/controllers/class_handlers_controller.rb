@@ -30,7 +30,7 @@ class ClassHandlersController < ApplicationController
       flash[:alert] = "No athlete found."
     elsif @athlete.valid_athlete_pin?(params[:athlete_pin])
       flash[:alert] = "Incorrect Athlete Pin."
-    elsif !@athlete.attend_class(@event)
+    elsif !@athlete.attend_class(@event, current_user)
       if @athlete.attendances.where(event_id: @event.id).any?
         flash[:alert] = "Athlete is already attending class."
       elsif @athlete.user.credits <= @event.cost_in_dollars

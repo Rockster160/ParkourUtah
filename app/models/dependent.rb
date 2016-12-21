@@ -60,11 +60,11 @@ class Dependent < ActiveRecord::Base
     self.athlete_pin == check_athlete_pin
   end
 
-  def attend_class(event)
+  def attend_class(event, instructor)
     event_cost = event.cost_in_dollars.to_i
     charge_type = charge_class(event_cost)
     if charge_type.present? && charge_type.is_a?(String)
-      attendance = attendances.create(user_id: user.id, event_id: event.id, type_of_charge: charge_type)
+      attendance = attendances.create(instructor_id: instructor.id, event_id: event.id, type_of_charge: charge_type)
     end
     attendance.try(:persisted?) || false
   end

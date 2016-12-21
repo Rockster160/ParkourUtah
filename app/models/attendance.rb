@@ -4,7 +4,7 @@
 #
 #  id             :integer          not null, primary key
 #  dependent_id   :integer
-#  user_id        :integer
+#  instructor_id  :integer
 #  event_id       :integer
 #  location       :string
 #  created_at     :datetime         not null
@@ -19,13 +19,12 @@ class Attendance < ActiveRecord::Base
   attr_accessor :skip_validations
 
   belongs_to :dependent
-  belongs_to :user # Instructor
+  belongs_to :instructor, class_name: "User"
   belongs_to :event
 
   validate :one_per_athlete
 
   def athlete; dependent; end
-  def instructor; user; end
 
   def sent!
     self.update(sent: true)
