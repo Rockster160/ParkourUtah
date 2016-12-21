@@ -1,16 +1,13 @@
 <div class="central-container">
   <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
-  <h1><%= @event_schedule.title %></h1>
-  <h3>Attendances</h3>
-  <% @attendances_by_date.sort_by {|k,v|-k.to_i}.each do |date, attendances| %>
-    <h3><%= date.strftime("%-d %b, %Y") %></h3>
+  <h1><%= @instructor.full_name %></h1>
+  <% @instructor.attendances_taught.order(created_at: :desc).group_by {|a| a.created_at.to_date}.each do |date, attendances| %>
+    <h3><%= date.strftime("%B %-d, %Y") %></h3>
     <ul>
       <% attendances.each do |attendance| %>
-        <% athlete = attendance.athlete %>
-        <% next unless athlete.present? %>
-        <% guardian = athlete.user %>
+        <% next unless attendance.athlete.present? %>
         <li style="margin-top: 10px;">
-          <strong>Instructor:</strong> <%= link_to attendance.instructor.full_name, instructor_path(attendance.instructor) %><br>
+          <strong>Class:</strong> <%= link_to attendance.event.title, event_schedule_path(attendance.event.event_schedule) %><br>
           <strong>Student:</strong> <%= link_to attendance.athlete.full_name, admin_user_path(attendance.athlete.user) %><br>
           <strong>Guardian:</strong> <%= link_to attendance.athlete.user.email, admin_user_path(attendance.athlete.user) %>
         </li>

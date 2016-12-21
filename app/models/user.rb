@@ -69,6 +69,7 @@ class User < ActiveRecord::Base
   has_many :subscriptions, dependent: :destroy
   has_many :subscribed_events, through: :subscriptions, source: "event_schedule"
   has_many :classes_to_teach, class_name: "EventSchedule", foreign_key: "instructor_id"
+  has_many :attendances_taught, class_name: "Attendance"
   has_many :emergency_contacts, dependent: :destroy
 
   after_create :assign_cart

@@ -63,6 +63,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :attendances, only: [ :index ]
+
   get :dashboard, controller: :admins
   resource :admin, only: [] do
     get :purchase_history

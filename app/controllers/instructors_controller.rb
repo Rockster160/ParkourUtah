@@ -5,6 +5,10 @@ class InstructorsController < ApplicationController
     @instructors = User.instructors.order(instructor_position: :asc)
   end
 
+  def show
+    @instructor = User.instructors.find(params[:id])
+  end
+
   def new
     @instructor = User.new
   end

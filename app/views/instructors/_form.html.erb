@@ -1,11 +1,19 @@
 <div class="central-container form-offset">
-  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %> <br>
+  <%= link_to "View Instructor Attendances", instructor_path(@instructor), class: 'pkut-btn' %>
   <%= form_for @instructor, url: instructors_path do |f| %>
     <div class="form-container">
-      <div class="form-field">
-        <%= f.label :email, "Enter an existing users email or a new account will be created for them." %> <br>
-        <%= f.text_field :email, placeholder: 'justin@parkourutah.com', class: 'pkut-textbox' %>
-      </div>
+      <% if @instructor.persisted? %>
+        <div class="form-field">
+          <%= f.label :email %> <br>
+          <%= f.text_field :email, placeholder: 'justin@parkourutah.com', class: 'pkut-textbox' %>
+        </div>
+      <% else %>
+        <div class="form-field">
+          <%= f.label :email, "Enter an existing users email or a new account will be created for them." %> <br>
+          <%= f.text_field :email, placeholder: 'justin@parkourutah.com', class: 'pkut-textbox' %>
+        </div>
+      <% end %>
       <div class="form-field">
         <%= f.label :first_name %> <br>
         <%= f.text_field :first_name, placeholder: 'Justin', class: 'pkut-textbox' %>
