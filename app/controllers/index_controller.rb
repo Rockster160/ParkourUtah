@@ -58,7 +58,8 @@ class IndexController < ApplicationController
 
   def contact
     success = false
-    if /\(\d{3}\) \d{3}-\d{4}/ =~ params[:phone]
+    blacklisted = blacklisted_body?
+    if /\(\d{3}\) \d{3}-\d{4}/ =~ params[:phone] && blacklisted
       flash[:notice] = "Thanks! We'll have somebody get in contact with you shortly."
       success = true
     end
@@ -70,7 +71,7 @@ class IndexController < ApplicationController
       body: params[:comment],
       success: success
     )
-    if params[:phone].split('').map {|x| x[/\d+/]}.join.length >= 7 || success
+    if !blacklisted && (params[:phone].split('').map {|x| x[/\d+/]}.join.length >= 7 || success)
       contact_request.notify_slack
     end
     redirect_to root_path
@@ -111,6 +112,17 @@ class IndexController < ApplicationController
         flash[:alert] = "There was an error saving your address."
       end
     end
+  end
+
+  def blacklisted_body?
+    body_blacklist.any? { |blacklist_string| params[:comment].include?(blacklist_string) }
+  end
+
+  def body_blacklist
+    [
+      "1. You have been in business for At Least 1 year",
+      "Cheap Coach"
+    ]
   end
 
 end
