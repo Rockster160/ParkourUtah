@@ -16,7 +16,7 @@
     <h3><%= item.title %></h3>
     <ul>
       <% users.each do |user| %>
-        <a href="<%= user_admin_path(user) %>">
+        <a href="<%= admin_user_path(user) %>">
           <li><%= user.id %>: <%= user.email %></li>
         </a>
       <% end %>

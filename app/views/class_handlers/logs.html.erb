@@ -17,7 +17,7 @@
   <% @attendances.each do |attendance| %>
     <% athlete = attendance.athlete %>
     <% next if athlete.nil? %>
-    <a href="<%= user_admin_path(athlete.user) %>"><h3><%= athlete.full_name %> - <%= attendance.type_of_charge %></h3></a>
+    <a href="<%= admin_user_path(athlete.user) %>"><h3><%= athlete.full_name %> - <%= attendance.type_of_charge %></h3></a>
     <p>Guardian phone: <%= athlete.guardian_phone %></p>
     <% athlete.user.emergency_contacts.each do |ec| %>
       <p>Emergency Contact: <strong><%= ec.name %> <%= athlete.format_phone(ec.number) %></strong></p>
