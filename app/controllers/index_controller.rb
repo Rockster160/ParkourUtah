@@ -121,7 +121,8 @@ class IndexController < ApplicationController
   def body_blacklist
     [
       "1. You have been in business for At Least 1 year",
-      "Cheap Coach"
+      "Cheap Coach",
+      "Our Tiffany Jewellery Store"
     ]
   end
 
