@@ -1,7 +1,7 @@
 <div class="central-container form-offset">
   <h1><%= @event.title %></h1>
   <h4>Instructor: <%= @event.host_name %></h4>
-  <h6><%= @event.recurring? ? @event.date.strftime('%As at %l:%M %p') : @event.date.strftime('%A, %B %-d at %-l:%M %p') %></h6>
+  <h6><%= @event.date.strftime('%As at %l:%M %p') %></h6>
   <p>Cost: <%= @event.cost_in_dollars > 0 ? "#{@event.cost_in_dollars.round} credits" : 'Free' %></p>
   <br/>
   <p><%= @event.description %></p>
