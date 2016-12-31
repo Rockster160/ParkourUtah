@@ -73,7 +73,7 @@ class Dependent < ActiveRecord::Base
     if has_unlimited_access?
       'Unlimited Subscription' if current_subscription.use!
     elsif has_trial?
-      'Trial Class' if trial.use!
+      'Trial Class'
     elsif user.credits >= event_cost
       'Credits' if user.charge_credits(event_cost)
     end
