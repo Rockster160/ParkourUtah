@@ -125,7 +125,8 @@ class IndexController < ApplicationController
       "Our Tiffany Jewellery Store",
       "Swiss Replica Watch",
       "Cheap Moncler jackets",
-      "revolution in online promotion"
+      "revolution in online promotion",
+      "buy cs6 photoshop cheapest"
     ]
   end
 
