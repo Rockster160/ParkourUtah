@@ -31,8 +31,12 @@ class EventsController < ApplicationController
   end
 
   def cancel
-    event = @event_schedule.event_by_id(params[:id], with_date: params[:date])
-    event.save
+    if params[:id] == "new"
+      event = @event_schedule.event_by_id(params[:id], with_date: params[:date])
+      event.save
+    else
+      event = Event.find(params[:id])
+    end
     if params[:should_happen] == "true"
       event.uncancel!
       flash[:notice] = "Event has successfully been uncancelled."
