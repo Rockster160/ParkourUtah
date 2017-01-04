@@ -127,7 +127,8 @@ class IndexController < ApplicationController
       "Cheap Moncler jackets",
       "revolution in online promotion",
       "buy cs6 photoshop cheapest",
-      "omasex.online"
+      "omasex.online",
+      "deposito e investimento"
     ]
   end
 
