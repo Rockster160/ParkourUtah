@@ -128,7 +128,12 @@ class IndexController < ApplicationController
       "revolution in online promotion",
       "buy cs6 photoshop cheapest",
       "omasex.online",
-      "deposito e investimento"
+      "deposito e investimento",
+      "mp3dj.eu",
+      "buy essay for college",
+      "I love reading phorums posted here",
+      "You have a product, service and have no customers?",
+      "buy a cheap"
     ]
   end
 
