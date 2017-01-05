@@ -71,7 +71,8 @@ class IndexController < ApplicationController
       body: params[:comment],
       success: success
     )
-    if !blacklisted && (params[:phone].split('').map {|x| x[/\d+/]}.join.length >= 7 || success)
+    phone_digits = params[:phone].split('').map {|x| x[/\d+/]}.join
+    if !blacklisted && ((phone_digits.length >= 7 && phone_digits.length <= 10) || success)
       contact_request.notify_slack
     end
     redirect_to root_path
@@ -133,7 +134,8 @@ class IndexController < ApplicationController
       "buy essay for college",
       "I love reading phorums posted here",
       "You have a product, service and have no customers?",
-      "buy a cheap"
+      "buy a cheap",
+      "href="
     ]
   end
 
