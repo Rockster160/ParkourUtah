@@ -46,7 +46,7 @@ class Cart < ActiveRecord::Base
     slack_message << "#{'-- Total:'.ljust(max_name)} #{''.rjust(max_quantity)}  #{number_to_currency(total_in_dollars).rjust(max_cost)}\n"
     slack_message << "```"
 
-    channel = Rails.env.production? ? "#support" : "#slack-testing"
+    channel = Rails.env.production? ? "#purchases" : "#slack-testing"
     SlackNotifier.notify(slack_message, channel)
   end
 
