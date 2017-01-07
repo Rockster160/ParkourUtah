@@ -11,9 +11,57 @@
 #
 
 class Cart < ActiveRecord::Base
+  include ActionView::Helpers::NumberHelper
 
   belongs_to :user
   has_many :cart_items, dependent: :destroy
+
+  def notify_slack_of_purchase
+    if user.present?
+      user_url = Rails.application.routes.url_helpers.admin_user_url(user)
+      user_url_text = user.present? ? "<#{user_url}|Click here to view their profile.>" : ""
+    end
+    slack_message = "#{email || user.try(:email)} has just made a purchase. #{user_url_text}\n"
+
+    if is_physical?
+      address = user.address
+      slack_message << "*Shipping information*\n"
+      slack_message << "> #{address.line1}\n"
+      slack_message << "> #{address.line2}\n"
+      slack_message << "> #{address.city}\n"
+      slack_message << "> #{address.state}\n"
+      slack_message << "> #{address.zip}\n\n"
+    end
+
+    max_name = [10, cart_items.map(&:order_name).map(&:to_s).map(&:length)].flatten.max + 2
+    max_quantity = [2, cart_items.map(&:amount).map(&:to_s).map(&:length)].flatten.max + 2
+    max_cost = [5, cart_items.map(&:line_item).map(&:cost_in_pennies).map(&:to_s).map(&:length)].flatten.max + 5
+
+    slack_message << "```"
+    cart_items.each do |cart_item|
+      slack_message << "#{cart_item.order_name.ljust(max_name)} #{cart_item.amount.to_s.rjust(max_quantity)}x #{number_to_currency(cart_item.line_item.cost_in_pennies / 100).rjust(max_cost)}\n"
+    end
+    slack_message << "#{'-- Tax:'.ljust(max_name)} #{''.rjust(max_quantity)}  #{number_to_currency(taxes_in_dollars).rjust(max_cost)}\n" if taxes > 0
+    slack_message << "#{'-- Shipping:'.ljust(max_name)} #{''.rjust(max_quantity)}  #{number_to_currency(shipping_in_dollars).rjust(max_cost)}\n" if shipping > 0
+    slack_message << "#{'-- Total:'.ljust(max_name)} #{''.rjust(max_quantity)}  #{number_to_currency(total_in_dollars).rjust(max_cost)}\n"
+    slack_message << "```"
+
+    channel = Rails.env.production? ? "#support" : "#slack-testing"
+    SlackNotifier.notify(slack_message, channel)
+  end
+
+  def is_gift_card?
+    cart_items.any? { |cart_item| ["Gift Card"].include?(cart_item.item.category) }
+  end
+  def is_physical?
+    cart_items.any? { |cart_item| ["Clothing", "Accessories"].include?(cart_item.item.category) }
+  end
+  def adds_credits?
+    cart_items.any? { |cart_item| cart_item.item.credits > 0 }
+  end
+  def is_subscription?
+    cart_items.any? { |cart_item| cart_item.item.is_subscription? }
+  end
 
   def purchased?
     purchased_at?

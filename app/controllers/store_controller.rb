@@ -164,9 +164,8 @@ class StoreController < ApplicationController
     if user_signed_in?
       if current_user.address && current_user.address.is_valid?
         if create_charge
-          ItemsPurchasedMailerWorker.perform_async(current_user.cart.id, "rocco11nicholls@gmail.com")
           ItemsPurchasedMailerWorker.perform_async(current_user.cart.id, @cart.email) unless Rails.env.development?
-          ItemsPurchasedMailerWorker.perform_async(current_user.cart.id, ENV["PKUT_EMAIL"]) unless Rails.env.development?
+          @cart.notify_slack_of_purchase
           current_user.carts.create
           flash[:notice] = "Cart was successfully purchased."
         else
@@ -177,9 +176,7 @@ class StoreController < ApplicationController
       end
     else
       if create_charge
-        ItemsPurchasedMailerWorker.perform_async(@cart.id, "rocco11nicholls@gmail.com")
         ItemsPurchasedMailerWorker.perform_async(@cart.id, @cart.email) unless Rails.env.development?
-        ItemsPurchasedMailerWorker.perform_async(@cart.id, ENV["PKUT_EMAIL"]) unless Rails.env.development?
         session["cart_id"] = Cart.create.id
         flash[:notice] = "Cart was successfully purchased."
       else

@@ -74,11 +74,13 @@
       <td></td>
       <td><%= number_to_currency(@cart.taxes_in_dollars) %></td>
     </tr>
-    <tr>
-      <td><strong>Shipping</strong></td>
-      <td></td>
-      <td><%= number_to_currency(@cart.shipping_in_dollars) %></td>
-    </tr>
+    <% if @is_physical %>
+      <tr>
+        <td><strong>Shipping</strong></td>
+        <td></td>
+        <td><%= number_to_currency(@cart.shipping_in_dollars) %></td>
+      </tr>
+    <% end %>
     <tr>
       <td><strong>Total</strong></td>
       <td></td>
