@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :still_signed_in
-  before_action :validate_instructor, only: [ :show, :index ]
-  before_action :validate_admin, except: [ :show, :index ]
+  before_action :validate_instructor, only: [ :show, :index, :attendance ]
+  before_action :validate_admin, except: [ :show, :index, :attendance ]
 
   def show
     @user = User.find(params[:id])
