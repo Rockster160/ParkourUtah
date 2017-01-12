@@ -6,9 +6,9 @@
   <% end %>
   <%= link_to "Private Class", athlete_id_class_handler_path(1), class: 'pkut-btn' %> <br>
   <%= link_to "Testing Session", athlete_id_class_handler_path(83788378), class: 'pkut-btn' %> <br>
+  <h2>Admin Abilities</h2>
+  <%= link_to "Users", admin_users_path, class: 'pkut-btn' %> <br>
   <% if current_user.is_admin? %>
-    <h2>Admin Abilities</h2>
-    <%= link_to "Users", admin_users_path, class: 'pkut-btn' %> <br>
     <%= link_to "Send Text Message", batch_text_message_admin_path, class: 'pkut-btn' %> <br>
     <%= link_to "Send Batch Email", batch_email_admin_path, class: 'pkut-btn' %> <br>
     <%= link_to "Purchase History", purchase_history_admin_path, class: 'pkut-btn' %> <br>

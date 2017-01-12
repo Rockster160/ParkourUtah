@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :still_signed_in
-  before_action :validate_instructor, only: [ :show ]
-  before_action :validate_admin, except: [ :show ]
+  before_action :validate_instructor, only: [ :show, :index ]
+  before_action :validate_admin, except: [ :show, :index ]
 
   def show
     @user = User.find(params[:id])
@@ -10,7 +10,7 @@ class UsersController < ApplicationController
   def index
     @users = User.order(created_at: :desc)
     @users = @users.by_fuzzy_text(params[:by_fuzzy_text]) if params[:by_fuzzy_text]
-    @users = @users.page(params[:page] || 1)
+    @users = @users.page(params[:page])
 
     respond_to do |format|
       format.json { render json: @users.to_json(include: :dependents) }
