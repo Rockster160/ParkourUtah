@@ -24,6 +24,12 @@ test:
   # password: <%= ENV["PKUT_DB_PASSWORD"] %>
   database: parkour_utah_test
 
+staging:
+  <<: *default
+  database: parkour_utah_staging
+  username: rails
+  password: <%= ENV['PKUT_STAGING_PG_PASSWORD'] %>
+
 production:
   <<: *default
   username: parkour_utah
