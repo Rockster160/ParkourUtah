@@ -42,7 +42,7 @@ class IndexController < ApplicationController
       slack_message = default_message + user_message
     else
       escaped_body = params["Body"].split("\n").map { |line| "\n>#{line}" }.join("")
-      default_message = "*Received text message from: #{params["From"]}*\n>#{escaped_body}"
+      default_message = "*Received text message from: #{params["From"]}*\n#{escaped_body}"
       respond_link = Rails.application.routes.url_helpers.batch_text_message_admin_url(recipients: raw_number)
       user_message = user.present? ? "\nPhone Number seems to match: <#{user_link}|#{user.id} - #{user.email}>" : ""
       respond_message = "\n<#{respond_link}|Click here to respond!>"
