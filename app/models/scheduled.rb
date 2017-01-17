@@ -31,11 +31,11 @@ class Scheduled < ActiveRecord::Base
     end
   end
 
-  def self.send_summary(days)
+  def self.send_summary(days_ago_start, days_ago_end=0)
     summary = {}
     payment = {}
 
-    (0..(days - 1)).each do |days_ago|
+    (days_ago_end..(days_ago_start - 1)).each do |days_ago|
       date = (Time.zone.now - days_ago.days).to_datetime
       first_date = date.beginning_of_day
       last_date = date.end_of_day
@@ -47,7 +47,7 @@ class Scheduled < ActiveRecord::Base
         instructors = {}
         if event.attendances.any?
           event.attendances.each do |attendance|
-            instructor = attendance.user
+            instructor = attendance.instructor
             athlete = attendance.athlete
 
             instructors[instructor.full_name] ||= {}

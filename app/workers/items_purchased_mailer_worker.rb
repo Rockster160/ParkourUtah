@@ -2,7 +2,7 @@ class ItemsPurchasedMailerWorker
   include Sidekiq::Worker
 
   def perform(cart_id, email)
-    unless email
+    if email.nil?
       cart = Cart.find(cart_id)
       user = cart.user
       email ||= user.email
