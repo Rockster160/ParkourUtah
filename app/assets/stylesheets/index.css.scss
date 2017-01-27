@@ -10,11 +10,37 @@ body {
   z-index: -5;
   width: 100%;
   font-family: 'Young', Arial, sans-serif;
-  background-color: $pkut-grey-light;
+  background-color: $mat-grey; 
 }
 
+//custom scrollbar
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background: $mat_pkut-red;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 50px;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+
+//end scrollbar styling
+
+
 #bgvid {
-  background: $pkut-grey-light;
+  background: $mat-grey_dark; 
 }
 
 /* fix bs3 horizontal scrollbar bug */
@@ -41,6 +67,8 @@ body {
   height: auto;
   width: auto;
   transform: translateZ(0);
+  
+  margin-bottom: 5vh;
 }
 
 .container > h1 {
@@ -110,7 +138,8 @@ body {
   min-height: 100%;
   min-width: 100%;
   max-width: 100%;
-  background: linear-gradient(left top, white, $pkut-grey-dark)
+  background: linear-gradient(top, $mat-grey_light, $mat-grey)
+  // background: $mat-grey;
 }
 .callout {
   color: #ffffff;
@@ -127,8 +156,8 @@ body {
 }
 
 footer {
-  padding: 50px 0;
-  background: black;
+  padding: 50px 0; // This line! Here! Look at me! Hey! Aha! See? I'm here.
+  background: $mat-grey_dark;
   color: white;
 }
 

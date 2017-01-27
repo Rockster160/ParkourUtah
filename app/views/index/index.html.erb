@@ -1,7 +1,7 @@
   <div class="video-bg">
-    <video autoplay loop muted id="bgvid">
-      <source src="<%= asset_path('//s3-us-west-2.amazonaws.com/pkut-default/pkut-bg-video.mov') %>" type="video/mp4">
-      <source src="<%= asset_path('pkut-bg-video.mp4') %>" type="video/mp4">
+   <video autoplay="" loop="" muted="" id="bgvid">
+      <source src="//s3-us-west-2.amazonaws.com/pkut-default/pkut-bg-video.mov" type="video/mp4">
+      <source src="/assets/pkut-bg-video-affb00c6247a665efd8a506bd3326466.mp4" type="video/mp4">
     </video>
   </div>
 <div class="header-container" id="home">
@@ -9,17 +9,19 @@
     <div class="container">
       <%= image_tag('//s3-us-west-2.amazonaws.com/pkut-default/PKUT-full-color.png', class: 'img-responsive pkut-main center-block') %>
       <div>&nbsp;</div>
-      <a href="#about" class="main-btn lead scroll-link">About Us</a>
-      <a href="#peeps" class="main-btn lead scroll-link">Our people</a>
-      <br class="visible-xs visible-sm"/>
-      <% if user_signed_in? %>
-        <a href="<%= edit_user_registration_path %>" class="main-btn lead call-to-arms">Get Started</a>
-      <% else %>
-        <a href="<%= new_user_registration_path %>" class="main-btn lead call-to-arms">Get Started</a>
-      <% end %>
-      <br class="visible-xs visible-sm"/>
-      <a href="#calendar" class="main-btn lead scroll-link">Locations</a>
-      <a href="#join" class="main-btn lead scroll-link">Contact us</a>
+      <div class="call-nav">
+        <a href="#about" class="main-btn lead scroll-link">About Us</a>
+        <a href="#peeps" class="main-btn lead scroll-link">Our people</a>
+        <br class="visible-xs visible-sm"/>
+        <% if user_signed_in? %>
+          <a href="<%= edit_user_registration_path %>" class="main-btn lead call-to-arms">Get Started</a>
+        <% else %>
+          <a href="<%= new_user_registration_path %>" class="main-btn lead call-to-arms">Get Started</a>
+        <% end %>
+        <br class="visible-xs visible-sm"/>
+        <a href="#calendar" class="main-btn lead scroll-link">Locations</a>
+        <a href="#join" class="main-btn lead scroll-link">Contact us</a>
+      </div>
     </div>
   </div>
 </div>
@@ -74,7 +76,7 @@
 
   <div class="row">
     <div class="col-md-6 col-md-offset-3 text-center">
-      <h2>Locations</h2>
+      <h2 class="locations-text">Locations</h2>
       <br>
     </div>
   </div>
@@ -84,7 +86,7 @@
       <% @cities.each do |city| %>
         <div class="col-md-3 col-sm-6 col-xs-12">
           <div class="list-group">
-            <%= link_to city, calendar_show_path(city: city.parameterize), class: 'list-group-item' %>
+            <%= link_to city, calendar_show_path(city: city.parameterize), class: 'list-group-item locations-item' %>
           </div>
         </div>
       <% end %>
@@ -96,7 +98,7 @@
 <div class="blurb bright" id="join">
   <div class="row">
     <div class="col-md-6 col-md-offset-3 text-center">
-      <h3>Contact Us</h3>
+      <h2 class="contact-text"></h2>
       <br>
     </div>
   </div>
@@ -107,16 +109,21 @@
 
 <footer class="footer-index">
   <div class="container">
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3 text-center">
-        <ul class="list-inline">
-          <li><a href="//facebook.com/ParkourUtah" target="_blank" class="media-links facebook"><%= icon('facebook', '', class: 'fa-2x') %></a></li>
-          <li><a href="//youtube.com/ParkourUtah" target="_blank" class="media-links youtube"><%= icon('youtube', '', class: 'fa-2x') %></a></li>
-          <li><a href="//twitter.com/ParkourUtah" target="_blank" class="media-links twitter"><%= icon('twitter', '', class: 'fa-2x') %></a></li>
-        </ul>
-        <hr>
-        <br>ParkourUtah © <%= Time.now.year %></p>
+    <div class="row text-center">
+      <div class="social-media-container">
+        <a href="//facebook.com/ParkourUtah" target="_blank" class="social-media-icon">
+          <div class="bubble facebook"></div>
+        </a>
+        <a href="//youtube.com/ParkourUtah" target="_blank" class="social-media-icon">
+          <div class="bubble youtube"></div>
+        </a>
+        <a href="//twitter.com/ParkourUtah" target="_blank" class="social-media-icon">
+          <div class="bubble twitter"></div>
+        </a>
       </div>
+      <br>
+      <div class="copywright">ParkourUtah © <%= Time.now.year %></div>
+      </p>
     </div>
   </div>
 </footer>
