@@ -1,0 +1,122 @@
+<div class="video-bg">
+  <video autoplay loop muted id="bgvid">
+    <source src="<%= asset_path('//s3-us-west-2.amazonaws.com/pkut-default/pkut-bg-video.mov') %>" type="video/mp4">
+  </video>
+</div>
+<div class="header-container" id="home">
+<div class="header vert">
+  <div class="container">
+    <%= image_tag('//s3-us-west-2.amazonaws.com/pkut-default/PKUT-full-color.png', class: 'img-responsive pkut-main center-block') %>
+    <div>&nbsp;</div>
+    <a href="#about" class="btn btn-default btn-lg scroll-link">About Us</a>
+    <a href="#peeps" class="btn btn-default btn-lg scroll-link">Our people</a>
+    <br class="visible-xs visible-sm"/>
+    <a href="/comingsoon" class="btn btn-default call-to-arms">Get Started</a>
+    <br class="visible-xs visible-sm"/>
+    <a href="#calendar" class="btn btn-default btn-lg scroll-link">Locations</a>
+    <a href="#join" class="btn btn-default btn-lg scroll-link">Contact us</a>
+  </div>
+</div>
+</div>
+
+<div id="about" class="blurb">
+<div class="container">
+  <div class="row">
+    <h1>Who we are</h1>
+    <p class="lead">We are Parkour Utah and we like to jump over stuff!</p>
+  </div>
+  <div class="row hidden">
+    <%= render 'index/video_carousel' %>
+  </div>
+</div>
+</div>
+<%= render 'index/modal_placeholders' %>
+
+<div class="callout-background">
+</div>
+
+<div class="gallery" id="calendar">
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3 text-center">
+    <h2>Locations</h2>
+    <br>
+  </div>
+</div>
+
+<div class="container well well-lg">
+  <div class="row">
+    <% @cities.each do |city| %>
+      <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="list-group">
+          <%= link_to city, calendar_show_path(city), class: 'list-group-item' %>
+        </div>
+      </div>
+    <% end %>
+    </div>
+  </div>
+
+</div>
+
+<div class="blurb bright" id="join">
+<div class="row">
+  <div class="col-md-6 col-md-offset-3 text-center">
+    <h3>Contact Us!</h3>
+    <br>
+  </div>
+</div>
+<div class="row">
+  <%= render partial: 'contact_us' %>
+</div>
+</div>
+
+<footer class="footer-index">
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3 text-center">
+      <ul class="list-inline">
+        <li><a href="//www.facebook.com/ParkourUtah" target="_blank" class="media-links"><%= icon('facebook', '', class: 'fa-2x') %></a></li>
+        <li><a href="//twitter.com/ParkourUtah" target="_blank" class="media-links"><%= icon('twitter', '', class: 'fa-2x') %></a></li>
+        <li><a href="" target="_blank" class="media-links"><%= icon('google-plus', '', class: 'fa-2x') %></a></li>
+        <li><a href="" target="_blank" class="media-links"><%= icon('instagram', '', class: 'fa-2x') %></a></li>
+      </ul>
+      <hr>
+      <br>ParkourUtah © <%= Time.now.year %></p>
+    </div>
+  </div>
+</div>
+</footer>
+
+
+<div class="callout-container" id="peeps" style="visibility: hidden;display: none;">
+<div class="callout">
+  <div class="col-md-12 text-center"><h2>Meet our people</h2></div>
+  <div class="col-md-12 text-center">&nbsp;</div>
+  <div class="row">
+    <div class="col-lg-10 col-lg-offset-1 instructors-container">
+      <% @instructors.each do |instructor| %>
+        <div class="flip-container" ontouchstart="this.classList.toggle('hover');">
+          <div class="flipper">
+            <div class="front" style="background: #FFF url(<%= instructor.avatar(:medium) %>);background-size: 100% 100%;">
+            </div>
+            <div class="back" style="background: #FFF url(<%= instructor.avatar_2(:medium) %>);background-size: 100% 100%;">
+              <div class="bio-background">
+                <br/>
+                <p class="card-bio-text">
+                  <strong class="instructor-name"><%= instructor.full_name %></strong><br/>
+                  <% unless instructor.nickname.nil? %>
+                    AKA "<%= instructor.nickname %>"</br>
+                  <% end %>
+                  <%= instructor.title %><br/>
+                  <%= instructor.stats %><br/><br/>
+                  <%= instructor.bio %>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+</div>
