@@ -22,3 +22,5 @@ todo.txt
 # Ignore all c9 files
 /.c9/*
 pkut.zip
+
+git config core.fileMode false
