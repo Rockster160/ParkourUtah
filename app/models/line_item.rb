@@ -71,7 +71,7 @@ class LineItem < ActiveRecord::Base
   end
 
   def cost_in_dollars=(new_dollar_cost)
-    self.cost_in_pennies = new_dollar_cost * 100
+    self.cost_in_pennies = new_dollar_cost.to_f * 100
   end
   def cost_in_dollars
     self.cost_in_pennies.to_f / 100
