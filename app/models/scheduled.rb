@@ -32,6 +32,7 @@ class Scheduled < ActiveRecord::Base
   end
 
   def self.send_summary(days_ago_start, days_ago_end=0)
+    # Break me into smaller methods!!!
     summary = {}
     payment = {}
 
