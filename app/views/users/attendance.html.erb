@@ -9,7 +9,7 @@
         <% athlete.attendances.each do |attendance| %>
         <li>
           <%= attendance.created_at.strftime('%B %-d, %Y') %> - <%= attendance.event ? attendance.event.title : 'This event was deleted' %><br>
-          Host: <%= attendance.user.full_name %>
+          Host: <%= attendance.instructor.full_name %>
         </li>
         <% end %>
       </ul>
