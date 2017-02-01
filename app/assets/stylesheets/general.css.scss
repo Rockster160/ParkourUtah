@@ -43,7 +43,6 @@
   border-radius: 7px;
 }
 
-// TODO This is being overridden by bootstrap
 .locations-item {
   text-decoration: none;
   transition: all 0.1s ease-in-out;
@@ -63,6 +62,7 @@
   }
 
   &:hover {
+    // Overriding Bootstrap's applied styles
     color: $mat-pkut-red !important;
     background-color: white !important;
     box-shadow: none !important;
@@ -124,19 +124,6 @@
     text-align: center;
   }
 }
-
-// .footer-index {
-//   margin-left: 0px !important;
-
-//   //resetting bootstrap
-//   li a {
-//     color: inherit;
-//     &:hover {
-//       color: inherit;
-//       cursor: auto;
-//     }
-//   }
-// }
 
 .social-media-container {
   display: inline-block;
@@ -200,6 +187,6 @@
     }
   }
 }
-.copywright {
+.copyright {
   padding: 15px;
 }
