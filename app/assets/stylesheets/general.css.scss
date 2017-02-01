@@ -53,12 +53,12 @@
 
 
 //TODO This is being overridden by bootstrap, fix l8r
-.locations-item{
+.locations-item {
   text-decoration: none;
   transition: all 0.1s ease-in-out;
   position: relative;
 
-  &:after{
+  &:after {
     content: '';
     top: 0;
     left: 0;
@@ -71,19 +71,19 @@
     transition: opacity 0.1s ease-in-out;
   }
 
-  &:hover{
+  &:hover {
     color: $mat-pkut-red !important;
     background-color: white !important;
     box-shadow: none !important;
     transform: scale(1.05, 1.05);
   }
 
-  &:hover:after{
+  &:hover:after {
     opacity: 1;
   }
 }
 
-#calendar .list-group:after{
+#calendar .list-group:after {
 
 }
 
@@ -138,9 +138,9 @@
 //   margin-left: 0px !important;
 
 //   //resetting bootstrap
-//   li a{
+//   li a {
 //     color: inherit;
-//     &:hover{
+//     &:hover {
 //       color: inherit;
 //       cursor: auto;
 //     }
@@ -209,6 +209,6 @@
     }
   }
 }
-.copywright{
+.copywright {
   padding: 15px;
 }
