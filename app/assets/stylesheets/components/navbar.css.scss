@@ -24,10 +24,6 @@
   }
 }
 
-.icon-bar {
-  background-color: red;
-}
-
 .nav-icon {
   position: absolute;
   right: 17px;
@@ -36,7 +32,7 @@
 
 .navbar a {
   font-size: 14px;
-  color: $mat_pkut-red;
+  color: $mat-pkut-red;
   text-transform: uppercase;
   text-decoration: none;
   text-shadow: none;
