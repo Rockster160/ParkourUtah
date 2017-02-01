@@ -86,7 +86,6 @@ Rails.application.routes.draw do
     end
   end
 
-  get 'test' => 'index#index'
   post 'contact' => 'index#contact'
   post 'receive_sms' => 'index#receive_sms'
   get 'contact' => 'index#contact_page', as: 'contact_page'
