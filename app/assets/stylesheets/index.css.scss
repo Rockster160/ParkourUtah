@@ -1,8 +1,6 @@
 @import "config/variables";
 @import 'config/font-imports';
-/* -- custom css for Bootstrap 3.x --*/
 
-/* move special fonts to HTML head for better performance */
 html,
 body {
   max-width: 100%;
@@ -13,8 +11,7 @@ body {
   background-color: $mat-grey;
 }
 
-//custom scrollbar
-
+// Custom scrollbar
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -34,16 +31,14 @@ body {
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
-
-
-//end scrollbar styling
+// End scrollbar styling
 
 
 #bgvid {
-  background: $mat-grey-dark; 
+  background: $mat-grey-dark;
 }
 
-/* fix bs3 horizontal scrollbar bug */
+// Fix bs3 horizontal scrollbar bug
 .row { margin: 0; padding: 0 }
 
 .pkut-main {
@@ -77,7 +72,7 @@ body {
 
 .header h1 {
   font-size: 80px;
-  color: #fff;
+  color: #FFF;
   margin-left: -5px;
   margin-bottom: 5px;
   text-transform: uppercase;
@@ -89,7 +84,7 @@ body {
 
 .blurb {
   padding: 24px 0;
-  background-color: #fefefe;
+  background-color: #FEFEFE;
 }
 
 .blurb .panel {
@@ -105,7 +100,7 @@ body {
 .featurette {
   background: #222334;
   padding: 50px 0;
-  color: #ffffff;
+  color: #FFFFFF;
 }
 
 .featurette-item {
@@ -113,7 +108,7 @@ body {
 }
 
 .featurette-item > i {
-  border: 3px solid #ffffff;
+  border: 3px solid #FFFFFF;
   border-radius: 50%;
   display: inline-block;
   font-size: 56px;
@@ -139,10 +134,9 @@ body {
   min-width: 100%;
   max-width: 100%;
   background: linear-gradient(top, $mat-grey-light, $mat-grey)
-  // background: $mat-grey;
 }
 .callout {
-  color: #ffffff;
+  color: #FFFFFF;
   min-height: 500px;
   padding-bottom: 50px;
   min-height: 100%;
@@ -156,7 +150,7 @@ body {
 }
 
 footer {
-  padding: 50px 0; // This line! Here! Look at me! Hey! Aha! See? I'm here.
+  padding: 50px 0;
   background: $mat-grey-dark;
   color: white;
 }
@@ -169,5 +163,3 @@ footer {
     padding:15px;
   }
 }
-
-/* -- end custom css for Bootstrap 3.x --*/

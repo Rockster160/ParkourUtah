@@ -108,7 +108,7 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
 
 .calendar-controls {
   min-height: 100px;
-  background: #eee;
+  background: #EEE;
   padding-top: 34px;
   border-radius: 20px 20px 0 0;
 }
@@ -246,13 +246,13 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
 }
 
 .not-month {
-  background: #eee;
+  background: #EEE;
 }
 
 @media (max-width: 767px) {
   .calendar-controls {
     min-height: 120px;
-    background: #eee;
+    background: #EEE;
     padding-top: 10px;
     border-radius: 20px 20px 0 0;
   }
