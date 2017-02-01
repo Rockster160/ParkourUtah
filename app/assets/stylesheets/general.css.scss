@@ -1,14 +1,6 @@
 @import "config/variables";
 @import 'config/font-imports';
 
-.media-links {
-  transition: 0.2s;
-  color: white;
-  &.facebook:hover { color: #3B5998 }
-  &.youtube:hover { color: #B31217 }
-  &.twitter:hover { color: #55ACEE }
-}
-
 .hover-btn:hover { cursor: pointer; }
 
 .central-container {
@@ -51,8 +43,7 @@
   border-radius: 7px;
 }
 
-
-//TODO This is being overridden by bootstrap, fix l8r
+// TODO This is being overridden by bootstrap
 .locations-item {
   text-decoration: none;
   transition: all 0.1s ease-in-out;
@@ -82,11 +73,6 @@
     opacity: 1;
   }
 }
-
-#calendar .list-group:after {
-
-}
-
 
 .close-btn {
   transition: all 0.1s ease-in-out;
@@ -127,7 +113,12 @@
   padding-left: 10px;
   line-height: 3em;
   color: $pkut-grey;
-  & h1 {
+
+  padding: 0 20px 20px;
+  border-radius: 8px;
+  border: 2px solid $pkut-grey-light;
+  background: white;
+  h1 {
     font-size: 72px;
     color: $pkut-red;
     text-align: center;
