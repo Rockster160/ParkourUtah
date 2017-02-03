@@ -91,6 +91,7 @@ Rails.application.configure do
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
 
+  config.active_record.belongs_to_required_by_default = true
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 end

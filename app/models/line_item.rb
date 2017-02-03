@@ -30,7 +30,7 @@ class LineItem < ApplicationRecord
 
   has_attached_file :display,
     styles: { :medium => "300x300>", :thumb => "100x100#" },
-    :default_url => "/images/missing.png",
+    :default_url => "http://parkourutah.com/images/missing.png",
     :storage => :s3,
     :bucket => ENV['PKUT_S3_BUCKET_NAME'],
     :convert_options => { :all => '-background white -flatten +matte' }

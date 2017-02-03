@@ -86,7 +86,7 @@ class User < ApplicationRecord
                     :styles => { :medium => "300x400>", :thumb => "120x160" },
                     storage: :s3,
                     bucket: ENV['PKUT_S3_BUCKET_NAME'],
-                    :default_url => "/images/missing.png",
+                    :default_url => "http://parkourutah.com/images/missing.png",
                     :convert_options => { :all => '-background white -flatten +matte' }
   validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
 
@@ -94,7 +94,7 @@ class User < ApplicationRecord
                     :styles => { :medium => "300x400>", :thumb => "120x160" },
                     storage: :s3,
                     bucket: ENV['PKUT_S3_BUCKET_NAME'],
-                    :default_url => "/images/missing.png",
+                    :default_url => "http://parkourutah.com/images/missing.png",
                     :convert_options => { :all => '-background white -flatten +matte' }
   validates_attachment_content_type :avatar_2, :content_type => /\Aimage\/.*\Z/
 

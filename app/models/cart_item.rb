@@ -14,9 +14,9 @@
 
 class CartItem < ApplicationRecord
 
-  belongs_to :cart
+  belongs_to :cart, optional: true
   belongs_to :user
-  belongs_to :line_item
+  belongs_to :line_item, optional: true
 
   before_save :verify_amount_is_not_nil
 
