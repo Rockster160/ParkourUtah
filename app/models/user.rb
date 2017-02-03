@@ -58,7 +58,7 @@
 # drivers_license_number
 # drivers_license_state
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
 
   has_one :address, dependent: :destroy
   has_one :notifications, dependent: :destroy

@@ -22,7 +22,7 @@
 #
 
 # TODO Rename to 'Athlete'
-class Dependent < ActiveRecord::Base
+class Dependent < ApplicationRecord
 
   belongs_to :user
   has_many :waivers, dependent: :destroy

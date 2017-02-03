@@ -24,7 +24,7 @@
 #  redemption_item_id   :integer
 #
 
-class LineItem < ActiveRecord::Base
+class LineItem < ApplicationRecord
 
   has_many :redemption_keys
 

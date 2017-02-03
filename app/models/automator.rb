@@ -8,7 +8,7 @@
 #  updated_at :datetime         not null
 #
 
-class Automator < ActiveRecord::Base
+class Automator < ApplicationRecord
 
   def self.activate!
     Automator.create unless first

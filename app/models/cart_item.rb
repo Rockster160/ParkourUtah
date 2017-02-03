@@ -12,7 +12,7 @@
 #  order_name     :string
 #
 
-class CartItem < ActiveRecord::Base
+class CartItem < ApplicationRecord
 
   belongs_to :cart
   belongs_to :user

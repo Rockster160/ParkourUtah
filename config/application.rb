@@ -1,4 +1,4 @@
-require File.expand_path('../boot', __FILE__)
+require_relative 'boot'
 
 require 'rails/all'
 
@@ -20,7 +20,7 @@ module ParkourUtah
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
     config.assets.precompile += ['', '']
-    config.serve_static_files = false
+    config.public_file_server.enabled = false
     config.assets.initialize_on_precompile true
     config.autoload_paths += %W(#{config.root}/app/workers)
     config.eager_load_paths += %W(#{config.root}/app/workers)
@@ -30,5 +30,7 @@ module ParkourUtah
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+    config.active_record.belongs_to_required_by_default = true
+    config.assets.quiet = true
   end
 end

@@ -13,7 +13,7 @@
 #  updated_at :datetime         not null
 #
 
-class ContactRequest < ActiveRecord::Base
+class ContactRequest < ApplicationRecord
 
   def notify_slack
     email_url = Rails.application.routes.url_helpers.batch_email_admin_url(recipients: email)

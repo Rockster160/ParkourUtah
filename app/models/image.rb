@@ -8,7 +8,7 @@
 #  updated_at :datetime         not null
 #
 
-class Image < ActiveRecord::Base
+class Image < ApplicationRecord
   belongs_to :spot
 
   has_attached_file :file,

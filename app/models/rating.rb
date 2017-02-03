@@ -9,6 +9,6 @@
 #  updated_at :datetime         not null
 #
 
-class Rating < ActiveRecord::Base
+class Rating < ApplicationRecord
   belongs_to :spot
 end

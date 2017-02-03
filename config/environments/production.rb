@@ -27,7 +27,7 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
 
   Paperclip.options.merge!(:command_path => "/usr/bin")
-  # config.serve_static_files = ENV['RAILS_SERVE_STATIC_FILES'].present?
+  # config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
   config.paperclip_defaults = {
     :storage => :s3,
     :s3_credentials => {
@@ -42,7 +42,7 @@ Rails.application.configure do
   # config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
-  config.serve_static_files = false
+  config.public_file_server.enabled = false
   config.assets.compile = false
   config.assets.digest = true
 

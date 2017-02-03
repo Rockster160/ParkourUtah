@@ -14,7 +14,7 @@
 #
 
 # TODO Rename associations to be better
-class Attendance < ActiveRecord::Base
+class Attendance < ApplicationRecord
 
   attr_accessor :skip_validations
 

@@ -14,7 +14,7 @@
 
 # Rename to RecurringSubscription
 # Add Stripe ID here, and attempt to charge using that customer instead
-class AthleteSubscription < ActiveRecord::Base
+class AthleteSubscription < ApplicationRecord
 
   belongs_to :dependent
   after_initialize :set_default_expiration_date

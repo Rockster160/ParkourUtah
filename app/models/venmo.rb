@@ -11,7 +11,7 @@
 #  updated_at    :datetime         not null
 #
 
-class Venmo < ActiveRecord::Base
+class Venmo < ApplicationRecord
 
   def expired?
     Time.zone.now > expires_at

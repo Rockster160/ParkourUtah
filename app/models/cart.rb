@@ -10,7 +10,7 @@
 #  purchased_at :datetime
 #
 
-class Cart < ActiveRecord::Base
+class Cart < ApplicationRecord
   include ActionView::Helpers::NumberHelper
 
   belongs_to :user

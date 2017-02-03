@@ -1,5 +1,5 @@
 require 'net/http'
-class Scheduled < ActiveRecord::Base
+class Scheduled < ApplicationRecord
 
   def self.send_class_text
     date_range = 100.minutes.from_now..130.minutes.from_now

@@ -8,7 +8,7 @@
 #  name    :string
 #
 
-class EmergencyContact < ActiveRecord::Base
+class EmergencyContact < ApplicationRecord
 
   belongs_to :user
 

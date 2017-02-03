@@ -11,7 +11,7 @@
 #  updated_at   :datetime         not null
 #
 
-class Waiver < ActiveRecord::Base
+class Waiver < ApplicationRecord
 
   belongs_to :dependent
   validate :has_matching_name_as_athlete

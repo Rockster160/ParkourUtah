@@ -20,7 +20,7 @@
 #  updated_at      :datetime
 #
 
-class EventSchedule < ActiveRecord::Base
+class EventSchedule < ApplicationRecord
   include Defaults
 
   belongs_to :instructor, class_name: "User"
