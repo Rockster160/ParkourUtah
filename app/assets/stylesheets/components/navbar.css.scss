@@ -24,10 +24,6 @@
   }
 }
 
-.icon-bar {
-  background-color: red;
-}
-
 .nav-icon {
   position: absolute;
   right: 17px;
@@ -36,19 +32,19 @@
 
 .navbar a {
   font-size: 14px;
-  color: $pkut-red;
+  color: $mat-pkut-red;
   text-transform: uppercase;
   text-decoration: none;
-  text-shadow:
-    -1px -1px 0 #FFF,
-    1px -1px 0 #FFF,
-    -1px 1px 0 #FFF,
-    1px 1px 0 #FFF,
-    2px 2px 3px #555;
+  text-shadow: none;
+  transition: text-shadow 0.2s ease-in-out;
   &:hover {
     text-decoration: none;
-    background-color: $pkut-grey-white;
-    color: darken($pkut-red, 10%);
+    text-shadow:
+      -1px -1px 0 #FFF,
+      1px -1px 0 #FFF,
+      -1px 1px 0 #FFF,
+      1px 1px 0 #FFF,
+      2px 2px 3px #555;
   }
 }
 
@@ -56,4 +52,8 @@
   text-decoration: none;
   text-transform: none;
   color: $pkut-red;
+}
+
+.call-nav {
+  padding-bottom:30px;
 }

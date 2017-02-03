@@ -27,10 +27,10 @@ p {
   font-family: 'MicroExtendFLF-BoldItalic', Arial, sans-serif;
 }
 
-.standout {
-  color: $pkut-red;
-  text-shadow: 3px 3px 3px $pkut-grey-dark;
+.locations-text, .standout, .contact-text, .standout {
+  color: $mat-grey-dark;
 }
+
 .header-text {
   color: $pkut-grey-dark;
 }

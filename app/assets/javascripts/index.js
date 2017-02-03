@@ -21,6 +21,12 @@ var ready = function() {
         || (lBound >= top && lBound <= bottom)
         || (uBound >= top && uBound <= bottom);
   };
+  
+  $('.submit-contact-us').click(function(e) {
+    e.preventDefault();
+    $(this).parents('form').submit();
+    return false;
+  })
 
   if (window.location.pathname == "/") {
     /* smooth scrolling */
