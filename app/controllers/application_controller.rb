@@ -30,11 +30,8 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:account_update) << :avatar
-    devise_parameter_sanitizer.for(:account_update) << :avatar_2
-    devise_parameter_sanitizer.for(:account_update) << :bio
-    devise_parameter_sanitizer.for(:account_update) << :phone_number
-    devise_parameter_sanitizer.for(:sign_up) << :first_name
+    devise_parameter_sanitizer.sanitize(:account_update) { |u| u.permit(:avatar, :avatar_2, :bio, :phone_number) }
+    devise_parameter_sanitizer.sanitize(:sign_up) { |u| u.permit(:first_name) }
   end
 
   def still_signed_in

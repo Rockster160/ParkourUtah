@@ -57,6 +57,8 @@
 # date_of_birth
 # drivers_license_number
 # drivers_license_state
+# reset_password_token
+# confirmation_token
 
 class User < ApplicationRecord
 

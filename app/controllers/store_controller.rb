@@ -45,6 +45,7 @@ class StoreController < ApplicationController
 
       orders = @cart.cart_items
       order = orders.where(order_name: name).first
+
       if params[:new_amount]
         params[:new_amount] ||= "0"
         if params[:new_amount].to_i <= 0

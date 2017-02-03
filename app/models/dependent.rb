@@ -170,7 +170,7 @@ class Dependent < ApplicationRecord
     num.times do |n|
      athlete = Dependent.first
      athlete.generate_pin
-     binding.pry if athlete.athlete_id == Dependent.last.athlete_id
+    #  binding.pry if athlete.athlete_id == Dependent.last.athlete_id
      athlete.athlete_id
      puts n
    end
