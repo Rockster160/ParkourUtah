@@ -21,7 +21,7 @@ var ready = function() {
         || (lBound >= top && lBound <= bottom)
         || (uBound >= top && uBound <= bottom);
   };
-  
+
   $('.submit-contact-us').click(function(e) {
     e.preventDefault();
     $(this).parents('form').submit();
@@ -39,12 +39,6 @@ var ready = function() {
     });
   };
 
-  $('.forceOpen').click(function() {});
-  $('body').delegate('.forceOpen', 'click', function() {
-    var id = $(this).attr('data-target');
-    $('.modal').modal('hide');
-    $(id).modal('show');
-  });
 };
 
 $('.delayed-load').ready(function() {

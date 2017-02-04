@@ -43,16 +43,13 @@
     <% if current_user.is_admin? %>
       --<%= link_to 'Add Trial Class', update_trials_admin_user_path(@user, athlete_id: athlete.id, num: '1'), method: :post %><br/>
     <% end %>
-    <div class="modal fade" id="edit<%= athlete.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="central-container">
-        <div class="error-container center-block">
-          <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
-          <h3 class="pkut-header"><%= athlete.full_name %></h3>
-            <p>This will permanently delete this athlete. Are you sure? This action cannot be undone.<p>
-            <%= link_to "Delete", destroy_athlete_path(athlete.id), class: 'pkut-btn', method: :delete %>
-        </div>
-      </div>
-    </div>
+
+    <%= render_modal("edit#{athlete.id}", "skinny-modal") do %>
+      <h3 class="pkut-header"><%= athlete.full_name %></h3>
+      <p>This will permanently delete this athlete. Are you sure? This action cannot be undone.<p>
+      <%= link_to "Delete", destroy_athlete_path(athlete.id), class: 'pkut-btn', method: :delete %>
+    <% end %>
+
     --Birthday: <%= athlete.date_of_birth %><br/>
     --Waiver expires: <%= athlete.waiver ? athlete.waiver.exp_date.strftime('%B %e, %Y') : "No waiver signed" %><br/>
     <% if current_user.is_admin? %>
@@ -71,7 +68,27 @@
   <% end %>
 </div>
 <hr>
-<%= render partial: 'destroy_user', locals: {user: @user} %>
-<%= render partial: 'adjust_credits', locals: {user: @user} %>
+
+<%= render_modal("adjust-#{@user.id}", "skinny-modal") do %>
+  <h1 class="pkut-header">Adjust</h1>
+  <p class="error-message">Enter a number to add credits to user's account. Enter a (-) before the number to subtract credits.</p>
+  <p class="error-message">(12 or -12)</p>
+  <%= form_tag update_credits_admin_user_path(@user) do %>
+    <%= text_field_tag :adjust, '' %>
+    <%= submit_tag "Adjust Credits", class: 'pkut-btn' %>
+  <% end %>
+<% end %>
+
+<%= render_modal("delete-#{@user.id}", "skinny-modal") do %>
+  <h1 class="pkut-header">Destroy?</h1>
+  <p class="error-message">Are you positive you want to destroy <strong><%= @user.full_name %></strong>?</p>
+  <p class="error-message">This is permanent and cannot be undone.</p>
+  <p class="error-message">If you are sure, enter `DELETE`(all caps, no quotes) below and then click delete user.</p>
+  <%= form_for [:admin, @user], method: :delete do %>
+    <%= text_field_tag :confirmation, '', class: 'delete-user-field'  %>
+    <%= submit_tag "Delete User", class: 'delete-user-btn' %>
+  <% end %>
+<% end %>
+
 <%= render partial: 'edit_user_notifications', locals: {user: @user} %>
 <%= render partial: 'edit_user_subscriptions', locals: {user: @user} %>

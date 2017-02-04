@@ -36,13 +36,6 @@
   white-space: pre-wrap;
 }
 
-.standard-modal {
-  padding: 10px;
-  background: white;
-  border: 2px solid $pkut-grey-dark;
-  border-radius: 7px;
-}
-
 .locations-item {
   text-decoration: none;
   transition: all 0.1s ease-in-out;
@@ -93,10 +86,6 @@
   &.contact-close {
     margin-right: 16px;
     margin-top: 1px;
-  }
-  &.error-close {
-    right: -30px;
-    top: -20px;
   }
   &.delete { margin-top: 10px; }
 }

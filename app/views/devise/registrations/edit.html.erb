@@ -145,17 +145,13 @@
     <div class="actions internal-center">
       <a alt="..." class="pkut-btn forceOpen" data-toggle="modal" data-target="#confirm_modal">Update</a><br/>
     </div>
-    <div class="modal fade" id="confirm_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="central-container">
-        <div class="error-container center-block">
-          <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
-          <h1 class="pkut-header">Confirm</h1>
-          <p>We need your current password to update your changes.</p>
-          <%= f.password_field :current_password, autocomplete: "off", class: 'pkut-textbox' %>
-          <%= f.submit "Update", class: 'pkut-btn' %>
-        </div>
-      </div>
-    </div>
+
+    <%= render_modal("confirm_modal", "skinny-modal") do %>
+      <h1 class="pkut-header">Confirm</h1>
+      <p>We need your current password to update your changes.</p>
+      <%= f.password_field :current_password, autocomplete: "off", class: 'pkut-textbox' %>
+      <%= f.submit "Update", class: 'pkut-btn' %>
+    <% end %>
   <% end %>
   <hr>
   <div class="row">
@@ -173,16 +169,13 @@
             <p>Has unlimited classes until: <%= athlete.has_access_until.strftime('%B %e, %Y') %></p>
           <% end %>
           <a alt="..." class="pkut-header forceOpen" data-toggle="modal" data-target="#edit<%= athlete.id %>">Delete Athlete</a><br/>
-          <div class="modal fade" id="edit<%= athlete.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="central-container">
-              <div class="error-container center-block">
-                <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
-                <h3 class="pkut-header"><%= athlete.full_name %></h3>
-                  <p>This will permanently delete this athlete. Are you sure? This action cannot be undone.<p>
-                  <%= link_to "Delete", destroy_athlete_path(athlete.id), class: 'pkut-btn', method: :delete %>
-              </div>
-            </div>
-          </div>
+
+          <%= render_modal("edit#{athlete.id}", "skinny-modal") do %>
+            <h3 class="pkut-header"><%= athlete.full_name %></h3>
+            <p>This will permanently delete this athlete. Are you sure? This action cannot be undone.<p>
+            <%= link_to "Delete", destroy_athlete_path(athlete.id), class: 'pkut-btn', method: :delete %>
+          <% end %>
+
           <% if athlete.signed_waiver? && athlete.waiver.is_active? %>
             <% if athlete.waiver.expires_soon? %>
               <%= link_to waivers_path(athlete.id) do  %>
@@ -204,24 +197,16 @@
     </div>
   </div>
 </div>
-<% content_for :body do %>
-  <% current_user.athletes.each do |athlete| %>
-    <div class="modal fade" id="athlete-<%= athlete.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="central-container">
-        <div class="error-container center-block">
-          <button type="button" class="close-btn error-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
-          <h2 class="pkut-header">Reset PIN</h2>
-          <p>Enter the new desired pin for</p>
-          <strong><%= athlete.full_name %></strong>
-          <%= form_tag reset_pin_path(athlete) do %>
-            <%= telephone_field_tag "athlete_pin", '', placeholder: 'New Pin', class: 'pkut-textbox sm-textbox formatPin ', autocomplete: 'off', style: 'padding-top: 0;' %>
-            <%= telephone_field_tag "pin_confirmation", '', placeholder: 'Confirm', class: 'pkut-textbox sm-textbox formatPin ', autocomplete: 'off', style: 'padding-top: 0;' %>
-            <p>Please enter your current password below to verify:</p>
-            <%= password_field_tag :password, '', autocomplete: 'off', class: 'pkut-textbox' %>
-            <%= submit_tag 'Submit', class: 'pkut-btn' %>
-          <% end %>
-        </div>
-      </div>
-    </div>
+
+<%= render_modal("", "skinny-modal") do %>
+  <h2 class="pkut-header">Reset PIN</h2>
+  <p>Enter the new desired pin for</p>
+  <strong><%= athlete.full_name %></strong>
+  <%= form_tag reset_pin_path(athlete) do %>
+    <%= telephone_field_tag "athlete_pin", '', placeholder: 'New Pin', class: 'pkut-textbox sm-textbox formatPin ', autocomplete: 'off', style: 'padding-top: 0;' %>
+    <%= telephone_field_tag "pin_confirmation", '', placeholder: 'Confirm', class: 'pkut-textbox sm-textbox formatPin ', autocomplete: 'off', style: 'padding-top: 0;' %>
+    <p>Please enter your current password below to verify:</p>
+    <%= password_field_tag :password, '', autocomplete: 'off', class: 'pkut-textbox' %>
+    <%= submit_tag 'Submit', class: 'pkut-btn' %>
   <% end %>
 <% end %>

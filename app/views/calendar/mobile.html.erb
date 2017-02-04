@@ -2,11 +2,21 @@
   <script src="//maps.google.com/maps/api/js?v=3.23&key=<%= ENV['PKUT_GMAPS_KEY'] %>"></script>
   <script src="//cdn.rawgit.com/mahnunchik/markerclustererplus/master/dist/markerclusterer.min.js"></script>
 <% end %>
-<%= render partial: 'event_details_container' %>
+
+<%= render_modal("event-detail-modal") do %>
+  <div class="event-detail-container"></div>
+<% end %>
+
 <div class="mobile-calendar-controls internal-center">
   <span class="pkut-btn center-btn low-btn forceOpen" data-toggle="modal" data-target="#datepicker-modal">Goto</span>
 </div>
-<%= render partial: 'datepicker' %>
+
+<%= render_modal("datepicker-modal", "skinny-modal") do %>
+  <h1 class="pkut-header">Select Date</h1>
+  <span class="mobile-calendar-date-picker internal-center"></span>
+  <%= link_to 'Desktop View', calendar_show_path(desktop: true) %>
+<% end %>
+
 <div class="mobile-view-container" data-week-url="<%= week_path %>">
   <div class="load-previous"></div>
   <div class="weeks-container">

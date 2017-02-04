@@ -1,3 +1,15 @@
+<div class="modal fade" id="modal_contact" tabindex="-1" aria-hidden="true">
+  <div class="central-container modal-dialog">
+    <button type="button" class="close-btn contact-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
+    <%= render partial: 'index/contact_us' %>
+  </div>
+</div>
+
+<%= render_modal("incomplete_error_modal") do %>
+  <h1 class="pkut-header">Error</h1>
+  <p class="error-message">Looks like we still need some information. Please fill in the remaining <span id="number_of_errors_container">fields.</span></p>
+<% end %>
+
 <div class="desktop-header hidden-xs">
   <div class="navbar navbar-fixed-top" data-spy="affix">
     <div class="container">
@@ -39,13 +51,6 @@
           <% end %>
         </ul>
       </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="modal_contact" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="central-container modal-dialog">
-      <button type="button" class="close-btn contact-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
-      <%= render partial: 'index/contact_us' %>
     </div>
   </div>
 </div>
@@ -91,4 +96,3 @@
     </div>
   </div>
 </div>
-<%= render partial: 'layouts/required_missing' %>
