@@ -28,7 +28,7 @@ class IndexController < ApplicationController
     params[:notify].each do |attribute, value|
       current_user.notifications.update(attribute => true)
     end
-    redirect_to edit_user_registration_path
+    redirect_to edit_user_path
   end
 
   def receive_sms
@@ -55,7 +55,7 @@ class IndexController < ApplicationController
   def update
     update_address
     update_phone
-    redirect_to edit_user_registration_path
+    redirect_to edit_user_path
   end
 
   def contact

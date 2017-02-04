@@ -3,7 +3,7 @@
   <h4 class="warning-text text-center">This process must be completed by a parent or legal guardian.</h4>
   <h2 class="header-text">Add Athletes</h2>
   <p>Add the first and last name, birthday, and desired Pin Code for each athlete (including yourself) who is going to participate in lessons.</p>
-  <%= form_tag url: {controller: 'registrations'} do %>
+  <%= form_tag(register_step_3, {id: "modal-submit"}) do %>
     <% token = 10.times.map {(('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a).sample}.join %>
     <div class="athlete-container">
       <div class="row athlete-input-info">
@@ -22,19 +22,19 @@
   <a alt="..." class="pkut-btn pull-right populate-waiver-btn" data-toggle="modal" data-target="#waiver_modal">Sign Waiver</a><br/>
 </div>
 
-<%= render_modal("error_modal", "skinny-modal") do %>
-  <h1 class="pkut-header">Error</h1>
-  <p class="error-message">
-    Sorry! It looks like we still need some information.
-    Before continuing, please make sure you have downloaded, read, and understand the waiver.
-    Next, make sure you have done the following:
-    1) Have added at least 1 athlete.
-    2)Have agreed to the Terms and Conditions.
-    3) Have signed your name.
-  </p>
-<% end %>
-
 <%= render_modal("what_is", "skinny-modal") do %>
   <h1 class="pkut-header">Pin Code</h1>
   <p class="error-message">A PIN code (similar to a debit card PIN) is a 4 digit number that the athlete will need in order to attend class. This code will be entered along with the Athlete ID Number, which is assigned to you at the end of your registration. Please select a 4 digit number that is EASY to remember for each athlete.</p>
+<% end %>
+
+<%= render_modal("error_modal", "skinny-modal text-left") do %>
+  <h1 class="pkut-header">Error</h1>
+  <p class="error-message">
+    <p>Sorry! It looks like we still need some information.</p>
+    <p>Before continuing, please make sure you have downloaded, read, and understand the waiver.</p>
+    <p>Next, make sure you have done the following:</p>
+    <br>1) Have added at least 1 athlete.
+    <br>2) Have agreed to the Terms and Conditions.
+    <br>3) Have signed your name.
+  </p>
 <% end %>

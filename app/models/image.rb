@@ -14,6 +14,7 @@ class Image < ApplicationRecord
   has_attached_file :file,
                :styles => { :medium => "300x400>", :thumb => "120x160" },
                storage: :s3,
+               s3_permissions: :private,
                bucket: ENV['PKUT_S3_BUCKET_NAME'],
                :default_url => "http://parkourutah.com/images/missing.png",
                :convert_options => { :all => '-background white -flatten +matte' }

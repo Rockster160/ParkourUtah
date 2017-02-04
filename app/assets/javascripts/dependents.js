@@ -26,6 +26,16 @@ var ready = function() {
     });
   });
 
+  $('.submit-modal-form').click(function(e) {
+    var $form = $('#modal-submit');
+    $('.modal-form-field').each(function() {
+      $form.append($('<input>', {type: "hidden", val: this.value, name: this.name}))
+    })
+    e.preventDefault();
+    $form.submit();
+    return false;
+  })
+
   $('.add-athlete-btn').click(function() {
     var token = generateToken();
     $('.athlete-container').append('<div class="row athlete-input-info"><div class="col-sm-6"><input type="text" name="athlete[' +

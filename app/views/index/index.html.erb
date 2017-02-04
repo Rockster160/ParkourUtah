@@ -7,16 +7,16 @@
 <div class="header-container" id="home">
   <div class="header vert">
     <div class="container">
-      <%= image_tag('//s3-us-west-2.amazonaws.com/pkut-default/PKUT-full-color.png', class: 'img-responsive pkut-main center-block') %>
+      <%= image_tag('PKUT-full-color.png', class: 'img-responsive pkut-main center-block') %>
       <div>&nbsp;</div>
       <div class="call-nav">
         <a href="#about" class="main-btn lead scroll-link">About Us</a>
         <a href="#peeps" class="main-btn lead scroll-link">Our people</a>
         <br class="visible-xs visible-sm"/>
         <% if user_signed_in? %>
-          <a href="<%= edit_user_registration_path %>" class="main-btn lead call-to-arms">Get Started</a>
+          <a href="<%= edit_user_path %>" class="main-btn lead call-to-arms">Get Started</a>
         <% else %>
-          <a href="<%= new_user_registration_path %>" class="main-btn lead call-to-arms">Get Started</a>
+          <a href="<%= new_user_path %>" class="main-btn lead call-to-arms">Get Started</a>
         <% end %>
         <br class="visible-xs visible-sm"/>
         <a href="#calendar" class="main-btn lead scroll-link">Locations</a>

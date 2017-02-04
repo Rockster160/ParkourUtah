@@ -76,13 +76,13 @@ Rails.application.routes.draw do
     get :batch_email
     post :send_batch_emailer
 
-    resources :users do
-      member do
-        get :attendance
-        post :update_trials
-        post :update_credits
-        post :update_notifications
-      end
+  end
+  resources :admin_users, path: "admin/users", only: [ :show, :index, :destroy ] do
+    member do
+      get :attendance
+      post :update_trials
+      post :update_credits
+      post :update_notifications
     end
   end
 
@@ -109,6 +109,7 @@ Rails.application.routes.draw do
   post 'waivers' => 'dependents#update_waiver'
   post 'delete_athlete/:athlete_id' => 'dependents#delete_athlete'
 
+  resource :user
   devise_for :users, :controllers => {:registrations => "users/registrations"}
   devise_scope :user do
     get "/account" => "users/registrations#edit"

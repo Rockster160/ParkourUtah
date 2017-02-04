@@ -1,22 +1,22 @@
 <div class="row">
   <div class="col-sm-6">
-    <h2 class="hidden-xs"><%= current_user.email %></h2>
-    <h4 class="visible-xs"><%= current_user.email %></h4>
+    <h2 class="hidden-xs"><%= @user.email %></h2>
+    <h4 class="visible-xs"><%= @user.email %></h4>
   </div>
   <div class="col-sm-6 text-right">
-    <h2>Credits: <span class="pkut-header"><%= current_user.credits %><span></h2>
+    <h2>Credits: <span class="pkut-header"><%= @user.credits %><span></h2>
   </div>
 </div>
 <div class="central-container form-offset">
 
   <div class="row internal-center">
-    <% if current_user.non_verified_athletes.count > 0 %>
+    <% if @user.non_verified_athletes.count > 0 %>
       <div class="pkut-btn big-btn orange-btn-glowing forceOpen" data-toggle="modal" data-target="#verify_athletes">
         Click here to receive 2 trial classes!
       </div> <br>
       <%= render partial: 'dependents/verify_athletes' %>
     <% end %>
-    <% if current_user.unassigned_subscriptions_count > 0 %>
+    <% if @user.unassigned_subscriptions_count > 0 %>
       <div class="pkut-btn big-btn forceOpen" data-toggle="modal" data-target="#assign_subscriptions">
         Assign subscriptions to students!
       </div> <br>
@@ -25,9 +25,9 @@
     <a class="pkut-btn text-center forceOpen" data-toggle="modal" data-target="#notification_modal">Edit Notifications</a><br/>
     <%= render partial: 'devise/registrations/notifications' %>
     <%
-      has_subscriptions = current_user.subscribed_athletes.any? ||
-      current_user.athletes_with_unlimited_access.count > 0 ||
-      current_user.subscribed_events.any?
+      has_subscriptions = @user.subscribed_athletes.any? ||
+      @user.athletes_with_unlimited_access.count > 0 ||
+      @user.subscribed_events.any?
     %>
     <% if has_subscriptions %>
       <br/>
@@ -37,7 +37,10 @@
   </div>
   <br/>
 
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+
+  <%= render partial: 'layouts/error_container', locals: { resource: @user } %>
+
+  <%= form_for(@user, html: { method: :put, id: "modal-submit" }) do |f| %>
 
     <div class="row">
       <div class="col-sm-3">
@@ -57,7 +60,7 @@
     </div>
     <br/>
 
-    <%= fields_for :emergency_contacts, resource.emergency_contacts.last do |ff| %>
+    <%= f.fields_for :emergency_contacts, @user.emergency_contacts.last do |ff| %>
       <h5>Emergency Contact</h5>
       <div class="row">
         <div class="col-sm-3">
@@ -78,46 +81,46 @@
     <% end %>
     <br/>
 
-    <%= fields_for :address, resource.address do |fff| %>
+    <%= f.fields_for :address, @user.address do |ff| %>
       <h5>Address:</h5>
       <div class="row">
         <div class="col-sm-3">
-          <br/><%= fff.label :line1, 'Line 1:' %>
+          <br/><%= ff.label :line1, 'Line 1:' %>
         </div>
         <div class="col-sm-9">
-          <%= fff.text_field :line1, class: 'pkut-textbox customRequired' %>
+          <%= ff.text_field :line1, class: 'pkut-textbox customRequired' %>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-3">
-          <br/><%= fff.label :line2, 'Line 2:' %>
+          <br/><%= ff.label :line2, 'Line 2:' %>
         </div>
         <div class="col-sm-9">
-          <%= fff.text_field :line2, class: 'pkut-textbox' %>
+          <%= ff.text_field :line2, class: 'pkut-textbox' %>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-3">
-          <br/><%= fff.label :city, 'City:' %>
+          <br/><%= ff.label :city, 'City:' %>
         </div>
         <div class="col-sm-9">
-          <%= fff.text_field :city, class: 'pkut-textbox customRequired' %>
+          <%= ff.text_field :city, class: 'pkut-textbox customRequired' %>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-3">
-          <br/><%= fff.label :state, 'State:' %>
+          <br/><%= ff.label :state, 'State:' %>
         </div>
         <div class="col-sm-9">
-          <%= fff.text_field :state, class: 'pkut-textbox customRequired' %>
+          <%= ff.text_field :state, class: 'pkut-textbox customRequired' %>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-3">
-          <br/><%= fff.label :zip, 'Zip:' %>
+          <br/><%= ff.label :zip, 'Zip:' %>
         </div>
         <div class="col-sm-9">
-          <%= fff.text_field :zip, class: 'pkut-textbox customRequired' %>
+          <%= ff.text_field :zip, class: 'pkut-textbox customRequired' %>
         </div>
       </div>
     <% end %>
@@ -149,8 +152,8 @@
     <%= render_modal("confirm_modal", "skinny-modal") do %>
       <h1 class="pkut-header">Confirm</h1>
       <p>We need your current password to update your changes.</p>
-      <%= f.password_field :current_password, autocomplete: "off", class: 'pkut-textbox' %>
-      <%= f.submit "Update", class: 'pkut-btn' %>
+      <%= f.password_field :current_password, autocomplete: "off", class: 'pkut-textbox modal-form-field' %>
+      <%= link_to "Update", "", class: 'pkut-btn submit-modal-form' %>
     <% end %>
   <% end %>
   <hr>
@@ -159,9 +162,9 @@
       <h5>Athletes:</h5>
     </div>
     <div class="col-sm-9">
-      <% current_user.athletes_by_waiver_expiration.each_with_index do |athlete, pos| %>
+      <% @user.athletes_by_waiver_expiration.each_with_index do |athlete, pos| %>
         <div class="row">
-          <h4><%= athlete.full_name %> - ID:<%= athlete.athlete_id %></h4>
+          <h4><%= athlete.full_name %> - ID:<%= athlete.zero_padded(athlete.athlete_id, 4) %></h4>
           <% if athlete.trials.count > 0 %>
             <h4 style="color:yellow;">Trial Classes remaining: <%= athlete.trials.count %></h4>
           <% end %>
@@ -198,15 +201,17 @@
   </div>
 </div>
 
-<%= render_modal("", "skinny-modal") do %>
-  <h2 class="pkut-header">Reset PIN</h2>
-  <p>Enter the new desired pin for</p>
-  <strong><%= athlete.full_name %></strong>
-  <%= form_tag reset_pin_path(athlete) do %>
-    <%= telephone_field_tag "athlete_pin", '', placeholder: 'New Pin', class: 'pkut-textbox sm-textbox formatPin ', autocomplete: 'off', style: 'padding-top: 0;' %>
-    <%= telephone_field_tag "pin_confirmation", '', placeholder: 'Confirm', class: 'pkut-textbox sm-textbox formatPin ', autocomplete: 'off', style: 'padding-top: 0;' %>
-    <p>Please enter your current password below to verify:</p>
-    <%= password_field_tag :password, '', autocomplete: 'off', class: 'pkut-textbox' %>
-    <%= submit_tag 'Submit', class: 'pkut-btn' %>
+<% @user.athletes.each do |athlete| %>
+  <%= render_modal("athlete-#{athlete.id}", "skinny-modal") do %>
+    <h2 class="pkut-header">Reset PIN</h2>
+    <p>Enter the new desired pin for</p>
+    <strong><%= athlete.full_name %></strong>
+    <%= form_tag reset_pin_path(athlete) do %>
+      <%= telephone_field_tag "athlete_pin", '', placeholder: 'New Pin', class: 'pkut-textbox sm-textbox formatPin ', autocomplete: 'off', style: 'padding-top: 0;' %>
+      <%= telephone_field_tag "pin_confirmation", '', placeholder: 'Confirm', class: 'pkut-textbox sm-textbox formatPin ', autocomplete: 'off', style: 'padding-top: 0;' %>
+      <p>Please enter your current password below to verify:</p>
+      <%= password_field_tag :password, '', autocomplete: 'off', class: 'pkut-textbox' %>
+      <%= submit_tag 'Submit', class: 'pkut-btn' %>
+    <% end %>
   <% end %>
 <% end %>

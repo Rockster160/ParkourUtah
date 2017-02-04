@@ -4,7 +4,7 @@
   <h5 class="warning-text">This process must be completed by a parent or legal guardian.</h5>
   <h1 class="header-text">Get Started</h1>
 
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+  <%= form_for(current_user) do |f| %>
     <div class="field">
       <%= f.email_field :email, placeholder: 'Email Address', class: "pkut-textbox customRequired" %>
     </div>
@@ -23,7 +23,7 @@
 
     <div class="actions">
       <%= f.submit "Next", class: 'pkut-btn' %><br />
-      <%= link_to "Aready have an account?", new_session_path(resource_name), class: '' %>
+      <%= link_to "Aready have an account?", new_session_path("User"), class: '' %>
     </div>
   <% end %>
 </div>

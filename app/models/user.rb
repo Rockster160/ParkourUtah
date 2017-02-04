@@ -74,6 +74,9 @@ class User < ApplicationRecord
   has_many :attendances_taught, class_name: "Attendance", foreign_key: "instructor_id"
   has_many :emergency_contacts, dependent: :destroy
 
+  accepts_nested_attributes_for :emergency_contacts
+  accepts_nested_attributes_for :address
+
   after_create :assign_cart
   after_create :create_blank_address
   after_create :create_default_notifications
@@ -87,6 +90,7 @@ class User < ApplicationRecord
   has_attached_file :avatar,
                     :styles => { :medium => "300x400>", :thumb => "120x160" },
                     storage: :s3,
+                    s3_permissions: :private,
                     bucket: ENV['PKUT_S3_BUCKET_NAME'],
                     :default_url => "http://parkourutah.com/images/missing.png",
                     :convert_options => { :all => '-background white -flatten +matte' }
@@ -95,6 +99,7 @@ class User < ApplicationRecord
   has_attached_file :avatar_2,
                     :styles => { :medium => "300x400>", :thumb => "120x160" },
                     storage: :s3,
+                    s3_permissions: :private,
                     bucket: ENV['PKUT_S3_BUCKET_NAME'],
                     :default_url => "http://parkourutah.com/images/missing.png",
                     :convert_options => { :all => '-background white -flatten +matte' }
