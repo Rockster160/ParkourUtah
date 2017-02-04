@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161221051506) do
+ActiveRecord::Schema.define(version: 20170204215627) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,9 +24,8 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.string   "zip"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_addresses_on_user_id", using: :btree
   end
-
-  add_index "addresses", ["user_id"], name: "index_addresses_on_user_id", using: :btree
 
   create_table "athlete_subscriptions", force: :cascade do |t|
     t.integer  "dependent_id"
@@ -37,9 +35,8 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.boolean  "auto_renew",      default: true
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
+    t.index ["dependent_id"], name: "index_athlete_subscriptions_on_dependent_id", using: :btree
   end
-
-  add_index "athlete_subscriptions", ["dependent_id"], name: "index_athlete_subscriptions_on_dependent_id", using: :btree
 
   create_table "attendances", force: :cascade do |t|
     t.integer  "dependent_id"
@@ -50,16 +47,9 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.datetime "updated_at",                     null: false
     t.string   "type_of_charge"
     t.boolean  "sent",           default: false
-  end
-
-  add_index "attendances", ["dependent_id"], name: "index_attendances_on_dependent_id", using: :btree
-  add_index "attendances", ["event_id"], name: "index_attendances_on_event_id", using: :btree
-  add_index "attendances", ["instructor_id"], name: "index_attendances_on_instructor_id", using: :btree
-
-  create_table "automators", force: :cascade do |t|
-    t.boolean  "open",       default: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.index ["dependent_id"], name: "index_attendances_on_dependent_id", using: :btree
+    t.index ["event_id"], name: "index_attendances_on_event_id", using: :btree
+    t.index ["instructor_id"], name: "index_attendances_on_instructor_id", using: :btree
   end
 
   create_table "cart_items", force: :cascade do |t|
@@ -70,9 +60,8 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.datetime "updated_at",                  null: false
     t.string   "redeemed_token", default: ""
     t.string   "order_name"
+    t.index ["cart_id"], name: "index_cart_items_on_cart_id", using: :btree
   end
-
-  add_index "cart_items", ["cart_id"], name: "index_cart_items_on_cart_id", using: :btree
 
   create_table "carts", force: :cascade do |t|
     t.integer  "user_id"
@@ -80,9 +69,8 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.datetime "updated_at",   null: false
     t.string   "email"
     t.datetime "purchased_at"
+    t.index ["user_id"], name: "index_carts_on_user_id", using: :btree
   end
-
-  add_index "carts", ["user_id"], name: "index_carts_on_user_id", using: :btree
 
   create_table "contact_requests", force: :cascade do |t|
     t.string   "user_agent"
@@ -112,17 +100,15 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.string   "last_name"
     t.string   "date_of_birth"
     t.boolean  "verified",                   default: false
+    t.index ["user_id"], name: "index_dependents_on_user_id", using: :btree
   end
-
-  add_index "dependents", ["user_id"], name: "index_dependents_on_user_id", using: :btree
 
   create_table "emergency_contacts", force: :cascade do |t|
     t.integer "user_id"
     t.string  "number"
     t.string  "name"
+    t.index ["user_id"], name: "index_emergency_contacts_on_user_id", using: :btree
   end
-
-  add_index "emergency_contacts", ["user_id"], name: "index_emergency_contacts_on_user_id", using: :btree
 
   create_table "event_schedules", force: :cascade do |t|
     t.integer  "instructor_id"
@@ -140,10 +126,9 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.string   "color"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["instructor_id"], name: "index_event_schedules_on_instructor_id", using: :btree
+    t.index ["spot_id"], name: "index_event_schedules_on_spot_id", using: :btree
   end
-
-  add_index "event_schedules", ["instructor_id"], name: "index_event_schedules_on_instructor_id", using: :btree
-  add_index "event_schedules", ["spot_id"], name: "index_event_schedules_on_spot_id", using: :btree
 
   create_table "events", force: :cascade do |t|
     t.datetime "date"
@@ -158,9 +143,8 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.integer  "spot_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["spot_id"], name: "index_images_on_spot_id", using: :btree
   end
-
-  add_index "images", ["spot_id"], name: "index_images_on_spot_id", using: :btree
 
   create_table "line_items", force: :cascade do |t|
     t.string   "display_file_name"
@@ -196,18 +180,16 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.boolean "text_class_cancelled",  default: false
     t.boolean "email_class_cancelled", default: false
     t.boolean "email_newsletter",      default: true
+    t.index ["user_id"], name: "index_notifications_on_user_id", using: :btree
   end
-
-  add_index "notifications", ["user_id"], name: "index_notifications_on_user_id", using: :btree
 
   create_table "ratings", force: :cascade do |t|
     t.integer  "rated"
     t.integer  "spot_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["spot_id"], name: "index_ratings_on_spot_id", using: :btree
   end
-
-  add_index "ratings", ["spot_id"], name: "index_ratings_on_spot_id", using: :btree
 
   create_table "redemption_keys", force: :cascade do |t|
     t.string   "key"
@@ -216,9 +198,8 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.datetime "updated_at",                   null: false
     t.boolean  "redeemed",     default: false
     t.integer  "line_item_id"
+    t.index ["line_item_id"], name: "index_redemption_keys_on_line_item_id", using: :btree
   end
-
-  add_index "redemption_keys", ["line_item_id"], name: "index_redemption_keys_on_line_item_id", using: :btree
 
   create_table "spots", force: :cascade do |t|
     t.string   "title"
@@ -230,16 +211,14 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
     t.string   "location"
+    t.index ["event_id"], name: "index_spots_on_event_id", using: :btree
   end
-
-  add_index "spots", ["event_id"], name: "index_spots_on_event_id", using: :btree
 
   create_table "subscriptions", force: :cascade do |t|
     t.integer "user_id"
     t.integer "event_schedule_id"
+    t.index ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
   end
-
-  add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
 
   create_table "trial_classes", force: :cascade do |t|
     t.integer  "dependent_id"
@@ -247,9 +226,8 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.datetime "used_at"
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
+    t.index ["dependent_id"], name: "index_trial_classes_on_dependent_id", using: :btree
   end
-
-  add_index "trial_classes", ["dependent_id"], name: "index_trial_classes_on_dependent_id", using: :btree
 
   create_table "unlimited_subscriptions", force: :cascade do |t|
     t.integer  "usages",     default: 0
@@ -257,9 +235,8 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.integer  "user_id"
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+    t.index ["user_id"], name: "index_unlimited_subscriptions_on_user_id", using: :btree
   end
-
-  add_index "unlimited_subscriptions", ["user_id"], name: "index_unlimited_subscriptions_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                          default: "",    null: false
@@ -307,19 +284,9 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.string   "referrer",                       default: ""
     t.integer  "subscription_cost",              default: 5000
     t.integer  "unassigned_subscriptions_count", default: 0
-  end
-
-  add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-
-  create_table "venmos", force: :cascade do |t|
-    t.string   "access_token"
-    t.string   "refresh_token"
-    t.datetime "expires_at"
-    t.string   "username"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
   create_table "waivers", force: :cascade do |t|
@@ -329,9 +296,8 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.string   "signed_by"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+    t.index ["dependent_id"], name: "index_waivers_on_dependent_id", using: :btree
   end
-
-  add_index "waivers", ["dependent_id"], name: "index_waivers_on_dependent_id", using: :btree
 
   add_foreign_key "athlete_subscriptions", "dependents"
   add_foreign_key "cart_items", "carts"
