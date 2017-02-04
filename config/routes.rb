@@ -75,7 +75,6 @@ Rails.application.routes.draw do
     get :email_body
     get :batch_email
     post :send_batch_emailer
-
   end
   resources :admin_users, path: "admin/users", only: [ :show, :index, :destroy ] do
     member do

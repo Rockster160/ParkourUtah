@@ -59,9 +59,9 @@ class AdminUsersController < ApplicationController
   def destroy
     if params[:confirmation] == "DELETE"
       User.find(params[:id]).destroy
-      redirect_to recent_users_path, notice: "User successfully deleted."
+      redirect_to admin_users_path, notice: "User successfully deleted."
     else
-      redirect_to recent_users_path, notice: "Sorry, DELETE was not entered correctly. User still exists."
+      redirect_to admin_users_path, notice: "Sorry, DELETE was not entered correctly. User still exists."
     end
   end
 
