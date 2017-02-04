@@ -107,6 +107,12 @@
   border: 1px solid $mat-grey;
   border-radius: 3px;
 
+  padding: 0px;
+  padding-left: 5px;
+  margin-bottom: 5px;
+  margin-top: 0px;
+  width: 100%;
+
   &:focus {
     border: 1px solid $mat-pkut-red;
     box-shadow: inset 0px 0px 0px 1px $mat-pkut-red;
@@ -184,12 +190,15 @@
 
 .contact-us .col-sm-4 {
   padding: 5px;
-
   &:first-of-type {
-    padding-left: 0px;
+    padding-left: 0;
   }
   &:last-of-type {
-    padding-right: 0px;
+    padding-right: 0;
+  }
+  @media(max-width: 767px) {
+    padding: 0px;
+    padding-bottom: 10px;
   }
 }
 .contact-us .header-text {
