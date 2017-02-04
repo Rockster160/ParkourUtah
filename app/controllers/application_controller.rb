@@ -38,6 +38,12 @@ class ApplicationController < ActionController::Base
     current_user.still_signed_in! if current_user
   end
 
+  def validate_user_signed_in
+    unless user_signed_in?
+      redirect_to root_path, alert: "You must be logged in to view this page."
+    end
+  end
+
   def validate_instructor
     unless current_user && current_user.is_instructor?
       redirect_to edit_user_path, alert: "You are not authorized to view this page."

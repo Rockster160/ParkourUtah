@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_action :validate_user_signed_in
   before_action :still_signed_in
 
   def create
