@@ -378,7 +378,7 @@
     position: relative;
     margin-left: 20px;
     font-weight: normal;
-    font-size: 1.2em;
+    font-size: 18px;
     &:before {
       content: "";
       position: absolute;
@@ -396,7 +396,7 @@
         position: absolute;
         color: $pkut-grey-dark;
         font-size: 21px;
-        top: -18px;
+        top: -15px;
         left: -35px;
       }
     }
@@ -411,7 +411,7 @@
       position: absolute;
       color: $pkut-red;
       font-size: 21px;
-      top: -20px;
+      top: -15px;
       left: -35px;
     }
   }
