@@ -2,12 +2,12 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  before_filter :configure_permitted_parameters, if: :devise_controller?
+  before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :merge_carts
   before_action :logit
 
   def after_sign_in_path_for(resource)
-    edit_user_registration_path
+    edit_user_path
   end
 
   def after_sign_up_path_for(resource)
@@ -30,11 +30,8 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:account_update) << :avatar
-    devise_parameter_sanitizer.for(:account_update) << :avatar_2
-    devise_parameter_sanitizer.for(:account_update) << :bio
-    devise_parameter_sanitizer.for(:account_update) << :phone_number
-    devise_parameter_sanitizer.for(:sign_up) << :first_name
+    devise_parameter_sanitizer.sanitize(:account_update) { |u| u.permit(:avatar, :avatar_2, :bio, :phone_number) }
+    devise_parameter_sanitizer.sanitize(:sign_up) { |u| u.permit(:first_name) }
   end
 
   def still_signed_in
@@ -43,19 +40,19 @@ class ApplicationController < ActionController::Base
 
   def validate_instructor
     unless current_user && current_user.is_instructor?
-      redirect_to edit_user_registration_path, alert: "You are not authorized to view this page."
+      redirect_to edit_user_path, alert: "You are not authorized to view this page."
     end
   end
 
   def validate_mod
     unless current_user && current_user.is_mod?
-      redirect_to edit_user_registration_path, alert: "You are not authorized to view this page."
+      redirect_to edit_user_path, alert: "You are not authorized to view this page."
     end
   end
 
   def validate_admin
     unless current_user && current_user.is_admin?
-      redirect_to edit_user_registration_path, alert: "You are not authorized to view this page."
+      redirect_to edit_user_path, alert: "You are not authorized to view this page."
     end
   end
 

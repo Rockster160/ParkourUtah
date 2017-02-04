@@ -53,9 +53,7 @@ Rails.application.configure do
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
 
+  config.active_record.belongs_to_required_by_default = true
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 end
-
-require "#{Rails.root}/lib/custom_notifier"
-Rails.application.config.middleware.use ExceptionNotification::Rack, custom: {}

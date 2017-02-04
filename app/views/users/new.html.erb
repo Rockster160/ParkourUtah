@@ -1,0 +1,29 @@
+<div class="central-container form-offset internal-center">
+  <%= render partial: 'registrations/progress_bar', locals: {step: 1} %>
+  <%= devise_error_messages! %>
+  <h5 class="warning-text">This process must be completed by a parent or legal guardian.</h5>
+  <h1 class="header-text">Get Started</h1>
+
+  <%= form_for(current_user) do |f| %>
+    <div class="field">
+      <%= f.email_field :email, placeholder: 'Email Address', class: "pkut-textbox customRequired" %>
+    </div>
+
+    <div class="field">
+      <%= f.password_field :password, autocomplete: "off", placeholder: 'Password', class: "pkut-textbox customRequired" %>
+    </div>
+
+    <div class="field"x>
+      <%= f.password_field :password_confirmation, autocomplete: "off", placeholder: 'Confirm Password', class: "pkut-textbox customRequired" %>
+    </div>
+
+    <div class="internal-center">
+      <div class="recaptcha-container"><%= recaptcha_tags %></div>
+    </div>
+
+    <div class="actions">
+      <%= f.submit "Next", class: 'pkut-btn' %><br />
+      <%= link_to "Aready have an account?", new_session_path("User"), class: '' %>
+    </div>
+  <% end %>
+</div>

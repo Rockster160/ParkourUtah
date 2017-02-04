@@ -16,7 +16,7 @@
 #  email_newsletter      :boolean          default(TRUE)
 #
 
-class Notifications < ActiveRecord::Base
+class Notifications < ApplicationRecord
   include Defaults
 
   belongs_to :user

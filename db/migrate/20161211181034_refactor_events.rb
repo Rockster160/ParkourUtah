@@ -54,7 +54,7 @@ class RefactorEvents < ActiveRecord::Migration
       end
       Event.where(token: token).update_all(event_schedule_id: event_schedule.id)
       puts "\nHost: #{next_event.host}" if event_schedule.instructor_id.nil?
-      binding.pry unless event_schedule.persisted?
+      # binding.pry unless event_schedule.persisted?
       print event_schedule.persisted? ? "\e[32m.\e[0m" : "\e[31mF\e[0m"
     end
 

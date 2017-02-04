@@ -44,7 +44,7 @@ class EventsController < ApplicationController
       event.cancel!
       flash[:notice] = "Event has successfully been cancelled."
     end
-    redirect_to :back
+    redirect_back fallback_location: root_path
   end
 
   private

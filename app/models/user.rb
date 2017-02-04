@@ -57,8 +57,10 @@
 # date_of_birth
 # drivers_license_number
 # drivers_license_state
+# reset_password_token
+# confirmation_token
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
 
   has_one :address, dependent: :destroy
   has_one :notifications, dependent: :destroy
@@ -71,6 +73,9 @@ class User < ActiveRecord::Base
   has_many :classes_to_teach, class_name: "EventSchedule", foreign_key: "instructor_id"
   has_many :attendances_taught, class_name: "Attendance", foreign_key: "instructor_id"
   has_many :emergency_contacts, dependent: :destroy
+
+  accepts_nested_attributes_for :emergency_contacts
+  accepts_nested_attributes_for :address
 
   after_create :assign_cart
   after_create :create_blank_address
@@ -85,16 +90,18 @@ class User < ActiveRecord::Base
   has_attached_file :avatar,
                     :styles => { :medium => "300x400>", :thumb => "120x160" },
                     storage: :s3,
+                    s3_permissions: :private,
                     bucket: ENV['PKUT_S3_BUCKET_NAME'],
-                    :default_url => "/images/missing.png",
+                    :default_url => "http://parkourutah.com/images/missing.png",
                     :convert_options => { :all => '-background white -flatten +matte' }
   validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
 
   has_attached_file :avatar_2,
                     :styles => { :medium => "300x400>", :thumb => "120x160" },
                     storage: :s3,
+                    s3_permissions: :private,
                     bucket: ENV['PKUT_S3_BUCKET_NAME'],
-                    :default_url => "/images/missing.png",
+                    :default_url => "http://parkourutah.com/images/missing.png",
                     :convert_options => { :all => '-background white -flatten +matte' }
   validates_attachment_content_type :avatar_2, :content_type => /\Aimage\/.*\Z/
 

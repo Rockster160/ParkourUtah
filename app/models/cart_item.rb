@@ -12,10 +12,10 @@
 #  order_name     :string
 #
 
-class CartItem < ActiveRecord::Base
+class CartItem < ApplicationRecord
 
   belongs_to :cart
-  belongs_to :user
+  belongs_to :user, optional: true
   belongs_to :line_item
 
   before_save :verify_amount_is_not_nil

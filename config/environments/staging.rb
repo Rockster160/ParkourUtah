@@ -10,13 +10,25 @@ Rails.application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
+
   routes.default_url_options = { host: 'staging.parkourutah.com', protocol: 'http://', port: nil }
   config.action_mailer.default_url_options = { host: 'staging.parkourutah.com', protocol: 'http://', port: nil }
-  config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.perform_deliveries = false
+  config.action_mailer.asset_host = 'http://staging.parkourutah.com'
+  ActionMailer::Base.delivery_method = :smtp
+  ActionMailer::Base.smtp_settings = {
+    :address              => 'email-smtp.us-west-2.amazonaws.com',
+    :port                 => 587,
+    :user_name            => ENV['PKUT_AWS_EMAILNAME'],
+    :password             => ENV['PKUT_AWS_EMAIL_PASS'],
+    :authentication       => :plain,
+    :enable_starttls_auto => true,
+    :openssl_verify_mode  => 'none'
+  }
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_deliveries = true
 
   Paperclip.options.merge!(:command_path => "/usr/bin")
-  # config.serve_static_files = ENV['RAILS_SERVE_STATIC_FILES'].present?
+  # config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
   config.paperclip_defaults = {
     :storage => :s3,
     :s3_credentials => {
@@ -31,7 +43,7 @@ Rails.application.configure do
   # config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
-  config.serve_static_files = false
+  config.public_file_server.enabled = false
   config.assets.compile = false
   config.assets.digest = true
 
@@ -51,6 +63,7 @@ Rails.application.configure do
   # when problems arise.
   config.log_level = :info
   RAILS_DEFAULT_LOGGER = Logger.new('log/staging.log')
+  # config.logger = Logger.new('log/staging.log')
   config.log_formatter = ::Logger::Formatter.new
 
   # config.log_formatter = ::Logger::Formatter.new
@@ -61,7 +74,7 @@ Rails.application.configure do
   # Use a different logger for distributed setups.
   # config.logger = ActiveSupport::TaggedLogging.new(SyslogLogger.new)
 
-  # Use a different cache store in production.
+  # Use a different cache store in staging.
   # config.cache_store = :mem_cache_store
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
@@ -77,11 +90,10 @@ Rails.application.configure do
 
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
-  config.log_formatter = ::Logger::Formatter.new
 
+  config.active_record.belongs_to_required_by_default = true
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
-
 end
 
 require "#{Rails.root}/lib/custom_notifier"

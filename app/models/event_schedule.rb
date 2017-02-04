@@ -20,11 +20,11 @@
 #  updated_at      :datetime
 #
 
-class EventSchedule < ActiveRecord::Base
+class EventSchedule < ApplicationRecord
   include Defaults
 
   belongs_to :instructor, class_name: "User"
-  belongs_to :spot
+  belongs_to :spot, optional: true
   has_many :events
   has_many :attendances, through: :events
   has_many :subscriptions, dependent: :destroy

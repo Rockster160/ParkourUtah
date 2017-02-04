@@ -8,11 +8,12 @@
 #  name    :string
 #
 
-class EmergencyContact < ActiveRecord::Base
+class EmergencyContact < ApplicationRecord
 
   belongs_to :user
 
   before_save :format_phone
+  validates_presence_of :name, :number
 
   def format_phone
     self.number = number.gsub(/[^0-9]/, "") if attribute_present?("number")

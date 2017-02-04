@@ -17,7 +17,7 @@ class DependentsController < ApplicationController
       redirect_to waivers_path
     else
       flash[:alert] = "There was an error creating one or more of the athletes."
-      redirect_to :back
+      redirect_back fallback_location: root_path
     end
   end
 
@@ -25,9 +25,9 @@ class DependentsController < ApplicationController
     athlete = Dependent.find(params[:id])
 
     if athlete.update(athlete_photo: params[:athlete_photo])
-      redirect_to :back, notice: 'Image successfully updated.'
+      redirect_back fallback_location: root_path, notice: 'Image successfully updated.'
     else
-      redirect_to :back, alert: 'There was an error updating the image.'
+      redirect_back fallback_location: root_path, alert: 'There was an error updating the image.'
     end
   end
 
@@ -37,14 +37,14 @@ class DependentsController < ApplicationController
     if pin == confirm
       if Dependent.find(params[:athlete_id]).update(athlete_pin: pin)
         flash[:notice] = "Pin successfully updated."
-        redirect_to edit_user_registration_path
+        redirect_to edit_user_path
       else
         flash[:alert] = "There was an error saving your pin."
-        redirect_to :back
+        redirect_back fallback_location: root_path
       end
     else
       flash[:alert] = "The pins did not match. No changes were made."
-      redirect_to :back
+      redirect_back fallback_location: root_path
     end
   end
 
@@ -57,7 +57,7 @@ class DependentsController < ApplicationController
         end
       end
     end
-    redirect_to edit_user_registration_path
+    redirect_to edit_user_path
   end
 
   def assign_subscription
@@ -70,50 +70,66 @@ class DependentsController < ApplicationController
       end
     end
 
-    redirect_to :back
+    redirect_back fallback_location: root_path
   end
 
   def update_waiver
-    valid = []
-    new_athlete_ids = []
-    params[:athlete].each do |athlete|
-      if validate_athlete_attributes(athlete[1])
-        new_athlete = current_user.dependents.create(
-          full_name: athlete[1][:name],
-          date_of_birth: athlete[1][:dob],
-          athlete_pin: athlete[1][:code]
-        )
-        new_athlete.waivers.create(
-          signed_for: new_athlete.full_name,
-          signed_by: params[:signed_by],
-        )
-        if new_athlete.sign_waiver!
-          new_athlete_ids << new_athlete.id
-          new_athlete.generate_pin
-          valid << new_athlete
+    @valid = []
+    @new_athlete_ids = []
+
+    add_new_athletes_from_waivers
+
+    update_existing_athlete_waivers
+
+    if @new_athlete_ids.count > 0
+      ::NewAthleteInfoMailerWorker.perform_async(@new_athlete_ids)
+      ::NewAthleteNotificationMailerWorker.perform_async(@new_athlete_ids)
+    end
+binding.pry
+    if @valid.count == 1
+      redirect_to step_4_path, notice: "Success! #{@valid.count} waiver updated/created."
+    elsif @valid.count > 1
+      redirect_to step_4_path, notice: "Success! #{@valid.count} waivers updated/created."
+    else
+      redirect_back fallback_location: root_path, alert: "An error occurred."
+    end
+  end
+
+  def update_existing_athlete_waivers
+    if params[:update_athlete].present?
+      params[:update_athlete].each do |athlete_id, athlete_params|
+        athlete = Dependent.find(athlete_id)
+        if validate_athlete_attributes(athlete_params)
+          athlete.waivers.create({
+            signed_for: athlete.full_name,
+            signed_by: params[:signed_by],
+          }).sign!
+          @valid << athlete
         end
       end
-    end if params[:athlete]
-    params[:update_athlete].each do |athlete_id, athlete_params|
-      athlete = Dependent.find(athlete_id)
-      if validate_athlete_attributes(athlete_params)
-        athlete.waivers.create(
-          signed_for: athlete.full_name,
-          signed_by: params[:signed_by],
-        ).sign!
-        valid << athlete
-      end
-    end if params[:update_athlete]
-    if new_athlete_ids.count > 0
-      ::NewAthleteInfoMailerWorker.perform_async(new_athlete_ids)
-      ::NewAthleteNotificationMailerWorker.perform_async(new_athlete_ids)
     end
-    if valid.count == 1
-      redirect_to step_4_path, notice: "Success! #{valid.count} waiver updated/created."
-    elsif valid.count > 1
-      redirect_to step_4_path, notice: "Success! #{valid.count} waivers updated/created."
-    else
-      redirect_to :back, alert: "An error occurred."
+  end
+
+  def add_new_athletes_from_waivers
+    if params[:athlete].present?
+      params[:athlete].each do |token, athlete|
+        if validate_athlete_attributes(athlete)
+          new_athlete = current_user.dependents.create({
+            full_name: athlete[:name],
+            date_of_birth: athlete[:dob],
+            athlete_pin: athlete[:code]
+          })
+          new_athlete.waivers.create({
+            signed_for: new_athlete.full_name,
+            signed_by: params[:signed_by],
+          })
+          if new_athlete.sign_waiver!
+            @new_athlete_ids << new_athlete.id
+            new_athlete.generate_pin
+            @valid << new_athlete
+          end
+        end
+      end
     end
   end
 
@@ -132,28 +148,28 @@ class DependentsController < ApplicationController
   def delete_athlete
     athlete = Dependent.find(params[:athlete_id])
     athlete.destroy
-    redirect_to :back, notice: "Athlete successfully deleted."
+    redirect_back fallback_location: root_path, notice: "Athlete successfully deleted."
   end
 
   def reset_pin
     if current_user.valid_password?(params[:password])
       @athlete = Dependent.find(params[:athlete_id])
       if params[:athlete_pin] == params[:pin_confirmation] && @athlete.update(athlete_pin: params[:athlete_pin].to_i)
-        redirect_to edit_user_registration_path, notice: "Successfully updated pin for #{@athlete.full_name}."
+        redirect_to edit_user_path, notice: "Successfully updated pin for #{@athlete.full_name}."
       else
-        redirect_to edit_user_registration_path, alert: 'The pins you entered did not match.'
+        redirect_to edit_user_path, alert: 'The pins you entered did not match.'
       end
     else
-      redirect_to edit_user_registration_path, alert: 'Sorry. Your password was not correct.'
+      redirect_to edit_user_path, alert: 'Sorry. Your password was not correct.'
     end
   end
 
   def destroy
     athlete = Dependent.find(params[:id])
     if athlete.destroy
-      redirect_to :back, notice: "Athlete successfully deleted."
+      redirect_back fallback_location: root_path, notice: "Athlete successfully deleted."
     else
-      redirect_to :back, notice: "There was a problem destroying the athlete."
+      redirect_back fallback_location: root_path, notice: "There was a problem destroying the athlete."
     end
   end
 

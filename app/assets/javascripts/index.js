@@ -22,6 +22,12 @@ var ready = function() {
         || (uBound >= top && uBound <= bottom);
   };
 
+  $('.submit-contact-us').click(function(e) {
+    e.preventDefault();
+    $(this).parents('form').submit();
+    return false;
+  })
+
   if (window.location.pathname == "/") {
     /* smooth scrolling */
     if (window.mobilecheck()) {} else {
@@ -33,12 +39,6 @@ var ready = function() {
     });
   };
 
-  $('.forceOpen').click(function() {});
-  $('body').delegate('.forceOpen', 'click', function() {
-    var id = $(this).attr('data-target');
-    $('.modal').modal('hide');
-    $(id).modal('show');
-  });
 };
 
 $('.delayed-load').ready(function() {

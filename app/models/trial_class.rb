@@ -10,7 +10,7 @@
 #  updated_at   :datetime         not null
 #
 
-class TrialClass < ActiveRecord::Base
+class TrialClass < ApplicationRecord
   belongs_to :dependent
 
   def use!

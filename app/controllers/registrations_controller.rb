@@ -22,7 +22,7 @@ class RegistrationsController < ApplicationController
       current_user.update(registration_step: 3)
       redirect_to step_3_path, notice: "Success!"
     else
-      redirect_to :back, alert: "Something went wrong."
+      redirect_back fallback_location: root_path, alert: "Something went wrong."
     end
   end
 
@@ -51,12 +51,12 @@ class RegistrationsController < ApplicationController
 
   def post_step_3
     valid = []
-    params[:athlete].each do |athlete|
-      if validate_athlete_attributes(athlete[1])
+    params[:athlete].each do |token, athlete|
+      if validate_athlete_attributes(athlete)
         new_athlete = current_user.dependents.create(
-          full_name: athlete[1][:name],
-          date_of_birth: athlete[1][:dob],
-          athlete_pin: athlete[1][:code]
+          full_name: athlete[:name],
+          date_of_birth: athlete[:dob],
+          athlete_pin: athlete[:code]
         )
         new_athlete.waivers.create(
           signed_for: new_athlete.full_name,
@@ -72,7 +72,7 @@ class RegistrationsController < ApplicationController
       current_user.update(registration_step: 4)
       redirect_to step_4_path, notice: "Success! #{valid.count} waivers created."
     else
-      redirect_to :back, alert: "An error occurred."
+      redirect_back fallback_location: root_path, alert: "An error occurred."
     end
   end
 
@@ -94,7 +94,7 @@ class RegistrationsController < ApplicationController
     if update_self && notification && address && contact && update_athletes
       redirect_to step_4_path, notice: "We've updated the requested changes."
     else
-      redirect_to :back, alert: "Something went wrong."
+      redirect_back fallback_location: root_path, alert: "Something went wrong."
     end
   end
 
@@ -137,7 +137,7 @@ class RegistrationsController < ApplicationController
         redirect_to root_path, alert: "Must be signed in to do that."
       else
         if current_user.registration_complete?
-          redirect_to edit_user_registration_path
+          redirect_to edit_user_path
         end
       end
     end

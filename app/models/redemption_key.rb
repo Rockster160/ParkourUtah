@@ -11,7 +11,7 @@
 #  line_item_id :integer
 #
 
-class RedemptionKey < ActiveRecord::Base
+class RedemptionKey < ApplicationRecord
 
   after_create :generate_key
   belongs_to :line_item

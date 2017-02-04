@@ -11,7 +11,7 @@
 #  is_cancelled      :boolean          default(FALSE)
 #
 
-class Event < ActiveRecord::Base
+class Event < ApplicationRecord
   include Defaults
 
   belongs_to :event_schedule

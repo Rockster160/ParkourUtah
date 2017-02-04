@@ -49,10 +49,10 @@ class ApplicationMailer < ActionMailer::Base
   def customer_purchase_mail(cart_id, email)
     @cart = Cart.find(cart_id.to_i)
     @order_items = @cart.cart_items
-    @is_gift_card = @cart.is_gift_card?@order_items.any? { |cart_item| ["Gift Card"].include?(cart_item.item.category) }
-    @is_physical = @cart.is_physical?@order_items.any? { |cart_item| ["Clothing", "Accessories"].include?(cart_item.item.category) }
-    @adds_credits = @cart.adds_credits?@order_items.any? { |cart_item| cart_item.item.credits > 0 }
-    @is_subscription = @cart.is_subscription?@order_items.any? { |cart_item| cart_item.item.is_subscription? }
+    @is_gift_card = @order_items.any? { |cart_item| ["Gift Card"].include?(cart_item.item.category) }
+    @is_physical = @order_items.any? { |cart_item| ["Clothing", "Accessories"].include?(cart_item.item.category) }
+    @adds_credits = @order_items.any? { |cart_item| cart_item.item.credits > 0 }
+    @is_subscription = @order_items.any? { |cart_item| cart_item.item.is_subscription? }
     @user = @cart.user
     @address = @user.try(:address)
 

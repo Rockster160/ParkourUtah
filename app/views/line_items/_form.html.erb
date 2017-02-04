@@ -9,7 +9,7 @@
       </div>
       <div class="form-field">
         <%= f.label :cost_in_dollars %>
-        <%= f.number_field :cost_in_dollars, placeholder: '3000.99', class: 'customRequired pkut-textbox' %>
+        <%= f.number_field :cost_in_dollars, placeholder: '3000.99', class: 'customRequired pkut-textbox', step: "any", min: "0" %>
       </div>
       <div class="form-field">
         <%= f.label :size %>

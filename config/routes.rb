@@ -6,8 +6,6 @@ Rails.application.routes.draw do
   match '422', to: 'index#page_not_found', via: :all
   match '500', to: 'index#page_broken', via: :all
 
-  get "/calendar/all", to: redirect("/calendar")
-
   get 'talk' => 'index#get_request'
   post 'listen' => 'index#give_request'
 
@@ -75,18 +73,16 @@ Rails.application.routes.draw do
     get :email_body
     get :batch_email
     post :send_batch_emailer
-
-    resources :users do
-      member do
-        get :attendance
-        post :update_trials
-        post :update_credits
-        post :update_notifications
-      end
+  end
+  resources :admin_users, path: "admin/users", only: [ :show, :index, :destroy ] do
+    member do
+      get :attendance
+      post :update_trials
+      post :update_credits
+      post :update_notifications
     end
   end
 
-  get 'test' => 'index#index'
   post 'contact' => 'index#contact'
   post 'receive_sms' => 'index#receive_sms'
   get 'contact' => 'index#contact_page', as: 'contact_page'
@@ -110,16 +106,18 @@ Rails.application.routes.draw do
   post 'waivers' => 'dependents#update_waiver'
   post 'delete_athlete/:athlete_id' => 'dependents#delete_athlete'
 
+  resource :user
   devise_for :users, :controllers => {:registrations => "users/registrations"}
   devise_scope :user do
     get "/account" => "users/registrations#edit"
   end
   post 'user/notifications/update' => 'index#update_notifications'
 
+  get "/calendar/all", to: redirect("/calendar")
   get 'calendar' => 'calendar#show', as: 'calendar_show'
   get 'calendar/week' => 'calendar#get_week', as: 'week'
   get 'm/calendar' => 'calendar#mobile', as: 'calendar_mobile'
-  get 'calendar/week' => 'calendar#get_week', as: 'calendar_week'
+  get 'calendar/:city' => 'calendar#show'
 
   post 'store/charge' => 'store#charge', as: 'charge'
   get 'store' => 'store#index', as: 'store'

@@ -1,0 +1,115 @@
+<%= render_modal("edit_user_notifications") do %>
+  <%= form_tag update_notifications_admin_user_path(@user) do %>
+    <h1 class="pkut-header hidden-xs">Notifications</h1>
+    <h4 class="pkut-header visible-xs">Notifications</h4>
+    <p>Receive Notifications for:</p>
+    <div class="row">
+      <div class="col-xs-4">
+      </div>
+      <div class="col-xs-4">
+        Email
+      </div>
+      <div class="col-xs-4">
+        Text
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-4">
+        Waiver Expiring
+      </div>
+      <div class="col-xs-4">
+        <div class="pkut-checkbox">
+          <%= check_box_tag "notify[email_waiver_expiring]", '', @user.notifications.email_waiver_expiring? %>
+          <%= label_tag "notify[email_waiver_expiring]", '' %>
+        </div>
+      </div>
+      <div class="col-xs-4">
+        <div class="pkut-checkbox">
+          <%= check_box_tag "notify[text_waiver_expiring]", '', @user.notifications.text_waiver_expiring? %>
+          <%= label_tag "notify[text_waiver_expiring]", '' %>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-4">
+        Class Reminders
+      </div>
+      <div class="col-xs-4">
+        <div class="pkut-checkbox">
+          <%= check_box_tag "notify[email_class_reminder]", '', @user.notifications.email_class_reminder? %>
+          <%= label_tag "notify[email_class_reminder]", '' %>
+        </div>
+      </div>
+      <div class="col-xs-4">
+        <div class="pkut-checkbox">
+          <%= check_box_tag "notify[text_class_reminder]", '', @user.notifications.text_class_reminder? %>
+          <%= label_tag "notify[text_class_reminder]", '' %>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-4">
+        Class Cancelled Message
+      </div>
+      <div class="col-xs-4">
+        <div class="pkut-checkbox">
+          <%= check_box_tag "notify[email_class_cancelled]", '', @user.notifications.email_class_cancelled? %>
+          <%= label_tag "notify[email_class_cancelled]", '' %>
+        </div>
+      </div>
+      <div class="col-xs-4">
+        <div class="pkut-checkbox">
+          <%= check_box_tag "notify[text_class_cancelled]", '', @user.notifications.text_class_cancelled? %>
+          <%= label_tag "notify[text_class_cancelled]", '' %>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-4">
+        Low on credits
+      </div>
+      <div class="col-xs-4">
+        <div class="pkut-checkbox">
+          <%= check_box_tag "notify[email_low_credits]", '', @user.notifications.email_low_credits? %>
+          <%= label_tag "notify[email_low_credits]", '' %>
+        </div>
+      </div>
+      <div class="col-xs-4">
+        <div class="pkut-checkbox">
+          <%= check_box_tag "notify[text_low_credits]", '', @user.notifications.text_low_credits? %>
+          <%= label_tag "notify[text_low_credits]", '' %>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-4">
+        Newsletter
+      </div>
+      <div class="col-xs-4">
+        <div class="pkut-checkbox">
+          <%= check_box_tag "notify[email_newsletter]", '', @user.notifications.email_newsletter? %>
+          <%= label_tag "notify[email_newsletter]", '' %>
+        </div>
+      </div>
+      <div class="col-xs-4"></div>
+    </div>
+
+    <% unless @user.notifications.sms_receivable %>
+      <div class="row" style="color: orange">
+        <h4>You have blacklisted text notifications from ParkourUtah! You will not receive any text alerts.</h4>
+        <h5>To un-blacklist us, simply text the word 'start' to +1 (740) 571-4304 and then click the button below.</h5>
+        <h5>You should receive a text message saying you will now be able to receive text notifications from ParkourUtah.</h5>
+      </div>
+      <div class="row">
+        <%= link_to 'Text Me!', make_sms_receivable_path, class: 'pkut-btn', remote: true, method: :post %>
+      </div>
+    <% end %>
+
+    <%= submit_tag "Update", class: 'pkut-btn' %>
+  <% end %>
+<% end %>

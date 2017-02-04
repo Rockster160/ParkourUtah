@@ -1,0 +1,43 @@
+@import "config/variables";
+@import 'config/font-imports';
+
+.modal {
+  z-index: 10000;
+  overflow-y: auto;
+  .modal-container {
+    margin: 70px auto auto;
+    width: 900px;
+    max-width: 90%;
+    min-height: 6em;
+
+    text-align: center;
+    font-size: 14px;
+    color: black;
+    padding: 1em 10% 2em;
+
+    background: white;
+    border: 2px solid $pkut-grey-dark;
+    border-radius: 7px;
+    padding-left: 10px;
+    padding-right: 30px;
+    .close-btn {
+      top: -15px;
+      right: -28px;
+    }
+  }
+  &.skinny-modal {
+    .modal-container {
+      width: 450px;
+    }
+  }
+  &.medium-modal {
+    .modal-container {
+      width: 700px;
+    }
+  }
+  &.text-left {
+    .modal-container {
+      text-align: left;
+    }
+  }
+}

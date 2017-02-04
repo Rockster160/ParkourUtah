@@ -28,13 +28,13 @@ class IndexController < ApplicationController
     params[:notify].each do |attribute, value|
       current_user.notifications.update(attribute => true)
     end
-    redirect_to edit_user_registration_path
+    redirect_to edit_user_path
   end
 
   def receive_sms
     raw_number = params["From"].gsub(/[^0-9]/, "").last(10)
     user = User.where("phone_number ILIKE ?", "%#{raw_number}%").first
-    user_link = Rails.application.routes.url_helpers.admin_user_url(user)
+    user_link = Rails.application.routes.url_helpers.admin_user_url(user) if user.present?
     if %w(STOP STOPALL UNSUBSCRIBE CANCEL END QUIT).include?(params["Body"].squish.upcase)
       user.notifications.update(sms_receivable: false) if user.present? && user.notifications.present?
       default_message = "#{params["From"]} has opted out of text messages from PKUT.\nThey will no longer receive text messages from us (Including messages sent from the admin text messaging page).\nIn order to re-enable messages, they must send a text message saying \"START\" to us, and then log in to their account, Home, then click Notifications, then the button that says 'Text Me!'\nIf the message sends successfully, they will be able to receive text messages from us again."
@@ -55,7 +55,7 @@ class IndexController < ApplicationController
   def update
     update_address
     update_phone
-    redirect_to edit_user_registration_path
+    redirect_to edit_user_path
   end
 
   def contact

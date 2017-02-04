@@ -1,0 +1,418 @@
+@import "config/variables";
+@import 'config/font-imports';
+
+.fileform-center { margin-left: 90px; }
+
+.form-offset {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.form-field {
+  .pkut-textbox {
+    margin-top: -5px;
+  }
+}
+
+.form-container {
+  width: 100%;
+  max-width: 350px;
+  margin:  0 auto;
+
+  h3 { margin-top: 20px; }
+  .pkut-dropdown, .pkut-textarea { margin-bottom: 10px;}
+}
+
+.errors-container {
+  background: pink;
+  border-radius: 8px;
+  border-width: 3px;
+  border-style: outset;
+  border-color: red;
+  padding: 10px;
+  text-align: left;
+  margin-bottom: 30px;
+}
+
+.recaptcha-container {
+  margin: 0 auto;
+  width: 300px;
+}
+
+.pkut-box {
+  text-align: left;
+  padding: 0 2.5%;
+  margin-left: 10px;
+  width: 600px;
+  border: 2px solid $mat-grey;
+  border-radius: 7px;
+  background: $mat-grey-light;
+}
+
+.pkut-dropdown {
+  line-height: 30px;
+  font-size: 21px;
+  max-width: 350px;
+  width: 100%;
+}
+
+.text-field-height {
+  height: 30px;
+  margin: 10px 0;
+}
+
+.pkut-textbox {
+  margin: 10px 0;
+  width: 350px;
+  max-width: 100%;
+  padding: 4px 0 0 10px;
+  height: 30px;
+
+  font-size: 21px;
+  color: black;
+
+  border: 2px solid $pkut-grey-dark;
+  border-radius: 7px;
+  &:focus { outline: none; }
+  &.sm-textbox {
+    width: 155px;
+    &:not(:last-child) {
+      margin-right: 5px;
+    }
+  }
+  &.xs-textbox {
+    width: 85px;
+    &:not(:last-child) {
+      margin-right: 5px;
+    }
+  }
+  &.textbox-2col-5max {
+    width: 130px;
+    &:not(:last-child) {
+      margin-right: 5px;
+    }
+  }
+  &.textbox-1col-5max {
+    width: 70px;
+    &:not(:last-child) {
+      margin-right: 5px;
+    }
+  }
+}
+
+
+.mat-pkut-textbox {
+  @extend .pkut-textbox;
+
+  border: 1px solid $mat-grey;
+  border-radius: 3px;
+
+  padding: 0px;
+  padding-left: 5px;
+  margin-bottom: 5px;
+  margin-top: 0px;
+  width: 100%;
+
+  &:focus {
+    border: 1px solid $mat-pkut-red;
+    box-shadow: inset 0px 0px 0px 1px $mat-pkut-red;
+  }
+}
+
+.show-required {
+  position: relative;
+  &:before {
+    content: '(Required)';
+    position: absolute;
+    top: 20px;
+    padding-left: 10px;
+  }
+  .what-is-pin {
+    position: absolute;
+    width: 70px;
+    top: -30px;
+    right: 5px;
+  }
+}
+
+.arrow-required {
+  &:before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 16px solid transparent;
+    border-right: 20px solid red;
+    border-bottom: 16px solid transparent;
+    margin-top: -6px;
+    margin-left: 20px;
+  }
+  &:after {
+    content: 'Required';
+    position: absolute;
+    margin-left: 0px;
+    margin-top: 2px;
+    width: 80px;
+    height:17px;
+    padding-top: 0px;
+    padding-left: 7px;
+    background: red;
+    color: black;
+    font-weight: bold;
+    font-size: 1em;
+  }
+}
+
+.pkut-textarea {
+  width: 100%;
+  min-height: 6em;
+  font-size: 1.3em;
+  color: black;
+  padding: 5px;
+  border-radius: 20px;
+
+  border: 2px solid $pkut-grey-dark;
+  border-radius: 7px;
+  &:focus { outline: none; }
+}
+
+.mat-pkut-textarea {
+  @extend .pkut-textarea;
+
+  resize: none;
+  border-radius: 3px;
+  border: 1px solid $mat-grey;
+  &:focus {
+    border: 1px solid $mat-pkut-red;
+    box-shadow: inset 0px 0px 0px 1px $mat-pkut-red;
+  }
+}
+
+.contact-us .col-sm-4 {
+  padding: 5px;
+  &:first-of-type {
+    padding-left: 0;
+  }
+  &:last-of-type {
+    padding-right: 0;
+  }
+  @media(max-width: 767px) {
+    padding: 0px;
+    padding-bottom: 10px;
+  }
+}
+.contact-us .header-text {
+  text-align: center;
+}
+
+.pkut-btn {
+  display: inline-block;
+
+  padding: 8px 12px;
+  line-height: 1;
+  font-size: 16px;
+  text-decoration: none;
+
+  z-index: 10000;
+  transition: 0.3s;
+  margin: 8px 20px;
+  max-width: 300px;
+
+  text-decoration: none;
+  padding: 5px 20px;
+  font-family: 'MicroExtendFLF-Bold', Arial, sans-serif;
+  font-size: 18px;
+
+  border: none;
+  border-radius: 5px / 10px;
+  box-shadow: 3px 3px 5px black;
+
+  color: $pkut-grey-white;
+  background-color: $pkut-red;
+
+  &:hover {
+    color: $pkut-grey-light;
+    background-color: $pkut-red-dark;
+    outline: none;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  &.disabled {
+    color: $pkut-grey-light;
+    background-color: $pkut-red-dark;
+    outline: none;
+    text-decoration: none;
+  }
+  &.low-btn { z-index: 1000; }
+}
+
+.mat-pkut-btn {
+  @extend .pkut-btn;
+
+  border-radius: 3px;
+  background-color: $mat-pkut-red;
+  color: white;
+  transition: all 0.1s ease-in-out;
+  position: relative;
+  box-shadow: none;
+  z-index: 1;
+
+  &:after {
+    content: '';
+    top: 0;
+    left: 0;
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    box-shadow: 0px 5px 20px -5px $mat-grey;
+    transition: opacity 0.1s ease-in-out;
+  }
+
+  &:hover {
+    background-color: $mat-pkut-red;
+    color: white;
+    transform: scale(1.05, 1.05);
+  }
+
+  &:hover:after {
+    opacity: 1;
+  }
+}
+
+.big-btn {
+  z-index: 100;
+  white-space: normal;
+  position: relative;
+  margin: 20px auto;
+  a {
+    color: white;
+    text-decoration: none;
+    max-width: 200px;
+  }
+  &.orange-btn-glowing {
+    animation: glowing 1800ms infinite;
+  }
+}
+
+@keyframes glowing {
+  0%, 100% { background-color: orange; }
+  50% { background-color: red; }
+}
+
+
+.main-btn {
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  display: inline-block;
+  border: 1px solid white;
+  border-radius: 6px;
+  margin: 7px;
+  padding: 10px 0;
+  width: 170px;
+
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 17px;
+  line-height: 1.33;
+  color: white;
+  vertical-align: middle;
+  text-decoration: none;
+
+  background: transparent;
+
+  &:hover {
+    cursor: pointer;
+
+    color: $mat-pkut-red;
+    text-decoration: none;
+
+    background-color: $mat-white;
+    box-shadow: none !important;
+  }
+
+  &:after {
+    content: '';
+    top: 0;
+    left: 0;
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    box-shadow: 0px 10px 40px 0px $mat-grey-dark;
+    transition: opacity 0.1s ease-in-out;
+  }
+
+  &:hover:after {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 500px) {
+  .pkut-btn { margin-left: 0; }
+  .main-btn {
+    padding: 15px 0;
+    width: 40%;
+    font-size: 8px;
+  }
+}
+.call-to-arms {
+  color: $mat-white;
+  width: 170px;
+  padding: 20px 0;
+
+  border-color: transparent;
+  background: $mat-pkut-red;
+
+  &:hover {
+    background-color: $mat-white;
+    color: $mat-pkut-red;
+  }
+}
+
+.pkut-checkbox {
+  width: 100%;
+  label {
+    position: relative;
+    margin-left: 20px;
+    font-weight: normal;
+    font-size: 18px;
+    &:before {
+      content: "";
+      position: absolute;
+      top: -7px;
+      left: -35px;
+      width: 15px;
+      height: 15px;
+      border: 2px inset $pkut-grey;
+      background: white;
+    }
+    &:hover {
+      cursor: pointer;
+      &:after {
+        content: "\2713 ";
+        position: absolute;
+        color: $pkut-grey-dark;
+        font-size: 21px;
+        top: -15px;
+        left: -35px;
+      }
+    }
+  }
+  input[type=checkbox] {
+    visibility: hidden;
+  }
+  input[type=checkbox]:checked + label {
+    &:after {
+      content: "\2713 ";
+      text-shadow: 1px 1px $pkut-grey-dark;
+      position: absolute;
+      color: $pkut-red;
+      font-size: 21px;
+      top: -15px;
+      left: -35px;
+    }
+  }
+}

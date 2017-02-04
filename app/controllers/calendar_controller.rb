@@ -62,9 +62,9 @@ class CalendarController < ApplicationController
   end
 
   def mobile_check
-    browser = Browser.new
+    browser = Browser.new(request.user_agent)
     if browser.known?
-      return browser.mobile?
+      return browser.device.mobile?
     else
       if session[:mobile_param]
         return session[:mobile_param] == "1"

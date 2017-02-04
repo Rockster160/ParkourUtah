@@ -42,14 +42,14 @@ class EventSchedulesController < ApplicationController
     user = params[:user_id].present? ? User.find(params[:user_id]) : current_user
     user.subscriptions.create(event_schedule_id: params[:id])
     flash[:notice] = "You have successfully subscribed to this event."
-    redirect_to :back
+    redirect_back fallback_location: root_path
   end
 
   def unsubscribe
     user = params[:user_id].present? ? User.find(params[:user_id]) : current_user
     user.subscriptions.where(event_schedule_id: params[:id]).destroy_all
     flash[:notice] = "You have successfully unsubscribed from this event."
-    redirect_to :back
+    redirect_back fallback_location: root_path
   end
 
   def send_message_to_subscribers
@@ -62,7 +62,7 @@ class EventSchedulesController < ApplicationController
         ApplicationMailer.email(user.email, "Message regarding the #{event_schedule.title} class today", params[:message]).deliver_now
       end
     end
-    redirect_to :back, notice: 'Your message has been sent.'
+    redirect_back fallback_location: root_path, notice: 'Your message has been sent.'
   end
 
   private

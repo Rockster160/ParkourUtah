@@ -9,4 +9,9 @@ module ApplicationHelper
       nil
     end
   end
+
+  def render_modal(modal_id, additional_classes="", &block)
+    render layout: "layouts/modal", locals: { modal_id: modal_id, additional_classes: additional_classes } { block.call }
+  end
+
 end

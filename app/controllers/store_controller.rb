@@ -22,10 +22,10 @@ class StoreController < ApplicationController
 
   def unsubscribe
     athlete = Dependent.find(params[:id])
-    if athlete.subscription.update(auto_renew: false)
-      redirect_to edit_user_registration_path, notice: 'Successfully Unsubscribed'
+    if athlete.current_subscription.update(auto_renew: false)
+      redirect_to edit_user_path, notice: 'Successfully Unsubscribed'
     else
-      redirect_to edit_user_registration_path, notice: 'There was an error unsubscribing.'
+      redirect_to edit_user_path, notice: 'There was an error unsubscribing.'
     end
   end
 
@@ -45,6 +45,7 @@ class StoreController < ApplicationController
 
       orders = @cart.cart_items
       order = orders.where(order_name: name).first
+
       if params[:new_amount]
         params[:new_amount] ||= "0"
         if params[:new_amount].to_i <= 0
@@ -192,7 +193,7 @@ class StoreController < ApplicationController
     end
 
     if user_signed_in?
-      redirect_to edit_user_registration_path
+      redirect_to edit_user_path
     else
       redirect_to root_path
     end

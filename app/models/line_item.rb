@@ -24,13 +24,13 @@
 #  redemption_item_id   :integer
 #
 
-class LineItem < ActiveRecord::Base
+class LineItem < ApplicationRecord
 
   has_many :redemption_keys
 
   has_attached_file :display,
     styles: { :medium => "300x300>", :thumb => "100x100#" },
-    :default_url => "/images/missing.png",
+    :default_url => "http://parkourutah.com/images/missing.png",
     :storage => :s3,
     :bucket => ENV['PKUT_S3_BUCKET_NAME'],
     :convert_options => { :all => '-background white -flatten +matte' }
@@ -71,7 +71,7 @@ class LineItem < ActiveRecord::Base
   end
 
   def cost_in_dollars=(new_dollar_cost)
-    self.cost_in_pennies = new_dollar_cost * 100
+    self.cost_in_pennies = new_dollar_cost.to_f * 100
   end
   def cost_in_dollars
     self.cost_in_pennies.to_f / 100

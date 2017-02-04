@@ -14,7 +14,7 @@
 #  location    :string
 #
 
-class Spot < ActiveRecord::Base
+class Spot < ApplicationRecord
   
   has_many :event_schedules
   has_many :images

@@ -2,6 +2,9 @@
 <html>
 <head>
   <title>ParkourUtah</title>
+  <% unless Rails.env.production? %>
+    <meta name="robots" content="noindex">
+  <% end %>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
   <meta name="google-site-verification" content="5uf1OKzOYIfhb6m-6kpArPbzV2wNzPoig7yKI8lElk0" />
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>

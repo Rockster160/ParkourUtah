@@ -2,7 +2,18 @@
   <style>
     html, body { background: black; }
   </style>
-  <%= render partial: 'registration_required' %>
+<% end %>
+
+<%= render_modal("registration_required", "skinny-modal") do %>
+  <h3 class="pkut-header">Registration Required</h3>
+  <br/>
+  <div class="row">
+    <p>You must be registered and signed in to purchase class credits.</p>
+    <p>If you already have an account, click the 'Sign In' button below. Otherwise, click on 'Register' in order to create a new account.</p>
+    <p>If you would like to purchase classes as a gift for somebody else, please select our Gift Card option below.</p>
+    <a href="<%= new_user_session_path %>" class="pkut-btn">Sign In</a> <br> <br>
+    <a href="<%= new_user_path %>" class="pkut-btn">Register</a>
+  </div>
 <% end %>
 
 <div class="row shopping-container">
@@ -46,7 +57,10 @@
               </div>
             </div>
           </div>
-          <%= render partial: 'layouts/message', locals: {modal_id: "details#{item.id}", title: item.title, message: item.description} %>
+          <%= render_modal("details#{item.id}", "skinny-modal") do %>
+            <h1 class="pkut-header">item.title</h1>
+            <p class="error-message">item.description</p>
+          <% end %>
           <%= render partial: 'store/selection_modal', locals: {item: item} %>
         <% end %>
       <% end %>

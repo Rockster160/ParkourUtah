@@ -58,4 +58,8 @@
     </div>
   <% end %>
 </div>
-<%= render partial: 'layouts/message', locals: {modal_id: "what_is", title: "SMS Updates", message: "If you would like, we would be happy to speed things up and send you notifications by text. These can be easily changed and customized from your profile and include reminders for your athletes' waivers expiring, updates to class, and when your account has almost run out of credits."} %>
+
+<%= render_modal("what_is", "skinny-modal") do %>
+  <h1 class="pkut-header">SMS Updates</h1>
+  <p class="error-message">If you would like, we would be happy to speed things up and send you notifications by text. These can be easily changed and customized from your profile and include reminders for your athletes' waivers expiring, updates to class, and when your account has almost run out of credits.</p>
+<% end %>
