@@ -6,8 +6,6 @@ Rails.application.routes.draw do
   match '422', to: 'index#page_not_found', via: :all
   match '500', to: 'index#page_broken', via: :all
 
-  get "/calendar/all", to: redirect("/calendar")
-
   get 'talk' => 'index#get_request'
   post 'listen' => 'index#give_request'
 
@@ -115,10 +113,11 @@ Rails.application.routes.draw do
   end
   post 'user/notifications/update' => 'index#update_notifications'
 
+  get "/calendar/all", to: redirect("/calendar")
   get 'calendar' => 'calendar#show', as: 'calendar_show'
   get 'calendar/week' => 'calendar#get_week', as: 'week'
   get 'm/calendar' => 'calendar#mobile', as: 'calendar_mobile'
-  get 'calendar/week' => 'calendar#get_week', as: 'calendar_week'
+  get 'calendar/:city' => 'calendar#show'
 
   post 'store/charge' => 'store#charge', as: 'charge'
   get 'store' => 'store#index', as: 'store'

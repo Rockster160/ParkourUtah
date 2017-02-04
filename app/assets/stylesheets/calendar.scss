@@ -111,6 +111,15 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
   background: #EEE;
   padding-top: 34px;
   border-radius: 20px 20px 0 0;
+  .select2-container {
+    width: 200px !important;
+    &:first-of-type {
+      float: left;
+    }
+    &:last-of-type {
+      float: right;;
+    }
+  }
 }
 
 .calendar {
