@@ -1,6 +1,8 @@
 class ClassSummaryCalculator
   attr_reader :summary
 
+  # summary = ClassSummaryCalculator.new(start_date: start_date, end_date: end_date).generate
+
   CalculatedSummary = Struct.new(:start_date, :end_date, :days, :instructors, :total_earned, :total_payment, :profit) do
     def instructor_by_name(name)
       instructors.each do |instructor|
@@ -44,7 +46,7 @@ class ClassSummaryCalculator
           raise InstructorNotFound unless summary_instructor.present?
 
           minimum_to_pay_instructor = event.min_payment_per_session || 0
-          payment_per_student = event.payment_per_student
+          payment_per_student = event.payment_per_student || 0
           maximum_to_pay_instructor = event.max_payment_per_session
 
           amount_to_pay_instructor = payment_per_student * instructor.students.count
