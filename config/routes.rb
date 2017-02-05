@@ -106,9 +106,10 @@ Rails.application.routes.draw do
   post 'waivers' => 'dependents#update_waiver'
   post 'delete_athlete/:athlete_id' => 'dependents#delete_athlete'
 
-  resource :users, path: "users" do
-    get :sign_up, action: "new"
-  end
+  get "users/sign_up", action: "new", controller: "users"
+  get "users/edit", action: "edit", controller: "users"
+  get "users/edit", action: "edit", controller: "users"
+  resource :user, except: [ :show ]
   devise_for :users
   devise_scope :user do
     get "/account" => "users/registrations#edit"

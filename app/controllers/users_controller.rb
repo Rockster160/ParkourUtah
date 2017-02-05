@@ -27,7 +27,7 @@ class UsersController < ApplicationController
   def update
     @user = current_user
     if current_user.update_with_password(user_params)
-      redirect_to edit_users_path, notice: "Updated successfully!"
+      redirect_to edit_user_path, notice: "Updated successfully!"
     else
       flash.now[:alert] = "Failed to update"
       render :edit

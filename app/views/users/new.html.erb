@@ -3,7 +3,7 @@
   <h5 class="warning-text">This process must be completed by a parent or legal guardian.</h5>
   <h1 class="header-text">Get Started</h1>
 
-  <%= form_for(@user) do |f| %>
+  <%= form_for(@user, url: user_path) do |f| %>
     <div class="field">
       <%= f.email_field :email, placeholder: 'Email Address', class: "pkut-textbox customRequired" %>
     </div>

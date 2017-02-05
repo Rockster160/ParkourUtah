@@ -137,7 +137,7 @@ class RegistrationsController < ApplicationController
         redirect_to root_path, alert: "Must be signed in to do that."
       else
         if current_user.registration_complete?
-          redirect_to edit_users_path
+          redirect_to edit_user_path
         end
       end
     end

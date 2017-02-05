@@ -50,7 +50,7 @@ class SpotsController < ApplicationController
       if user_signed_in?
         redirect_to new_user_session_path, alert: "You must be an Admin to view this page."
       else
-        redirect_to edit_users_path, alert: "You must be an Admin to view this page."
+        redirect_to edit_user_path, alert: "You must be an Admin to view this page."
       end
     end
   end

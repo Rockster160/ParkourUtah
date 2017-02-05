@@ -40,7 +40,7 @@
 
   <%= render partial: 'layouts/error_container', locals: { resource: @user } %>
 
-  <%= form_for(@user, html: { method: :put, id: "modal-submit" }) do |f| %>
+  <%= form_for(@user, url: user_path, html: { method: :put, id: "modal-submit" }) do |f| %>
 
     <div class="row">
       <div class="col-sm-3">
