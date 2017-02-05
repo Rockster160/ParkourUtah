@@ -4,22 +4,37 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
   </head>
   <body>
-    <% @summary.each do |date| %>
-      <h2>Summary for <%= date.first %></h2>
-      <% date[1].each do |classes| %>
-        <h4>-Class: <%= classes.first %></h4>
-        <% classes[1].each do |instructor| %>
-          --Instructor: <strong><%= instructor.first %></strong> - pay: $<%= instructor[1]["pay"] %><br/>
-          <% instructor[1].first[1].each do |athlete| %>
-          ---- <%= athlete %><br/>
+    
+    <% @summary.days.each do |day| %>
+      <h3><%= day.date.strftime("%A (%d/%m/%Y) Totals:").upcase %></h3>
+      <% day.classes.each do |day_class| %>
+        <% cancelled = day_class.class_cancelled %>
+        <% schedule = EventSchedule.find(day_class.schedule_id) %>
+        <p style="<%= 'color: red' if cancelled %>">
+          <strong><%= schedule.title %> - <%= schedule.city %> - <%= schedule.time_of_day %></strong> - Instructor: <strong><%= day_class.instructors.map(&:name).join(", ") %></strong>
+          <% if cancelled %>
+            <br>Cancelled
           <% end %>
-        <% end %>
+          <% students = day_class.instructors.map(&:students).flatten %>
+          <% if students.none? %>
+            <br>---- None
+          <% else %>
+            <% students.each do |student| %>
+              <br>---- <%= student.name %> - <%= student.payment_type %>
+            <% end %>
+          <% end %>
+        </p>
       <% end %>
-      <br/><br/>
     <% end %>
-    <h3>Totals</h3>
-    <% @payment.each do |instructor, payment| %>
-      <%= instructor %> - $<%= payment %><br/>
+
+    <h4>Totals</h4>
+    <% @summary.instructors.each do |instructor| %>
+      <%= instructor.name %> - $<%= instructor.total_payment %><br>
     <% end %>
+    <% profit = @summary.profit %>
+    <br><strong>Total Earnings: $<%= @summary.total_earned %></strong>
+    <br><strong>Total Paid to Instructors: $<%= @summary.total_payment %></strong>
+    <br><strong>Profit: <span style="color: <%= profit >= 0 ? 'green' : 'red' %>">$<%= @summary.profit %></span></strong>
+
   </body>
 </html>

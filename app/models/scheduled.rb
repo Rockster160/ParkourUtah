@@ -32,59 +32,9 @@ class Scheduled < ApplicationRecord
   end
 
   def self.send_summary(days_ago_start, days_ago_end=0)
-    # Break me into smaller methods!!!
-    summary = {}
-    payment = {}
-
-    (days_ago_end..(days_ago_start - 1)).each do |days_ago|
-      date = (Time.zone.now - days_ago.days).to_datetime
-      first_date = date.beginning_of_day
-      last_date = date.end_of_day
-
-      events = Event.by_date(date)
-      special = Attendance.where(event_id: 1).where(created_at: first_date..last_date).map(&:event)
-      events += special
-      events.flatten.compact.each do |event|
-        instructors = {}
-        if event.attendances.any?
-          event.attendances.each do |attendance|
-            instructor = attendance.instructor
-            athlete = attendance.athlete
-
-            instructors[instructor.full_name] ||= {}
-            instructors[instructor.full_name]["students"] ||= []
-            instructors[instructor.full_name]["pay"] ||= 0
-
-            instructors[instructor.full_name]["students"] << "#{athlete.full_name} - #{attendance.type_of_charge}"
-            pay = event.title == "Test" ? 15 : instructor.payment_multiplier
-            instructors[instructor.full_name]["pay"] += pay
-
-            attendance.sent!
-          end
-        else
-          instructors[event.host_name] ||= {}
-          instructors[event.host_name]["students"] = ["None"]
-          instructors[event.host_name]["pay"] = 15
-        end
-
-        instructors.each do |instructor|
-          pay = event.attendances.count > 5 ? instructor[1]["pay"] : 15
-          instructor[1]["pay"] = pay
-          payment[instructor[0]] ||= 0
-          payment[instructor[0]] += pay
-        end
-        summary["#{date.strftime("%A %B %-d, %Y")}"] ||= {}
-        if event.title == "Test"
-          summary["#{date.strftime("%A %B %-d, %Y")}"]["Private Class"] = instructors
-        else
-          summary["#{date.strftime("%A %B %-d, %Y")}"]["#{event.title} - #{event.city} - #{event.date.strftime('%l:%M%p')}"] = instructors
-        end
-      end
-    end
-
-    total_summary_json = [summary, payment]
-
-    ::SummaryMailerWorker.perform_async(total_summary_json)
+    return true unless Rails.env.production?
+    summary = ClassSummaryCalculator.new(start_date: days_ago_start.days_ago, end_date: days_ago_end.days_ago).generate
+    ApplicationMailer.summary_mail(summary).deliver_now
   end
 
   def self.monthly_subscription_charges

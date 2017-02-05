@@ -70,7 +70,8 @@ class ApplicationMailerPreview < ActionMailer::Preview
   end
 
   def summary_mail
-    ApplicationMailer.summary_mail(class_summary_fake_data)
+    summary = ClassSummaryCalculator.new(start_date: Time.zone.local(2016, 10, 1), end_date: Time.zone.local(2016, 11, 1)).generate
+    ApplicationMailer.summary_mail(summary)
   end
 
   private
