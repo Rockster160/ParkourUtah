@@ -87,7 +87,12 @@ class EventSchedulesController < ApplicationController
       :description,
       :full_address,
       :city,
-      :color
+      :color,
+      :payment_per_student,
+      :min_payment_per_session,
+      :max_payment_per_session,
+      :accepts_unlimited_classes,
+      :accepts_trial_classes
     )
   end
 

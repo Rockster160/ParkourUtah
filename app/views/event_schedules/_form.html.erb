@@ -1,4 +1,3 @@
-
 <div class="central-container form-offset">
   <%= link_to "Event List", event_schedules_path, class: 'pkut-btn' %> <br>
   <% if @event_schedule.persisted? %>
@@ -20,6 +19,18 @@
         <%= f.label :cost %> <br>
         <%= f.text_field :cost, class: 'pkut-textbox customRequired' %>
       </div>
+      <div class="form-field">
+        <div class="pkut-checkbox">
+          <%= f.check_box :accepts_unlimited_classes, {}, "true", "false" %>
+          <%= f.label :accepts_unlimited_classes %>
+        </div>
+      </div>
+      <div class="form-field">
+        <div class="pkut-checkbox">
+          <%= f.check_box :accepts_trial_classes, {}, "true", "false" %>
+          <%= f.label :accepts_trial_classes %>
+        </div>
+      </div>
       <h3>Date</h3>
       <div class="form-field">
         <%= f.label :start_str_date, "Start Date" %> <br>
@@ -36,6 +47,19 @@
           <div style="width: 45%; display: inline-block; float: right;"><%= f.text_field :time_of_day, class: 'pkut-textbox customRequired' %></div>
         </div>
       </div>
+      <h3>Payment Rules</h3>
+      <div class="form-field">
+        <%= f.label :payment_per_student, "Payment per student (Optional)" %>
+        <%= f.text_field :payment_per_student, class: "pkut-textbox" %>
+      </div>
+      <div class="form-field">
+        <%= f.label :min_payment_per_session, "Minimum payment for class (Optional)" %>
+        <%= f.text_field :min_payment_per_session, class: "pkut-textbox" %>
+      </div>
+      <div class="form-field">
+        <%= f.label :max_payment_per_session, "Maximum payment for class (Optional)" %>
+        <%= f.text_field :max_payment_per_session, class: "pkut-textbox" %>
+      </div>
       <h3>Additional Info</h3>
       <div class="form-field">
         <%= f.label :description %> <br>
@@ -46,7 +70,7 @@
         <%= f.text_field :city, class: 'pkut-textbox customRequired' %>
       </div>
       <div class="form-field">
-        <%= f.label :full_address, "Address (Either a Spot or enter the address manually here)" %> <br>
+        <%= f.label :full_address, "Address (Either attach a Spot or enter the address manually here)" %> <br>
         <%= f.text_field :full_address, class: 'pkut-textbox' %>
       </div>
       <div class="form-field">

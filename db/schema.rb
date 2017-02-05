@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170204215627) do
+ActiveRecord::Schema.define(version: 20170205154853) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -126,6 +126,11 @@ ActiveRecord::Schema.define(version: 20170204215627) do
     t.string   "color"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "payment_per_student"
+    t.integer  "min_payment_per_session"
+    t.integer  "max_payment_per_session"
+    t.boolean  "accepts_unlimited_classes", default: true
+    t.boolean  "accepts_trial_classes",     default: true
     t.index ["instructor_id"], name: "index_event_schedules_on_instructor_id", using: :btree
     t.index ["spot_id"], name: "index_event_schedules_on_spot_id", using: :btree
   end
@@ -269,7 +274,6 @@ ActiveRecord::Schema.define(version: 20170204215627) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.integer  "instructor_position"
-    t.integer  "payment_multiplier",             default: 3
     t.string   "stats"
     t.string   "title"
     t.string   "nickname"

@@ -2,22 +2,27 @@
 #
 # Table name: event_schedules
 #
-#  id              :integer          not null, primary key
-#  instructor_id   :integer
-#  spot_id         :integer
-#  start_date      :datetime
-#  end_date        :datetime
-#  hour_of_day     :integer
-#  minute_of_day   :integer
-#  day_of_week     :integer
-#  cost_in_pennies :integer
-#  title           :string
-#  description     :text
-#  full_address    :string
-#  city            :string
-#  color           :string
-#  created_at      :datetime
-#  updated_at      :datetime
+#  id                        :integer          not null, primary key
+#  instructor_id             :integer
+#  spot_id                   :integer
+#  start_date                :datetime
+#  end_date                  :datetime
+#  hour_of_day               :integer
+#  minute_of_day             :integer
+#  day_of_week               :integer
+#  cost_in_pennies           :integer
+#  title                     :string
+#  description               :text
+#  full_address              :string
+#  city                      :string
+#  color                     :string
+#  created_at                :datetime
+#  updated_at                :datetime
+#  payment_per_student       :integer
+#  min_payment_per_session   :integer
+#  max_payment_per_session   :integer
+#  accepts_unlimited_classes :boolean          default(TRUE)
+#  accepts_trial_classes     :boolean          default(TRUE)
 #
 
 class EventSchedule < ApplicationRecord
@@ -32,10 +37,13 @@ class EventSchedule < ApplicationRecord
 
   before_save :add_hash_to_colors
 
-  default :color, "##{6.times.map { rand(16).to_s(16) }.join('')}"
+  default_on_create :color, "##{6.times.map { rand(16).to_s(16) }.join('')}"
+  default_on_create :payment_per_student, 4
+  default_on_create :min_payment_per_session, 15
 
-  validates :start_date, :hour_of_day, :minute_of_day, :day_of_week, :cost_in_pennies, :title, :city, presence: true
+  validates :start_date, :hour_of_day, :minute_of_day, :day_of_week, :cost_in_pennies, :title, :city, :color, presence: true
   validate :has_either_address_or_spot
+  validate :has_at_least_one_payment_rule
 
   scope :in_the_future, -> { where("start_date < :now AND (end_date IS NULL OR end_date > :now)", now: Time.zone.now) }
 
@@ -68,7 +76,7 @@ class EventSchedule < ApplicationRecord
   end
 
   def cost=(amount_in_dollars)
-    self.cost_in_pennies = amount_in_dollars * 100
+    self.cost_in_pennies = amount_in_dollars.to_f * 100
   end
   def cost; cost_in_dollars; end
   def cost_in_dollars; cost_in_pennies.to_f / 100.to_f; end
@@ -136,7 +144,13 @@ class EventSchedule < ApplicationRecord
 
   def has_either_address_or_spot
     if spot_id.nil? && full_address.blank?
-      errors.add(:base, "Event must have either an Address of a Spot attached.")
+      errors.add(:base, "Event must have either an Address or a Spot attached.")
+    end
+  end
+
+  def has_at_least_one_payment_rule
+    if payment_per_student.nil? && min_payment_per_session.nil? && max_payment_per_session.nil?
+      errors.add(:base, "Must have at least 1 payment rule set.")
     end
   end
 

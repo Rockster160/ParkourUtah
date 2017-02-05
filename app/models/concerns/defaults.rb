@@ -13,6 +13,12 @@ module Defaults
       value = param.respond_to?(:call) ? param.call(self) : param
       self[attribute] = value
     end
+    self.class.created_defaults.each do |attribute, param|
+      next if self.persisted?
+      next unless self.send(attribute).nil?
+      value = param.respond_to?(:call) ? param.call(self) : param
+      self[attribute] = value
+    end
   end
 
   # Added to class of object
@@ -23,8 +29,17 @@ module Defaults
       defaults[attribute] = block if block_given?
     end
 
+    def default_on_create(attribute, value = nil, &block)
+      created_defaults[attribute] = value
+      # Allow the passing of blocks
+      created_defaults[attribute] = block if block_given?
+    end
+
     def defaults
       @defaults ||= {}
+    end
+    def created_defaults
+      @created_defaults ||= {}
     end
   end
 end

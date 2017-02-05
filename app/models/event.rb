@@ -31,21 +31,26 @@ class Event < ApplicationRecord
     where(date: first_date..last_date)
   }
 
-  delegate :instructor,       to: :event_schedule, allow_nil: true
-  delegate :spot,             to: :event_schedule, allow_nil: true
-  delegate :hour_of_day,      to: :event_schedule, allow_nil: true
-  delegate :minute_of_day,    to: :event_schedule, allow_nil: true
-  delegate :day_of_week,      to: :event_schedule, allow_nil: true
-  delegate :cost_in_pennies,  to: :event_schedule, allow_nil: true
-  delegate :title,            to: :event_schedule, allow_nil: true
-  delegate :description,      to: :event_schedule, allow_nil: true
-  delegate :full_address,     to: :event_schedule, allow_nil: true
-  delegate :city,             to: :event_schedule, allow_nil: true
-  delegate :color,            to: :event_schedule, allow_nil: true
-  delegate :time_of_day,      to: :event_schedule, allow_nil: true
-  delegate :host_name,        to: :event_schedule, allow_nil: true
-  delegate :subscribed_users, to: :event_schedule, allow_nil: true
-  delegate :cost_in_dollars,  to: :event_schedule, allow_nil: true
+  delegate :instructor,                to: :event_schedule, allow_nil: true
+  delegate :spot,                      to: :event_schedule, allow_nil: true
+  delegate :hour_of_day,               to: :event_schedule, allow_nil: true
+  delegate :minute_of_day,             to: :event_schedule, allow_nil: true
+  delegate :day_of_week,               to: :event_schedule, allow_nil: true
+  delegate :cost_in_pennies,           to: :event_schedule, allow_nil: true
+  delegate :title,                     to: :event_schedule, allow_nil: true
+  delegate :description,               to: :event_schedule, allow_nil: true
+  delegate :full_address,              to: :event_schedule, allow_nil: true
+  delegate :city,                      to: :event_schedule, allow_nil: true
+  delegate :color,                     to: :event_schedule, allow_nil: true
+  delegate :time_of_day,               to: :event_schedule, allow_nil: true
+  delegate :host_name,                 to: :event_schedule, allow_nil: true
+  delegate :subscribed_users,          to: :event_schedule, allow_nil: true
+  delegate :cost_in_dollars,           to: :event_schedule, allow_nil: true
+  delegate :payment_per_student,       to: :event_schedule, allow_nil: true
+  delegate :min_payment_per_session,   to: :event_schedule, allow_nil: true
+  delegate :max_payment_per_session,   to: :event_schedule, allow_nil: true
+  delegate :accepts_unlimited_classes, to: :event_schedule
+  delegate :accepts_trial_classes,     to: :event_schedule
 
   def update_date(new_date_params)
     new_date = Time.zone.parse(new_date_params[:str_date]) rescue nil
