@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   before_action :logit
 
   def after_sign_in_path_for(resource)
-    edit_user_path
+    edit_users_path
   end
 
   def after_sign_up_path_for(resource)
@@ -46,19 +46,19 @@ class ApplicationController < ActionController::Base
 
   def validate_instructor
     unless current_user && current_user.is_instructor?
-      redirect_to edit_user_path, alert: "You are not authorized to view this page."
+      redirect_to edit_users_path, alert: "You are not authorized to view this page."
     end
   end
 
   def validate_mod
     unless current_user && current_user.is_mod?
-      redirect_to edit_user_path, alert: "You are not authorized to view this page."
+      redirect_to edit_users_path, alert: "You are not authorized to view this page."
     end
   end
 
   def validate_admin
     unless current_user && current_user.is_admin?
-      redirect_to edit_user_path, alert: "You are not authorized to view this page."
+      redirect_to edit_users_path, alert: "You are not authorized to view this page."
     end
   end
 

@@ -1,12 +1,19 @@
 class UsersController < ApplicationController
-  before_action :validate_user_signed_in
+  before_action :validate_user_signed_in, except: [ :new, :create ]
   before_action :still_signed_in
 
+  def new
+    @user = User.new
+  end
+
   def create
-    if (verify_recaptcha || !(Rails.env.production?)) && User.create(user_params)
+    @user = User.new(user_params)
+    if (verify_recaptcha || !(Rails.env.production?)) && @user.save
+      sign_in :user, @user
       redirect_to step_2_path
     else
-      redirect_back fallback_location: root_path, alert: "You failed the bot test. Make sure to wait for the green checkmark to appear."
+      flash.now[:alert] = "You failed the bot test. Make sure to wait for the green checkmark to appear."
+      render :new
     end
   end
 
@@ -20,7 +27,7 @@ class UsersController < ApplicationController
   def update
     @user = current_user
     if current_user.update_with_password(user_params)
-      redirect_to edit_user_path, notice: "Updated successfully!"
+      redirect_to edit_users_path, notice: "Updated successfully!"
     else
       flash.now[:alert] = "Failed to update"
       render :edit

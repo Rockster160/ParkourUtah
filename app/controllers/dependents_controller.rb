@@ -37,7 +37,7 @@ class DependentsController < ApplicationController
     if pin == confirm
       if Dependent.find(params[:athlete_id]).update(athlete_pin: pin)
         flash[:notice] = "Pin successfully updated."
-        redirect_to edit_user_path
+        redirect_to edit_users_path
       else
         flash[:alert] = "There was an error saving your pin."
         redirect_back fallback_location: root_path
@@ -57,7 +57,7 @@ class DependentsController < ApplicationController
         end
       end
     end
-    redirect_to edit_user_path
+    redirect_to edit_users_path
   end
 
   def assign_subscription
@@ -155,12 +155,12 @@ binding.pry
     if current_user.valid_password?(params[:password])
       @athlete = Dependent.find(params[:athlete_id])
       if params[:athlete_pin] == params[:pin_confirmation] && @athlete.update(athlete_pin: params[:athlete_pin].to_i)
-        redirect_to edit_user_path, notice: "Successfully updated pin for #{@athlete.full_name}."
+        redirect_to edit_users_path, notice: "Successfully updated pin for #{@athlete.full_name}."
       else
-        redirect_to edit_user_path, alert: 'The pins you entered did not match.'
+        redirect_to edit_users_path, alert: 'The pins you entered did not match.'
       end
     else
-      redirect_to edit_user_path, alert: 'Sorry. Your password was not correct.'
+      redirect_to edit_users_path, alert: 'Sorry. Your password was not correct.'
     end
   end
 

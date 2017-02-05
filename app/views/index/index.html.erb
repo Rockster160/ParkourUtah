@@ -14,9 +14,9 @@
         <a href="#peeps" class="main-btn lead scroll-link">Our people</a>
         <br class="visible-xs visible-sm"/>
         <% if user_signed_in? %>
-          <a href="<%= edit_user_path %>" class="main-btn lead call-to-arms">Get Started</a>
+          <a href="<%= edit_users_path %>" class="main-btn lead call-to-arms">Get Started</a>
         <% else %>
-          <a href="<%= new_user_path %>" class="main-btn lead call-to-arms">Get Started</a>
+          <a href="<%= new_users_path %>" class="main-btn lead call-to-arms">Get Started</a>
         <% end %>
         <br class="visible-xs visible-sm"/>
         <a href="#calendar" class="main-btn lead scroll-link">Locations</a>

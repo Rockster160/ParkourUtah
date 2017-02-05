@@ -1,10 +1,9 @@
 <div class="central-container form-offset internal-center">
   <%= render partial: 'registrations/progress_bar', locals: {step: 1} %>
-  <%= devise_error_messages! %>
   <h5 class="warning-text">This process must be completed by a parent or legal guardian.</h5>
   <h1 class="header-text">Get Started</h1>
 
-  <%= form_for(current_user) do |f| %>
+  <%= form_for(@user) do |f| %>
     <div class="field">
       <%= f.email_field :email, placeholder: 'Email Address', class: "pkut-textbox customRequired" %>
     </div>
@@ -23,7 +22,7 @@
 
     <div class="actions">
       <%= f.submit "Next", class: 'pkut-btn' %><br />
-      <%= link_to "Aready have an account?", new_session_path("User"), class: '' %>
+      <%= link_to "Aready have an account?", new_session_path(User), class: '' %>
     </div>
   <% end %>
 </div>

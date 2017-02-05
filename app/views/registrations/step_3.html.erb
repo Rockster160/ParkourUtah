@@ -3,7 +3,7 @@
   <h4 class="warning-text text-center">This process must be completed by a parent or legal guardian.</h4>
   <h2 class="header-text">Add Athletes</h2>
   <p>Add the first and last name, birthday, and desired Pin Code for each athlete (including yourself) who is going to participate in lessons.</p>
-  <%= form_tag(register_step_3, {id: "modal-submit"}) do %>
+  <%= form_tag(register_step_3_path, {id: "modal-submit"}) do %>
     <% token = 10.times.map {(('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a).sample}.join %>
     <div class="athlete-container">
       <div class="row athlete-input-info">
