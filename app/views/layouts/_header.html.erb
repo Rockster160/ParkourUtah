@@ -14,7 +14,11 @@
   <div class="navbar navbar-fixed-top" data-spy="affix">
     <div class="container">
       <div class="navbar-header">
-        <a href="/" class="navbar-brand">STAGING</a>
+        <% if Rails.env.production? %>
+          <a href="/" class="navbar-brand">PARKOUR UTAH</a>
+        <% else %>
+          <a href="/" class="navbar-brand"><%= Rails.env.upcase %></a>
+        <% end %>
       </div>
       <div class="pull-right" id="navbar">
         <ul class="nav navbar-nav">
@@ -58,7 +62,11 @@
 <div class="mobile-header visible-xs">
   <div class="navbar navbar-fixed-top" data-spy="affix">
     <div class="container">
-      <a href="/" class="navbar-brand">PARKOUR UTAH</a>
+      <% if Rails.env.production? %>
+        <a href="/" class="navbar-brand">PARKOUR UTAH</a>
+      <% else %>
+        <a href="/" class="navbar-brand"><%= Rails.env.upcase %></a>
+      <% end %>
       <div class="nav-collapse pull-right" id="navbar">
         <a href="#" class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
           <%= icon('bars', '', class: 'fa-lg nav-icon') %>
