@@ -4,6 +4,7 @@ $(document).ready(function(){
     limit: 5,
     remote: {
       url: '/admin/users?by_fuzzy_text=%QUERY',
+      wildcard: '%QUERY',
       filter: function(x) {
         return $.map(x, function(item) {
           return { user: item }

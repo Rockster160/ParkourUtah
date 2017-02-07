@@ -1,3 +1,13 @@
+.tt-menu {
+  background: white;
+}
+
+.tt-selectable:hover {
+  cursor: pointer;
+  color: #FFF;
+  background-color: #0097CF;
+}
+
 .tt-highlight {
   color: red;
 }
@@ -24,8 +34,6 @@
 }
 
 .tt-suggestion.tt-cursor {
-  color: #FFF;
-  background-color: #0097CF;
 
 }
 
