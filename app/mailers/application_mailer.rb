@@ -2,7 +2,9 @@ class ApplicationMailer < ActionMailer::Base
   default from: 'parkourutah@gmail.com', template_path: "mailers/#{self.name.underscore}"
   layout 'mailer'
 
-  def email(email, subject, body)
+  def email(email, subject, body, email_type="")
+    @user = User.where(email: email).first
+    @email_type = email_type
     @body = body.html_safe
 
     mail({

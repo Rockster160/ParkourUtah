@@ -1,5 +1,9 @@
 class ApplicationMailerPreview < ActionMailer::Preview
 
+  def email
+    ApplicationMailer.email("rocco11nicholls@gmail.com", "Unsubscribe me!", "This user should be able to unsubscribe", "email_newsletter")
+  end
+
   def welcome_mail
     email = ''
     ApplicationMailer.welcome_mail(email)

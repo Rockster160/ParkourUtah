@@ -84,7 +84,16 @@ class IndexController < ApplicationController
   end
 
   def unsubscribe
-    if User.find(params[:id]).notifications.update(params[:type] => false)
+    if params[:type].present? &&  params[:id].present?
+      unsubscribe_type = params[:type]
+      user_id = params[:id]
+    else
+      unsubscribe_params = Rack::Utils.parse_nested_query(Base64.urlsafe_decode64(params[:unsubscribe_code] || ''))
+      unsubscribe_type = unsubscribe_params['unsubscribe'].try(:to_sym) || :all
+      user_id = unsubscribe_params['user_id'].try(:to_i)
+    end
+
+    if User.find(user_id).unsubscribe_from(unsubscribe_type)
       flash[:notice] = "You have been successully unsubscribed."
     else
       flash[:alert] = "Failed to unsubscribe."

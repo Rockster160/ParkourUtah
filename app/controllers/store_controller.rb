@@ -142,6 +142,7 @@ class StoreController < ApplicationController
     end
     order_success = stripe_charge.nil? || stripe_charge.try(:status) == "succeeded"
     if order_success
+      @cart.update(purchased_at: DateTime.current)
       @cart.cart_items.each do |order|
         line_item = LineItem.find(order.line_item_id)
         if RedemptionKey.redeem(order.redeemed_token)

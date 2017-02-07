@@ -160,6 +160,15 @@ class User < ApplicationRecord
     users
   end
 
+  def unsubscribe_from(notification_type)
+    if notification_type.to_sym == :all
+      notifications.change_all_email_to(false)
+      notifications.save
+    else
+      notifications.update(notification_type.to_sym => false)
+    end
+  end
+
   def still_signed_in!
     self.last_sign_in_at = Time.zone.now
     self.save!
