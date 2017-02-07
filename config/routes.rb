@@ -66,6 +66,7 @@ Rails.application.routes.draw do
   get :dashboard, controller: :admins
   resource :admin, only: [] do
     get :purchase_history
+    get :summary
 
     get :batch_text_message
     post :send_batch_texts

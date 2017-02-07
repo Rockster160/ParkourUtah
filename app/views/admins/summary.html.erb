@@ -1,0 +1,49 @@
+<div class="central-container form-offset">
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
+  <h3>Summary Generator</h3>
+
+  <%= form_tag summary_admin_path, method: :get do %>
+    <div class="form-field">
+      <%= label_tag :start_str_date, "Start Date" %> <br>
+      <%= text_field_tag :start_date, params[:start_date], class: 'pkut-textbox datepicker-field' %>
+    </div>
+    <div class="form-field">
+      <%= label_tag :end_str_date, "End Date (Leave empty to repeat forever)" %> <br>
+      <%= text_field_tag :end_date, params[:end_date] || Time.zone.now.strftime('%b %d, %Y'), class: 'pkut-textbox datepicker-field' %>
+    </div>
+    <%= submit_tag "Generate!", class: "pkut-btn" %>
+  <% end %>
+
+  <% if @summary.present? %>
+    <% @summary.days.each do |day| %>
+      <h3><%= day.date.strftime("%A (%d/%m/%Y) Totals:").upcase %></h3>
+      <% day.classes.each do |day_class| %>
+        <% cancelled = day_class.class_cancelled %>
+        <% schedule = EventSchedule.find(day_class.schedule_id) %>
+        <p style="<%= 'color: red' if cancelled %>">
+          <strong><%= schedule.title %> - <%= schedule.city %> - <%= schedule.time_of_day %></strong> - Instructor: <strong><%= day_class.instructors.map(&:name).join(", ") %></strong>
+          <% if cancelled %>
+            <br>Cancelled
+          <% end %>
+          <% students = day_class.instructors.map(&:students).flatten %>
+          <% if students.none? %>
+            <br>---- None
+          <% else %>
+            <% students.each do |student| %>
+              <br>---- <%= student.name %> - <%= student.payment_type %>
+            <% end %>
+          <% end %>
+        </p>
+      <% end %>
+    <% end %>
+
+    <h4>Totals</h4>
+    <% @summary.instructors.each do |instructor| %>
+      <%= instructor.name %> - $<%= instructor.total_payment %><br>
+    <% end %>
+    <% profit = @summary.profit %>
+    <br><strong>Total Earnings: $<%= @summary.total_earned %></strong>
+    <br><strong>Total Paid to Instructors: $<%= @summary.total_payment %></strong>
+    <br><strong>Profit: <span style="color: <%= profit >= 0 ? 'green' : 'red' %>">$<%= @summary.profit %></span></strong>
+  <% end %>
+</div>

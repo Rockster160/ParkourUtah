@@ -21,6 +21,23 @@ class AdminsController < ApplicationController
     end
   end
 
+  def summary
+
+    if params[:start_date]
+      start_date = Time.zone.parse(params[:start_date]) rescue nil
+    end
+    if params[:end_date]
+      end_date = Time.zone.parse(params[:end_date]) rescue nil
+    end
+    start_date ||= Time.zone.now
+    
+    if start_date.present? && end_date.present?
+      @summary = ClassSummaryCalculator.new(start_date: start_date, end_date: end_date).generate
+    else
+      @summary = nil
+    end
+  end
+
   def batch_text_message
     @users = User.where(id: params[:user_ids])
     case params[:template]

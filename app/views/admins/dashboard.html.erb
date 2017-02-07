@@ -11,6 +11,7 @@
   <% if current_user.is_admin? %>
     <%= link_to "Send Text Message", batch_text_message_admin_path, class: 'pkut-btn' %> <br>
     <%= link_to "Send Batch Email", batch_email_admin_path, class: 'pkut-btn' %> <br>
+    <%= link_to "Summary Generator", summary_admin_path, class: 'pkut-btn' %> <br>
     <%= link_to "Purchase History", purchase_history_admin_path, class: 'pkut-btn' %> <br>
     <%= link_to "Redemption Keys", redemption_keys_path, class: 'pkut-btn' %> <br>
     <%= link_to "Items", line_items_path, class: 'pkut-btn' %> <br>
