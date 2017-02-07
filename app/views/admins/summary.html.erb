@@ -4,11 +4,11 @@
 
   <%= form_tag summary_admin_path, method: :get do %>
     <div class="form-field">
-      <%= label_tag :start_str_date, "Start Date" %> <br>
+      <%= label_tag :start_date, "Start Date" %> <br>
       <%= text_field_tag :start_date, params[:start_date], class: 'pkut-textbox datepicker-field' %>
     </div>
     <div class="form-field">
-      <%= label_tag :end_str_date, "End Date (Leave empty to repeat forever)" %> <br>
+      <%= label_tag :end_date, "End Date" %> <br>
       <%= text_field_tag :end_date, params[:end_date] || Time.zone.now.strftime('%b %d, %Y'), class: 'pkut-textbox datepicker-field' %>
     </div>
     <%= submit_tag "Generate!", class: "pkut-btn" %>
