@@ -62,20 +62,20 @@ class Dependent < ApplicationRecord
   end
 
   def attend_class(event, instructor)
-    event_cost = event.cost_in_dollars.to_i
-    charge_type = charge_class(event_cost)
+    charge_type = charge_class(event)
     if charge_type.present? && charge_type.is_a?(String)
       attendance = attendances.create(instructor_id: instructor.id, event_id: event.id, type_of_charge: charge_type)
     end
     attendance.try(:persisted?) || false
   end
 
-  def charge_class(event_cost)
-    if has_unlimited_access?
+  def charge_class(event)
+    if event.accepts_unlimited_classes? && has_unlimited_access?
       'Unlimited Subscription' if current_subscription.use!
-    elsif has_trial?
+    elsif event.accepts_trial_classes? && has_trial?
       'Trial Class'
     elsif user.credits >= event_cost
+      event_cost = event.cost_in_dollars.to_i
       'Credits' if user.charge_credits(event_cost)
     end
   end
