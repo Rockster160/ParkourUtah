@@ -138,6 +138,8 @@ class StoreController < ApplicationController
         }.merge(@cart_is_subscription ? {customer: current_user.stripe_id} : {source: params[:stripeToken]}))
       rescue Stripe::CardError => e
         stripe_charge = {failure_message: "Failed to Charge: #{e}"}
+      rescue
+        stripe_charge = {failure_message: "Failed to Charge, try logging out and back in or trying a different browser?"}
       end
     end
     order_success = stripe_charge.nil? || stripe_charge.try(:status) == "succeeded"
