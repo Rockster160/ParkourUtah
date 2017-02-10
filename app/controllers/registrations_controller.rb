@@ -124,8 +124,8 @@ class RegistrationsController < ApplicationController
         athlete.generate_pin
       end
     end
-    
-    slack_message = "New User: <#{admin_user_path(current_user)}|#{current_user.id} #{current_user.email}>\n"
+
+    slack_message = "New User: <#{admin_user_url(current_user)}|#{current_user.id} #{current_user.email}>\n"
     current_user.athletes.each do |athlete|
       slack_message << "#{athlete.id} #{athlete.full_name} - Athlete ID: #{athlete.zero_padded(athlete.athlete_id, 4)} Pin: #{athlete.zero_padded(athlete.athlete_pin, 4)}\n"
     end
