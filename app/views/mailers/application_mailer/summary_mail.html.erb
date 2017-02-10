@@ -4,9 +4,9 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
   </head>
   <body>
-    
+
     <% @summary.days.each do |day| %>
-      <h3><%= day.date.strftime("%A (%d/%m/%Y) Totals:").upcase %></h3>
+      <h3><%= day.date.strftime("%A (%m/%d/%Y) Totals:").upcase %></h3>
       <% day.classes.each do |day_class| %>
         <% cancelled = day_class.class_cancelled %>
         <% schedule = EventSchedule.find(day_class.schedule_id) %>
@@ -29,7 +29,7 @@
 
     <h4>Totals</h4>
     <% @summary.instructors.each do |instructor| %>
-      <%= instructor.name %> - $<%= instructor.total_payment %><br>
+      <%= instructor.name %> - $<%= instructor.total_payment %> / Profit: <span style="color: <%= instructor.profit >= 0 ? 'green' : 'red' %>;">$<%= instructor.profit %></span><br>
     <% end %>
     <% profit = @summary.profit %>
     <br><strong>Total Earnings: $<%= @summary.total_earned %></strong>

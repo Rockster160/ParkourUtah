@@ -22,7 +22,6 @@ class AdminsController < ApplicationController
   end
 
   def summary
-
     if params[:start_date]
       start_date = Time.zone.parse(params[:start_date]) rescue nil
     end
@@ -30,7 +29,7 @@ class AdminsController < ApplicationController
       end_date = Time.zone.parse(params[:end_date]) rescue nil
     end
     start_date ||= Time.zone.now
-    
+
     if start_date.present? && end_date.present?
       @summary = ClassSummaryCalculator.new(start_date: start_date, end_date: end_date).generate
     else
