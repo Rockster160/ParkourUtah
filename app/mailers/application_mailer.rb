@@ -78,13 +78,6 @@ class ApplicationMailer < ActionMailer::Base
     mail(to: @athletes.first.user.email, subject: "New Athlete Information")
   end
 
-  def new_athlete_notification_mail(athlete_ids)
-    @athletes = athlete_ids.map { |athlete_id| Dependent.find(athlete_id) }
-    @user = @athletes.first.user
-
-    mail(to: ENV["PKUT_EMAIL"], subject: "Somebody made some athletes!")
-  end
-
   def pin_reset_mail(athlete_id)
     @athlete = Dependent.find(athlete_id.to_i)
 

@@ -124,8 +124,16 @@ class RegistrationsController < ApplicationController
         athlete.generate_pin
       end
     end
+    
+    slack_message = "New User: <#{admin_user_path(current_user)}|#{current_user.id} #{current_user.email}>\n"
+    current_user.athletes.each do |athlete|
+      slack_message << "#{athlete.id} #{athlete.full_name} - Athlete ID: #{athlete.zero_padded(athlete.athlete_id, 4)} Pin: #{athlete.zero_padded(athlete.athlete_pin, 4)}\n"
+    end
+    slack_message << "Referred By: #{current_user.referrer}"
+    channel = Rails.env.production? ? "#new-users" : "#slack-testing"
+    SlackNotifier.notify(slack_message, channel)
+
     ::NewAthleteInfoMailerWorker.perform_async(approved.compact)
-    ::NewAthleteNotificationMailerWorker.perform_async(approved.compact)
     current_user.update(registration_step: 5)
     redirect_to step_5_path
   end

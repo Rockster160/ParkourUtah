@@ -83,7 +83,6 @@ class DependentsController < ApplicationController
 
     if @new_athlete_ids.count > 0
       ::NewAthleteInfoMailerWorker.perform_async(@new_athlete_ids)
-      ::NewAthleteNotificationMailerWorker.perform_async(@new_athlete_ids)
     end
     if @valid.count == 1
       redirect_to step_4_path, notice: "Success! #{@valid.count} waiver updated/created."
