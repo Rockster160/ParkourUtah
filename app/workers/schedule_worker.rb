@@ -25,7 +25,7 @@ class ScheduleWorker
   end
 
   def send_class_text(params)
-    date_range = 100.minutes.from_now..130.minutes.from_now
+    date_range = minutes_from_now(100)..minutes_from_now(130)
     Subscription.find_each do |subscriber|
       user = subscriber.user
       user.subscribed_events.joins(:events).where(events: {date: date_range}).each do |schedule|
@@ -48,7 +48,7 @@ class ScheduleWorker
   def waiver_checks(params)
     Dependent.all.each do |athlete|
       user = athlete.user
-      if athlete.waiver.exp_date.to_date == (Time.zone.now + 1.week).to_date
+      if athlete.waiver.exp_date.to_date == weeks_from_now(1).to_date
         if user.notifications.email_waiver_expiring
           ::ExpiringWaiverMailerWorker.perform_async(athlete.id)
         end
@@ -61,7 +61,7 @@ class ScheduleWorker
 
   def remind_recurring_payments(params)
     athletes_expiring_soon = Dependent.joins(:athlete_subscriptions)
-      .where('athlete_subscriptions.expires_at > ? AND athlete_subscriptions.expires_at < ?', 10.days.from_now.beginning_of_day, 10.days.from_now.end_of_day)
+      .where('athlete_subscriptions.expires_at > ? AND athlete_subscriptions.expires_at < ?', days_from_now(10).beginning_of_day, days_from_now(10).end_of_day)
       .where('athlete_subscriptions.auto_renew = true')
     by_users = athletes_expiring_soon.group_by(&:user_id)
 
@@ -118,8 +118,24 @@ class ScheduleWorker
     return true unless Rails.env.production? || params["send_without_prod"]
     start_date_days_ago = params["start_date_days_ago"].to_i
     end_date_days_ago = params["end_date_days_ago"].to_i
-    summary = ClassSummaryCalculator.new(start_date: Time.zone.now - (start_date_days_ago * 60 * 60 * 24), end_date: Time.zone.now - (end_date_days_ago * 60 * 60 * 24)).generate
+    summary = ClassSummaryCalculator.new(start_date: days_ago(start_date_days_ago), end_date: days_ago(end_date_days_ago)).generate
     ApplicationMailer.summary_mail(summary, nil, start_date_days_ago == 7).deliver_now
+  end
+
+  def minutes_from_now(seconds)
+    Time.zone.now + (seconds * 60)
+  end
+
+  def weeks_from_now(seconds)
+    Time.zone.now + (seconds * 60 * 60 * 24 * 7)
+  end
+
+  def days_ago(seconds)
+    Time.zone.now - (seconds * 60 * 60 * 24)
+  end
+
+  def days_from_now(seconds)
+    Time.zone.now + (seconds * 60 * 60 * 24)
   end
 
 end
