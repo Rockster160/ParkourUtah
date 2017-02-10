@@ -19,4 +19,4 @@ Sidekiq::Cron::Job.create(name: "send_summary", cron: "10 21 * * *", class: "Sch
 Sidekiq::Cron::Job.create(name: "waiver_checks", cron: "30 9 * * *", class: "ScheduleWorker", args: {waiver_checks: nil})
 Sidekiq::Cron::Job.create(name: "remind_recurring_payments", cron: "30 10 * * *", class: "ScheduleWorker", args: {remind_recurring_payments: nil})
 Sidekiq::Cron::Job.create(name: "monthly_subscription_charges", cron: "0 7 * * *", class: "ScheduleWorker", args: {monthly_subscription_charges: nil})
-Sidekiq::Cron::Job.create(name: "send_summary", cron: "30 21 * * 6", class: "ScheduleWorker", args: {send_summary: {start_date_days_ago: 7}})
+Sidekiq::Cron::Job.create(name: "send_summary_weekly", cron: "40 21 * * 6", class: "ScheduleWorker", args: {send_summary: {start_date_days_ago: 7}})
