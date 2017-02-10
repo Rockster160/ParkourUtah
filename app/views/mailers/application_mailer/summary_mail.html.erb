@@ -28,8 +28,10 @@
     <% end %>
 
     <h4>Totals</h4>
-    <% @summary.instructors.each do |instructor| %>
-      <%= instructor.name %> - $<%= instructor.total_payment %> / Profit: <span style="color: <%= instructor.profit >= 0 ? 'green' : 'red' %>;">$<%= instructor.profit %></span><br>
+    <% if @include_totals %>
+      <% @summary.instructors.each do |instructor| %>
+        <%= instructor.name %> - $<%= instructor.total_payment %> / Profit: <span style="color: <%= instructor.profit >= 0 ? 'green' : 'red' %>;">$<%= instructor.profit %></span><br>
+      <% end %>
     <% end %>
     <% profit = @summary.profit %>
     <br><strong>Total Earnings: $<%= @summary.total_earned %></strong>

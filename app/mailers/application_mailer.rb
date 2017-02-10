@@ -84,11 +84,12 @@ class ApplicationMailer < ActionMailer::Base
     mail(to: @athlete.user.email, subject: "Request for ID or Pin Reset")
   end
 
-  def summary_mail(summary, to_email=ENV['PKUT_EMAIL'])
+  def summary_mail(summary, to_email=nil, include_totals=false)
+    @include_totals = include_totals
     @summary = summary
     start_day = @summary.start_date.strftime("%A %B %-d, %Y")
     end_day = @summary.end_date.strftime("%A %B %-d, %Y")
     subject = "Class summary from #{start_day} to #{end_day}"
-    mail(to: to_email, subject: subject)
+    mail(to: to_email || ENV['PKUT_EMAIL'], subject: subject)
   end
 end

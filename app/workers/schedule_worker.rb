@@ -119,7 +119,7 @@ class ScheduleWorker
     start_date_days_ago = params["start_date_days_ago"].to_i
     end_date_days_ago = params["end_date_days_ago"].to_i
     summary = ClassSummaryCalculator.new(start_date: Time.zone.now - (start_date_days_ago * 60 * 60 * 24), end_date: Time.zone.now - (end_date_days_ago * 60 * 60 * 24)).generate
-    ApplicationMailer.summary_mail(summary, "rocco11nicholls@gmail.com").deliver_now
+    ApplicationMailer.summary_mail(summary, nil, start_date_days_ago == 7).deliver_now
   end
 
 end
