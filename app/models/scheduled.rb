@@ -1,6 +1,10 @@
 require 'net/http'
 class Scheduled < ApplicationRecord
 
+  def self.post_to_custom_logger
+    CustomLogger.log("\e[33m.\e[0m")
+  end
+
   def self.send_class_text
     date_range = 100.minutes.from_now..130.minutes.from_now
     Subscription.find_each do |subscriber|

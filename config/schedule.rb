@@ -1,3 +1,7 @@
+every 1.minute do
+  runner "Scheduled.post_to_custom_logger"
+end
+
 every 1.hour do
   runner "Scheduled.send_class_text"
 end
