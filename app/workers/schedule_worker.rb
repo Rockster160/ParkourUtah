@@ -10,6 +10,14 @@ class ScheduleWorker
     end
   end
 
+  # slack_message = "New User: <#{admin_user_path(current_user)}|#{current_user.id} #{current_user.email}>\n"
+  # current_user.athletes.each do |athlete|
+  #   slack_message << "#{athlete.id} #{athlete.full_name} - Athlete ID: #{athlete.zero_padded(athlete.athlete_id, 4)} Pin: #{athlete.zero_padded(athlete.athlete_pin, 4)}\n"
+  # end
+  # slack_message << "Referred By: #{current_user.referrer}"
+  # channel = Rails.env.production? ? "#new-users" : "#slack-testing"
+  # SlackNotifier.notify(slack_message, channel)
+
   private
 
   def post_to_custom_logger(params)
@@ -58,8 +66,11 @@ class ScheduleWorker
     by_users = athletes_expiring_soon.group_by(&:user_id)
 
     by_users.each do |user_id, athletes|
-      ExpiringWaiverMailer.delay.notify_subscription_updating(user_id)
-      SmsMailerWorker.perform_async('3852599640', "To update in 10 days: #{athletes.map(&:full_name)}")
+      ExpiringWaiverMailer.notify_subscription_updating(user_id).deliver_now
+
+      slack_message = "Unlimited Subscriptions to update in 10 days: #{athletes.map(&:full_name).join(", ")}"
+      channel = Rails.env.production? ? "#purchases" : "#slack-testing"
+      SlackNotifier.notify(slack_message, channel)
     end
   end
 
@@ -85,7 +96,9 @@ class ScheduleWorker
           true
         end
         if charge || charge.status == "succeeded"
-          SmsMailerWorker.perform_async('3852599640', "Successfully updated Subscription for #{user.email} at $#{(total_cost/100).round(2)}.")
+          slack_message = "Charged Unlimited Subscriptions for #{user.email} at $#{(total_cost/100).round(2)}."
+          channel = Rails.env.production? ? "#purchases" : "#slack-testing"
+          SlackNotifier.notify(slack_message, channel)
 
           recurring_athletes.each do |athlete|
             old_sub = athlete.subscription
