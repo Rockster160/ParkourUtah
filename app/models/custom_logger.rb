@@ -6,8 +6,8 @@ class CustomLogger
       log("#{request.env["REQUEST_METHOD"]} - #{request.env['REQUEST_PATH']} #{filtered_params}", user, cart_id)
     end
 
-    def log_blip!
-      File.open("log/custom_logger.txt", "a+") { |f| f << "." }
+    def log_blip!(with_color="\e[0m")
+      File.open("log/custom_logger.txt", "a+") { |f| f << "#{with_color}.\e[0m" }
     end
 
     def log(message, user=nil, cart_id)

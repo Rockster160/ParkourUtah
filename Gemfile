@@ -28,7 +28,7 @@ gem "paperclip", "~> 4.2"
 gem 'aws-sdk', '< 2.0'
 gem 'httparty'
 gem 'sidekiq'
-gem 'whenever', require: false
+gem 'sidekiq-cron', "~> 0.4.0"
 gem 'sinatra', require: nil
 gem 'twilio-ruby'
 gem 'puma'

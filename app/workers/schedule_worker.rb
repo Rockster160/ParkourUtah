@@ -1,11 +1,22 @@
-require 'net/http'
-class Scheduled < ApplicationRecord
+class ScheduleWorker
+  include Sidekiq::Worker
+  sidekiq_options retry: false
 
-  def self.post_to_custom_logger
-    CustomLogger.log("\e[33m.\e[0m")
+  def perform(task_values)
+    task_values.each do |task, params|
+      unless task.nil?
+        self.send(task.to_sym, params)
+      end
+    end
   end
 
-  def self.send_class_text
+  private
+
+  def post_to_custom_logger(params)
+    CustomLogger.log_blip!("\e[32m")
+  end
+
+  def send_class_text(params)
     date_range = 100.minutes.from_now..130.minutes.from_now
     Subscription.find_each do |subscriber|
       user = subscriber.user
@@ -26,22 +37,33 @@ class Scheduled < ApplicationRecord
     end
   end
 
-  def self.remind_recurring_payments
-    athletes_expiring_soon = Dependent.joins(:athlete_subscriptions).where('athlete_subscriptions.expires_at > ? AND athlete_subscriptions.expires_at < ?', 10.days.from_now.beginning_of_day, 10.days.from_now.end_of_day).where('athlete_subscriptions.auto_renew = true')
+  def waiver_checks(params)
+    Dependent.all.each do |athlete|
+      user = athlete.user
+      if athlete.waiver.exp_date.to_date == (Time.zone.now + 1.week).to_date
+        if user.notifications.email_waiver_expiring
+          ::ExpiringWaiverMailerWorker.perform_async(athlete.id)
+        end
+        if user.notifications.text_waiver_expiring && user.notifications.sms_receivable
+          ::SmsMailerWorker.perform_async(user.phone_number, "The waiver belonging to #{athlete.full_name} is no longer active as of #{athlete.waiver.exp_date.strftime('%B %e')}. Head up to ParkourUtah.com to get it renewed!")
+        end
+      end
+    end
+  end
+
+  def remind_recurring_payments(params)
+    athletes_expiring_soon = Dependent.joins(:athlete_subscriptions)
+      .where('athlete_subscriptions.expires_at > ? AND athlete_subscriptions.expires_at < ?', 10.days.from_now.beginning_of_day, 10.days.from_now.end_of_day)
+      .where('athlete_subscriptions.auto_renew = true')
     by_users = athletes_expiring_soon.group_by(&:user_id)
+
     by_users.each do |user_id, athletes|
       ExpiringWaiverMailer.delay.notify_subscription_updating(user_id)
       SmsMailerWorker.perform_async('3852599640', "To update in 10 days: #{athletes.map(&:full_name)}")
     end
   end
 
-  def self.send_summary(days_ago_start, days_ago_end=0)
-    return true unless Rails.env.production?
-    summary = ClassSummaryCalculator.new(start_date: days_ago_start.days_ago, end_date: days_ago_end.days_ago).generate
-    ApplicationMailer.summary_mail(summary).deliver_now
-  end
-
-  def self.monthly_subscription_charges
+  def monthly_subscription_charges(params)
     count = 0
     User.every do |user|
       recurring_athletes = []
@@ -79,18 +101,12 @@ class Scheduled < ApplicationRecord
     count
   end
 
-  def self.waiver_checks
-    Dependent.all.each do |athlete|
-      user = athlete.user
-      if athlete.waiver.exp_date.to_date == (Time.zone.now + 1.week).to_date
-        if user.notifications.email_waiver_expiring
-          ::ExpiringWaiverMailerWorker.perform_async(athlete.id)
-        end
-        if user.notifications.text_waiver_expiring && user.notifications.sms_receivable
-          ::SmsMailerWorker.perform_async(user.phone_number, "The waiver belonging to #{athlete.full_name} is no longer active as of #{athlete.waiver.exp_date.strftime('%B %e')}. Head up to ParkourUtah.com to get it renewed!")
-        end
-      end
-    end
+  def send_summary(params)
+    return true unless Rails.env.production? || params["send_without_prod"]
+    start_date_days_ago = params["start_date_days_ago"].to_i
+    end_date_days_ago = params["end_date_days_ago"].to_i
+    summary = ClassSummaryCalculator.new(start_date: Time.zone.now - (start_date_days_ago * 60 * 60 * 24), end_date: Time.zone.now - (end_date_days_ago * 60 * 60 * 24)).generate
+    ApplicationMailer.summary_mail(summary, "rocco11nicholls@gmail.com").deliver_now
   end
 
 end
