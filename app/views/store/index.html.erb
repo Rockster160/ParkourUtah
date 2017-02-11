@@ -40,7 +40,7 @@
               </div>
               <div class="item-back">
                 <p class="item-text"><%= item.description %></p>
-                <a class="hover-btn forceOpen" style="text-align: center;" data-toggle="modal" data-target="#details<%= item.id %>">Read More</a>
+                <a class="hover-btn forceOpen" style="text-align: center;" data-toggle="modal" data-target="#details-<%= item.id %>">Read More</a>
                 <% if item.colors && item.sizes %>
                   <a alt="..." class="pkut-btn" data-toggle="modal" data-target="#info<%= item.id %>">Colors/Sizes</a><br/>
                 <% elsif item.colors %>
@@ -57,9 +57,9 @@
               </div>
             </div>
           </div>
-          <%= render_modal("details#{item.id}", "skinny-modal") do %>
-            <h1 class="pkut-header">item.title</h1>
-            <p class="error-message">item.description</p>
+          <%= render_modal("details-#{item.id}", "skinny-modal") do %>
+            <h1 class="pkut-header"><%= item.title %></h1>
+            <p class="error-message"><%= item.description %></p>
           <% end %>
           <%= render partial: 'store/selection_modal', locals: {item: item} %>
         <% end %>
