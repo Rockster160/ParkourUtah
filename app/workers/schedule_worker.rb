@@ -121,7 +121,7 @@ class ScheduleWorker
     start_date, end_date = case params["scope"]
     when "day" then [now.beginning_of_day, now.end_of_day]
     when "month" then [last_week.beginning_of_month, last_week.end_of_month]
-    when
+    end
     summary = ClassSummaryCalculator.new(start_date: start_date, end_date: end_date).generate
     ApplicationMailer.summary_mail(summary, nil, params["scope"] == "month").deliver_now
   end
