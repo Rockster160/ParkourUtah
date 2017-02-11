@@ -1,4 +1,4 @@
-<div class="central-container form-offset internal-center">
+<div class="central-container form-offset text-center">
   <%= render partial: 'registrations/progress_bar', locals: {step: 1} %>
   <h5 class="warning-text">This process must be completed by a parent or legal guardian.</h5>
   <h1 class="header-text">Get Started</h1>
@@ -16,7 +16,7 @@
       <%= f.password_field :password_confirmation, autocomplete: "off", placeholder: 'Confirm Password', class: "pkut-textbox customRequired" %>
     </div>
 
-    <div class="internal-center">
+    <div class="text-center">
       <div class="recaptcha-container"><%= recaptcha_tags %></div>
     </div>
 

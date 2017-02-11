@@ -1,6 +1,21 @@
 @import "config/variables";
 @import 'config/font-imports';
 
+.orders-placeholder {
+  @media(max-width: 767px) {
+    margin-top: 20px;
+  }
+}
+
+.shopping-cart-cell {
+  min-width: 228px;
+}
+
+.shop-close {
+  top: -5px;
+  right: -8px;
+}
+
 .shopping-container {
   position: relative;
   max-width: 950px;

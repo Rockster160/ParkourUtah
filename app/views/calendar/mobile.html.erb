@@ -7,13 +7,13 @@
   <div class="event-detail-container"></div>
 <% end %>
 
-<div class="mobile-calendar-controls internal-center">
+<div class="mobile-calendar-controls text-center">
   <span class="pkut-btn center-btn low-btn forceOpen" data-toggle="modal" data-target="#datepicker-modal">Goto</span>
 </div>
 
 <%= render_modal("datepicker-modal", "skinny-modal") do %>
   <h1 class="pkut-header">Select Date</h1>
-  <span class="mobile-calendar-date-picker internal-center"></span>
+  <span class="mobile-calendar-date-picker text-center"></span>
   <%= link_to 'Desktop View', calendar_show_path(desktop: true) %>
 <% end %>
 

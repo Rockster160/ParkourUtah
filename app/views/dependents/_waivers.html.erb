@@ -11,7 +11,7 @@
     <br/>
     <p>If this information is incorrect please click the red X on the top right and update the information before attempting to sign the waiver again.</p>
     <p>If any athletes are missing, please be sure that all information is filled out entirely with the requested formats.</p>
-    <div class="internal-center">
+    <div class="text-center">
       <%= link_to 'REVIEW AND DOWNLOAD WAIVER', '//s3-us-west-2.amazonaws.com/pkut-default/RELEASE+AGREEMENT1.pdf', class: 'pkut-link', target: '_blank' %>
       <div class="text-field-height pkut-checkbox arrow-required">
         <%= check_box_tag :signed, '', nil, class: 'required-checkbox' %>
@@ -22,7 +22,7 @@
     <p>I also certify that I understand that the above document that I have downloaded and read is a legal document, and it is my understanding that an electronic signature has the same effect and can be enforced in the same way as a writen signature, as stated in Utah Code 46-4-201.</p>
     <p>By signing this document, I am waiving any liability claims against Parkour Utah for myself, and, if any of the athletes listed above are minors, I certify that I am the parent and/or guardian of those athletes, and I am waiving any liability claims against Parkour Utah on behalf of the minors listed as the athletes above.</p>
     <br/>
-    <div class="internal-center">
+    <div class="text-center">
       <%= text_field_tag :signed_by, '', placeholder: 'Signed By', class: 'pkut-textbox customRequired', autocomplete: 'off' %>
       <br/>
       <a class="pkut-btn add-athletes-submission" data-dismiss="modal">Sign Waiver</a><br/>

@@ -1,4 +1,4 @@
-<div class="central-container form-offset internal-center">
+<div class="central-container form-offset text-center">
   <%= render partial: 'registrations/progress_bar', locals: {step: 2} %>
   <h4 class="warning-text text-center">This process must be completed by a parent or legal guardian.</h4>
   <h2 class="header-text">Okay let's get some personal info</h2>
@@ -46,7 +46,7 @@
       </div>
     </div>
   </div>
-  <div class="row internal-center">
+  <div class="row text-center">
     <h4>How did you hear about us? If you were referred by a person, please tell us their name.</h4>
     <%= select_tag "user[referrer_dropdown]", options_for_select(["", "Billboard", "Facebook", "Google Search", "Flyer", "Word of Mouth"]), class: 'pkut-dropdown show-referral-text-box' %>
     <%= text_field_tag 'user[referrer_text]', '', placeholder: 'John Smith', class: "pkut-textbox referral-text-field hidden" %>
