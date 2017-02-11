@@ -14,4 +14,14 @@ module ApplicationHelper
     render layout: "layouts/modal", locals: { modal_id: modal_id, additional_classes: additional_classes } { block.call }
   end
 
+  def mobile_device?
+    browser = Browser.new(request.user_agent)
+    if browser.known?
+      if browser.device.mobile? || !!(request.user_agent =~ /Mobile|webOS/)
+        return true
+      end
+    end
+    false
+  end
+
 end

@@ -62,6 +62,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def verify_user_is_not_signed_in
+    if user_signed_in?
+      redirect_to edit_user_path, alert: "You're already signed in!"
+    end
+  end
+
   def see_current_user
     Rails.logger.silence do
       if user_signed_in?

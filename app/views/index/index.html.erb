@@ -1,8 +1,9 @@
   <div class="video-bg">
-   <video autoplay="" loop="" muted="" id="bgvid">
-      <source src="//s3-us-west-2.amazonaws.com/pkut-default/pkut-bg-video.mov" type="video/mp4">
-      <source src="/assets/pkut-bg-video-affb00c6247a665efd8a506bd3326466.mp4" type="video/mp4">
-    </video>
+    <% unless mobile_device? %>
+      <video autoplay="" loop="" muted="">
+        <source src="<%= asset_path('pkut-bg-video.mov') %>" type="video/mp4">
+      </video>
+    <% end %>
   </div>
 <div class="header-container" id="home">
   <div class="header vert">

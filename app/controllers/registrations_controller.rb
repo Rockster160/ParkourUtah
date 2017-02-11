@@ -140,30 +140,30 @@ class RegistrationsController < ApplicationController
 
   private
 
-    def verify_user_signed_in
-      unless current_user
-        redirect_to root_path, alert: "Must be signed in to do that."
-      else
-        if current_user.registration_complete?
-          redirect_to edit_user_path
-        end
+  def verify_user_signed_in
+    if user_signed_in?
+      if current_user.registration_complete?
+        redirect_to edit_user_path
+      end
+    else
+      redirect_to root_path, alert: "Must be signed in to do that."
+    end
+  end
+
+  def current_step
+    params[:action].gsub(/[^0-9]/, '').to_i
+  end
+
+  def redirect_user_to_correct_step
+    unless current_step == current_user.registration_step
+      redirect_to case current_user.registration_step
+      when 2 then step_2_path
+      when 3 then step_3_path
+      when 4 then step_4_path
+      when 5 then step_5_path
+      else page_not_found_path
       end
     end
-
-    def current_step
-      params[:action].gsub(/[^0-9]/, '').to_i
-    end
-
-    def redirect_user_to_correct_step
-      unless current_step == current_user.registration_step
-        redirect_to case current_user.registration_step
-        when 2 then step_2_path
-        when 3 then step_3_path
-        when 4 then step_4_path
-        when 5 then step_5_path
-        else page_not_found_path
-        end
-      end
-    end
+  end
 
 end
