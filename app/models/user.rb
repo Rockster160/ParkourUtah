@@ -61,6 +61,8 @@
 
 class User < ApplicationRecord
 
+  LOW_CREDIT_ALERT = 30
+
   has_one :address, dependent: :destroy
   has_one :notifications, dependent: :destroy
   has_many :unlimited_subscriptions, dependent: :destroy
@@ -224,23 +226,9 @@ class User < ApplicationRecord
     Subscription.where(user_id: self.id, event_schedule_id: event_schedule_id || 0).any?
   end
 
-  def charge(price, athlete)
-    if athlete.has_unlimited_access?
-      athlete.subscription.use!
-      'Unlimited Subscription'
-    elsif athlete.has_trial?
-      athlete.trial.use!
-      'Trial Class'
-    elsif self.credits >= price
-      charge_credits(price)
-    else
-      return false
-    end
-  end
-
   def charge_credits(price)
     self.credits -= price
-    send_alert_for_low_credits if self.credits < 30
+    send_alert_for_low_credits if self.credits < LOW_CREDIT_ALERT
     self.save!
   end
 

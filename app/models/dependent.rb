@@ -62,6 +62,7 @@ class Dependent < ApplicationRecord
   end
 
   def attend_class(event, instructor)
+    attendance = nil
     charge_type = charge_class(event)
     if charge_type.present? && charge_type.is_a?(String)
       attendance = attendances.create(instructor_id: instructor.id, event_id: event.id, type_of_charge: charge_type)
@@ -72,16 +73,14 @@ class Dependent < ApplicationRecord
   def charge_class(event)
     event_cost = event.cost_in_dollars.to_i
     if event.accepts_unlimited_classes? && has_unlimited_access?
-      'Unlimited Subscription' if current_subscription.use!
+      current_subscription.use! ? 'Unlimited Subscription' : false
     elsif event.accepts_trial_classes? && has_trial?
-      'Trial Class'
+      use_trial! ? 'Trial Class' : false
     elsif user.credits >= event_cost
-      'Credits' if user.charge_credits(event_cost)
+      user.charge_credits(event_cost) ? 'Credits' : false
+    else
+      false
     end
-  end
-
-  def trial
-    trials.first
   end
 
   def trials
@@ -89,6 +88,14 @@ class Dependent < ApplicationRecord
   end
 
   def has_trial?
+    trials.any?
+  end
+
+  def trial
+    trials.first
+  end
+
+  def use_trial!
     trial.try(:use!) || false
   end
 
