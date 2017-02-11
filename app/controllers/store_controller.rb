@@ -1,6 +1,5 @@
 class StoreController < ApplicationController
   before_action :set_cart
-  before_action :mobile_check
 
   def index
     @items_by_category = {}
@@ -214,15 +213,6 @@ class StoreController < ApplicationController
         session["cart_id"] = cart.id
       end
       @cart = cart
-    end
-  end
-
-  def mobile_check
-    browser = Browser.new(request.user_agent)
-    if browser.known?
-      if browser.device.mobile? || !!(request.user_agent =~ /Mobile|webOS/)
-        redirect_to root_path, alert: "Sorry for the inconvenience, but our store is not currently available on mobile devices. Please come back and try again from a desktop computer."
-      end
     end
   end
 
