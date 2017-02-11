@@ -116,10 +116,14 @@ class ScheduleWorker
 
   def send_summary(params)
     return true unless Rails.env.production? || params["send_without_prod"]
-    start_date_days_ago = params["start_date_days_ago"].to_i
-    end_date_days_ago = params["end_date_days_ago"].to_i
-    summary = ClassSummaryCalculator.new(start_date: days_ago(start_date_days_ago), end_date: days_ago(end_date_days_ago)).generate
-    ApplicationMailer.summary_mail(summary, nil, start_date_days_ago == 7).deliver_now
+    now = Time.zone.now
+    last_week = days_ago(7)
+    start_date, end_date = case params["scope"]
+    when "day" then now.beginning_of_day, now.end_of_day
+    when "month" then last_week.beginning_of_month, last_week.end_of_month
+    when
+    summary = ClassSummaryCalculator.new(start_date: start_date, end_date: end_date).generate
+    ApplicationMailer.summary_mail(summary, nil, params["scope"] == "month").deliver_now
   end
 
   def minutes_from_now(seconds)
