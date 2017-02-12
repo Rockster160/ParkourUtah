@@ -1,0 +1,46 @@
+# start_date = Time.zone.local(2016, 12, 1); end_date = start_date.end_of_month; summary = ClassSummaryCalculator.new(start_date: start_date, end_date: end_date).generate; ApplicationMailer.summary_mail(summary, nil, true).deliver!
+wb = xlsx_package.workbook
+wb.styles do |style|
+  black = "000000"
+  dark_cell_background_color = "5B5B5B"
+  default_cell_border = "B1B1BE"
+  text_center = style.add_style(alignment: { horizontal: :center })
+  spacer = style.add_style(bg_color: dark_cell_background_color, sz: 8, border: { style: :thin, color: dark_cell_background_color })
+  border_top = style.add_style(border: { style: :thin, color: default_cell_border }, border_top: { color: black })
+  border_left = style.add_style(border: { style: :thin, color: default_cell_border }, border_left: { color: black })
+  border_right = style.add_style(border: { style: :thin, color: default_cell_border }, border_right: { color: black })
+  border_bottom = style.add_style(border: { style: :thin, color: default_cell_border }, border_bottom: { color: black })
+
+  day_total_styles = [nil, nil, border_top, border_top, border_top, border_top, border_top, border_top]
+  wb.add_worksheet(name: summary.start_date.strftime("Summary %B %Y")) do |sheet|
+    # ABCDEFGH
+    # 12345678
+    sheet.add_row [summary.start_date.strftime("Summary %B %Y"), nil, nil, nil, nil, nil, nil, nil], style: text_center
+    sheet.merge_cells("A1:H1")
+    sheet.add_row ["", "", "", "", "", "", "", ""], style: spacer
+    sheet.add_row ["Date", "Class", "Teacher", "Students", "Payment Type", "Cancellation", "Pay", "Profit"]
+    sheet.add_row ["", "", "", "", "", "", "", ""], style: spacer
+
+    summary.days.each do |day|
+      day.classes.each do |event|
+        event.instructors.each do |instructor|
+          first_student = instructor.students.first
+          other_students = instructor.students - [instructor.students.first]
+          sheet.add_row [day.date.strftime("%m/%-d/%Y"), event.name, instructor.name, first_student.try(:name) || "0", first_student.try(:payment_type), event.class_cancelled ? "Y" : "", instructor.total_payment == 0 ? "N/A" : instructor.total_payment, instructor.profit == 0 ? "N/A" : instructor.profit]
+          other_students.each do |student|
+            sheet.add_row ["", "", "", student.try(:name), student.try(:payment_type), "", "", ""]
+          end
+        end
+      end
+      sheet.add_row ["", "", "Day Totals", day.classes.map(&:instructors).flatten.map(&:students).flatten.count, "", "", "", day.profit], style: day_total_styles
+      sheet.add_row ["", "", "", "", "", "", "", ""], style: spacer
+    end
+
+    sheet.add_row ["", "", "", "", "", "", "", "Profit"], style: [nil, nil, nil, nil, nil, nil, nil, border_bottom]
+    sheet.add_row ["", "", "Payment", "", "", "", "Pay", summary.profit], style: [nil, nil, border_bottom, nil, nil, nil, nil, border_left]
+    summary.instructors.each do |instructor|
+      sheet.add_row ["", "", instructor.name, "", "", "", instructor.total_payment, ""], style: [border_right, nil, nil, nil, nil, nil, nil, nil]
+    end
+
+  end
+end

@@ -1,4 +1,5 @@
 class ApplicationMailer < ActionMailer::Base
+  # http://localhost:7545/rails/mailers
   default from: 'parkourutah@gmail.com', template_path: "mailers/#{self.name.underscore}"
   layout 'mailer'
 
@@ -87,9 +88,17 @@ class ApplicationMailer < ActionMailer::Base
   def summary_mail(summary, to_email=nil, include_totals=false)
     @include_totals = include_totals
     @summary = summary
+
     start_day = @summary.start_date.strftime("%A %B %-d, %Y")
     end_day = @summary.end_date.strftime("%A %B %-d, %Y")
     subject = "Class summary from #{start_day} to #{end_day}"
+
+    xlsx = render_to_string layout: false, handlers: [:axlsx], formats: [:xlsx], template: "mailers/application_mailer/summary", locals: {summary: summary}
+    xlsx = Base64.encode64(xlsx)
+    attachments[@summary.start_date.strftime("Summary %B %Y") + '.xlsx'] = {mime_type: Mime::XLSX, content: xlsx, encoding: 'base64'}
+    self.instance_variable_set(:@_lookup_context, nil)
+
     mail(to: to_email || ENV['PKUT_EMAIL'], subject: subject)
   end
+
 end

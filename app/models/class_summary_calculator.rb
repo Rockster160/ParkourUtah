@@ -83,7 +83,7 @@ class ClassSummaryCalculator
   end
 
   def generate_classes_for_day(date)
-    events = Event.by_date(date)
+    events = EventSchedule.events_for_date(date)
 
     events.map do |event|
       generate_details_for_event(event)
