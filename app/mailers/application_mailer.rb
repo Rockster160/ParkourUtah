@@ -93,10 +93,12 @@ class ApplicationMailer < ActionMailer::Base
     end_day = @summary.end_date.strftime("%A %B %-d, %Y")
     subject = "Class summary from #{start_day} to #{end_day}"
 
-    xlsx = render_to_string layout: false, handlers: [:axlsx], formats: [:xlsx], template: "mailers/application_mailer/summary", locals: {summary: summary}
-    xlsx = Base64.encode64(xlsx)
-    attachments[@summary.start_date.strftime("Summary %B %Y") + '.xlsx'] = {mime_type: Mime::XLSX, content: xlsx, encoding: 'base64'}
-    self.instance_variable_set(:@_lookup_context, nil)
+    if @include_totals
+      xlsx = render_to_string layout: false, handlers: [:axlsx], formats: [:xlsx], template: "mailers/application_mailer/summary", locals: {summary: summary}
+      xlsx = Base64.encode64(xlsx)
+      attachments[@summary.start_date.strftime("Summary %B %Y") + '.xlsx'] = {mime_type: Mime::XLSX, content: xlsx, encoding: 'base64'}
+      self.instance_variable_set(:@_lookup_context, nil)
+    end
 
     mail(to: to_email || ENV['PKUT_EMAIL'], subject: subject)
   end
