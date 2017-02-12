@@ -31,7 +31,7 @@ class AwsLogger < ActiveRecord::Base
 
   after_create :parse_log
 
-  scope :log_requests, -> { where("request_uri ILIKE ?", "%/logs/%") }
+  scope :log_requests, -> { where("request_uri ILIKE ?", "%logs%") }
   scope :by_operation, ->(operation) { where("operation ILIKE ?", "%#{operation}%") }
   scope :parsed, -> { where(set_all_without_errors: true) }
   scope :sent_bytes, -> { where("bytes_sent > 0") }
@@ -69,7 +69,7 @@ class AwsLogger < ActiveRecord::Base
   end
 
   def is_log_request?
-    request_uri.to_s.include?("/logs/")
+    request_uri.to_s.include?("logs")
   end
 
   def clean_up_styles
