@@ -29,6 +29,10 @@ class AwsLogger < ActiveRecord::Base
 
   after_create :parse_log
 
+  scope :by_operation, ->(operation) { where("operation ILIKE ?", "%#{operation}%") }
+  scope :parsed, -> { where(set_all_without_errors: true) }
+  scope :sent_bytes, -> { where("bytes_sent > 0") }
+
   def parse_log
     return unless orginal_string.present?
     split_log = escape_white_space(orginal_string).split(" ")
