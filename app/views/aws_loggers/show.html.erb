@@ -1,13 +1,11 @@
 <div class="central-container" style="margin-bottom: 100px;">
   <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
-  <% @logger.attributes.except("id", "orginal_string").each do |log_attr, log_val| %>
+
+  <% logger.displayable_attributes.each do |log_attr, log_val| %>
     <div style="margin-top: 20px;">
-      <h4><%= log_attr.split(/_/).map(&:capitalize).join(" ") %></h4>
+      <h4><%= log_attr.to_s.split(/_/).map(&:capitalize).join(" ") %></h4>
       <%= log_val %>
     </div>
   <% end %>
-  <div style="margin-top: 20px;">
-    <h4>Original Log</h4>
-    <%= @logger.orginal_string %>
-  </div>
+
 </div>

@@ -26,6 +26,8 @@
 #
 
 class AwsLogger < ActiveRecord::Base
+  include ActionView::Helpers::NumberHelper
+  include ApplicationHelper
 
   after_create :parse_log
 
@@ -91,6 +93,30 @@ class AwsLogger < ActiveRecord::Base
     unless @temp_attributes[:set_all_without_errors]
       SlackNotifier.notify("*Failed to parse log file!*\n```#{orginal_string}```", "#server-errors")
     end
+  end
+
+  def displayable_attributes
+    {
+      bucket_owner: self.bucket_owner,
+      bucket: self.bucket,
+      time: "#{self.time.strftime('%b %-d, %Y %-l:%M:%S %p')}",
+      remote_ip: self.remote_ip,
+      requester: self.requester,
+      request_id: self.request_id,
+      operation: self.operation,
+      key: self.key,
+      request_uri: self.request_uri,
+      http_status: "#{self.http_status.presence || 'Unknown'} (#{Rack::Utils::HTTP_STATUS_CODES[self.http_status.to_i].presence || 'Unknown'})",
+      error_code: self.error_code,
+      bytes_sent: "#{number_to_human_size(self.bytes_sent, precision: 3)} (#{self.bytes_sent} bytes)",
+      object_size: "#{number_to_human_size(self.object_size, precision: 3)} (#{self.object_size} bytes)",
+      total_time: humanize_seconds(self.total_time).presence || "0 milliseconds",
+      turn_around_time: humanize_seconds(self.turn_around_time).presence || "0 milliseconds",
+      referrer: self.referrer,
+      user_agent: self.user_agent,
+      version_id: self.version_id,
+      orginal_string: self.orginal_string,
+    }
   end
 
 end

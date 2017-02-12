@@ -1,17 +1,15 @@
 <div class="central-container">
   <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
-  <div class="text-center"><%= paginate @loggers %></div>
-  <% @loggers.group_by {|l| l.time.to_date}.each do |date, loggers| %>
-    <h3><%= date.strftime("%B %-d, %Y") %></h3>
+  <div class="text-center"><%= paginate @loggers, params: { group: params[:group] } %></div>
+  <% @loggers.each do |groupable, loggers| %>
+    <h3><%= groupable %></h3>
     <ul>
-      <% loggers.each do |logger| %>
+      <% @loggers.each do |logger| %>
         <li style="margin-top: 10px;">
           <strong> <%= link_to "View Log", aws_logger_path(logger) %> </strong> <br>
-          <strong><%= 'remote_ip'.split(/_/).map(&:capitalize).join(" ") %>:</strong> <%= logger.remote_ip %> <br>
-          <strong><%= 'operation'.split(/_/).map(&:capitalize).join(" ") %>:</strong> <%= logger.operation %> <br>
-          <strong><%= 'requester'.split(/_/).map(&:capitalize).join(" ") %>:</strong> <%= logger.requester %> <br>
-          <strong><%= 'request_uri'.split(/_/).map(&:capitalize).join(" ") %>:</strong> <%= logger.request_uri %> <br>
-          <strong><%= 'bytes_sent'.split(/_/).map(&:capitalize).join(" ") %>:</strong> <%= logger.bytes_sent %> <br>
+          <% logger.displayable_attributes.slice(:time, :remote_ip, :operation, :request_uri, :bytes_sent).each do |log_attr, log_val| %>
+            <strong><%= log_attr.to_s.split(/_/).map(&:capitalize).join(" ") %>:</strong> <%= log_val %> <br>
+          <% end %>
         </li>
       <% end %>
     </ul>

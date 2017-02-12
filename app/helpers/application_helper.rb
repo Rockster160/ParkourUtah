@@ -1,4 +1,5 @@
 module ApplicationHelper
+
   def parse_date(str) #mm-dd-year
     return nil unless str
     month, day, year = str.first(10).split('-').map(&:to_i)
@@ -22,6 +23,15 @@ module ApplicationHelper
       end
     end
     false
+  end
+
+  def humanize_seconds(ms)
+    [[1000, :milliseconds], [60, :seconds], [60, :minutes], [24, :hours], [1000, :days]].map{ |count, name|
+      if ms > 0
+        ms, n = ms.divmod(count)
+        "#{n.to_i} #{name}"
+      end
+    }.compact.reverse.join(' ')
   end
 
 end
