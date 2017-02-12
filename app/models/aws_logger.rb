@@ -31,9 +31,12 @@ class AwsLogger < ActiveRecord::Base
 
   after_create :parse_log
 
+  scope :log_requests, -> { where("request_uri ILIKE ?", "%/logs/%") }
   scope :by_operation, ->(operation) { where("operation ILIKE ?", "%#{operation}%") }
   scope :parsed, -> { where(set_all_without_errors: true) }
   scope :sent_bytes, -> { where("bytes_sent > 0") }
+
+  validates :not_log_request
 
   def parse_log
     return unless orginal_string.present?
@@ -63,6 +66,10 @@ class AwsLogger < ActiveRecord::Base
     check_if_all_set
     self.assign_attributes(@temp_attributes)
     self.save
+  end
+
+  def is_log_request?
+    request_uri.to_s.include?("/logs/")
   end
 
   def clean_up_styles
@@ -117,6 +124,12 @@ class AwsLogger < ActiveRecord::Base
       version_id: self.version_id,
       orginal_string: self.orginal_string,
     }
+  end
+
+  def not_log_request
+    if is_log_request?
+      errors.add(:base, "Don't save Logs.")
+    end
   end
 
 end

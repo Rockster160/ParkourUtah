@@ -133,10 +133,12 @@ class ScheduleWorker
     log_files.each do |log_file|
       file_body = log_file.read
       logit = AwsLogger.create(orginal_string: file_body)
-      if logit.persisted?
+      if logit.persisted? || logit.is_log_request?
         log_file.delete
       else
-        SlackNotifier.notify("Failed to delete file: \n#{log_file}:```#{file_body}```", "#server-errors")
+        unless logit.is_log_request?
+          SlackNotifier.notify("Failed to delete file: \n#{log_file}:```#{file_body}```", "#server-errors")
+        end
       end
     end
   end
