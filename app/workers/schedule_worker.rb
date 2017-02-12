@@ -128,7 +128,7 @@ class ScheduleWorker
 
   def pull_logs_from_s3(params)
     s3 = AWS::S3.new
-    s3.buckets["pkut-default"]
+    bucket = s3.buckets["pkut-default"]
     log_files = bucket.objects.with_prefix('logs')
     log_files.each do |log_file|
       file_body = log_file.read
