@@ -11,7 +11,7 @@ class CustomLogger
     end
 
     def log(message, user=nil, cart_id=nil, request=nil)
-      ip_address = "IP: #{request.try(:remote_ip)}\n"
+      ip_address = "#{mobile_device?(request) ? 'M:' : 'D:'} IP: #{request.try(:remote_ip)}\n"
       display_name = user.present? ? "#{user.try(:id)}: #{user.try(:email)}\n" : ''
       display_cart = cart_id.present? ? "Cart: #{cart_id}\n" : ''
       formatted_time = Time.zone.now.in_time_zone('America/Denver').strftime('%b %d, %Y %H:%M:%S.%L')
@@ -30,6 +30,16 @@ class CustomLogger
         end
       end
       new_hash
+    end
+
+    def mobile_device?(request)
+      browser = Browser.new(request.user_agent)
+      if browser.known?
+        if browser.device.mobile? || !!(request.user_agent =~ /Mobile|webOS/)
+          return true
+        end
+      end
+      false
     end
 
   end
