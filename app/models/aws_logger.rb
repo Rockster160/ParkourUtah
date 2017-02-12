@@ -34,7 +34,8 @@ class AwsLogger < ActiveRecord::Base
   scope :log_requests, -> { where("request_uri ILIKE ?", "%logs%") }
   scope :by_operation, ->(operation) { where("operation ILIKE ?", "%#{operation}%") }
   scope :parsed, -> { where(set_all_without_errors: true) }
-  scope :sent_bytes, -> { where("bytes_sent > 0") }
+  scope :objects, -> { where(operation: "REST.GET.OBJECT") }
+  scope :with_sent_bytes, -> { where("bytes_sent > 0") }
 
   validate :not_log_request
 

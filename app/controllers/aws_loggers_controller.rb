@@ -10,9 +10,8 @@ class AwsLoggersController < ApplicationController
 
     @current_filter = params.to_hash.symbolize_keys.slice(:group, :sort, :order, :page)
 
-    @loggers = AwsLogger.parsed
-      .sent_bytes
-      .by_operation("GET")
+    @loggers = AwsLogger.parsed.objects
+      .with_sent_bytes
       .page(params[:page])
       .per(100)
 
