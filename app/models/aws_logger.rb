@@ -36,7 +36,7 @@ class AwsLogger < ActiveRecord::Base
   scope :parsed, -> { where(set_all_without_errors: true) }
   scope :sent_bytes, -> { where("bytes_sent > 0") }
 
-  validates :not_log_request
+  validate :not_log_request
 
   def parse_log
     return unless orginal_string.present?
