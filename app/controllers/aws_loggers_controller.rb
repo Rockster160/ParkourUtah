@@ -17,7 +17,7 @@ class AwsLoggersController < ApplicationController
 
     @loggers = case params[:sort]
     when "bytes_sent" then @loggers.order("bytes_sent #{sort_order}")
-    else @loggers.order(time: :desc)
+    else @loggers.order("time #{sort_order}")
     end
 
     @grouped_loggers = case params[:group]

@@ -128,16 +128,18 @@ class ScheduleWorker
 
   def pull_logs_from_s3(params)
     s3 = AWS::S3.new
-    bucket = s3.buckets["pkut-default"]
-    log_files = bucket.objects.with_prefix('logs')
-    log_files.each do |log_file|
-      file_body = log_file.read
-      logit = AwsLogger.create(orginal_string: file_body)
-      if logit.persisted? || logit.is_log_request?
-        log_file.delete
-      else
-        unless logit.is_log_request?
-          SlackNotifier.notify("Failed to delete file: \n#{log_file}:```#{file_body}```", "#server-errors")
+    buckets = [s3.buckets["pkut-default"], s3.buckets["pkut-uploads"]]
+    buckets.each do |bucket|
+      log_files = bucket.objects.with_prefix('logs')
+      log_files.each do |log_file|
+        file_body = log_file.read
+        logit = AwsLogger.create(orginal_string: file_body)
+        if logit.persisted? || logit.is_log_request?
+          log_file.delete
+        else
+          unless logit.is_log_request?
+            SlackNotifier.notify("Failed to delete file: \n#{log_file}:```#{file_body}```", "#server-errors")
+          end
         end
       end
     end
