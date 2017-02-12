@@ -9,11 +9,19 @@ module ParamsHelper
   end
 
   def sortable(link_text, param_string, options={})
+    current_order = sort_order
+    default_order = 'asc'
     if params[:sort] == param_string
-      sorted_class = "sorted sortable-#{toggled_sort_order}"
+      current_order = toggled_sort_order
       default_order = toggled_sort_order
     end
-    link_to link_text, { sort: param_string, order: default_order || "asc" }.merge(options[:additional_params] || {}), class: "sortable #{sorted_class} #{options[:class]}"
+    hash_location = (options[:additional_params] || {}).merge({ sort: param_string, order: default_order })
+    link_to "#{link_text} #{default_order}", hash_location, class: "pkut-btn #{options[:additional_classes]}"
+  end
+
+  def groupable(link_text, param_string, options={})
+    hash_location = (options[:additional_params] || {}).merge({ group: param_string })
+    link_to "#{link_text}", hash_location, class: "pkut-btn #{options[:additional_classes]}"
   end
 
 end

@@ -1,10 +1,17 @@
 <div class="central-container">
   <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
-  <div class="text-center"><%= paginate @loggers, params: { group: params[:group] } %></div>
-  <% @loggers.each do |groupable, loggers| %>
+  <div class="text-center"><%= paginate @loggers, params: @current_filter %></div>
+
+  Sort: <%= sortable("Time", "time", additional_params: @current_filter) %>
+  <%= sortable("Bytes", "bytes_sent", additional_params: @current_filter) %>
+  <br>
+  Group: <%= groupable("Date", "date", additional_params: @current_filter) %>
+  <%= groupable("Remote IP", "remote_ip", additional_params: @current_filter) %>
+
+  <% @grouped_loggers.each do |groupable, loggers| %>
     <h3><%= groupable %></h3>
     <ul>
-      <% @loggers.each do |logger| %>
+      <% loggers.each do |logger| %>
         <li style="margin-top: 10px;">
           <strong> <%= link_to "View Log", aws_logger_path(logger) %> </strong> <br>
           <% logger.displayable_attributes.slice(:time, :remote_ip, :operation, :request_uri, :bytes_sent).each do |log_attr, log_val| %>

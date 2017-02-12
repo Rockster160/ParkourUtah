@@ -8,20 +8,23 @@ class AwsLoggersController < ApplicationController
     params[:sort] ||= "time"
     params[:order] ||= "desc"
 
+    @current_filter = params.to_hash.symbolize_keys.slice(:group, :sort, :order, :page)
+
     @loggers = AwsLogger.parsed
       .sent_bytes
       .by_operation("GET")
       .page(params[:page])
       .per(100)
 
-    # @loggers = case params[:sort]
-    # when "bytes_sent" then @loggers.order("bytes_sent #{sort_order}")
-    # else @loggers.order(time: :desc)
-    # end
-    #
-    # @loggers = case params[:group]
-    # else @loggers.group_by { |l| l.time.to_date }.map {|k,vs|[k.strftime("%B %-d, %Y"), vs]}.to_h
-    # end
+    @loggers = case params[:sort]
+    when "bytes_sent" then @loggers.order("bytes_sent #{sort_order}")
+    else @loggers.order(time: :desc)
+    end
+
+    @grouped_loggers = case params[:group]
+    when "remote_ip" then @loggers.group_by { |l| l.remote_ip }
+    else @loggers.group_by { |l| l.time.to_date }.map {|k,vs|[k.strftime("%B %-d, %Y"), vs]}.to_h
+    end
   end
 
   def show
