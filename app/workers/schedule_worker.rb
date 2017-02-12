@@ -126,6 +126,21 @@ class ScheduleWorker
     ApplicationMailer.summary_mail(summary, nil, params["scope"] == "month").deliver_now
   end
 
+  def pull_logs_from_s3(params)
+    s3 = AWS::S3.new
+    s3.buckets["pkut-default"]
+    log_files = bucket.objects.with_prefix('logs')
+    log_files.each do |log_file|
+      file_body = log_file.read
+      logit = AwsLogger.create(orginal_string: file_body)
+      if logit.persisted?
+        log_file.delete
+      else
+        SlackNotifier.notify("Failed to delete file: \n#{log_file}:```#{file_body}```", "#server-errors")
+      end
+    end
+  end
+
   def minutes_from_now(seconds)
     Time.zone.now + (seconds * 60)
   end

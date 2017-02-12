@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150308064718) do
+ActiveRecord::Schema.define(version: 20170212002849) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,29 @@ ActiveRecord::Schema.define(version: 20150308064718) do
     t.index ["dependent_id"], name: "index_attendances_on_dependent_id", using: :btree
     t.index ["event_id"], name: "index_attendances_on_event_id", using: :btree
     t.index ["user_id"], name: "index_attendances_on_user_id", using: :btree
+  end
+
+  create_table "aws_loggers", force: :cascade do |t|
+    t.text     "orginal_string"
+    t.string   "bucket_owner"
+    t.string   "bucket"
+    t.datetime "time"
+    t.string   "remote_ip"
+    t.string   "requester"
+    t.string   "request_id"
+    t.string   "operation"
+    t.string   "key"
+    t.string   "request_uri"
+    t.string   "http_status"
+    t.string   "error_code"
+    t.bigint   "bytes_sent"
+    t.bigint   "object_size"
+    t.bigint   "total_time"
+    t.bigint   "turn_around_time"
+    t.string   "referrer"
+    t.string   "user_agent"
+    t.string   "version_id"
+    t.boolean  "set_all_without_errors"
   end
 
   create_table "carts", force: :cascade do |t|

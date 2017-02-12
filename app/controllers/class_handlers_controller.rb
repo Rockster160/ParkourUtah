@@ -33,7 +33,7 @@ class ClassHandlersController < ApplicationController
     elsif !@athlete.attend_class(@event, current_user)
       if @athlete.attendances.where(event_id: @event.id).any?
         flash[:alert] = "Athlete is already attending class."
-      elsif @athlete.user.credits <= @event.cost_in_dollars
+      elsif @athlete.user.credits < @event.cost_in_dollars
         flash[:alert] = "Insufficient credits in account."
       else
         SlackNotifier.notify("Failed to add athlete: #{@athlete.id}: #{@athlete.full_name}", "#server-errors")
