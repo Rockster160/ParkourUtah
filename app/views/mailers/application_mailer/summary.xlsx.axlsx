@@ -1,24 +1,24 @@
-# start_date = Time.zone.local(2016, 12, 1); end_date = start_date.end_of_month; summary = ClassSummaryCalculator.new(start_date: start_date, end_date: end_date).generate; ApplicationMailer.summary_mail(summary, nil, true).deliver!
+# start_date = Time.zone.local(2016, 12, 1); end_date = start_date.end_of_month; summary = ClassSummaryCalculator.new(start_date: start_date, end_date: end_date).generate; ApplicationMailer.summary_mail(summary, "rocco11nicholls@gmail.com", true).deliver!
 wb = xlsx_package.workbook
 wb.styles do |style|
   black = "000000"
   dark_cell_background_color = "5B5B5B"
   default_cell_border = "B1B1BE"
-  text_center = style.add_style(alignment: { horizontal: :center })
   spacer = style.add_style(bg_color: dark_cell_background_color, sz: 8, border: { style: :thin, color: dark_cell_background_color })
-  border_top = style.add_style(border: { style: :thin, color: default_cell_border }, border_top: { color: black })
-  border_left = style.add_style(border: { style: :thin, color: default_cell_border }, border_left: { color: black })
-  border_right = style.add_style(border: { style: :thin, color: default_cell_border }, border_right: { color: black })
-  border_bottom = style.add_style(border: { style: :thin, color: default_cell_border }, border_bottom: { color: black })
+  border_top = style.add_style(border: { style: :thin, color: default_cell_border }, border_top: { style: :thin, color: black })
+  border_left = style.add_style(border: { style: :thin, color: default_cell_border }, border_left: { style: :thin, color: black })
+  border_right = style.add_style(border: { style: :thin, color: default_cell_border }, border_right: { style: :thin, color: black })
+  border_bottom = style.add_style(border: { style: :thin, color: default_cell_border }, border_bottom: { style: :thin, color: black })
+  head = style.add_style(alignment: { horizontal: :center, vertical: :center , wrap_text: true}, b: true, height: 20)
 
   day_total_styles = [nil, nil, border_top, border_top, border_top, border_top, border_top, border_top]
   wb.add_worksheet(name: summary.start_date.strftime("Summary %B %Y")) do |sheet|
     # ABCDEFGH
     # 12345678
-    sheet.add_row [summary.start_date.strftime("Summary %B %Y"), nil, nil, nil, nil, nil, nil, nil], style: text_center
+    sheet.add_row [summary.start_date.strftime("Summary %B %Y"), nil, nil, nil, nil, nil, nil, nil], style: head
     sheet.merge_cells("A1:H1")
     sheet.add_row ["", "", "", "", "", "", "", ""], style: spacer
-    sheet.add_row ["Date", "Class", "Teacher", "Students", "Payment Type", "Cancellation", "Pay", "Profit"]
+    sheet.add_row ["Date", "Class", "Teacher", "Students", "Payment Type", "Cancellation", "Pay", "Profit"], style: head
     sheet.add_row ["", "", "", "", "", "", "", ""], style: spacer
 
     summary.days.each do |day|
@@ -39,8 +39,9 @@ wb.styles do |style|
     sheet.add_row ["", "", "", "", "", "", "", "Profit"], style: [nil, nil, nil, nil, nil, nil, nil, border_bottom]
     sheet.add_row ["", "", "Payment", "", "", "", "Pay", summary.profit], style: [nil, nil, border_bottom, nil, nil, nil, nil, border_left]
     summary.instructors.each do |instructor|
-      sheet.add_row ["", "", instructor.name, "", "", "", instructor.total_payment, ""], style: [border_right, nil, nil, nil, nil, nil, nil, nil]
+      sheet.add_row ["", "", instructor.name, "", "", "", instructor.total_payment, ""], style: [nil, nil, border_right, nil, nil, nil, nil, nil]
     end
+    sheet.column_widths 10, nil, nil, nil, nil, 5, 5, 5
 
   end
 end
