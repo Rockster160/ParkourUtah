@@ -2,7 +2,7 @@
   <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
   <div class="text-center"><%= paginate @loggers, params: @current_filter %></div>
 
-  <div class="logger-filter-section">
+  <div class="filter-group-section">
     Group: <%= groupable("Date", "date", additional_params: @current_filter) %>
     <%= groupable("Remote IP", "remote_ip", additional_params: @current_filter) %>
     <br>
@@ -11,13 +11,13 @@
   </div>
 
   <div class="ttable wide striped bordered">
-    <div class="trow">
+    <div class="trow title-row">
       <% [:time, :remote_ip, :request_uri, :bytes_sent].each do |col_name| %>
         <div class="tcell"><%= col_name.to_s.split(/_/).map(&:capitalize).join(" ") %></div>
       <% end %>
     </div>
     <% @grouped_loggers.each do |groupable, loggers| %>
-      <div class="trow title-row">
+      <div class="trow highlight-row">
         <div class="tcell"></div>
         <div class="tcell"><h4><%= groupable %></h4></div>
         <div class="tcell"></div>

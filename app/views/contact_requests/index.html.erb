@@ -1,0 +1,39 @@
+<div class="central-container">
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
+  <div class="text-center"><%= paginate @contacts, params: @current_filter %></div>
+
+  <div class="filter-group-section">
+    <%= toggleable("Blocked", "show_blocked_requests", additional_params: @current_filter) %> <br>
+    <%= form_tag @current_filter, method: :get do %>
+      <div class="form-field">
+        <%= text_field_tag :by_fuzzy_text, @current_filter[:filter], placeholder: "Filter", class: "pkut-textbox" %>
+        <%= submit_tag "Search", class: "pkut-btn" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="ttable wide striped bordered">
+    <div class="trow title-row">
+      <div class="tcell">?</div>
+      <div class="tcell">Info</div>
+      <div class="tcell">Date</div>
+      <div class="tcell">Body</div>
+    </div>
+    <% @contacts.each do |contact| %>
+      <%= link_to contact_request_path(contact), class: 'trow' do %>
+        <div class="tcell">
+          <% if contact.success? %>
+            <i class="fa fa-check" style="color: green;"></i>
+          <% else %>
+            <i class="fa fa-times" style="color: red;"></i>
+          <% end %>
+        </div>
+        <div class="tcell"><%= contact.name %> <br> <%= contact.phone %> <br> <%= contact.email %></div>
+        <div class="tcell"><%= contact.created_at.to_formatted_s(:simple) %></div>
+        <div class="tcell"><%= contact.body %></div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="text-center"><%= paginate @contacts, params: @current_filter %></div>
+</div>

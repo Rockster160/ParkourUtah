@@ -63,6 +63,7 @@ Rails.application.routes.draw do
 
   resources :attendances, only: [ :index ]
   resources :aws_loggers, only: [ :index, :show ]
+  resources :contact_requests, only: [ :index, :show ]
 
   get :dashboard, controller: :admins
   resource :admin, only: [] do
