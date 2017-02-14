@@ -30,7 +30,7 @@
         </div>
         <div class="tcell"><%= contact.name %> <br> <%= contact.phone %> <br> <%= contact.email %></div>
         <div class="tcell"><%= contact.created_at.to_formatted_s(:simple) %></div>
-        <div class="tcell"><%= contact.body %></div>
+        <div class="tcell" style="word-break: break-word"><%= contact.body %></div>
       <% end %>
     <% end %>
   </div>
