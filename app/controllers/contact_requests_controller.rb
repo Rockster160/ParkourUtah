@@ -2,6 +2,7 @@ class ContactRequestsController < ApplicationController
   before_action :validate_admin
 
   def index
+    params[:show_blocked_requests] ||= "hide"
     @contacts = ContactRequest.order(created_at: :desc).page(params[:page])
     @contacts = @contacts.by_fuzzy_text(params[:by_fuzzy_text]) if params[:by_fuzzy_text].present?
     @contacts = @contacts.where(success: true) if params[:show_blocked_requests] == "hide"
