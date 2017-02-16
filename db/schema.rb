@@ -15,16 +15,47 @@ ActiveRecord::Schema.define(version: 20170216020429) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "addresses", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "line1"
+    t.string   "line2"
+    t.string   "city"
+    t.string   "state"
+    t.string   "zip"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_addresses_on_user_id", using: :btree
+  end
+
+  create_table "athlete_subscriptions", force: :cascade do |t|
+    t.integer  "dependent_id"
+    t.integer  "usages",          default: 0
+    t.datetime "expires_at"
+    t.integer  "cost_in_pennies", default: 0
+    t.boolean  "auto_renew",      default: true
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.index ["dependent_id"], name: "index_athlete_subscriptions_on_dependent_id", using: :btree
+  end
+
   create_table "attendances", force: :cascade do |t|
     t.integer  "dependent_id"
-    t.integer  "user_id"
+    t.integer  "instructor_id"
     t.integer  "event_id"
     t.string   "location"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.string   "type_of_charge"
+    t.boolean  "sent",           default: false
     t.index ["dependent_id"], name: "index_attendances_on_dependent_id", using: :btree
     t.index ["event_id"], name: "index_attendances_on_event_id", using: :btree
-    t.index ["user_id"], name: "index_attendances_on_user_id", using: :btree
+    t.index ["instructor_id"], name: "index_attendances_on_instructor_id", using: :btree
+  end
+
+  create_table "automators", force: :cascade do |t|
+    t.boolean  "open",       default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "aws_loggers", force: :cascade do |t|
@@ -50,11 +81,35 @@ ActiveRecord::Schema.define(version: 20170216020429) do
     t.boolean  "set_all_without_errors"
   end
 
+  create_table "cart_items", force: :cascade do |t|
+    t.integer  "cart_id"
+    t.integer  "line_item_id"
+    t.integer  "amount",         default: 1
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.string   "redeemed_token", default: ""
+    t.string   "order_name"
+    t.index ["cart_id"], name: "index_cart_items_on_cart_id", using: :btree
+  end
+
   create_table "carts", force: :cascade do |t|
     t.integer  "user_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.string   "email"
+    t.datetime "purchased_at"
+    t.index ["user_id"], name: "index_carts_on_user_id", using: :btree
+  end
+
+  create_table "contact_requests", force: :cascade do |t|
+    t.string   "user_agent"
+    t.string   "phone"
+    t.string   "name"
+    t.string   "email"
+    t.string   "body"
+    t.boolean  "success"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_carts_on_user_id", using: :btree
   end
 
   create_table "dependents", force: :cascade do |t|
@@ -67,24 +122,57 @@ ActiveRecord::Schema.define(version: 20170216020429) do
     t.string   "athlete_photo_content_type"
     t.integer  "athlete_photo_file_size"
     t.datetime "athlete_photo_updated_at"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
+    t.string   "first_name"
+    t.string   "middle_name"
+    t.string   "last_name"
+    t.string   "date_of_birth"
+    t.boolean  "verified",                   default: false
     t.index ["user_id"], name: "index_dependents_on_user_id", using: :btree
+  end
+
+  create_table "emergency_contacts", force: :cascade do |t|
+    t.integer "user_id"
+    t.string  "number"
+    t.string  "name"
+    t.index ["user_id"], name: "index_emergency_contacts_on_user_id", using: :btree
+  end
+
+  create_table "event_schedules", force: :cascade do |t|
+    t.integer  "instructor_id"
+    t.integer  "spot_id"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.integer  "hour_of_day"
+    t.integer  "minute_of_day"
+    t.integer  "day_of_week"
+    t.integer  "cost_in_pennies"
+    t.string   "title"
+    t.text     "description"
+    t.string   "full_address"
+    t.string   "city"
+    t.string   "color"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["instructor_id"], name: "index_event_schedules_on_instructor_id", using: :btree
+    t.index ["spot_id"], name: "index_event_schedules_on_spot_id", using: :btree
   end
 
   create_table "events", force: :cascade do |t|
     t.datetime "date"
-    t.integer  "token"
-    t.string   "title"
-    t.string   "host"
-    t.float    "cost"
-    t.text     "description"
-    t.string   "city"
-    t.string   "address"
-    t.string   "location_instructions"
-    t.string   "class_name"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+    t.integer  "event_schedule_id"
+    t.datetime "original_date"
+    t.boolean  "is_cancelled",      default: false
+  end
+
+  create_table "images", force: :cascade do |t|
+    t.integer  "spot_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["spot_id"], name: "index_images_on_spot_id", using: :btree
   end
 
   create_table "line_items", force: :cascade do |t|
@@ -96,9 +184,69 @@ ActiveRecord::Schema.define(version: 20170216020429) do
     t.integer  "cost_in_pennies"
     t.string   "title"
     t.string   "category"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
     t.string   "size"
+    t.boolean  "hidden"
+    t.integer  "item_order"
+    t.integer  "credits",              default: 0
+    t.boolean  "is_subscription",      default: false
+    t.boolean  "taxable",              default: true
+    t.string   "color"
+    t.boolean  "is_full_image",        default: false
+    t.integer  "redemption_item_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.integer "user_id"
+    t.boolean "email_class_reminder",  default: false
+    t.boolean "text_class_reminder",   default: false
+    t.boolean "email_low_credits",     default: false
+    t.boolean "text_low_credits",      default: false
+    t.boolean "email_waiver_expiring", default: false
+    t.boolean "text_waiver_expiring",  default: false
+    t.boolean "sms_receivable"
+    t.boolean "text_class_cancelled",  default: false
+    t.boolean "email_class_cancelled", default: false
+    t.boolean "email_newsletter",      default: true
+    t.index ["user_id"], name: "index_notifications_on_user_id", using: :btree
+  end
+
+  create_table "ratings", force: :cascade do |t|
+    t.integer  "rated"
+    t.integer  "spot_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["spot_id"], name: "index_ratings_on_spot_id", using: :btree
+  end
+
+  create_table "redemption_keys", force: :cascade do |t|
+    t.string   "key"
+    t.string   "redemption"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.boolean  "redeemed",     default: false
+    t.integer  "line_item_id"
+    t.index ["line_item_id"], name: "index_redemption_keys_on_line_item_id", using: :btree
+  end
+
+  create_table "spots", force: :cascade do |t|
+    t.string   "title"
+    t.text     "description"
+    t.string   "lon"
+    t.string   "lat"
+    t.boolean  "approved",    default: false
+    t.integer  "event_id"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.string   "location"
+    t.index ["event_id"], name: "index_spots_on_event_id", using: :btree
+  end
+
+  create_table "subscriptions", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "event_schedule_id"
+    t.index ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
   end
 
   create_table "text_messages", force: :cascade do |t|
@@ -112,32 +260,38 @@ ActiveRecord::Schema.define(version: 20170216020429) do
     t.index ["instructor_id"], name: "index_text_messages_on_instructor_id", using: :btree
   end
 
-  create_table "transactions", force: :cascade do |t|
-    t.integer  "cart_id"
-    t.integer  "item_id"
-    t.integer  "amount",     default: 1
+  create_table "trial_classes", force: :cascade do |t|
+    t.integer  "dependent_id"
+    t.boolean  "used",         default: false
+    t.datetime "used_at"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.index ["dependent_id"], name: "index_trial_classes_on_dependent_id", using: :btree
+  end
+
+  create_table "unlimited_subscriptions", force: :cascade do |t|
+    t.integer  "usages",     default: 0
+    t.datetime "expires_at"
+    t.integer  "user_id"
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
-    t.index ["cart_id"], name: "index_transactions_on_cart_id", using: :btree
+    t.index ["user_id"], name: "index_unlimited_subscriptions_on_user_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "", null: false
-    t.string   "first_name",             default: "", null: false
-    t.string   "last_name",              default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "email",                          default: "",    null: false
+    t.string   "first_name",                     default: "",    null: false
+    t.string   "last_name",                      default: "",    null: false
+    t.string   "encrypted_password",             default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",                  default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
     t.inet     "last_sign_in_ip"
-    t.string   "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
-    t.string   "unconfirmed_email"
+    t.integer  "role",                           default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "avatar_file_name"
@@ -149,12 +303,39 @@ ActiveRecord::Schema.define(version: 20170216020429) do
     t.integer  "avatar_2_file_size"
     t.datetime "avatar_2_updated_at"
     t.text     "bio"
-    t.integer  "auth_net_id"
-    t.integer  "payment_id"
-    t.integer  "credits",                default: 0
+    t.integer  "credits",                        default: 0
     t.string   "phone_number"
+    t.string   "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.integer  "instructor_position"
+    t.integer  "payment_multiplier",             default: 3
+    t.string   "stats"
+    t.string   "title"
+    t.string   "nickname"
+    t.boolean  "email_subscription",             default: true
+    t.string   "stripe_id"
+    t.datetime "date_of_birth"
+    t.string   "drivers_license_number"
+    t.string   "drivers_license_state"
+    t.boolean  "registration_complete",          default: false
+    t.integer  "registration_step",              default: 2
+    t.boolean  "stripe_subscription",            default: false
+    t.string   "referrer",                       default: ""
+    t.integer  "subscription_cost",              default: 5000
+    t.integer  "unassigned_subscriptions_count", default: 0
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  end
+
+  create_table "venmos", force: :cascade do |t|
+    t.string   "access_token"
+    t.string   "refresh_token"
+    t.datetime "expires_at"
+    t.string   "username"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
   create_table "waivers", force: :cascade do |t|
@@ -167,6 +348,14 @@ ActiveRecord::Schema.define(version: 20170216020429) do
     t.index ["dependent_id"], name: "index_waivers_on_dependent_id", using: :btree
   end
 
+  add_foreign_key "athlete_subscriptions", "dependents"
+  add_foreign_key "cart_items", "carts"
   add_foreign_key "carts", "users"
-  add_foreign_key "transactions", "carts"
+  add_foreign_key "emergency_contacts", "users"
+  add_foreign_key "images", "spots"
+  add_foreign_key "notifications", "users"
+  add_foreign_key "ratings", "spots"
+  add_foreign_key "spots", "events"
+  add_foreign_key "trial_classes", "dependents"
+  add_foreign_key "unlimited_subscriptions", "users"
 end
