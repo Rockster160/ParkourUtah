@@ -51,7 +51,7 @@ class AdminsController < ApplicationController
     @failed = []
     phone_numbers.each do |phone_number|
       if phone_number.length == 10
-        SmsMailerWorker.perform_async(phone_number, params[:message])
+        TextMessage.create(stripped_phone_number: phone_number, body: params[:message])
         @success << phone_number
       else
         @failed << phone_number

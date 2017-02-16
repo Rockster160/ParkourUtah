@@ -9,9 +9,14 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
-    if (verify_recaptcha || !(Rails.env.production?)) && @user.save
-      sign_in :user, @user
-      redirect_to step_2_path
+    if (verify_recaptcha || !(Rails.env.production?))
+      if @user.save
+        sign_in :user, @user
+        redirect_to step_2_path
+      else
+        flash.now[:alert] = "Could not save your account. Please try again."
+        render :new
+      end
     else
       flash.now[:alert] = "You failed the bot test. Make sure to wait for the green checkmark to appear."
       render :new

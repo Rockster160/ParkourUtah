@@ -34,6 +34,7 @@ class IndexController < ApplicationController
   def receive_sms
     raw_number = params["From"].gsub(/[^0-9]/, "").last(10)
     user = User.where("phone_number ILIKE ?", "%#{raw_number}%").first
+    TextMessage.create(stripped_phone_number: raw_number, body: params["Body"])
     user_link = Rails.application.routes.url_helpers.admin_user_url(user) if user.present?
     if %w(STOP STOPALL UNSUBSCRIBE CANCEL END QUIT).include?(params["Body"].squish.upcase)
       user.notifications.update(sms_receivable: false) if user.present? && user.notifications.present?
@@ -60,8 +61,7 @@ class IndexController < ApplicationController
 
   def contact
     success = false
-    blacklisted = blacklisted_body?
-    if /\(\d{3}\) \d{3}-\d{4}/ =~ params[:phone] && blacklisted
+    if /\(\d{3}\) \d{3}-\d{4}/ =~ params[:phone] && blacklisted_body?
       flash[:notice] = "Thanks! We'll have somebody get in contact with you shortly."
       success = true
     end
@@ -74,7 +74,7 @@ class IndexController < ApplicationController
       success: success
     )
     phone_digits = params[:phone].split('').map {|x| x[/\d+/]}.join
-    if !blacklisted && ((phone_digits.length >= 7 && phone_digits.length <= 10) || success)
+    if !blacklisted_body? && ((phone_digits.length >= 7 && phone_digits.length <= 10) || success)
       contact_request.notify_slack
     end
     redirect_to root_path
@@ -127,7 +127,9 @@ class IndexController < ApplicationController
   end
 
   def blacklisted_body?
-    body_blacklist.any? { |blacklist_string| params[:comment].include?(blacklist_string) }
+    @blacklisted ||= begin
+      body_blacklist.any? { |blacklist_string| params[:comment].include?(blacklist_string) }
+    end
   end
 
   def body_blacklist
@@ -146,7 +148,8 @@ class IndexController < ApplicationController
       "I love reading phorums posted here",
       "You have a product, service and have no customers?",
       "buy a cheap",
-      "href="
+      "href=",
+      "GetBusinessFunded"
     ]
   end
 

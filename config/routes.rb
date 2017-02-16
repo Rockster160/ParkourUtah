@@ -63,6 +63,8 @@ Rails.application.routes.draw do
 
   resources :attendances, only: [ :index ]
   resources :aws_loggers, only: [ :index, :show ]
+  resources :contact_requests, only: [ :index, :show ]
+  resources :text_messages, only: [ :show, :create ]
 
   get :dashboard, controller: :admins
   resource :admin, only: [] do
@@ -82,6 +84,7 @@ Rails.application.routes.draw do
       post :update_trials
       post :update_credits
       post :update_notifications
+
     end
   end
 

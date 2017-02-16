@@ -1,7 +1,7 @@
 @import "config/variables";
 @import 'config/font-imports';
 
-.logger-filter-section {
+.filter-group-section {
   margin: 30px 0;
   text-align: center;
 }
@@ -26,6 +26,10 @@
     }
   }
   .trow.title-row {
+    font-weight: bold;
+    font-size: 20px;
+  }
+  .trow.highlight-row {
     background-color: $pkut-red-dark !important;
     height: 55px;
     .tcell {
