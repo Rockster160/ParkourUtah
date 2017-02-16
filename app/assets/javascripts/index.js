@@ -22,11 +22,12 @@ var ready = function() {
         || (uBound >= top && uBound <= bottom);
   };
 
-  $('.submit-contact-us').click(function(e) {
-    e.preventDefault();
-    $(this).parents('form').submit();
-    return false;
-  })
+  //removed in favor of <button>
+  // $('a.submit-button').click(function(e) {
+  //   e.preventDefault();
+  //   $(this).parents('form').submit();
+  //   return false;
+  // })
 
   if (window.location.pathname == "/") {
     /* smooth scrolling */
