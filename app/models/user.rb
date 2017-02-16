@@ -73,6 +73,7 @@ class User < ApplicationRecord
   has_many :subscribed_events, through: :subscriptions, source: "event_schedule"
   has_many :classes_to_teach, class_name: "EventSchedule", foreign_key: "instructor_id"
   has_many :attendances_taught, class_name: "Attendance", foreign_key: "instructor_id"
+  has_many :text_messages_sent, class_name: "TextMessage", foreign_key: "instructor_id"
   has_many :emergency_contacts, dependent: :destroy
 
   accepts_nested_attributes_for :emergency_contacts
@@ -160,6 +161,10 @@ class User < ApplicationRecord
       end
     end
     users
+  end
+
+  def text_messages
+    TextMessage.where(stripped_phone_number: phone_number.gsub(/[^\d]/, "").last(10))
   end
 
   def unsubscribe_from(notification_type)
