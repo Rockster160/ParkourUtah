@@ -185,7 +185,6 @@ class Dependent < ApplicationRecord
   end
 
   def sign_up_verified
-    # self.user.update(credits: (self.user.credits + (ENV["PKUT_CLASS_PRICE"].to_i * 2)))
     2.times { self.trial_classes.create }
   end
 

@@ -1,17 +1,35 @@
 <div class="central-container">
   <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
-  <% if @user.present? %>
-    <%= link_to "Back to User", admin_user_path(@user), class: 'pkut-btn' %>
+  <% if @number_user.present? %>
+    <%= link_to "Back to User", admin_user_path(@number_user), class: 'pkut-btn' %>
   <% end %>
 
-  <div class="new-message-form">
-  </div>
-  <div class="messages-container">
-    <% @text_messages.each do |text_message| %>
-      <div class="text-message <%= text_message.sent_to_user? ? 'to' : 'from' %>">
-        <pre><%= text_message.body %></pre>
+  <%= form_for @new_message do |f| %>
+    <div class="message-form">
+      <div class="messages-container">
+        <% @text_messages.each do |text_message| %>
+          <div class="text-message <%= text_message.sent_to_user? ? 'to' : 'from' %>">
+            <div class="timestamp">
+              <%= timeago(text_message.created_at) %>
+            </div>
+
+            <% if text_message.sent_to_user? %>
+              <div class="from-name"><%= text_message.instructor.try(:nickname).presence || text_message.instructor.try(:full_name) %></div>
+            <% end %>
+
+            <div class="message-body"><%= text_message.body %></div>
+          </div>
+        <% end %>
       </div>
-    <% end %>
-  </div>
+
+      <div class="message-form-wrapper">
+        <%= f.hidden_field :stripped_phone_number, value: @phone_number %>
+        <%= f.text_area :body, value: params[:body], class: "new-message-field" %>
+        <%= f.button(type: "submit", class: "send-message-btn") do %>
+        <i class="fa fa-paper-plane"></i>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
 
 </div>
