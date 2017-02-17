@@ -117,6 +117,9 @@
     border: 1px solid $mat-pkut-red;
     box-shadow: inset 0px 0px 0px 1px $mat-pkut-red;
   }
+  &.set-size{
+    width: 350px;
+  }
 }
 
 .show-required {
@@ -207,10 +210,9 @@
 
 .pkut-btn {
   display: inline-block;
+  outline: none;
 
-  padding: 8px 12px;
   line-height: 1;
-  font-size: 16px;
   text-decoration: none;
 
   z-index: 10000;
@@ -218,7 +220,6 @@
   margin: 8px 20px;
   max-width: 300px;
 
-  text-decoration: none;
   padding: 5px 20px;
   font-family: 'MicroExtendFLF-Bold', Arial, sans-serif;
   font-size: 18px;
@@ -268,6 +269,19 @@
     opacity: 0;
     box-shadow: 0px 5px 20px -5px $mat-grey;
     transition: opacity 0.1s ease-in-out;
+  }
+  &.darkShade:after{
+    content: '';
+    top: 0;
+    left: 0;
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    box-shadow: 0px 5px 20px -5px $mat-grey-dark;
+    transition: opacity 0.1s ease-in-out;
+    
   }
 
   &:hover {
