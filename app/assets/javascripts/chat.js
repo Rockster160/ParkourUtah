@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
-
-  $('.messages-container').scrollTop($('.messages-container')[0].scrollHeight);
+  if ($('.messages-container').length > 0) {
+    $('.messages-container').scrollTop($('.messages-container')[0].scrollHeight);
+  }
 
 })
