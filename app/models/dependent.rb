@@ -174,16 +174,6 @@ class Dependent < ApplicationRecord
     ((0...9999).to_a - bads.flatten)
   end
 
-  def self.athlete_id_tests(num)
-    num.times do |n|
-     athlete = Dependent.first
-     athlete.generate_pin
-    #  binding.pry if athlete.athlete_id == Dependent.last.athlete_id
-     athlete.athlete_id
-     puts n
-   end
-  end
-
   def sign_up_verified
     2.times { self.trial_classes.create }
   end

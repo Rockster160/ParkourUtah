@@ -73,7 +73,8 @@ class User < ApplicationRecord
   has_many :subscribed_events, through: :subscriptions, source: "event_schedule"
   has_many :classes_to_teach, class_name: "EventSchedule", foreign_key: "instructor_id"
   has_many :attendances_taught, class_name: "Attendance", foreign_key: "instructor_id"
-  has_many :text_messages_sent, class_name: "TextMessage", foreign_key: "instructor_id"
+  has_many :sent_messages, class_name: "Message", foreign_key: "sent_from_id"
+  has_many :received_messages, class_name: "Message", foreign_key: "sent_to_id"
   has_many :emergency_contacts, dependent: :destroy
 
   accepts_nested_attributes_for :emergency_contacts
@@ -124,6 +125,9 @@ class User < ApplicationRecord
   def is_instructor?; role >= 1; end
   def is_mod?; role >= 2; end
   def is_admin?; role >= 3; end
+  def instructor?; is_instructor?; end
+  def mod?; is_mod?; end
+  def admin?; is_admin?; end
   def self.[](id); find(id); end; #User[4]
 
   def self.last_signed_in
@@ -161,10 +165,6 @@ class User < ApplicationRecord
       end
     end
     users
-  end
-
-  def text_messages
-    TextMessage.where(stripped_phone_number: phone_number.gsub(/[^\d]/, "").last(10))
   end
 
   def unsubscribe_from(notification_type)

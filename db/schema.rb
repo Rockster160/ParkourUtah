@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170216020429) do
+ActiveRecord::Schema.define(version: 20170218145738) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -101,15 +101,17 @@ ActiveRecord::Schema.define(version: 20170216020429) do
     t.string   "size"
   end
 
-  create_table "text_messages", force: :cascade do |t|
-    t.integer  "instructor_id"
-    t.boolean  "read_by_instructor",    default: false
+  create_table "messages", force: :cascade do |t|
+    t.integer  "sent_from_id"
     t.boolean  "sent_to_user"
     t.string   "stripped_phone_number"
     t.text     "body"
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
-    t.index ["instructor_id"], name: "index_text_messages_on_instructor_id", using: :btree
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+    t.integer  "sent_to_id"
+    t.datetime "read_at"
+    t.integer  "message_type"
+    t.index ["sent_from_id"], name: "index_messages_on_sent_from_id", using: :btree
   end
 
   create_table "transactions", force: :cascade do |t|

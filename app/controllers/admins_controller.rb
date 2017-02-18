@@ -51,7 +51,7 @@ class AdminsController < ApplicationController
     @failed = []
     phone_numbers.each do |phone_number|
       if phone_number.length == 10
-        current_user.text_messages_sent.create(stripped_phone_number: phone_number, body: params[:message], sent_to_user: true)
+        current_user.sent_messages.create(stripped_phone_number: phone_number, body: params[:message], sent_to_user: true)
         @success << phone_number
       else
         @failed << phone_number

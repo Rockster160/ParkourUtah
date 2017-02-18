@@ -10,7 +10,6 @@ $received-color: #FAFAFA;
   border-radius: 15px;
   background-color: #CFD8DC;
   box-shadow: 0px 25px 51px -20px #000;
-  padding-top: 10px;
   position: relative;
   height: 500px;
 
@@ -58,10 +57,9 @@ $received-color: #FAFAFA;
     }
   }
 
-
-
   .messages-container {
-    height: 426px;
+    padding-top: 10px;
+    height: 436px;
     overflow-y: scroll;
     overflow-x: hidden;
 
@@ -71,13 +69,8 @@ $received-color: #FAFAFA;
 
       .from-name {
         position: absolute;
-        text-align: right;
         font-size: 12px;
         opacity: 0.5;
-        padding-left: 25%;
-        left: 15px;
-        top: 5px;
-        color: white;
       }
 
       .timestamp {
@@ -97,6 +90,7 @@ $received-color: #FAFAFA;
         background-color: #F5F5F5;
         border: 1px solid #CCC;
         border-radius: 4px;
+        word-break: break-word;
         font-family: "Menlo", "Monaco", "Consolas", "Courier New", "monospace";
         overflow: visible;
         box-sizing: border-box;
@@ -113,6 +107,10 @@ $received-color: #FAFAFA;
           border-color: darken($received-color, 5%);
           margin-right: 25%;
         }
+        .from-name {
+          text-align: left;
+          right: calc(25% + 15px);
+        }
       }
 
       &.to {
@@ -126,6 +124,13 @@ $received-color: #FAFAFA;
           background-color: $sent-color;
           border-color: darken($sent-color, 5%);
           margin-left: 25%;
+        }
+        .from-name {
+          text-align: right;
+          padding-left: 25%;
+          left: 15px;
+          top: 5px;
+          color: white;
         }
       }
 
