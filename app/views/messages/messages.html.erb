@@ -1,4 +1,5 @@
-<% @text_messages.each do |text_message| %>
+<% messages ||= @text_messages %>
+<% messages.each do |text_message| %>
   <div class="text-message <%= text_message.from_instructor? ? 'sent' : 'received' %>">
 
     <div class="timestamp"><%= timeago(text_message.created_at) %></div>

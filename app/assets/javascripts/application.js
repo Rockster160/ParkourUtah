@@ -22,6 +22,7 @@
 //= require gmaps/google
 //= require maskedinput
 //= require_tree .
+//= require_tree ./channels
 
 ready = function() {
 
