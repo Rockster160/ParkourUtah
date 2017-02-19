@@ -14,6 +14,7 @@ var settings = {
     suffixAgo: "ago",
     suffixFromNow: "from now",
     inPast: 'any moment now',
+    second: "moments",
     seconds: "less than a minute",
     minute: "about a minute",
     minutes: "%d minutes",
@@ -50,7 +51,8 @@ inWords = function(from_epoch) {
     return string.replace(/%d/i, value);
   }
 
-  var words = seconds < 45 && substitute($l.seconds, Math.round(seconds)) ||
+  var words = seconds < 30 && substitute($l.second, Math.round(seconds)) ||
+  seconds < 45 && substitute($l.seconds, Math.round(seconds)) ||
   seconds < 90 && substitute($l.minute, 1) ||
   minutes < 45 && substitute($l.minutes, Math.round(minutes)) ||
   minutes < 90 && substitute($l.hour, 1) ||
@@ -66,9 +68,3 @@ inWords = function(from_epoch) {
   if ($l.wordSeparator === undefined) { separator = " "; }
   return $.trim([prefix, words, suffix].join(separator));
 }
-
-$(document).ready(function() {
-  $('time.timeago').each(function() {
-    timeago(this);
-  })
-})

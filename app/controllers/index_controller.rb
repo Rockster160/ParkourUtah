@@ -34,7 +34,7 @@ class IndexController < ApplicationController
   def receive_sms
     raw_number = params["From"].gsub(/[^0-9]/, "").last(10)
     user = User.where("phone_number ILIKE ?", "%#{raw_number}%").first
-    TextMessage.create(stripped_phone_number: raw_number, body: params["Body"])
+    Message.create(stripped_phone_number: raw_number, body: params["Body"])
     user_link = Rails.application.routes.url_helpers.admin_user_url(user) if user.present?
     if %w(STOP STOPALL UNSUBSCRIBE CANCEL END QUIT).include?(params["Body"].squish.upcase)
       user.notifications.update(sms_receivable: false) if user.present? && user.notifications.present?

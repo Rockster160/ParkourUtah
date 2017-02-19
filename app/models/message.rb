@@ -23,7 +23,7 @@ class Message < ActiveRecord::Base
   validate :phone_number_length
   validates_presence_of :body
 
-  scope :by_phone_number, ->(phone_number) { where("REGEXP_REPLACE(stripped_phone_number, '[^\\d]', '', 'g') ILIKE ?", "%#{strip_phone_number(phone_number).last(10)}") }
+  scope :by_phone_number, ->(phone_number) { where("REGEXP_REPLACE(stripped_phone_number, '[^0-9]', '', 'g') ILIKE ?", "%#{strip_phone_number(phone_number).last(10)}") }
   scope :sent_and_received_by_user, ->(user) { where("sent_from_id = :user_id OR sent_to_id = :user_id", user_id: user.id) }
 
   enum message_type: {
@@ -45,7 +45,7 @@ class Message < ActiveRecord::Base
   end
 
   def lookup_receiver_by_phone_number
-    User.where("REGEXP_REPLACE(phone_number, '[^\\d]', '', 'g') ILIKE ?", "%#{stripped_phone_number.last(10)}").first
+    User.by_phone_number(phone_number).first
   end
 
   def sender_name
@@ -101,6 +101,7 @@ class Message < ActiveRecord::Base
 
   def strip_phone_number(number); self.class.strip_phone_number(number); end
   def self.strip_phone_number(number)
+    return 'No Number Found' unless number.present?
     number.gsub(/[^\d]/, "")
   end
 

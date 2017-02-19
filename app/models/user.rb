@@ -118,6 +118,7 @@ class User < ApplicationRecord
     joins('LEFT OUTER JOIN dependents ON users.id = dependents.user_id')
       .where("email ILIKE ? OR concat(users.first_name, ' ', users.last_name) ILIKE ? OR CAST(users.id AS TEXT) ILIKE ? OR dependents.full_name ILIKE ? OR CAST(dependents.athlete_id AS TEXT) ILIKE ?", text, text, text, text, text).uniq
   }
+  scope :by_phone_number, ->(number) { where("REGEXP_REPLACE(phone_number, '[^0-9]', '', 'g') ILIKE ?", "%#{number.gsub(/[^0-9]/, '').last(10)}") }
   scope :instructors, -> { where("role > 0").order(:instructor_position) }
   scope :mods, -> { where("role > 1") }
   scope :admins, -> { where("role > 2") }
