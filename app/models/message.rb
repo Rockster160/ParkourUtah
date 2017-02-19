@@ -64,8 +64,12 @@ class Message < ActiveRecord::Base
     if sent_from.present?
       "User #{sent_from_id}"
     else
-      stripped_phone_number
+      format_phone_number
     end
+  end
+
+  def format_phone_number
+    "+1 (#{phone_number[0..2]}) #{phone_number[3..5]}-#{phone_number[6..9]}"
   end
 
   def deliver
