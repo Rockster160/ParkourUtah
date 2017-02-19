@@ -6,10 +6,10 @@ test:
 
 staging:
   adapter: redis
-  url: redis://45.55.180.23:8076
   channel_prefix: parkourutah_staging
+  # url: redis://45.55.180.23:8076
 
 production:
   adapter: redis
-  url: redis://45.55.180.23:8075
   channel_prefix: parkourutah_production
+  # url: redis://45.55.180.23:8075
