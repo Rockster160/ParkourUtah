@@ -12,7 +12,7 @@ Rails.application.configure do
 
   config.action_cable.url = "ws://parkourutah.com/cable"
   config.action_cable.allowed_request_origins = ["http://parkourutah.com"]
-  
+
   routes.default_url_options = { host: 'parkourutah.com', protocol: 'http://', port: nil }
   config.action_mailer.default_url_options = { host: 'parkourutah.com', protocol: 'http://', port: nil }
   config.action_mailer.asset_host = 'http://parkourutah.com'
