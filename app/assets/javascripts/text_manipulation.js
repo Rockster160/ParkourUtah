@@ -45,6 +45,7 @@ var ready = function() {
     $(this).data('toggle', 'tooltip');
     $(this).data('placement', 'top');
     $(this).data('trigger', 'manual');
+    // 48-57 are numeric values
     if ((e.which >= 48 && e.which <= 57) || e.which == 0) {
       $(this).tooltip('hide');
       return e
@@ -64,7 +65,7 @@ var ready = function() {
   });
 
   $(".disableEnterSubmit").on("keypress", function (e) {
-    if (e.keyCode == 13) {
+    if (e.keyCode == KEY_EVENT_ENTER) {
       return false;
     }
   });

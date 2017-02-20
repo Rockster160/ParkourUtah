@@ -24,6 +24,14 @@
 //= require_tree .
 //= require_tree ./channels
 
+
+const KEY_EVENT_ENTER = 13,
+      KEY_EVENT_TAB = 9,
+      KEY_EVENT_UP = 38,
+      KEY_EVENT_DOWN = 40,
+      KEY_EVENT_LEFT = 37,
+      KEY_EVENT_RIGHT = 39;
+
 ready = function() {
 
   if ($('.flash').length == 0) {

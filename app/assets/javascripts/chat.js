@@ -63,6 +63,13 @@ $(document).ready(function() {
     refreshTimeago();
     setInterval(refreshTimeago, 10000);
 
+    $('.messages-form .new-message-field').keypress(function(evt) {
+      var $form = $('.messages-form');
+      if (evt.keyCode == KEY_EVENT_ENTER && !evt.shiftKey) {
+        $form.submit();
+      }
+    })
+
     $('.messages-form').submit(function(e) {
       e.preventDefault()
 
