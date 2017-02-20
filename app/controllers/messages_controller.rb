@@ -1,5 +1,5 @@
 class MessagesController < ApplicationController
-  before_action :validate_admin
+  before_action :validate_instructor
 
   def mark_messages_as_read
     Message.unread.where(id: params[:ids]).each(&:read!)
