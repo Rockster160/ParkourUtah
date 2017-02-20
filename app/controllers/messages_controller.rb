@@ -26,7 +26,7 @@ class MessagesController < ApplicationController
   end
 
   def create
-    @text_message = current_user.sent_messages.create(message_params.merge(message_type: Message.message_types[:text]))
+    @text_message = current_user.sent_messages.text.create(message_params)
     @number_user = @text_message.try(:sent_to)
     @text_message.deliver if @text_message.persisted?
 

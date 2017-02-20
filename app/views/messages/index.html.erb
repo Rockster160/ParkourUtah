@@ -4,7 +4,7 @@
     <%= link_to "Back to User", admin_user_path(@number_user), class: 'pkut-btn' %>
   <% end %>
 
-  <%= form_for current_user.sent_messages.new, html: { class: "messages-form" } do |f| %>
+  <%= form_for current_user.sent_messages.text.new, html: { class: "messages-form" } do |f| %>
     <div class="message-form">
       <div class="messages-container">
         <%# JS renders messages here  %>

@@ -51,13 +51,17 @@ class AdminsController < ApplicationController
     @failed = []
     phone_numbers.each do |phone_number|
       if phone_number.length == 10
-        current_user.sent_messages.create(stripped_phone_number: phone_number, body: params[:message], sent_to_user: true)
+        current_user.sent_messages.text.create(stripped_phone_number: phone_number, body: params[:message])
         @success << phone_number
       else
         @failed << phone_number
       end
     end
-    render :batch_text_message
+    if @success.length == 1
+      redirect_to messages_path(phone_number: @success.first), notice: "Successfully sent!"
+    else
+      render :batch_text_message
+    end
   end
 
   def batch_email
