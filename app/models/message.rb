@@ -146,7 +146,7 @@ class Message < ActiveRecord::Base
 
   def try_to_notify_slack_of_unread_message
     unless sent_from.try(:instructor?)
-      NotifySlackOfUnreadMessageWorker.perform_in(2.seconds, self.id)
+      NotifySlackOfUnreadMessageWorker.perform_in(20.seconds, self.id)
     end
   end
 
