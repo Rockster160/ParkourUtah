@@ -8,7 +8,12 @@
     <% else %>
       <div class="from-name"><%= text_message.receiver_name %></div>
     <% end %>
-    <div class="message-body"><%= text_message.body %></div>
+    <div class="message-body">
+      <%= text_message.body %>
+      <% if text_message.error? %>
+        <div class="text-error-message">Error: <%= text_message.error_message %></div>
+      <% end %>
+    </div>
 
   </div>
 <% end %>

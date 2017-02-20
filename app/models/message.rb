@@ -4,7 +4,6 @@
 #
 #  id                    :integer          not null, primary key
 #  sent_from_id          :integer
-#  sent_to_user          :boolean
 #  stripped_phone_number :string
 #  body                  :text
 #  created_at            :datetime         not null
@@ -12,6 +11,8 @@
 #  sent_to_id            :integer
 #  read_at               :datetime
 #  message_type          :integer
+#  error                 :boolean          default(FALSE)
+#  error_message         :string
 #
 
 class Message < ActiveRecord::Base
@@ -24,7 +25,7 @@ class Message < ActiveRecord::Base
   validates_presence_of :body
 
   after_create_commit { MessageBroadcastWorker.perform_async(self.id) }
-  after_create_commit { NotifySlackOfUnreadMessageWorker.perform_in(20.seconds, self.id) }
+  after_create_commit :try_to_notify_slack_of_unread_message
 
   scope :by_phone_number, ->(phone_number) { where("REGEXP_REPLACE(stripped_phone_number, '[^0-9]', '', 'g') ILIKE ?", "%#{strip_phone_number(phone_number).last(10)}") }
   scope :sent_and_received_by_user, ->(user) { where("sent_from_id = :user_id OR sent_to_id = :user_id", user_id: user.id) }
@@ -43,6 +44,11 @@ class Message < ActiveRecord::Base
 
   def read?; !read_at.nil?; end
   def unread?; read_at.nil?; end
+
+  def error!(msg="")
+    update(error: true, error_message: msg)
+    ActionCable.server.broadcast "phone_#{phone_number}_channel", error: { message_id: self.id, message: msg }
+  end
 
   def from_instructor?
     return sent_from.try(:instructor?)
@@ -137,4 +143,11 @@ class Message < ActiveRecord::Base
       errors.add(:phone_number, "must contain at least 10 digits.")
     end
   end
+
+  def try_to_notify_slack_of_unread_message
+    unless sent_to.try(:instructor?)
+      NotifySlackOfUnreadMessageWorker.perform_in(20.seconds, self.id)
+    end
+  end
+
 end

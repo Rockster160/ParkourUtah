@@ -14,7 +14,9 @@ class SmsMailerWorker
             from: "+17405714304"
           )
         rescue Twilio::REST::RequestError => e
+          m = Message.where(phone_number: num, body: msg).last
           if e.message == "The message From/To pair violates a blacklist rule."
+            m.error!("Blacklisted")
             if user = User.find_by_phone_number(num)
               user.notifications.update(sms_receivable: false)
             else
@@ -22,6 +24,7 @@ class SmsMailerWorker
             end
             return true
           else
+            m.error!(e.message)
             SmsMailerWorker.perform_async('+13852599640', "SMS failed: #{num}: #{e.message}")
           end
         end
