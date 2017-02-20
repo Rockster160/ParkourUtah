@@ -127,6 +127,7 @@ class ScheduleWorker
   end
 
   def pull_logs_from_s3(params)
+    return unless Rails.env.production?
     s3 = AWS::S3.new
     buckets = [s3.buckets["pkut-default"], s3.buckets["pkut-uploads"]]
     buckets.each do |bucket|

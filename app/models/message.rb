@@ -104,7 +104,9 @@ class Message < ActiveRecord::Base
       slack_message += "\n<#{respond_link}|Click here to respond!>"
     end
     slack_message += sent_from.present? ? "\nPhone Number seems to match: <#{user_link}|#{sent_from.id} - #{sent_from.email}>" : ""
-    channel = Rails.env.production? ? "#support" : "#slack-testing"
+    # channel = Rails.env.production? ? "#support" : "#slack-testing"
+    # FIXME
+    channel = "#slack-testing"
     SlackNotifier.notify(slack_message, channel)
   end
 
@@ -145,7 +147,7 @@ class Message < ActiveRecord::Base
   end
 
   def try_to_notify_slack_of_unread_message
-    unless sent_from.try(:instructor?)
+    if !sent_from.try(:instructor?) && self.text? && self.unread?
       NotifySlackOfUnreadMessageWorker.perform_in(20.seconds, self.id)
     end
   end
