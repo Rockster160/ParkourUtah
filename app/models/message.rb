@@ -98,7 +98,8 @@ class Message < ActiveRecord::Base
       slack_message += "\n<#{respond_link}|Click here to respond!>"
     end
     slack_message += sent_from.present? ? "\nPhone Number seems to match: <#{user_link}|#{sent_from.id} - #{sent_from.email}>" : ""
-    SlackNotifier.notify(slack_message, "#slack-testing")
+    channel = Rails.env.production? ? "#support" : "#slack-testing"
+    SlackNotifier.notify(slack_message, channel)
   end
 
   def phone_number
