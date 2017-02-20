@@ -1,5 +1,11 @@
 module ApplicationHelper
 
+  def timeago(time, options = {})
+    options[:class] ||= "timeago"
+    simple_time = time.to_formatted_s(:simple)
+    content_tag(:time, simple_time, options.merge(datetime: time.to_i, title: simple_time)) if time
+  end
+
   def parse_date(str) #mm-dd-year
     return nil unless str
     month, day, year = str.first(10).split('-').map(&:to_i)
@@ -26,7 +32,7 @@ module ApplicationHelper
   end
 
   def humanize_seconds(ms)
-    [[1000, :milliseconds], [60, :seconds], [60, :minutes], [24, :hours], [1000, :days]].map{ |count, name|
+    [[1000, :milliseconds], [60, :seconds], [60, :minutes], [24, :hours], [1000, :days]].map { |count, name|
       if ms > 0
         ms, n = ms.divmod(count)
         "#{n.to_i} #{name}"

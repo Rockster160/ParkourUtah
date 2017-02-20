@@ -1,0 +1,19 @@
+<% messages ||= @text_messages %>
+<% messages.each do |text_message| %>
+  <div class="text-message <%= text_message.from_instructor? ? 'sent' : 'received' %>" data-read-id="<%= text_message.id %>">
+
+    <div class="timestamp"><%= timeago(text_message.created_at) %></div>
+    <% if text_message.from_instructor? %>
+      <div class="from-name"><%= text_message.sender_name %></div>
+    <% else %>
+      <div class="from-name"><%= text_message.receiver_name %></div>
+    <% end %>
+    <div class="message-body">
+      <%= text_message.body %>
+      <% if text_message.error? %>
+        <div class="text-error-message">Error: <%= text_message.error_message %></div>
+      <% end %>
+    </div>
+
+  </div>
+<% end %>

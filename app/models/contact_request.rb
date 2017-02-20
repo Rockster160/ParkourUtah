@@ -15,12 +15,19 @@
 
 class ContactRequest < ApplicationRecord
 
+  after_create :log_message
+
   scope :by_fuzzy_text, ->(fuzzy_text) {
     formatted_text = fuzzy_text.to_s.downcase
     text = "%#{formatted_text}%"
     phone_column = "REGEXP_REPLACE(phone, '[^\\w]', '', 'g') ILIKE ?"
     where("#{phone_column} OR LOWER(name) ILIKE ? OR LOWER(email) ILIKE ? OR LOWER(body) ILIKE ?", text, text, text, text)
   }
+
+  def log_message
+    current_user ||= nil
+    Message.create(phone_number: phone, body: body, sent_from: current_user, message_type: Message.message_types[:contact_request], created_at: created_at)
+  end
 
   def notify_slack
     email_url = Rails.application.routes.url_helpers.batch_email_admin_url(recipients: email)

@@ -10,6 +10,8 @@ Rails.application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
+  config.action_cable.url = "ws://staging.parkourutah.com/cable"
+  config.action_cable.allowed_request_origins = ["http://staging.parkourutah.com"]
 
   routes.default_url_options = { host: 'staging.parkourutah.com', protocol: 'http://', port: nil }
   config.action_mailer.default_url_options = { host: 'staging.parkourutah.com', protocol: 'http://', port: nil }

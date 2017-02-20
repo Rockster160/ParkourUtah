@@ -19,6 +19,9 @@ Rails.application.routes.draw do
   post 'register/step_4/fix' => 'registrations#fix_step_4', as: 'fix_review_page'
   post 'register/step_5' => 'registrations#post_step_5'
 
+  # Websockets
+  mount ActionCable.server => '/cable'
+
   resources :instructors do
     member do
       post :update_position
@@ -64,7 +67,11 @@ Rails.application.routes.draw do
   resources :attendances, only: [ :index ]
   resources :aws_loggers, only: [ :index, :show ]
   resources :contact_requests, only: [ :index, :show ]
-  resources :text_messages, only: [ :show, :create ]
+  resources :messages, only: [ :index, :create ] do
+    collection do
+      post :mark_messages_as_read
+    end
+  end
 
   get :dashboard, controller: :admins
   resource :admin, only: [] do

@@ -1,0 +1,31 @@
+<div class="central-container">
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
+  <% if @number_user.present? %>
+    <%= link_to "Back to User", admin_user_path(@number_user), class: 'pkut-btn' %>
+  <% end %>
+
+  <%= form_for current_user.sent_messages.new, html: { class: "messages-form" } do |f| %>
+    <div class="message-form">
+      <div class="messages-container">
+        <%# JS renders messages here  %>
+        <% if @number_user.present? && @number_user.try(:sms_receivable?) == false %>
+          <div class="text-message important-alert-message">
+            <div class="message-body">
+              <strong>BLACKLISTED</strong> <br>
+              User will not receive any messages sent.
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="message-form-wrapper">
+        <%= f.hidden_field :phone_number, value: @phone_number %>
+        <%= f.text_area :body, value: params[:body], class: "new-message-field" %>
+        <%= f.button(type: "submit", class: "send-message-btn") do %>
+          <i class="fa fa-paper-plane"></i>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+</div>

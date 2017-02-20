@@ -174,18 +174,7 @@ class Dependent < ApplicationRecord
     ((0...9999).to_a - bads.flatten)
   end
 
-  def self.athlete_id_tests(num)
-    num.times do |n|
-     athlete = Dependent.first
-     athlete.generate_pin
-    #  binding.pry if athlete.athlete_id == Dependent.last.athlete_id
-     athlete.athlete_id
-     puts n
-   end
-  end
-
   def sign_up_verified
-    # self.user.update(credits: (self.user.credits + (ENV["PKUT_CLASS_PRICE"].to_i * 2)))
     2.times { self.trial_classes.create }
   end
 
