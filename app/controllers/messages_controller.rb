@@ -1,6 +1,11 @@
 class MessagesController < ApplicationController
   before_action :validate_admin
 
+  def mark_messages_as_read
+    Message.unread.where(id: params[:ids]).each(&:read!)
+    head :ok
+  end
+
   def index
     if params[:phone_number].present?
       @phone_number = params[:phone_number].to_s.gsub(/[^0-9]/, "").last(10)

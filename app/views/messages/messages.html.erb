@@ -1,6 +1,6 @@
 <% messages ||= @text_messages %>
 <% messages.each do |text_message| %>
-  <div class="text-message <%= text_message.from_instructor? ? 'sent' : 'received' %>">
+  <div class="text-message <%= text_message.from_instructor? ? 'sent' : 'received' %>" data-read-id="<%= text_message.id %>">
 
     <div class="timestamp"><%= timeago(text_message.created_at) %></div>
     <% if text_message.from_instructor? %>

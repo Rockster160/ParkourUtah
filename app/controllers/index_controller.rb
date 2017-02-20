@@ -33,23 +33,7 @@ class IndexController < ApplicationController
 
   def receive_sms
     raw_number = params["From"].gsub(/[^0-9]/, "").last(10)
-    user = User.where("phone_number ILIKE ?", "%#{raw_number}%").first
     Message.create(stripped_phone_number: raw_number, body: params["Body"])
-    user_link = Rails.application.routes.url_helpers.admin_user_url(user) if user.present?
-    if %w(STOP STOPALL UNSUBSCRIBE CANCEL END QUIT).include?(params["Body"].squish.upcase)
-      user.notifications.update(sms_receivable: false) if user.present? && user.notifications.present?
-      default_message = "#{params["From"]} has opted out of text messages from PKUT.\nThey will no longer receive text messages from us (Including messages sent from the admin text messaging page).\nIn order to re-enable messages, they must send a text message saying \"START\" to us, and then log in to their account, Home, then click Notifications, then the button that says 'Text Me!'\nIf the message sends successfully, they will be able to receive text messages from us again."
-      user_message = user.present? ? "\nPhone Number seems to match: <#{user_link}|#{user.id} - #{user.email}>" : ""
-      slack_message = default_message + user_message
-    else
-      escaped_body = params["Body"].split("\n").map { |line| "\n>#{line}" }.join("")
-      default_message = "*Received text message from: #{params["From"]}*\n#{escaped_body}"
-      respond_link = Rails.application.routes.url_helpers.batch_text_message_admin_url(recipients: raw_number)
-      user_message = user.present? ? "\nPhone Number seems to match: <#{user_link}|#{user.id} - #{user.email}>" : ""
-      respond_message = "\n<#{respond_link}|Click here to respond!>"
-      slack_message = default_message + user_message + respond_message
-    end
-    SlackNotifier.notify(slack_message, "#support")
     head :ok
   end
 

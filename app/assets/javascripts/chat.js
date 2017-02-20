@@ -27,7 +27,10 @@ $(document).ready(function() {
         scrollBottomOfMessages();
         refreshTimeago();
         last_message_timestamp = $('time.timeago').map(function() { return $(this).attr("datetime"); }).sort(function(a, b) { return a-b; }).last()[0];
-
+        var read_ids = $('.text-message.received').map(function() { return $(this).attr("data-read-id"); });
+        if (read_ids.length > 0) {
+          $.post('/messages/mark_messages_as_read', {ids: read_ids.toArray()})
+        }
         // Mark messages as read
       },
       send_message: function(message) {
