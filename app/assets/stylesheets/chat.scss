@@ -1,6 +1,7 @@
 @import "config/variables";
 @import 'config/font-imports';
 
+$alert-color: $pkut-grey-dark;
 $sent-color: $pkut-red-dark;
 $received-color: #FAFAFA;
 
@@ -131,6 +132,18 @@ $received-color: #FAFAFA;
           left: 15px;
           top: 4px;
           color: white;
+        }
+      }
+
+      &.important-alert-message {
+        .message-body {
+          border-radius: 20px;
+          color: white;
+          padding: 10px 15px 10px;
+          background-color: $alert-color;
+          border-color: darken($alert-color, 5%);
+          width: 100%;
+          text-align: center;
         }
       }
 

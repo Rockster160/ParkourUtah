@@ -260,6 +260,10 @@ class User < ApplicationRecord
     (phone.length == 10)
   end
 
+  def sms_receivable?
+    notifications.try(:sms_receivable) || false
+  end
+
   def cart
     self.carts.order(created_at: :desc).first
   end

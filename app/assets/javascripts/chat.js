@@ -46,6 +46,7 @@ $(document).ready(function() {
       $('time.timeago').each(function() {
         timeago(this);
       })
+      $('.important-alert-message').appendTo('.messages-container');
     }
 
     refreshTimeago();
