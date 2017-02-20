@@ -1,16 +1,19 @@
-<% if flash[:alert].present? || flash[:notice].present? %>
-  <div class="flash-container">
-    <% if flash[:notice].present? %>
-      <div class="flash notice-flash">
-        <i class="fa fa-times-circle fa-2x close-flash"></i>
-        <p class="flash-text"><%= flash[:notice] %></p>
+<% ['alert', 'notice'].each do |type| %>
+  <% if message = flash.send(type) %>
+    <div class="flash-banner flash-<%= type %>">
+      <div class="flash-container">
+        <% if type == 'alert' %>
+          <i class="fa fa-ban"></i>
+        <% else %>
+          <i class="fa fa-check-circle-o"></i>
+        <% end %>
+        <%= message %>
+        <div class="dismiss-flash">
+          <a id="dismissFlash">
+            <i class="fa fa-times-circle-o"></i>
+          </a>
+        </div>
       </div>
-    <% end %>
-    <% if flash[:alert].present? %>
-      <div class="flash alert-flash">
-        <i class="fa fa-times-circle fa-2x close-flash"></i>
-        <p class="flash-text"><%= flash[:alert] %></p>
-      </div>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 <% end %>

@@ -2,7 +2,7 @@
 @import 'config/font-imports';
 
 .modal {
-  z-index: 10000;
+  z-index: 1000;
   overflow-y: auto;
   .modal-container {
     margin: 70px auto auto;

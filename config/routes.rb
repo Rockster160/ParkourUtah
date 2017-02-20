@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   match '404', to: 'index#page_not_found', via: :all
   match '422', to: 'index#page_not_found', via: :all
   match '500', to: 'index#page_broken', via: :all
+  
+  get :flash_message, controller: "application"
 
   get 'talk' => 'index#get_request'
   post 'listen' => 'index#give_request'
