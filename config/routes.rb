@@ -19,6 +19,9 @@ Rails.application.routes.draw do
   post 'register/step_4/fix' => 'registrations#fix_step_4', as: 'fix_review_page'
   post 'register/step_5' => 'registrations#post_step_5'
 
+  # Websockets
+  mount ActionCable.server => '/cable'
+
   resources :instructors do
     member do
       post :update_position

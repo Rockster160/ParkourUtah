@@ -3,6 +3,42 @@ var last_message_timestamp = 0;
 $(document).ready(function() {
   if ($('.messages-container').length > 0) {
 
+    var params = parseParams();
+    var room_id = ''
+    if (params["phone_number"] != undefined) {
+      room_id = "phone_" + params["phone_number"];
+    } else if (params["user_id"] != undefined) {
+      room_id = "user_" + params["user_id"];
+    }
+
+    App.global_chat = App.cable.subscriptions.create({
+      channel: "ChatChannel",
+      chat_room_id: room_id
+    }, {
+      connected: function() {
+        console.log("step: connected");
+      },
+      disconnected: function() {
+        console.log("step: disconnected");
+      },
+      received: function(data) {
+        console.log("step: received");
+        $('.messages-container').append(data["message"]);
+        scrollBottomOfMessages();
+        refreshTimeago();
+        last_message_timestamp = $('time.timeago').map(function() { return $(this).attr("datetime"); }).sort(function(a, b) { return a-b; }).last()[0];
+
+        // Mark messages as read
+      },
+      send_message: function(message) {
+        console.log("step: send_message");
+        return this.perform('send_message', {
+          message: message,
+          chat_room_id: room_id
+        });
+      }
+    });
+
     refreshTimeago = function() {
       $('time.timeago').each(function() {
         timeago(this);
@@ -17,7 +53,7 @@ $(document).ready(function() {
 
       var form = this, $form = $(this),
           $message_field = $form.find('.new-message-field'),
-          message = $message_field.val(),
+          message = $.trim($message_field.val()),
           form_data = $form.serialize();
 
       if (message.length == 0) {
@@ -25,9 +61,7 @@ $(document).ready(function() {
       }
 
       $message_field.val("");
-      $.post(form.action, form_data).done(function() {
-        queryNewMessages();
-      })
+      App.global_chat.send_message(message, room_id);
 
       return false;
     })
@@ -54,15 +88,13 @@ $(document).ready(function() {
         var new_height = calculateHeightOfMessages();
         var new_messages_received = new_height > previous_height;
         if (new_messages_received) {
-          scrollBottomOfMessages()
+          scrollBottomOfMessages();
         }
         refreshTimeago();
-        // Mark messages as read
         last_message_timestamp = $('time.timeago').map(function() { return $(this).attr("datetime"); }).sort(function(a, b) { return a-b; }).last()[0];
       })
     }
     queryNewMessages();
-    setInterval(queryNewMessages, 5000);
   }
 })
 

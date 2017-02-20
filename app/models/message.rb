@@ -23,6 +23,8 @@ class Message < ActiveRecord::Base
   validate :phone_number_length
   validates_presence_of :body
 
+  after_create_commit { MessageBroadcastWorker.perform_async(self.id) }
+
   scope :by_phone_number, ->(phone_number) { where("REGEXP_REPLACE(stripped_phone_number, '[^0-9]', '', 'g') ILIKE ?", "%#{strip_phone_number(phone_number).last(10)}") }
   scope :sent_and_received_by_user, ->(user) { where("sent_from_id = :user_id OR sent_to_id = :user_id", user_id: user.id) }
 

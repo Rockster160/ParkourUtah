@@ -11,6 +11,10 @@ Rails.application.configure do
   config.action_controller.perform_caching = false
 
   config.action_mailer.default_url_options   = { :host => 'localhost:7545' }
+
+  config.action_cable.url = "ws://localhost:7545/cable"
+  config.action_cable.allowed_request_origins = ["http://localhost:7545"]
+
   # ActionMailer::Base.delivery_method = :smtp
   # ActionMailer::Base.smtp_settings = {
   #   :address              => 'email-smtp.us-west-2.amazonaws.com',

@@ -5,9 +5,6 @@ class MessagesController < ApplicationController
     if params[:phone_number].present?
       @phone_number = params[:phone_number].to_s.gsub(/[^0-9]/, "").last(10)
       @number_user = User.by_phone_number(@phone_number).first
-    elsif params[:user_id].present?
-      @number_user = User.find(params[:user_id])
-      @phone_number = @number_user.phone_number
     end
 
     @text_messages = Message.none

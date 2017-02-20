@@ -1,0 +1,15 @@
+development:
+  adapter: redis
+
+test:
+  adapter: redis
+
+staging:
+  adapter: redis
+  channel_prefix: parkourutah_staging
+  # url: redis://45.55.180.23:8076
+
+production:
+  adapter: redis
+  channel_prefix: parkourutah_production
+  url: redis://127.0.0.1:6379/0
