@@ -2,33 +2,28 @@
 #
 # Table name: messages
 #
-#  id                    :integer          not null, primary key
-#  sent_from_id          :integer
-#  stripped_phone_number :string
-#  body                  :text
-#  created_at            :datetime         not null
-#  updated_at            :datetime         not null
-#  sent_to_id            :integer
-#  read_at               :datetime
-#  message_type          :integer
-#  error                 :boolean          default(FALSE)
-#  error_message         :string
+#  id            :integer          not null, primary key
+#  sent_from_id  :integer
+#  body          :text
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  read_at       :datetime
+#  message_type  :integer
+#  error         :boolean          default(FALSE)
+#  error_message :string
+#  chat_room_id  :integer
 #
 
-class Message < ActiveRecord::Base
+class Message < ApplicationRecord
+  belongs_to :chat_room, touch: true
   belongs_to :sent_from, class_name: "User", optional: true
-  belongs_to :sent_to, class_name: "User", optional: true
+  # If sent_from is nil, assume phone_number group
 
-  before_validation :remove_non_digits_from_db_phone_number
-  before_validation :assign_users
-  validate :phone_number_length
   validates_presence_of :body
 
   after_create_commit { MessageBroadcastWorker.perform_async(self.id) }
   after_create_commit :try_to_notify_slack_of_unread_message
 
-  scope :by_phone_number, ->(phone_number) { where("REGEXP_REPLACE(stripped_phone_number, '[^0-9]', '', 'g') ILIKE ?", "%#{strip_phone_number(phone_number).last(10)}") }
-  scope :sent_and_received_by_user, ->(user) { where("sent_from_id = :user_id OR sent_to_id = :user_id", user_id: user.id) }
   scope :read, -> { where.not(read_at: nil) }
   scope :unread, -> { where(read_at: nil) }
 
@@ -52,10 +47,6 @@ class Message < ActiveRecord::Base
 
   def from_instructor?
     return sent_from.try(:instructor?)
-  end
-
-  def lookup_receiver_by_phone_number
-    User.by_phone_number(phone_number).first
   end
 
   def sender_name
@@ -104,47 +95,11 @@ class Message < ActiveRecord::Base
       slack_message += "\n<#{respond_link}|Click here to respond!>"
     end
     slack_message += sent_from.present? ? "\nPhone Number seems to match: <#{user_link}|#{sent_from.id} - #{sent_from.email}>" : ""
-    # channel = Rails.env.production? ? "#support" : "#slack-testing"
-    # FIXME
-    channel = "#slack-testing"
+    channel = Rails.env.production? ? "#support" : "#slack-testing"
     SlackNotifier.notify(slack_message, channel)
   end
 
-  def phone_number
-    self.stripped_phone_number
-  end
-  def phone_number=(new_phone)
-    self.stripped_phone_number = new_phone
-  end
-
   private
-
-  def assign_users
-    if sent_from.nil?
-      current_user ||= nil
-      self.sent_from_id = current_user.try(:id)
-    end
-    if sent_to.nil?
-      user = lookup_receiver_by_phone_number
-      self.sent_to_id = user.try(:id)
-    end
-  end
-
-  def strip_phone_number(number); self.class.strip_phone_number(number); end
-  def self.strip_phone_number(number)
-    return 'No Number Found' unless number.present?
-    number.gsub(/[^\d]/, "")
-  end
-
-  def remove_non_digits_from_db_phone_number
-    self.stripped_phone_number = strip_phone_number(stripped_phone_number).gsub(/[^\d]/, "")
-  end
-
-  def phone_number_length
-    unless stripped_phone_number.length >= 10
-      errors.add(:phone_number, "must contain at least 10 digits.")
-    end
-  end
 
   def try_to_notify_slack_of_unread_message
     if !sent_from.try(:instructor?) && self.text? && self.unread?

@@ -7,14 +7,7 @@ class MessagesController < ApplicationController
   end
 
   def index
-    if params[:phone_number].present?
-      @phone_number = params[:phone_number].to_s.gsub(/[^0-9]/, "").last(10)
-      @number_user = User.by_phone_number(@phone_number).first
-    end
-
-    @text_messages = Message.none
-    return unless request.xhr?
-
+    @chat_room = ChatRoom.find(params[:chat_room_id])
     @text_messages = Message.by_phone_number(@phone_number).order(created_at: :asc)
 
     if params[:last_sync].present?
@@ -26,7 +19,7 @@ class MessagesController < ApplicationController
   end
 
   def create
-    @text_message = current_user.sent_messages.text.create(message_params)
+    @text_message = current_user.sent_messages.chat.create(message_params)
     @number_user = @text_message.try(:sent_to)
     @text_message.deliver if @text_message.persisted?
 

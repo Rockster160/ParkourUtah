@@ -1,31 +1,17 @@
-<div class="central-container">
-  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
-  <% if @number_user.present? %>
-    <%= link_to "Back to User", admin_user_path(@number_user), class: 'pkut-btn' %>
-  <% end %>
+<% messages ||= @messages %>
+<% messages.each do |message| %>
+  <div class="chat-message <%= (message.sent_from == current_user) ? 'sent' : 'received' %>" data-read-id="<%= message.id %>">
 
-  <%= form_for current_user.sent_messages.text.new, html: { class: "messages-form" } do |f| %>
-    <div class="message-form">
-      <div class="messages-container">
-        <%# JS renders messages here  %>
-        <% if @number_user.present? && @number_user.try(:sms_receivable?) == false %>
-          <div class="text-message important-alert-message">
-            <div class="message-body">
-              <strong>BLACKLISTED</strong> <br>
-              User will not receive any messages sent.
-            </div>
-          </div>
-        <% end %>
-      </div>
-
-      <div class="message-form-wrapper">
-        <%= f.hidden_field :phone_number, value: @phone_number %>
-        <%= f.text_area :body, value: params[:body], class: "new-message-field" %>
-        <%= f.button(type: "submit", class: "send-message-btn") do %>
-          <i class="fa fa-paper-plane"></i>
-        <% end %>
-      </div>
+    <div class="timestamp"><%= timeago(message.created_at) %></div>
+    <div class="from-name"><%= message.sender_name %></div>
+    <div class="message-body">
+      <% message.body.split(/\n/).each do |line| %>
+        <%= line %> <br>
+      <% end %>
+      <% if message.error? %>
+        <div class="text-error-message">Error: <%= message.error_message %></div>
+      <% end %>
     </div>
-  <% end %>
 
-</div>
+  </div>
+<% end %>

@@ -28,15 +28,15 @@ $(document).ready(function() {
           scrollBottomOfMessages();
           refreshTimeago();
           last_message_timestamp = $('time.timeago').map(function() { return $(this).attr("datetime"); }).sort(function(a, b) { return a-b; }).last()[0];
-          var read_ids = $('.text-message').map(function() { return $(this).attr("data-read-id"); });
+          var read_ids = $('.chat-message').map(function() { return $(this).attr("data-read-id"); });
           // FIXME: Only read messages I receive
-          // var read_ids = $('.text-message.received').map(function() { return $(this).attr("data-read-id"); });
+          // var read_ids = $('.chat-message.received').map(function() { return $(this).attr("data-read-id"); });
           if (read_ids.length > 0) {
             $.post('/messages/mark_messages_as_read', {ids: read_ids.toArray()})
           }
         } else if (data["error"] != undefined) {
           var error = data["error"]
-          $('.text-message[data-read-id=' + error["message_id"] + '] > .message-body').append('<div class="text-error-message">Error: ' + error["message"] + '</div>')
+          $('.chat-message[data-read-id=' + error["message_id"] + '] > .message-body').append('<div class="text-error-message">Error: ' + error["message"] + '</div>')
           scrollBottomOfMessages();
           refreshTimeago();
         } else {
@@ -52,16 +52,6 @@ $(document).ready(function() {
         });
       }
     });
-
-    refreshTimeago = function() {
-      $('time.timeago').each(function() {
-        timeago(this);
-      })
-      $('.important-alert-message').appendTo('.messages-container');
-    }
-
-    refreshTimeago();
-    setInterval(refreshTimeago, 10000);
 
     $('.messages-form .new-message-field').keypress(function(evt) {
       var $form = $('.messages-form');

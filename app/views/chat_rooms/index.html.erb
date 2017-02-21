@@ -1,0 +1,16 @@
+<div class="central-container">
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
+  <div class="text-center">
+    <%= paginate @chat_rooms %>
+  </div>
+
+  <div class="chat-rooms-container">
+    <% @chat_rooms.each do |room| %>
+      <a href="<%= chat_room_path(room) %>" class="chat-room-box">
+        <div class="timestamp"><%= timeago(room.last_message.try(:created_at) || room.updated_at) %></div>
+        <div class="room-name"><%= room.name %></div>
+        <div class="room-last-message"><%= room.last_message_text %></div>
+      </a>
+    <% end %>
+  </div>
+</div>

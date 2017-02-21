@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   match '404', to: 'index#page_not_found', via: :all
   match '422', to: 'index#page_not_found', via: :all
   match '500', to: 'index#page_broken', via: :all
-  
+
   get :flash_message, controller: "application"
 
   get 'talk' => 'index#get_request'
@@ -69,7 +69,8 @@ Rails.application.routes.draw do
   resources :attendances, only: [ :index ]
   resources :aws_loggers, only: [ :index, :show ]
   resources :contact_requests, only: [ :index, :show ]
-  resources :messages, only: [ :index, :create ] do
+  resources :chat_rooms, path: 'chat', only: [ :index, :show ] do
+    resources :messages, only: [ :index ]
     collection do
       post :mark_messages_as_read
     end
