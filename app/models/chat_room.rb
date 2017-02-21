@@ -12,6 +12,7 @@
 
 class ChatRoom < ApplicationRecord
   include Defaults
+  include ApplicationHelper
   has_many :chat_room_users
   has_many :users, through: :chat_room_users
   has_many :messages
@@ -56,10 +57,22 @@ class ChatRoom < ApplicationRecord
     where(id: (permitted_ids + member_of_ids).uniq)
   }
 
+  def display_name
+    if text?
+      if support_user.present?
+        "Support: #{support_user.display_name}"
+      else
+        "Support: #{format_phone_number(name)}"
+      end
+    else
+      name
+    end
+  end
+
   def support_user
     return nil unless text?
     return nil unless name.gsub(/[^0-9]/, "").length == 10
-    return User.by_phone_number(name)
+    return User.by_phone_number(name).first
   end
 
   def last_message

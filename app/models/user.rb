@@ -190,6 +190,12 @@ class User < ApplicationRecord
     "#{self.first_name.capitalize} #{self.last_name.capitalize}"
   end
 
+  def display_name
+    return nickname if nickname.present?
+    return full_name if full_name.present?
+    "User:#{id} - #{email}"
+  end
+
   def signed_in?
     last_sign_in_at > 10.minutes.ago if last_sign_in_at
   end
