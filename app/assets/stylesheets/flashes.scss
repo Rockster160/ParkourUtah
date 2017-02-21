@@ -1,6 +1,10 @@
+@import "config/variables";
+@import 'config/font-imports';
+
 $flash-text: white;
-$flash-notice-bg: #616161;
-$flash-alert-bg: rgba(238, 0, 0, 0.8);
+$flash-notice-bg: $mat-grey-light;
+$flash-notice-bg: #BCDEC6;
+$flash-alert-bg: #C40820;
 
 .flash-banner {
   position: absolute;
@@ -11,30 +15,33 @@ $flash-alert-bg: rgba(238, 0, 0, 0.8);
   margin-left: 20px;
   text-align: center;
 
-  &.flash-notice > .flash-container {
-    border-color: $flash-notice-bg;
-    background-color: $flash-notice-bg;
-    color: $flash-text;
-  }
-  &.flash-alert > .flash-container {
-    border-color: $flash-alert-bg;
-    background-color: $flash-alert-bg;
-    color: $flash-text;
-  }
   .flash-container {
     position: relative;
-    padding: 15px;
+    padding: 10px;
     max-width: 300px;
     height: auto;
-    border-radius: 8px;
-    border-width: 3px;
-    border-style: outset;
+    border-radius: 4px;
+    font-size: 16px;
+    box-shadow: 0px 8px 10px -8px #000;
+
     .dismiss-flash {
       position: absolute;
-      top: 2px;
-      right: 4px;
+      top: 0px;
+      right: 2px;
       cursor: pointer;
-      i.fa-times-circle-o { color: $flash-text; }
+      opacity: 0.5;
+      &:hover { opacity: 1; }
     }
+  }
+
+  &.flash-notice > .flash-container {
+    background-color: $flash-notice-bg;
+    color: $mat-grey-dark;
+    .dismiss-flash i.fa-times-circle-o { color: $mat-grey-dark; }
+  }
+  &.flash-alert > .flash-container {
+    background-color: $flash-alert-bg;
+    color: $mat-grey-light;
+    .dismiss-flash i.fa-times-circle-o { color: $mat-grey-light; }
   }
 }
