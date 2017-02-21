@@ -1,6 +1,22 @@
 <% messages ||= @messages %>
+<%
+warden_session = session["warden.user.user.key"]
+if warden_session && warden_session[0] && warden_session[0][0]
+  current_user = User.find(warden_session[0][0])
+else
+  current_user = nil
+end
+  # binding.pry
+#   # session['']
+#   #  =
+# else
+#   current_user = nil
+# end
+%>
 <% messages.each do |message| %>
-  <div class="chat-message <%= (message.sent_from == current_user) ? 'sent' : 'received' %>" data-read-id="<%= message.id %>">
+  <% sent_by_current_user = message.sent_from.present? && message.sent_from == current_user %>
+  <% sent_class = sent_by_current_user ? 'sent' : 'received' %>
+  <div class="chat-message <%= sent_class %>" data-read-id="<%= message.id %>" data-is-read="<%= message.read? %>" data-sent-by-id="<%= message.sent_from_id %>">
 
     <div class="timestamp"><%= timeago(message.created_at) %></div>
     <div class="from-name"><%= message.sender_name %></div>

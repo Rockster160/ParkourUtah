@@ -17,7 +17,6 @@ class ChatRoom < ApplicationRecord
   has_many :users, through: :chat_room_users
   has_many :messages
 
-
   default_on_create visibility_level: 0 # admin
   enum visibility_level: {
     admin:      0,

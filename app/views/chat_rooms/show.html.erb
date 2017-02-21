@@ -9,7 +9,7 @@
   <%= form_for [@chat_room, @chat_room.messages.new], html: { class: "messages-form" } do |f| %>
     <% support_user = @chat_room.support_user %>
     <div class="message-form" data-messages-url="<%= chat_room_messages_path(@chat_room) %>">
-      <div class="messages-container">
+      <div class="messages-container" data-room-id="<%= @chat_room.id %>" data-current-user-id="<%= current_user.try(:id) || 'x' %>">
         <%# JS renders messages here  %>
         <% if support_user.present? && support_user.try(:sms_receivable?) == false %>
           <div class="chat-message important-alert-message">

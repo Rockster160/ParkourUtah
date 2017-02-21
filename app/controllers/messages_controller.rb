@@ -19,16 +19,16 @@ class MessagesController < ApplicationController
   end
 
   def create
-    binding.pry
-    # @text_message = current_user.sent_messages.chat.create(message_params)
-    # @number_user = @text_message.try(:sent_to)
-    # @text_message.deliver if @text_message.persisted?
-    #
-    # if request.xhr?
-    #   head :created
-    # else
-    #   redirect_to messages_path(phone_number: @text_message.phone_number), notice: "Successfully sent!"
-    # end
+    chat_room = current_user.chat_rooms.find(chat_room_id)
+
+    message = chat_room.messages.create!(body: data['message'], sent_from: current_user)
+    message.deliver if message.persisted?
+
+    if request.xhr?
+      head :created
+    else
+      redirect_to chat_room_messages_path(@chat_room, message), notice: "Successfully sent!"
+    end
   end
 
   private

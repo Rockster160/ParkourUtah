@@ -20,9 +20,10 @@ class Message < ApplicationRecord
   belongs_to :sent_from, class_name: "User", optional: true
   # If sent_from is nil, assume phone_number group
 
+  before_validation :set_message_type_to_chat_room
   validates_presence_of :body
 
-  after_create_commit { MessageBroadcastWorker.perform_async(self.id) }
+  after_create_commit :broadcast_creation
   after_create_commit :try_to_notify_slack_of_unread_message
 
   scope :read, -> { where.not(read_at: nil) }
@@ -43,7 +44,7 @@ class Message < ApplicationRecord
 
   def error!(msg="")
     update(error: true, error_message: msg)
-    ActionCable.server.broadcast "phone_#{phone_number}_channel", error: { message_id: self.id, message: msg }
+    ActionCable.server.broadcast "room_#{chat_room_id}_channel", error: { message_id: self.id, message: msg }
   end
 
   def from_instructor?
@@ -64,11 +65,15 @@ class Message < ApplicationRecord
     end
   end
 
+  def chat_room_name=(name)
+    self.chat_room = ChatRoom.find_or_create_by(name: name, message_type: self.message_type)
+  end
+
   def deliver
     # Messages receivable? Show before allowing an instructor to send a message
-    # Add callback in the worker to show the message as errored, with the error.
-    # (Enum? Or boolean with string?)
-    SmsMailerWorker.perform_async(stripped_phone_number, body)
+    if chat_room.present? && chat_room.text?
+      SmsMailerWorker.perform_async(chat_room.name, body)
+    end
   end
 
   def notify_slack
@@ -96,6 +101,15 @@ class Message < ApplicationRecord
     if !sent_from.try(:instructor?) && self.text? && self.unread?
       NotifySlackOfUnreadMessageWorker.perform_in(20.seconds, self.id)
     end
+  end
+
+  def set_message_type_to_chat_room
+    self.message_type = chat_room.try(:message_type)
+  end
+
+  def broadcast_creation
+    rendered_message = MessagesController.render template: 'messages/index', locals: { messages: [self] }, layout: false
+    ActionCable.server.broadcast "room_#{chat_room_id}_channel", message: rendered_message, current_user: nil
   end
 
 end

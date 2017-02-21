@@ -33,7 +33,7 @@ class IndexController < ApplicationController
 
   def receive_sms
     raw_number = params["From"].gsub(/[^0-9]/, "").last(10)
-    Message.create(stripped_phone_number: raw_number, body: params["Body"])
+    Message.text.create(body: params["Body"], chat_room_name: raw_number)
     head :ok
   end
 

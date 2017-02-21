@@ -8,8 +8,10 @@ class ChatChannel < ApplicationCable::Channel
   end
 
   def send_message(data)
-    # Mark these as text messages
-    message = current_user.sent_messages.text.create!(body: data['message'], phone_number: data['chat_room_id'][6..-1])
-    message.deliver
+    chat_room_id = data['chat_room_id'][5..-1]
+    chat_room = ChatRoom.find(chat_room_id)
+
+    message = chat_room.messages.create!(body: data['message'], sent_from: current_user)
+    message.deliver if chat_room.text?
   end
 end

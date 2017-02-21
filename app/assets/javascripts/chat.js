@@ -4,12 +4,7 @@ $(document).ready(function() {
   if ($('.messages-container').length > 0) {
 
     var params = parseParams();
-    var room_id = ''
-    if (params["phone_number"] != undefined) {
-      room_id = "phone_" + params["phone_number"];
-    } else if (params["user_id"] != undefined) {
-      room_id = "user_" + params["user_id"];
-    }
+    var room_id = "room_" + $('.messages-container').attr('data-room-id');
 
     App.global_chat = App.cable.subscriptions.create({
       channel: "ChatChannel",
@@ -25,6 +20,8 @@ $(document).ready(function() {
         console.log("step: received");
         if (data["message"] != undefined) {
           $('.messages-container').append(data["message"]);
+          var current_user_id = $('.messages-container').attr('data-current-user-id') || 'none';
+          $('.chat-message[data-sent-by-id=' + current_user_id + ']').removeClass('received').addClass('sent');
           scrollBottomOfMessages();
           refreshTimeago();
           last_message_timestamp = $('time.timeago').map(function() { return $(this).attr("datetime"); }).sort(function(a, b) { return a-b; }).last()[0];
