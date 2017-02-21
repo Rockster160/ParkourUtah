@@ -17,7 +17,7 @@
 class Message < ApplicationRecord
   include ApplicationHelper
   attr_accessor :do_not_deliver
-  belongs_to :chat_room, touch: true
+  belongs_to :chat_room
   belongs_to :sent_from, class_name: "User", optional: true
   # If sent_from is nil, assume phone_number group
 
@@ -26,6 +26,7 @@ class Message < ApplicationRecord
 
   after_create_commit :broadcast_creation
   after_create_commit :try_to_notify_slack_of_unread_message
+  after_create_commit { chat_room.touch }
 
   scope :read, -> { where.not(read_at: nil) }
   scope :unread, -> { where(read_at: nil) }
