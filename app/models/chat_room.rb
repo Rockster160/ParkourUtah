@@ -17,7 +17,7 @@ class ChatRoom < ApplicationRecord
   has_many :users, through: :chat_room_users
   has_many :messages
 
-  default_on_create visibility_level: 0 # admin
+  default_on_create :visibility_level, 0 # admin
   enum visibility_level: {
     admin:      0,
     mod:        1,
@@ -26,11 +26,10 @@ class ChatRoom < ApplicationRecord
     personal:   4
   }
 
-  default_on_create message_type: 1 # chat
+  default_on_create :message_type, 1 # chat
   enum message_type: {
     text: 0,
-    chat: 1,
-    contact_request: 2
+    chat: 1
   }
 
   validates_uniqueness_of :name

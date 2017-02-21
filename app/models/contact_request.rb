@@ -26,7 +26,7 @@ class ContactRequest < ApplicationRecord
 
   def log_message
     current_user ||= nil
-    Message.contact_request.create(phone_number: phone, body: body, sent_from: current_user, created_at: created_at)
+    Message.text.create(chat_room_name: phone, body: "Request For Contact: #{body}", sent_from: current_user, created_at: created_at, do_not_deliver: true)
   end
 
   def notify_slack

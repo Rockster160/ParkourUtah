@@ -16,6 +16,7 @@
 
 class Message < ApplicationRecord
   include ApplicationHelper
+  attr_accessor :do_not_deliver
   belongs_to :chat_room, touch: true
   belongs_to :sent_from, class_name: "User", optional: true
   # If sent_from is nil, assume phone_number group
@@ -31,8 +32,7 @@ class Message < ApplicationRecord
 
   enum message_type: {
     text: 0,
-    chat: 1,
-    contact_request: 2
+    chat: 1
   }
 
   def read!(time=Time.zone.now)
@@ -66,7 +66,8 @@ class Message < ApplicationRecord
   end
 
   def chat_room_name=(name)
-    self.chat_room = ChatRoom.find_or_create_by(name: name, message_type: self.message_type)
+    formatted_name = name.to_s.gsub(/[^0-9]/, "")
+    self.chat_room = ChatRoom.find_or_create_by(name: formatted_name, message_type: self.message_type)
   end
 
   def deliver
@@ -77,6 +78,7 @@ class Message < ApplicationRecord
   end
 
   def notify_slack
+    phone_number = chat_room.name
     user_link = Rails.application.routes.url_helpers.admin_user_url(sent_from) if sent_from.present?
     opt_out = %w(STOP STOPALL UNSUBSCRIBE CANCEL END QUIT).include?(body.squish.upcase)
     slack_message = ""
@@ -87,7 +89,7 @@ class Message < ApplicationRecord
     else
       escaped_body = body.split("\n").map { |line| "\n>#{line}" }.join("")
       slack_message += "*Received text message from: #{format_phone_number(phone_number)}*\n#{escaped_body}"
-      respond_link = Rails.application.routes.url_helpers.messages_url(phone_number: phone_number)
+      respond_link = Rails.application.routes.url_helpers.chat_room_url(chat_room)
       slack_message += "\n<#{respond_link}|Click here to respond!>"
     end
     slack_message += sent_from.present? ? "\nPhone Number seems to match: <#{user_link}|#{sent_from.id} - #{sent_from.email}>" : ""
@@ -98,7 +100,8 @@ class Message < ApplicationRecord
   private
 
   def try_to_notify_slack_of_unread_message
-    if !sent_from.try(:instructor?) && self.text? && self.unread?
+    if !sent_from.try(:instructor?) && self.text? && self.unread? && !self.do_not_deliver
+      puts "\e[31mNotify Slack!\e[0m"
       NotifySlackOfUnreadMessageWorker.perform_in(20.seconds, self.id)
     end
   end

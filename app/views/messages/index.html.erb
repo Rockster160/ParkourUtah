@@ -6,12 +6,6 @@ if warden_session && warden_session[0] && warden_session[0][0]
 else
   current_user = nil
 end
-  # binding.pry
-#   # session['']
-#   #  =
-# else
-#   current_user = nil
-# end
 %>
 <% messages.each do |message| %>
   <% sent_by_current_user = message.sent_from.present? && message.sent_from == current_user %>
