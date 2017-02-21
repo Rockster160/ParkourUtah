@@ -60,6 +60,7 @@
 # confirmation_token
 
 class User < ApplicationRecord
+  include ApplicationHelper
 
   LOW_CREDIT_ALERT = 30
 
@@ -87,7 +88,7 @@ class User < ApplicationRecord
   after_create :create_blank_address
   after_create :create_default_notifications
   after_create :send_welcome_email
-  before_save :format_phone_number
+  before_save :strip_phone_number
   before_destroy :clear_associations
 
   devise :database_authenticatable, :registerable, :confirmable,
@@ -212,7 +213,7 @@ class User < ApplicationRecord
   end
 
   def emergency_numbers
-    self.emergency_contacts.map { |num| format_phone_number_to_display(num) }
+    self.emergency_contacts.map { |num| format_phone_number(num) }
   end
 
   def athletes
@@ -272,7 +273,7 @@ class User < ApplicationRecord
   end
 
   def show_phone_number
-    format_phone_number_to_display(self.phone_number)
+    format_phone_number(self.phone_number)
   end
 
   def show_address(str)
@@ -306,13 +307,8 @@ class User < ApplicationRecord
     end
   end
 
-  def format_phone_number
+  def strip_phone_number
     self.phone_number = phone_number.gsub(/[^0-9]/, "") if attribute_present?("phone_number")
-  end
-
-  def format_phone_number_to_display(number)
-    return "" unless number && number.length == 10
-    "(#{number[0..2]}) #{number[3..5]}-#{number[6..9]}"
   end
 
   def split_name

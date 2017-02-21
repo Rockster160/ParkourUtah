@@ -8,14 +8,14 @@ class MessagesController < ApplicationController
 
   def index
     @chat_room = ChatRoom.find(params[:chat_room_id])
-    @text_messages = Message.by_phone_number(@phone_number).order(created_at: :asc)
+    @messages = @chat_room.messages.order(created_at: :asc)
 
     if params[:last_sync].present?
-      @text_messages = @text_messages.where("created_at > ?", Time.at(params[:last_sync].to_i))
+      @messages = @messages.where("created_at > ?", Time.at(params[:last_sync].to_i))
     end
 
-    @text_messages.each(&:read!)
-    render template: 'messages/messages', layout: false
+    @messages.each(&:read!)
+    render template: 'messages/index', layout: false
   end
 
   def create

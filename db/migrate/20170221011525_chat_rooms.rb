@@ -2,7 +2,7 @@ class ChatRooms < ActiveRecord::Migration[5.0]
   def change
     create_table :chat_rooms do |t|
       t.string :name
-      t.integer :visibility_level, default: 0
+      t.integer :visibility_level
 
       t.timestamps
     end
@@ -20,6 +20,7 @@ class ChatRooms < ActiveRecord::Migration[5.0]
 
     add_column :messages, :chat_room_id, :integer, foreign_key: true, index: true
     add_column :chat_room_users, :banned, :boolean, default: false
+    add_column :chat_rooms, :message_type, :integer
 
     Message.find_each do |msg|
       room = ChatRoom.find_or_create_by(name: msg.phone_number)

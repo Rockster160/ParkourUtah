@@ -32,7 +32,8 @@ $(document).ready(function() {
           // FIXME: Only read messages I receive
           // var read_ids = $('.chat-message.received').map(function() { return $(this).attr("data-read-id"); });
           if (read_ids.length > 0) {
-            $.post('/messages/mark_messages_as_read', {ids: read_ids.toArray()})
+            var url = $('.message-form').attr('data-messages-url') + '/mark_messages_as_read';
+            $.post(url, {ids: read_ids.toArray()})
           }
         } else if (data["error"] != undefined) {
           var error = data["error"]
@@ -93,8 +94,8 @@ $(document).ready(function() {
     queryNewMessages = function() {
       var params = parseParams();
       params["last_sync"] = parseInt(last_message_timestamp) + 1;
-
-      $.get('messages', params).success(function(data) {
+      var url = $('.message-form').attr('data-messages-url');
+      $.get(url, params).success(function(data) {
         var previous_height = calculateHeightOfMessages();
         $('.messages-container').append(data);
         var new_height = calculateHeightOfMessages();

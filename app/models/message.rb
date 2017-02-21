@@ -15,6 +15,7 @@
 #
 
 class Message < ApplicationRecord
+  include ApplicationHelper
   belongs_to :chat_room, touch: true
   belongs_to :sent_from, class_name: "User", optional: true
   # If sent_from is nil, assume phone_number group
@@ -55,22 +56,12 @@ class Message < ApplicationRecord
     if sent_from.present?
       "User #{sent_from_id}"
     else
-      stripped_phone_number
+      if chat_room.text?
+        format_phone_number(chat_room.name)
+      else
+        "#{chat_room.name} User"
+      end
     end
-  end
-
-  def receiver_name
-    display_name = (sent_from.try(:nickname) || sent_from.try(:full_name) || sent_from.try(:email))
-    return display_name if display_name.present?
-    if sent_from.present?
-      "User #{sent_from_id}"
-    else
-      format_phone_number
-    end
-  end
-
-  def format_phone_number
-    "+1 (#{phone_number[0..2]}) #{phone_number[3..5]}-#{phone_number[6..9]}"
   end
 
   def deliver
@@ -87,10 +78,10 @@ class Message < ApplicationRecord
 
     if opt_out
       sent_from.notifications.update(sms_receivable: false) if sent_from.present? && sent_from.notifications.present?
-      slack_message += "#{format_phone_number} has opted out of text messages from PKUT.\nThey will no longer receive text messages from us (Including messages sent from the admin text messaging page).\nIn order to re-enable messages, they must send a text message saying \"START\" to us, and then log in to their account, Home, then click Notifications, then the button that says 'Text Me!'\nIf the message sends successfully, they will be able to receive text messages from us again.\n"
+      slack_message += "#{format_phone_number(phone_number)} has opted out of text messages from PKUT.\nThey will no longer receive text messages from us (Including messages sent from the admin text messaging page).\nIn order to re-enable messages, they must send a text message saying \"START\" to us, and then log in to their account, Home, then click Notifications, then the button that says 'Text Me!'\nIf the message sends successfully, they will be able to receive text messages from us again.\n"
     else
       escaped_body = body.split("\n").map { |line| "\n>#{line}" }.join("")
-      slack_message += "*Received text message from: #{format_phone_number}*\n#{escaped_body}"
+      slack_message += "*Received text message from: #{format_phone_number(phone_number)}*\n#{escaped_body}"
       respond_link = Rails.application.routes.url_helpers.messages_url(phone_number: phone_number)
       slack_message += "\n<#{respond_link}|Click here to respond!>"
     end

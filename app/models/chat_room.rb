@@ -4,22 +4,33 @@
 #
 #  id               :integer          not null, primary key
 #  name             :string
-#  visibility_level :integer          default("admin")
+#  visibility_level :integer
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  message_type     :integer
 #
 
 class ChatRoom < ApplicationRecord
+  include Defaults
   has_many :chat_room_users
   has_many :users, through: :chat_room_users
   has_many :messages
 
+
+  default_on_create visibility_level: 0 # admin
   enum visibility_level: {
     admin:      0,
     mod:        1,
     instructor: 2,
     global:     3,
     personal:   4
+  }
+
+  default_on_create message_type: 1 # chat
+  enum message_type: {
+    text: 0,
+    chat: 1,
+    contact_request: 2
   }
 
   validates_uniqueness_of :name
@@ -44,6 +55,12 @@ class ChatRoom < ApplicationRecord
     member_of_ids = membered_by_user(user).pluck(:id)
     where(id: (permitted_ids + member_of_ids).uniq)
   }
+
+  def support_user
+    return nil unless text?
+    return nil unless name.gsub(/[^0-9]/, "").length == 10
+    return User.by_phone_number(name)
+  end
 
   def last_message
     messages.order(created_at: :desc).first

@@ -76,6 +76,7 @@ ActiveRecord::Schema.define(version: 20170221011525) do
     t.integer  "visibility_level", default: 0
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
+    t.integer  "message_type",     default: 0
   end
 
   create_table "dependents", force: :cascade do |t|

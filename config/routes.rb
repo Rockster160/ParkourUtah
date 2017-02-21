@@ -70,9 +70,10 @@ Rails.application.routes.draw do
   resources :aws_loggers, only: [ :index, :show ]
   resources :contact_requests, only: [ :index, :show ]
   resources :chat_rooms, path: 'chat', only: [ :index, :show ] do
-    resources :messages, only: [ :index ]
-    collection do
-      post :mark_messages_as_read
+    resources :messages, only: [ :index ] do
+      collection do
+        post :mark_messages_as_read
+      end
     end
   end
 

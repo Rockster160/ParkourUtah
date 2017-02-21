@@ -7,10 +7,8 @@ class ChatRoomsController < ApplicationController
   end
 
   def show
+    @messages = chat_room.messages.order(created_at: :desc)
   end
-
-  # def mark_messages_as_read
-  # end
 
   private
 

@@ -9,6 +9,7 @@
 #
 
 class EmergencyContact < ApplicationRecord
+  include ApplicationHelper
 
   belongs_to :user
 
@@ -20,14 +21,7 @@ class EmergencyContact < ApplicationRecord
   end
 
   def show_phone_number
-    format_phone_number_to_display(self.number)
-  end
-
-  private
-
-  def format_phone_number_to_display(number)
-    return "" unless number && number.length == 10
-    "(#{number[0..2]}) #{number[3..5]}-#{number[6..9]}"
+    format_phone_number(self.number)
   end
 
 end

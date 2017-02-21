@@ -1,14 +1,17 @@
 <div class="central-container">
   <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
-  <% if @number_user.present? %>
-    <%= link_to "Back to User", admin_user_path(@number_user), class: 'pkut-btn' %>
+  <% if current_user.instructor? %>
+    <% @chat_room.users.each do |user| %>
+      <%= link_to "#{user.id} - #{user.email}", admin_users_path(user) %> <br>
+    <% end %>
   <% end %>
 
-  <%= form_for current_user.sent_messages.text.new, html: { class: "messages-form" } do |f| %>
-    <div class="message-form">
+  <%= form_for [@chat_room, @chat_room.messages.new], html: { class: "messages-form" } do |f| %>
+    <% support_user = @chat_room.support_user %>
+    <div class="message-form" data-messages-url="<%= chat_room_messages_path(@chat_room) %>">
       <div class="messages-container">
         <%# JS renders messages here  %>
-        <% if @number_user.present? && @number_user.try(:sms_receivable?) == false %>
+        <% if support_user.present? && support_user.try(:sms_receivable?) == false %>
           <div class="chat-message important-alert-message">
             <div class="message-body">
               <strong>BLACKLISTED</strong> <br>
@@ -19,7 +22,6 @@
       </div>
 
       <div class="message-form-wrapper">
-        <%= f.hidden_field :phone_number, value: @phone_number %>
         <%= f.text_area :body, value: params[:body], class: "new-message-field" %>
         <%= f.button(type: "submit", class: "send-message-btn") do %>
           <i class="fa fa-paper-plane"></i>
