@@ -4,6 +4,7 @@
 .navbar-offset { height: $navbar-height; }
 
 .navbar {
+  // z-index is set to 1030 in Bootstrap
   transition: 1s;
   background-color: $pkut-grey-white;
   opacity: 0.8;

@@ -5,7 +5,9 @@ class IndexController < ApplicationController
 
   def sms_receivable
     current_user.notifications.update(sms_receivable: true)
-    SmsMailerWorker.perform_async(current_user.phone_number, 'Thank you! You will once again be able to receive text message notifications from ParkourUtah.')
+    num = current_user.phone_number
+    msg = "Thank you! You will once again be able to receive text message notifications from ParkourUtah."
+    Message.text.create(body: msg, chat_room_name: num, sent_from_id: 0).deliver
   end
 
   def page_not_found
@@ -17,7 +19,7 @@ class IndexController < ApplicationController
   end
 
   def index
-    @instructors = User.instructors
+    @instructors = User.instructors.where(should_display_on_front_page: true)
 
     future_events = EventSchedule.in_the_future
     @cities = future_events.pluck(:city).uniq.sort
@@ -33,7 +35,7 @@ class IndexController < ApplicationController
 
   def receive_sms
     raw_number = params["From"].gsub(/[^0-9]/, "").last(10)
-    Message.create(stripped_phone_number: raw_number, body: params["Body"])
+    Message.text.create(body: params["Body"], chat_room_name: raw_number)
     head :ok
   end
 
@@ -59,6 +61,7 @@ class IndexController < ApplicationController
     )
     phone_digits = params[:phone].split('').map {|x| x[/\d+/]}.join
     if !blacklisted_body? && ((phone_digits.length >= 7 && phone_digits.length <= 10) || success)
+      contact_request.log_message
       contact_request.notify_slack
     end
     redirect_to root_path

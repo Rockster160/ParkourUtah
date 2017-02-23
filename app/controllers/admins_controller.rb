@@ -49,16 +49,17 @@ class AdminsController < ApplicationController
     phone_numbers = params[:recipients].gsub(/[^\d|,]/, '').split(",").map(&:squish)
     @success = []
     @failed = []
+    @messages_sent = []
     phone_numbers.each do |phone_number|
       if phone_number.length == 10
-        current_user.sent_messages.text.create(stripped_phone_number: phone_number, body: params[:message])
+        @messages_sent << current_user.sent_messages.text.create(body: params[:message], chat_room_name: phone_number)
         @success << phone_number
       else
         @failed << phone_number
       end
     end
-    if @success.length == 1
-      redirect_to messages_path(phone_number: @success.first), notice: "Successfully sent!"
+    if @success.length == 1 && @failed.length == 0
+      redirect_to chat_room_path(@messages_sent.first.chat_room), notice: "Successfully sent!"
     else
       render :batch_text_message
     end

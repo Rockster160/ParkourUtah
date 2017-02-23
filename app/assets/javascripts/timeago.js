@@ -68,3 +68,17 @@ inWords = function(from_epoch) {
   if ($l.wordSeparator === undefined) { separator = " "; }
   return $.trim([prefix, words, suffix].join(separator));
 }
+
+refreshTimeago = function() {
+  $('time.timeago').each(function() {
+    timeago(this);
+  })
+  $('.important-alert-message').appendTo('.messages-container');
+}
+
+$(document).ready(function() {
+  if ($('time.timeago').length > 0) {
+    refreshTimeago();
+    setInterval(refreshTimeago, 10000);
+  }
+})

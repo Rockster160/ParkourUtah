@@ -215,7 +215,7 @@
   line-height: 1;
   text-decoration: none;
 
-  z-index: 10000;
+  z-index: 100;
   transition: 0.3s;
   margin: 8px 20px;
   max-width: 300px;
@@ -244,7 +244,7 @@
     outline: none;
     text-decoration: none;
   }
-  &.low-btn { z-index: 1000; }
+  &.low-btn { z-index: 99; }
 }
 
 .mat-pkut-btn {
@@ -281,7 +281,7 @@
     opacity: 0;
     box-shadow: 0px 5px 20px -5px $mat-grey-dark;
     transition: opacity 0.1s ease-in-out;
-    
+
   }
 
   &:hover {
@@ -296,7 +296,7 @@
 }
 
 .big-btn {
-  z-index: 100;
+  z-index: 99;
   white-space: normal;
   position: relative;
   margin: 20px auto;

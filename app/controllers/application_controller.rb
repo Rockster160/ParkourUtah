@@ -6,6 +6,11 @@ class ApplicationController < ActionController::Base
   before_action :merge_carts
   before_action :logit
 
+  def flash_message
+    flash.now[params[:flash_type].to_sym] = params[:message]
+    render partial: 'layouts/flashes'
+  end
+
   def after_sign_in_path_for(resource)
     edit_user_path
   end

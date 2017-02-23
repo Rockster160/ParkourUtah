@@ -1,51 +1,47 @@
 @import "config/variables";
 @import 'config/font-imports';
 
-.flash-container {
-  z-index: 10001;
-  position: fixed;
-  text-align: center;
-  min-height: 70px;
-  left: 25%;
-  top: 51px;
-  width: 50%;
-  color: white;
-  .flash-text {
-    width: 80%;
-    margin: 0 auto;
-    font-size: 1.5em;
-  }
-  .flash {
-    width: 100%;
-    height: 100%;
-    padding-top: 5px;
-  }
-  .notice-flash {
-    background-color: rgba(60, 225, 60, 0.8);
-    border: 5px ridge rgba(60, 225, 60, 0.8);
-  }
-  .alert-flash {
-    background-color: rgba(255, 0, 0, 0.8);
-    border: 5px ridge rgba(255, 0, 0, 0.8);
-  }
-  .close-flash {
-    position: absolute;
-    right: 5px;
-    top: 5px;
-    opacity: 0.7;
-    &:hover {
-      opacity: 1;
-      cursor: pointer;
-    }
-  }
-}
+$flash-text: white;
+$flash-notice-bg: $mat-grey-light;
+$flash-notice-bg: #BCDEC6;
+$flash-alert-bg: #C40820;
 
-@media (max-width: 767px) {
+.flash-banner {
+  position: absolute;
+  z-index: 2000;
+  top: 70px;
+  right: 20px;
+  max-width: 100%;
+  margin-left: 20px;
+  text-align: center;
+
   .flash-container {
-    width: 100%;
-    left: 0;
-    .flash-text {
-      font-size: 1em;
+    position: relative;
+    padding: 10px;
+    max-width: 300px;
+    height: auto;
+    border-radius: 4px;
+    font-size: 16px;
+    box-shadow: 0px 8px 10px -8px #000;
+
+    .dismiss-flash {
+      position: absolute;
+      top: 0px;
+      right: 2px;
+      cursor: pointer;
+      opacity: 0.5;
+      &:hover { opacity: 1; }
     }
+  }
+
+  &.flash-notice > .flash-container {
+    background-color: $flash-notice-bg;
+    color: $mat-grey-dark;
+    .dismiss-flash i.fa-times-circle-o { color: $mat-grey-dark; }
+  }
+  &.flash-alert > .flash-container {
+    background-color: $flash-alert-bg;
+    color: $mat-grey-light;
+    .dismiss-flash i.fa-times-circle-o { color: $mat-grey-light; }
   }
 }

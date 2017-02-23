@@ -1,5 +1,17 @@
 module ApplicationHelper
 
+  def strip_phone_number(phone_number)
+    stripped_number = phone_number.to_s.gsub(/[^0-9]/, "").last(10)
+    return phone_number unless stripped_number.length == 10
+    stripped_number
+  end
+
+  def format_phone_number(phone_number)
+    stripped_number = strip_phone_number(phone_number)
+    return stripped_number unless stripped_number.try(:length) == 10
+    "+1 (#{stripped_number[0..2]}) #{stripped_number[3..5]}-#{stripped_number[6..9]}"
+  end
+
   def timeago(time, options = {})
     options[:class] ||= "timeago"
     simple_time = time.to_formatted_s(:simple)

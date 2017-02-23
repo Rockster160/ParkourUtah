@@ -5,8 +5,9 @@
     <hr>
     <div class="row">
         <p>You are currently set up to auto-pay for monthly subscriptions.</p>
-        <% current_user.subscribed_athletes.sort_by {|a|a.current_subscription.expires_at}.each do |athlete| %>
-        <% subscription = athlete.current_subscription %>
+        <% current_user.subscribed_athletes.sort_by {|a|a.current_subscription.try(:expires_at)}.each do |athlete| %>
+          <% subscription = athlete.current_subscription %>
+          <% next unless subscription.present? %>
           <div class="row">
             <div class="col-xs-6">
               <p>The next payment of <%= number_to_currency(subscription.cost) %> for <%= athlete.full_name %> will process on <%= (subscription.expires_at + 1.day).strftime('%B %e, %Y') %>.</p>

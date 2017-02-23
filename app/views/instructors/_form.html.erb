@@ -35,10 +35,6 @@
         <%= f.text_field :stats, placeholder: '5\'10" 180 lbs', class: 'pkut-textbox' %>
       </div>
       <div class="form-field">
-        <%= f.label :payment_multiplier, 'How much paid per student?' %> <br>
-        <%= f.text_field :payment_multiplier, class: 'pkut-textbox restrictNumeric' %>
-      </div>
-      <div class="form-field">
         <%= f.label :bio %> <br>
         <%= f.text_area :bio, rows: '12', maxlength: '550', class: 'pkut-textarea restrictBio' %>
       </div>
@@ -49,6 +45,12 @@
       <div class="form-field">
         <%= f.label :avatar_2, 'Back Image' %> <br>
         <%= f.file_field :avatar_2 %>
+      </div>
+      <div class="form-field" style="margin-top: 10px;">
+        <div class="pkut-checkbox">
+          <%= f.check_box :should_display_on_front_page %>
+          <%= f.label :should_display_on_front_page, "Should Display on front page?" %>
+        </div>
       </div>
       <%= f.submit "Submit", class: 'btn btn-success' %>
       <% if @instructor.is_instructor? %>

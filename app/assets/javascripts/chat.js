@@ -4,12 +4,7 @@ $(document).ready(function() {
   if ($('.messages-container').length > 0) {
 
     var params = parseParams();
-    var room_id = ''
-    if (params["phone_number"] != undefined) {
-      room_id = "phone_" + params["phone_number"];
-    } else if (params["user_id"] != undefined) {
-      room_id = "user_" + params["user_id"];
-    }
+    var room_id = "room_" + $('.messages-container').attr('data-room-id');
 
     App.global_chat = App.cable.subscriptions.create({
       channel: "ChatChannel",
@@ -25,18 +20,21 @@ $(document).ready(function() {
         console.log("step: received");
         if (data["message"] != undefined) {
           $('.messages-container').append(data["message"]);
+          var current_user_id = $('.messages-container').attr('data-current-user-id') || 'none';
+          $('.chat-message[data-sent-by-id=' + current_user_id + ']').removeClass('received').addClass('sent');
           scrollBottomOfMessages();
           refreshTimeago();
           last_message_timestamp = $('time.timeago').map(function() { return $(this).attr("datetime"); }).sort(function(a, b) { return a-b; }).last()[0];
-          var read_ids = $('.text-message').map(function() { return $(this).attr("data-read-id"); });
+          var read_ids = $('.chat-message').map(function() { return $(this).attr("data-read-id"); });
           // FIXME: Only read messages I receive
-          // var read_ids = $('.text-message.received').map(function() { return $(this).attr("data-read-id"); });
+          // var read_ids = $('.chat-message.received').map(function() { return $(this).attr("data-read-id"); });
           if (read_ids.length > 0) {
-            $.post('/messages/mark_messages_as_read', {ids: read_ids.toArray()})
+            var url = $('.message-form').attr('data-messages-url') + '/mark_messages_as_read';
+            $.post(url, {ids: read_ids.toArray()})
           }
         } else if (data["error"] != undefined) {
           var error = data["error"]
-          $('.text-message[data-read-id=' + error["message_id"] + '] > .message-body').append('<div class="text-error-message">Error: ' + error["message"] + '</div>')
+          $('.chat-message[data-read-id=' + error["message_id"] + '] > .message-body').append('<div class="text-error-message">Error: ' + error["message"] + '</div>')
           scrollBottomOfMessages();
           refreshTimeago();
         } else {
@@ -52,16 +50,6 @@ $(document).ready(function() {
         });
       }
     });
-
-    refreshTimeago = function() {
-      $('time.timeago').each(function() {
-        timeago(this);
-      })
-      $('.important-alert-message').appendTo('.messages-container');
-    }
-
-    refreshTimeago();
-    setInterval(refreshTimeago, 10000);
 
     $('.messages-form .new-message-field').keypress(function(evt) {
       var $form = $('.messages-form');
@@ -103,8 +91,8 @@ $(document).ready(function() {
     queryNewMessages = function() {
       var params = parseParams();
       params["last_sync"] = parseInt(last_message_timestamp) + 1;
-
-      $.get('messages', params).success(function(data) {
+      var url = $('.message-form').attr('data-messages-url');
+      $.get(url, params).success(function(data) {
         var previous_height = calculateHeightOfMessages();
         $('.messages-container').append(data);
         var new_height = calculateHeightOfMessages();

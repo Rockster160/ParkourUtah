@@ -1,0 +1,45 @@
+<div class="central-container">
+  <%= link_to "Chat Rooms", chat_rooms_path, class: "pkut-btn" %>
+  <%= link_to "Back to Dashboard", dashboard_path, class: "pkut-btn" %>
+  <% if @chat_room.text? && @chat_room.support_user.present? %>
+    <%= link_to "User Page", admin_user_path(@chat_room.support_user), class: "pkut-btn" %>
+  <% end %>
+
+  <% if current_user.instructor? %>
+    <% @chat_room.users.each do |user| %>
+      <%= link_to "#{user.id} - #{user.email}", admin_user_path(user) %> <br>
+    <% end %>
+  <% end %>
+
+  <% if @chat_room.text? %>
+    <h4>This chat room is linked via text, so messages sent from here will be delivered to the phone number: <div class="text-center"><%= format_phone_number(@chat_room.name) %></div></h4>
+  <% end %>
+
+  <%= form_for [@chat_room, @chat_room.messages.new], html: { class: "messages-form" } do |f| %>
+    <% support_user = @chat_room.support_user %>
+    <div class="message-form" data-messages-url="<%= chat_room_messages_path(@chat_room) %>">
+      <div class="messages-container" data-room-id="<%= @chat_room.id %>" data-current-user-id="<%= current_user.try(:id) || 'x' %>">
+        <%# JS renders messages here  %>
+        <% if support_user.present? && support_user.try(:sms_receivable?) == false %>
+          <div class="chat-message important-alert-message">
+            <div class="message-body">
+              <strong>BLACKLISTED</strong> <br>
+              User will not receive any messages sent.
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="message-form-wrapper">
+        <%= f.text_area :body, value: params[:body], class: "new-message-field" %>
+        <%= f.button(type: "submit", class: "send-message-btn") do %>
+          <% if @chat_room.text? %>
+            <i class="fa fa-mobile"></i>
+          <% else %>
+            <i class="fa fa-paper-plane"></i>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
