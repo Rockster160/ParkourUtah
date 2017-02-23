@@ -1,9 +1,14 @@
 class ChatRoomsController < ApplicationController
+  include ApplicationHelper
   before_action :validate_user_signed_in
   before_action :verify_user_has_permission_to_view_room, only: [ :show ]
 
   def index
-    @chat_rooms = ChatRoom.viewable_by_user(current_user).order(updated_at: :desc).page(params[:page])
+    @chat_rooms = ChatRoom.joins(:messages).distinct.viewable_by_user(current_user).order(updated_at: :desc).page(params[:page])
+  end
+
+  def by_phone_number
+    redirect_to ChatRoom.text.find_or_create_by(name: strip_phone_number(params[:phone_number]))
   end
 
   def show

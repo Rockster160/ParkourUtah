@@ -1,10 +1,13 @@
 <div class="central-container">
   <%= link_to "Chat Rooms", chat_rooms_path, class: "pkut-btn" %>
   <%= link_to "Back to Dashboard", dashboard_path, class: "pkut-btn" %>
+  <% if @chat_room.text? && @chat_room.support_user.present? %>
+    <%= link_to "User Page", admin_user_path(@chat_room.support_user), class: "pkut-btn" %>
+  <% end %>
 
   <% if current_user.instructor? %>
     <% @chat_room.users.each do |user| %>
-      <%= link_to "#{user.id} - #{user.email}", admin_users_path(user) %> <br>
+      <%= link_to "#{user.id} - #{user.email}", admin_user_path(user) %> <br>
     <% end %>
   <% end %>
 

@@ -60,6 +60,7 @@
 # confirmation_token
 
 class User < ApplicationRecord
+  extend ApplicationHelper
   include ApplicationHelper
 
   LOW_CREDIT_ALERT = 30
@@ -89,7 +90,7 @@ class User < ApplicationRecord
   after_create :create_blank_address
   after_create :create_default_notifications
   after_create :send_welcome_email
-  before_save :strip_phone_number
+  before_save :remove_non_digit_characters_from_phone_number
   before_destroy :clear_associations
 
   devise :database_authenticatable, :registerable, :confirmable,
@@ -123,7 +124,7 @@ class User < ApplicationRecord
     joins('LEFT OUTER JOIN dependents ON users.id = dependents.user_id')
       .where("email ILIKE ? OR concat(users.first_name, ' ', users.last_name) ILIKE ? OR CAST(users.id AS TEXT) ILIKE ? OR dependents.full_name ILIKE ? OR CAST(dependents.athlete_id AS TEXT) ILIKE ?", text, text, text, text, text).uniq
   }
-  scope :by_phone_number, ->(number) { where("REGEXP_REPLACE(phone_number, '[^0-9]', '', 'g') ILIKE ?", "%#{number.gsub(/[^0-9]/, '').last(10)}") }
+  scope :by_phone_number, ->(number) { where("REGEXP_REPLACE(phone_number, '[^0-9]', '', 'g') ILIKE ?", "%#{strip_phone_number(number)}") }
   scope :instructors, -> { where("role > 0").order(:instructor_position) }
   scope :mods, -> { where("role > 1") }
   scope :admins, -> { where("role > 2") }
@@ -316,8 +317,8 @@ class User < ApplicationRecord
     end
   end
 
-  def strip_phone_number
-    self.phone_number = phone_number.gsub(/[^0-9]/, "") if attribute_present?("phone_number")
+  def remove_non_digit_characters_from_phone_number
+    self.phone_number = strip_phone_number(phone_number) if attribute_present?("phone_number")
   end
 
   def split_name

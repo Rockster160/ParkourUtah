@@ -9,23 +9,42 @@ $received-color: #FAFAFA;
   margin-top: 20px;
   .chat-room-box {
     display: block;
+    position: relative;
     text-decoration: none;
     transition: all 0.3s;
-    border: 1px solid white;
+    border: 1px solid $pkut-grey-dark;
     padding: 10px;
     overflow: hidden;
 
-    color: white;
+    color: $pkut-grey-dark;
+    font-weight: 100;
     background-color: transparent;
     border: 1px solid white;
+    .support-icon {
+      position: absolute;
+      top: 5px; right: 5px;
+      font-size: 20px;
+    }
+    .timestamp {
+      .fa { color: black; }
+      margin-top: -5px;
+      margin-bottom: 5px;
+      font-size: 12px;
+    }
     .room-name {
+      color: black;
       font-weight: bold;
       font-size: 20px;
     }
     .room-last-message {
+      padding-left: 20px;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
+
+      .last-sender {
+        color: $pkut-red;
+      }
     }
     &:hover {
       cursor: pointer;

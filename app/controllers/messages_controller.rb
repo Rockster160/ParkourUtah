@@ -19,22 +19,20 @@ class MessagesController < ApplicationController
   end
 
   def create
-    chat_room = current_user.chat_rooms.find(chat_room_id)
-
-    message = chat_room.messages.create!(body: data['message'], sent_from: current_user)
+    message = @chat_room.messages.create!(body: data['message'], sent_from: current_user)
     message.deliver if message.persisted?
 
     if request.xhr?
       head :created
     else
-      redirect_to chat_room_messages_path(@chat_room, message), notice: "Successfully sent!"
+      redirect_to chat_room_path(@chat_room), notice: "Successfully sent!"
     end
   end
 
   private
 
   def set_chat_room
-    @chat_room = ChatRoom.find(params[:chat_room_id])
+    @chat_room = ChatRoom.find(params[:chat_room_id]) if params[:chat_room_id].present?
   end
 
   def message_params

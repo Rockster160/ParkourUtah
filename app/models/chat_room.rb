@@ -58,9 +58,9 @@ class ChatRoom < ApplicationRecord
   def display_name
     if text?
       if support_user.present?
-        "Support: #{support_user.display_name}"
+        support_user.display_name
       else
-        "Support: #{format_phone_number(name)}"
+        format_phone_number(name)
       end
     else
       name
