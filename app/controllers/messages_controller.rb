@@ -14,7 +14,7 @@ class MessagesController < ApplicationController
       @messages = @messages.where("created_at > ?", Time.at(params[:last_sync].to_i))
     end
 
-    @messages.each(&:read!)
+    @messages.where.not(sent_from_id: current_user.id).each(&:read!)
     render template: 'messages/index', layout: false
   end
 
