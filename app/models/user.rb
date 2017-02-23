@@ -33,6 +33,7 @@
 #  confirmed_at                   :datetime
 #  confirmation_sent_at           :datetime
 #  instructor_position            :integer
+#  payment_multiplier             :integer          default(3)
 #  stats                          :string
 #  title                          :string
 #  nickname                       :string
