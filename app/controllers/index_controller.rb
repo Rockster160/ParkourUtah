@@ -19,7 +19,7 @@ class IndexController < ApplicationController
   end
 
   def index
-    @instructors = User.instructors
+    @instructors = User.instructors.where(should_display_on_front_page: true)
 
     future_events = EventSchedule.in_the_future
     @cities = future_events.pluck(:city).uniq.sort
@@ -61,6 +61,7 @@ class IndexController < ApplicationController
     )
     phone_digits = params[:phone].split('').map {|x| x[/\d+/]}.join
     if !blacklisted_body? && ((phone_digits.length >= 7 && phone_digits.length <= 10) || success)
+      contact_request.log_message
       contact_request.notify_slack
     end
     redirect_to root_path

@@ -11,7 +11,7 @@
 }
 
 .min-container {
-  min-height: Calc(100vh - 50px);
+  min-height: calc(100vh - 50px);
 }
 
 .small-container {
@@ -178,7 +178,7 @@ a.bluelink{
   position: relative;
   transition: all 0.1s ease-in-out;
   overflow: hidden;
-  
+
   &:after{
     transition: all 0.1s ease-in-out;
     width: 100%;

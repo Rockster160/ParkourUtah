@@ -15,8 +15,6 @@
 
 class ContactRequest < ApplicationRecord
 
-  after_create :log_message
-
   scope :by_fuzzy_text, ->(fuzzy_text) {
     formatted_text = fuzzy_text.to_s.downcase
     text = "%#{formatted_text}%"
