@@ -56,7 +56,7 @@ class EventSchedulesController < ApplicationController
     event_schedule = EventSchedule.find(params[:id])
     event_schedule.subscribed_users.each do |user|
       if user.notifications.text_class_cancelled? && user.notifications.sms_receivable?
-        ::SmsMailerWorker.perform_async(user.phone_number, params[:message])
+        Message.text.create(body: params[:message], chat_room_name: user.phone_number, sent_from_id: 0).deliver
       end
       if user.notifications.email_class_cancelled?
         ApplicationMailer.email(user.email, "Message regarding the #{event_schedule.title} class today", params[:message]).deliver_now

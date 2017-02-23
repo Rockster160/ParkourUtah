@@ -35,7 +35,7 @@ class ScheduleWorker
           num = user.phone_number
           if num.length == 10
             msg = "Hope to see you at our #{event.title} class today at #{event.date.strftime('%-l:%M')}!"
-            ::SmsMailerWorker.perform_async(num, msg)
+            Message.text.create(body: msg, chat_room_name: num, sent_from_id: 0).deliver
           end
         end
         if user.notifications.email_class_reminder?
@@ -53,7 +53,8 @@ class ScheduleWorker
           ::ExpiringWaiverMailerWorker.perform_async(athlete.id)
         end
         if user.notifications.text_waiver_expiring && user.notifications.sms_receivable
-          ::SmsMailerWorker.perform_async(user.phone_number, "The waiver belonging to #{athlete.full_name} is no longer active as of #{athlete.waiver.exp_date.strftime('%B %e')}. Head up to ParkourUtah.com to get it renewed!")
+          msg = "The waiver belonging to #{athlete.full_name} is no longer active as of #{athlete.waiver.exp_date.strftime('%B %e')}. Head up to ParkourUtah.com to get it renewed!"
+          Message.text.create(body: msg, chat_room_name: user.phone_number, sent_from_id: 0).deliver
         end
       end
     end

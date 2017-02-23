@@ -294,7 +294,9 @@ class User < ApplicationRecord
       ::LowCreditsMailerWorker.perform_async(self.id)
     end
     if self.notifications.text_low_credits && self.notifications.sms_receivable
-      ::SmsMailerWorker.perform_async(self.phone_number, "You are low on Credits! Head up to ParkourUtah.com/store to get some more so you have some for next time.")
+      num = self.phone_number
+      msg = "You are low on Credits! Head up to ParkourUtah.com/store to get some more so you have some for next time."
+      Message.text.create(body: msg, chat_room_name: num, sent_from_id: 0).deliver
     end
   end
 

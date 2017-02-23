@@ -19,7 +19,10 @@ class Message < ApplicationRecord
   attr_accessor :do_not_deliver
   belongs_to :chat_room
   belongs_to :sent_from, class_name: "User", optional: true
-  # If sent_from is nil, assume phone_number group
+  # If sent_from_id is nil, message is from an unknown user.
+  # If sent_from_id is 0, message is from PKUT
+
+  automated message from PKUT
 
   before_validation :set_message_type_to_chat_room
   validates_presence_of :body
@@ -49,17 +52,18 @@ class Message < ApplicationRecord
   end
 
   def from_instructor?
-    return sent_from.try(:instructor?)
+    return !!sent_from.try(:instructor?)
   end
 
   def sender_name
+    return "ParkourUtah -> #{format_phone_number(chat_room.name)}" if sent_from_id == 0
     display_name = (sent_from.try(:nickname) || sent_from.try(:full_name) || sent_from.try(:email))
     return display_name if display_name.present?
     if sent_from.present?
       "User #{sent_from_id}"
     else
       if chat_room.text?
-        format_phone_number(chat_room.name)
+        "#{format_phone_number(chat_room.name)} -> ParkourUtah"
       else
         "#{chat_room.name} User"
       end

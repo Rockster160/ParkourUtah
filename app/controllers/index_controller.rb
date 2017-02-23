@@ -5,7 +5,9 @@ class IndexController < ApplicationController
 
   def sms_receivable
     current_user.notifications.update(sms_receivable: true)
-    SmsMailerWorker.perform_async(current_user.phone_number, 'Thank you! You will once again be able to receive text message notifications from ParkourUtah.')
+    num = current_user.phone_number
+    msg = "Thank you! You will once again be able to receive text message notifications from ParkourUtah."
+    Message.text.create(body: msg, chat_room_name: num, sent_from_id: 0).deliver
   end
 
   def page_not_found
