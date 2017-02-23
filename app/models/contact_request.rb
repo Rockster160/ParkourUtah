@@ -15,8 +15,6 @@
 
 class ContactRequest < ApplicationRecord
 
-  after_create :log_message
-
   scope :by_fuzzy_text, ->(fuzzy_text) {
     formatted_text = fuzzy_text.to_s.downcase
     text = "%#{formatted_text}%"
@@ -26,7 +24,7 @@ class ContactRequest < ApplicationRecord
 
   def log_message
     current_user ||= nil
-    Message.contact_request.create(phone_number: phone, body: body, sent_from: current_user, created_at: created_at)
+    Message.text.create(chat_room_name: phone, body: "Request For Contact: #{body}", sent_from: current_user, created_at: created_at, do_not_deliver: true)
   end
 
   def notify_slack

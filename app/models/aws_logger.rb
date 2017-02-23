@@ -25,7 +25,7 @@
 #  set_all_without_errors :boolean
 #
 
-class AwsLogger < ActiveRecord::Base
+class AwsLogger < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   include ApplicationHelper
 

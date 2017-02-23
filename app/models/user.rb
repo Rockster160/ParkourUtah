@@ -61,22 +61,28 @@
 # confirmation_token
 
 class User < ApplicationRecord
+  extend ApplicationHelper
+  include ApplicationHelper
 
   LOW_CREDIT_ALERT = 30
 
-  has_one :address, dependent: :destroy
-  has_one :notifications, dependent: :destroy
+  has_one  :address,                 dependent: :destroy
+  has_one  :notifications,           dependent: :destroy
+
   has_many :unlimited_subscriptions, dependent: :destroy
-  has_many :carts, dependent: :destroy
-  has_many :dependents, dependent: :destroy
-  has_many :cart_items, through: :cart
-  has_many :subscriptions, dependent: :destroy
+  has_many :carts,                   dependent: :destroy
+  has_many :dependents,              dependent: :destroy
+  has_many :subscriptions,           dependent: :destroy
+  has_many :chat_room_users,         dependent: :destroy
+  has_many :emergency_contacts,      dependent: :destroy
+  has_many :cart_items,              through: :cart
+  has_many :chat_rooms,              through: :chat_room_users
+
+  has_many :classes_to_teach,   class_name: "EventSchedule", foreign_key: "instructor_id"
+  has_many :attendances_taught, class_name: "Attendance",    foreign_key: "instructor_id"
+  has_many :sent_messages,      class_name: "Message",       foreign_key: "sent_from_id"
+
   has_many :subscribed_events, through: :subscriptions, source: "event_schedule"
-  has_many :classes_to_teach, class_name: "EventSchedule", foreign_key: "instructor_id"
-  has_many :attendances_taught, class_name: "Attendance", foreign_key: "instructor_id"
-  has_many :sent_messages, class_name: "Message", foreign_key: "sent_from_id"
-  has_many :received_messages, class_name: "Message", foreign_key: "sent_to_id"
-  has_many :emergency_contacts, dependent: :destroy
 
   accepts_nested_attributes_for :emergency_contacts
   accepts_nested_attributes_for :address
@@ -85,7 +91,7 @@ class User < ApplicationRecord
   after_create :create_blank_address
   after_create :create_default_notifications
   after_create :send_welcome_email
-  before_save :format_phone_number
+  before_save :remove_non_digit_characters_from_phone_number
   before_destroy :clear_associations
 
   devise :database_authenticatable, :registerable, :confirmable,
@@ -119,7 +125,7 @@ class User < ApplicationRecord
     joins('LEFT OUTER JOIN dependents ON users.id = dependents.user_id')
       .where("email ILIKE ? OR concat(users.first_name, ' ', users.last_name) ILIKE ? OR CAST(users.id AS TEXT) ILIKE ? OR dependents.full_name ILIKE ? OR CAST(dependents.athlete_id AS TEXT) ILIKE ?", text, text, text, text, text).uniq
   }
-  scope :by_phone_number, ->(number) { where("REGEXP_REPLACE(phone_number, '[^0-9]', '', 'g') ILIKE ?", "%#{number.gsub(/[^0-9]/, '').last(10)}") }
+  scope :by_phone_number, ->(number) { where("REGEXP_REPLACE(phone_number, '[^0-9]', '', 'g') ILIKE ?", "%#{strip_phone_number(number)}") }
   scope :instructors, -> { where("role > 0").order(:instructor_position) }
   scope :mods, -> { where("role > 1") }
   scope :admins, -> { where("role > 2") }
@@ -187,6 +193,12 @@ class User < ApplicationRecord
     "#{self.first_name.capitalize} #{self.last_name.capitalize}"
   end
 
+  def display_name
+    return nickname if nickname.present?
+    return full_name if full_name.present?
+    "User:#{id} - #{email}"
+  end
+
   def signed_in?
     last_sign_in_at > 10.minutes.ago if last_sign_in_at
   end
@@ -210,7 +222,7 @@ class User < ApplicationRecord
   end
 
   def emergency_numbers
-    self.emergency_contacts.map { |num| format_phone_number_to_display(num) }
+    self.emergency_contacts.map { |num| format_phone_number(num) }
   end
 
   def athletes
@@ -270,7 +282,7 @@ class User < ApplicationRecord
   end
 
   def show_phone_number
-    format_phone_number_to_display(self.phone_number)
+    format_phone_number(self.phone_number)
   end
 
   def show_address(str)
@@ -284,7 +296,9 @@ class User < ApplicationRecord
       ::LowCreditsMailerWorker.perform_async(self.id)
     end
     if self.notifications.text_low_credits && self.notifications.sms_receivable
-      ::SmsMailerWorker.perform_async(self.phone_number, "You are low on Credits! Head up to ParkourUtah.com/store to get some more so you have some for next time.")
+      num = self.phone_number
+      msg = "You are low on Credits! Head up to ParkourUtah.com/store to get some more so you have some for next time."
+      Message.text.create(body: msg, chat_room_name: num, sent_from_id: 0).deliver
     end
   end
 
@@ -304,13 +318,8 @@ class User < ApplicationRecord
     end
   end
 
-  def format_phone_number
-    self.phone_number = phone_number.gsub(/[^0-9]/, "") if attribute_present?("phone_number")
-  end
-
-  def format_phone_number_to_display(number)
-    return "" unless number && number.length == 10
-    "(#{number[0..2]}) #{number[3..5]}-#{number[6..9]}"
+  def remove_non_digit_characters_from_phone_number
+    self.phone_number = strip_phone_number(phone_number) if attribute_present?("phone_number")
   end
 
   def split_name
