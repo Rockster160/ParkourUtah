@@ -22,8 +22,6 @@ class Message < ApplicationRecord
   # If sent_from_id is nil, message is from an unknown user.
   # If sent_from_id is 0, message is from PKUT
 
-  automated message from PKUT
-
   before_validation :set_message_type_to_chat_room
   validates_presence_of :body
 
@@ -105,7 +103,7 @@ class Message < ApplicationRecord
   private
 
   def try_to_notify_slack_of_unread_message
-    if !sent_from.try(:instructor?) && self.text? && self.unread? && !self.do_not_deliver
+    if !sent_from.try(:instructor?) && sent_from_id != 0 && self.text? && self.unread? && !self.do_not_deliver
       puts "\e[31mNotify Slack!\e[0m"
       NotifySlackOfUnreadMessageWorker.perform_in(20.seconds, self.id)
     end
