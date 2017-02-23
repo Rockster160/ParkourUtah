@@ -2,17 +2,16 @@
 #
 # Table name: messages
 #
-#  id                    :integer          not null, primary key
-#  sent_from_id          :integer
-#  stripped_phone_number :string
-#  body                  :text
-#  created_at            :datetime         not null
-#  updated_at            :datetime         not null
-#  sent_to_id            :integer
-#  read_at               :datetime
-#  message_type          :integer
-#  error                 :boolean          default(FALSE)
-#  error_message         :string
+#  id            :integer          not null, primary key
+#  sent_from_id  :integer
+#  body          :text
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  read_at       :datetime
+#  message_type  :integer
+#  error         :boolean          default(FALSE)
+#  error_message :string
+#  chat_room_id  :integer
 #
 
 class Message < ActiveRecord::Base

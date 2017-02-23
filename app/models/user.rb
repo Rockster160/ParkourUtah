@@ -47,6 +47,7 @@
 #  referrer                       :string           default("")
 #  subscription_cost              :integer          default(5000)
 #  unassigned_subscriptions_count :integer          default(0)
+#  should_display_on_front_page   :boolean          default(TRUE)
 #
 
 # Ununsed?

@@ -17,7 +17,7 @@ class IndexController < ApplicationController
   end
 
   def index
-    @instructors = User.instructors
+    @instructors = User.instructors.where(should_display_on_front_page: true)
 
     future_events = EventSchedule.in_the_future
     @cities = future_events.pluck(:city).uniq.sort
