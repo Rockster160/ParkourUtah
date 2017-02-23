@@ -25,7 +25,7 @@ class ScheduleWorker
   end
 
   def send_class_text(params)
-    date_range = minutes_from_now(100)..minutes_from_now(130)
+    date_range = minutes_from_now(110)..minutes_from_now(130)
     Subscription.find_each do |subscriber|
       user = subscriber.user
       user.subscribed_events.joins(:events).where(events: {date: date_range}).each do |schedule|

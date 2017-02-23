@@ -83,8 +83,11 @@ $received-color: #FAFAFA;
       background-color: $pkut-red;
       color: white;
 
+      .fa-mobile { font-size: 30px; }
+
       &:hover {
         font-size: 24px;
+        .fa-mobile { font-size: 36px; }
       }
     }
   }

@@ -1,9 +1,15 @@
 <div class="central-container">
-  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
+  <%= link_to "Chat Rooms", chat_rooms_path, class: "pkut-btn" %>
+  <%= link_to "Back to Dashboard", dashboard_path, class: "pkut-btn" %>
+
   <% if current_user.instructor? %>
     <% @chat_room.users.each do |user| %>
       <%= link_to "#{user.id} - #{user.email}", admin_users_path(user) %> <br>
     <% end %>
+  <% end %>
+
+  <% if @chat_room.text? %>
+    <h4>This chat room is linked via text, so messages sent from here will be delivered to the phone number: <div class="text-center"><%= format_phone_number(@chat_room.name) %></div></h4>
   <% end %>
 
   <%= form_for [@chat_room, @chat_room.messages.new], html: { class: "messages-form" } do |f| %>
@@ -24,7 +30,11 @@
       <div class="message-form-wrapper">
         <%= f.text_area :body, value: params[:body], class: "new-message-field" %>
         <%= f.button(type: "submit", class: "send-message-btn") do %>
-          <i class="fa fa-paper-plane"></i>
+          <% if @chat_room.text? %>
+            <i class="fa fa-mobile"></i>
+          <% else %>
+            <i class="fa fa-paper-plane"></i>
+          <% end %>
         <% end %>
       </div>
     </div>
