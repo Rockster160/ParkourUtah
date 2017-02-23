@@ -60,7 +60,7 @@ class IndexController < ApplicationController
       success: success
     )
     phone_digits = params[:phone].split('').map {|x| x[/\d+/]}.join
-    if !blacklisted_body?(contact_request.body) && (phone = (strip_phone_number(contact_request.phone) || contact_request.phone.gsub(/[^0-9]/, ""))).present? && phone.length >= 7 && phone.length <= 10 && contact_request.success
+    if !blacklisted_body? && ((phone_digits.length >= 7 && phone_digits.length <= 10) || success)
       contact_request.log_message
       contact_request.notify_slack
     end
