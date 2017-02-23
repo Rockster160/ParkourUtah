@@ -27,8 +27,8 @@ class ChatRooms < ActiveRecord::Migration[5.0]
       if room.persisted?
         msg.update(chat_room_id: room.id)
 
-        room.chat_room_users.create(chat_room_id: room.id, user_id: msg.sent_to_id) if msg.sent_to.present?
-        room.chat_room_users.create(chat_room_id: room.id, user_id: msg.sent_from_id) if msg.sent_from.present?
+        room.chat_room_users.create(chat_room_id: room.id, user_id: msg.sent_to_id) if msg.sent_to_id.present?
+        room.chat_room_users.create(chat_room_id: room.id, user_id: msg.sent_from_id) if msg.sent_from_id.present?
       end
     end
     ChatRoom.find_each do |room|
