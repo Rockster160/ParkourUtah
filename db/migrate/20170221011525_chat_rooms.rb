@@ -23,7 +23,7 @@ class ChatRooms < ActiveRecord::Migration[5.0]
     add_column :chat_rooms, :message_type, :integer
 
     Message.find_each do |msg|
-      room = ChatRoom.find_or_create_by(name: msg.phone_number)
+      room = ChatRoom.find_or_create_by(name: msg.stripped_phone_number)
       if room.persisted?
         msg.update(chat_room_id: room.id)
 
