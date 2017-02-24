@@ -211,3 +211,10 @@ $received-color: #FAFAFA;
   }
 
 }
+
+.red-bg:after {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(173deg, $mat-pkut-red 400px, transparent 0);
+}
