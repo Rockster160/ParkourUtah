@@ -44,4 +44,7 @@ $flash-alert-bg: #C40820;
     color: $mat-grey-light;
     .dismiss-flash i.fa-times-circle-o { color: $mat-grey-light; }
   }
+  &.high-flash {
+    top: 10px; right: 10px;
+  }
 }

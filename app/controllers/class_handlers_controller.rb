@@ -1,6 +1,7 @@
 class ClassHandlersController < ApplicationController
   before_action :validate_instructor
   before_action :set_event_schedule
+  before_action :set_high_flashes
 
   def athlete_id
     if @event_schedule.present?
@@ -54,6 +55,10 @@ class ClassHandlersController < ApplicationController
 
   def set_event_schedule
     @event_schedule = EventSchedule.find(params[:event_schedule_id]) if params[:event_schedule_id].present?
+  end
+
+  def set_high_flashes
+    @high_flash = true
   end
 
 end

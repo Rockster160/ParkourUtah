@@ -6,9 +6,11 @@
   <% end %>
 
   <% if current_user.instructor? %>
-    <% @chat_room.users.each do |user| %>
-      <%= link_to "#{user.id} - #{user.email}", admin_user_path(user) %> <br>
-    <% end %>
+    <div class="chat-room-users-container">
+      <% @chat_room.users.each do |user| %>
+        <%= link_to "#{user.id} - #{user.email}", admin_user_path(user) %> <br>
+      <% end %>
+    </div>
   <% end %>
 
   <% if @chat_room.text? %>
