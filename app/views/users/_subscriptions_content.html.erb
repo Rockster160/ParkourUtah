@@ -1,4 +1,6 @@
-<%= render_modal("subscription_modal") do %>
+<% has_subscriptions = @user.subscribed_athletes.any? || @user.athletes_with_unlimited_access.count > 0 || @user.subscribed_events.any? %>
+
+<% if has_subscriptions %>
   <h1 class="pkut-header hidden-xs">Subscriptions</h1>
   <h4 class="pkut-header visible-xs">Subscriptions</h4>
   <% if current_user.subscribed_athletes.any? %>
@@ -47,4 +49,5 @@
   <% else %>
     <h3>You aren't subscribed to any classes.</h3>
   <% end %>
+
 <% end %>

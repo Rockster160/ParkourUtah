@@ -1,0 +1,133 @@
+<div class="text-center">
+  <% if @user.non_verified_athletes.count > 0 %>
+    <div class="pkut-btn big-btn orange-btn-glowing forceOpen" data-toggle="modal" data-target="#verify_athletes">
+      Click here to receive 2 trial classes!
+    </div> <br>
+    <%= render partial: 'dependents/verify_athletes' %>
+  <% end %>
+  <% if @user.unassigned_subscriptions_count > 0 %>
+    <div class="pkut-btn big-btn forceOpen" data-toggle="modal" data-target="#assign_subscriptions">
+      Assign subscriptions to students!
+    </div> <br>
+  <% end %>
+  <%= render partial: 'dependents/assign_subscriptions' %>
+</div>
+
+<%= form_for(@user, url: user_path, html: { method: :put, id: "modal-submit" }) do |f| %>
+
+  <%= render partial: 'layouts/error_container', locals: { resource: @user } %>
+
+  <div class="row">
+    <div class="col-sm-3">
+      <br/><%= f.label :email, 'Email Address:' %>
+    </div>
+    <div class="col-sm-9">
+      <%= f.email_field :email, class: 'pkut-textbox customRequired' %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-3">
+      <br/><%= f.label :phone_number, 'Phone Number:' %>
+    </div>
+    <div class="col-sm-9">
+      <%= f.telephone_field :phone_number, autocomplete: "off", class: 'pkut-textbox formatPhoneNumber customRequired' %>
+    </div>
+  </div>
+  <br/>
+
+  <%= f.fields_for :emergency_contacts, @user.emergency_contacts.last do |ff| %>
+    <h5>Emergency Contact</h5>
+    <div class="row">
+      <div class="col-sm-3">
+        <br/><%= ff.label :name, 'Name:' %>
+      </div>
+      <div class="col-sm-9">
+        <%= ff.text_field :name, class: 'pkut-textbox customRequired' %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-3">
+        <br/><%= ff.label :number, 'Phone Number:' %>
+      </div>
+      <div class="col-sm-9">
+        <%= ff.telephone_field :number, class: 'pkut-textbox formatPhoneNumber customRequired' %>
+      </div>
+    </div>
+  <% end %>
+  <br/>
+
+  <%= f.fields_for :address, @user.address do |ff| %>
+    <h5>Address:</h5>
+    <div class="row">
+      <div class="col-sm-3">
+        <br/><%= ff.label :line1, 'Line 1:' %>
+      </div>
+      <div class="col-sm-9">
+        <%= ff.text_field :line1, class: 'pkut-textbox customRequired' %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-3">
+        <br/><%= ff.label :line2, 'Line 2:' %>
+      </div>
+      <div class="col-sm-9">
+        <%= ff.text_field :line2, class: 'pkut-textbox' %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-3">
+        <br/><%= ff.label :city, 'City:' %>
+      </div>
+      <div class="col-sm-9">
+        <%= ff.text_field :city, class: 'pkut-textbox customRequired' %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-3">
+        <br/><%= ff.label :state, 'State:' %>
+      </div>
+      <div class="col-sm-9">
+        <%= ff.text_field :state, class: 'pkut-textbox customRequired' %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-3">
+        <br/><%= ff.label :zip, 'Zip:' %>
+      </div>
+      <div class="col-sm-9">
+        <%= ff.text_field :zip, class: 'pkut-textbox customRequired' %>
+      </div>
+    </div>
+  <% end %>
+  <br/>
+
+  <h5>Change Password:</h5>
+  <div class="row">
+    <div class="col-sm-3">
+      <p>(8 character minimum)</p>
+      <br/><%= f.label :password, "New Password:" %>
+    </div>
+    <div class="col-sm-9">
+      <%= f.password_field :password, autocomplete: "off", class: 'pkut-textbox' %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-3">
+      <br/><%= f.label :password_confirmation, "Confirm Password:" %><br />
+    </div>
+    <div class="col-sm-9">
+      <%= f.password_field :password_confirmation, autocomplete: "off", class: 'pkut-textbox' %>
+    </div>
+  </div>
+
+  <div class="actions text-center">
+    <a alt="..." class="pkut-btn forceOpen" data-toggle="modal" data-target="#confirm_modal">Update</a><br/>
+  </div>
+
+  <%= render_modal("confirm_modal", "skinny-modal") do %>
+    <h1 class="pkut-header">Confirm</h1>
+    <p>We need your current password to update your changes.</p>
+    <%= f.password_field :current_password, autocomplete: "off", class: 'pkut-textbox modal-form-field' %>
+    <%= link_to "Update", "", class: 'pkut-btn submit-modal-form' %>
+  <% end %>
+<% end %>
