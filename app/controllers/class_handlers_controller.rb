@@ -26,11 +26,16 @@ class ClassHandlersController < ApplicationController
 
   def join_class
     @event = Event.find(params[:id])
+    if params[:pin] == "0" || params[:pin] == ENV["PKUT_PIN"]
+      return redirect_to athlete_id_class_handler_path(@event)
+    end
+
     @athlete = Dependent.where(athlete_id: params[:athlete_id].to_i).first
     if @athlete.nil?
       flash[:alert] = "No athlete found."
-    elsif @athlete.valid_athlete_pin?(params[:athlete_pin])
+    elsif !@athlete.valid_athlete_pin?(params[:pin])
       flash[:alert] = "Incorrect Athlete Pin."
+      return redirect_to athlete_pin_class_handler_path(@event, athlete_id: params[:athlete_id])
     elsif !@athlete.attend_class(@event, current_user)
       if @athlete.attendances.where(event_id: @event.id).any?
         flash[:alert] = "Athlete is already attending class."

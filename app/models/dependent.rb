@@ -58,7 +58,7 @@ class Dependent < ApplicationRecord
 
   def valid_athlete_pin?(check_athlete_pin)
     return false unless check_athlete_pin.present?
-    self.athlete_pin == check_athlete_pin
+    self.athlete_pin.to_s.rjust(4, "0") == check_athlete_pin.to_s.rjust(4, "0")
   end
 
   def attend_class(event, instructor)
