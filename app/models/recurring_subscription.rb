@@ -14,15 +14,16 @@
 #  user_id         :integer
 #
 
-# Add Stripe ID here, and attempt to charge using that customer instead
 class RecurringSubscription < ApplicationRecord
 
   belongs_to :athlete, optional: true
   belongs_to :user
 
-  scope :active, -> { where("expires_at > ?", Time.zone.now) }
-  scope :inactive, -> { where("expires_at <= ?", Time.zone.now) }
+  scope :auto_renew, -> { where(auto_renew: true) }
+  scope :assigned, -> { where.not(athlete_id: nil) }
   scope :unassigned, -> { where(athlete_id: nil) }
+  scope :active, -> { assigned.where("expires_at > ?", Time.zone.now) }
+  scope :inactive, -> { assigned.where("expires_at <= ?", Time.zone.now) }
 
   def active?; self.expires_at.to_date > Time.zone.now.to_date; end
   def inactive?; self.expires_at.to_date <= Time.zone.now.to_date; end

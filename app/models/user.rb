@@ -36,7 +36,7 @@
 #  stats                          :string
 #  title                          :string
 #  nickname                       :string
-#  email_subscription             :boolean          default(TRUE)
+#  can_receive_emails             :boolean          default(TRUE)
 #  stripe_id                      :string
 #  date_of_birth                  :datetime
 #  drivers_license_number         :string
@@ -48,17 +48,22 @@
 #  subscription_cost              :integer          default(5000)
 #  unassigned_subscriptions_count :integer          default(0)
 #  should_display_on_front_page   :boolean          default(TRUE)
+#  can_receive_sms                :boolean          default(TRUE)
+#  full_name                      :string
 #
 
 # Ununsed?
 # first_name
 # last_name
-# email_subscription
 # date_of_birth
 # drivers_license_number
 # drivers_license_state
 # reset_password_token
 # confirmation_token
+# stripe_id
+# stripe_subscription
+# subscription_cost
+# unassigned_subscriptions_count
 
 class User < ApplicationRecord
   extend ApplicationHelper
@@ -119,7 +124,7 @@ class User < ApplicationRecord
   validate :positive_credits
 
   scope :online, -> { where('last_sign_in_at > ?', 10.minutes.ago) }
-  scope :by_signed_in, -> { order(last_sign_in_at: :desc) }
+  scope :by_signed_in, -> { by_most_recent(:last_sign_in_at) }
   scope :by_fuzzy_text, lambda { |text|
     text = "%#{text}%"
     joins('LEFT OUTER JOIN athletes ON users.id = athletes.user_id')
@@ -142,11 +147,6 @@ class User < ApplicationRecord
     by_signed_in.first
   end
 
-  def self.every(&block)
-    return self.all.to_enum unless block_given?
-    self.all.each {|user| block.call(user)}
-  end
-
   def self.remove_number_from_texting(num)
     if user = find_by_phone_number(num)
       user.notifications.update(sms_receivable: false)
@@ -162,19 +162,6 @@ class User < ApplicationRecord
     end
   end
 
-  def self.by_trial_expired_days_ago(days)
-    users = []
-    every do |user|
-      has_expired_athlete = false
-      user.athletes.each do |athlete|
-        if athlete.created_at.to_date == (Time.now - days.days).to_date && !athlete.verified
-          users << user
-        end
-      end
-    end
-    users
-  end
-
   def unsubscribe_from(notification_type)
     if notification_type.to_sym == :all
       notifications.change_all_email_to(false)
@@ -187,10 +174,6 @@ class User < ApplicationRecord
   def still_signed_in!
     self.last_sign_in_at = Time.zone.now
     self.save!
-  end
-
-  def full_name
-    "#{self.first_name.capitalize} #{self.last_name.capitalize}"
   end
 
   def display_name

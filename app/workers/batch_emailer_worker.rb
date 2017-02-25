@@ -12,7 +12,7 @@ class BatchEmailerWorker
     else
       notification_type = "email_#{email_type}"
       notification_type = Notifications.column_names.include?(notification_type) ? notification_type : "email_newsletter"
-      User.joins(:notifications).where(email_subscription: true, notifications: {notification_type => true}).each do |user|
+      User.joins(:notifications).where(can_receive_emails: true, notifications: {notification_type => true}).each do |user|
         puts "Emailing #{user.email}"
         ApplicationMailer.email(user.email, subject, body, notification_type).deliver_now
         sleep 0.1

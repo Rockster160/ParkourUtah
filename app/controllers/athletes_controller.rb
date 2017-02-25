@@ -66,7 +66,7 @@ class AthletesController < ApplicationController
 
     if user.recurring_subscriptions.unassigned.count > 0
       subscription = user.recurring_subscriptions.unassigned.last
-      if subscription.update(athlete_id: athlete.id)
+      if subscription.assign_to_athlete(athlete)
         redirect_to edit_user_path, notice: "Successfully assigned! This subscription will auto-charge each month from now on."
       else
         redirect_to edit_user_path, alert: "Failed to add the Subscription. The start and expiration dates will not be set until successfully assigned."

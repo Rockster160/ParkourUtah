@@ -12,7 +12,7 @@ class ScheduleWorker
 
   # slack_message = "New User: <#{admin_user_path(current_user)}|#{current_user.id} #{current_user.email}>\n"
   # current_user.athletes.each do |athlete|
-  #   slack_message << "#{athlete.id} #{athlete.full_name} - Athlete ID: #{athlete.zero_padded(athlete.fast_pass_id, 4)} Pin: #{athlete.zero_padded(athlete.fast_pass_pin, 4)}\n"
+  #   slack_message << "#{athlete.id} #{athlete.full_name} - Athlete ID: #{athlete.fast_pass_id.rjust(4, "0")} Pin: #{athlete.fast_pass_pin.rjust(4, "0")}\n"
   # end
   # slack_message << "Referred By: #{current_user.referrer}"
   # channel = Rails.env.production? ? "#new-users" : "#slack-testing"
@@ -46,7 +46,7 @@ class ScheduleWorker
   end
 
   def waiver_checks(params)
-    Athlete.all.each do |athlete|
+    Athlete.find_each do |athlete|
       user = athlete.user
       if athlete.waiver.exp_date.to_date == weeks_from_now(1).to_date
         if user.notifications.email_waiver_expiring
@@ -76,43 +76,38 @@ class ScheduleWorker
   end
 
   def monthly_subscription_charges(params)
-    count = 0
-    User.every do |user|
-      recurring_athletes = []
-      total_cost = user.athletes.inject(0) do |sum, athlete|
-        valid_payment = (athlete.subscription && athlete.subscription.inactive? && athlete.subscription.auto_renew) || false
-        recurring_athletes << athlete if valid_payment
-        sum + (valid_payment ? athlete.subscription.cost_in_pennies : 0)
-      end
-      if recurring_athletes.count > 0 && user.stripe_id
-        count += 1
-        Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
-        charge = if total_cost > 0
-          Stripe::Charge.create(
-            :amount   => total_cost,
-            :currency => "usd",
-            :customer => user.stripe_id
-          )
-        else
-          true
+    Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
+    RecurringSubscription.assigned.auto_renew.inactive.group_by(&:user).each do |user, recurring_subscriptions|
+      recurring_subscriptions.group_by(&:stripe_id).each do |stripe_id, stripe_subscriptions|
+        total_cost = stripe_subscriptions.map(&:cost_in_pennies).sum
+        begin
+          stripe_charge = Stripe::Charge.create({
+            amount:   total_cost,
+            currency: "usd",
+            customer: stripe_subscriptions.first.stripe_id
+          })
+        rescue Stripe::CardError => e
+          stripe_charge = {failure_message: "Failed to Charge: #{e}"}
+        rescue
+          stripe_charge = {failure_message: "Failed to Charge, try logging out and back in or trying a different browser."}
         end
-        if charge || charge.status == "succeeded"
-          slack_message = "Charged Unlimited Subscriptions for #{user.email} at $#{(total_cost/100).round(2)}."
+        if stripe_charge.try(:status) == "succeeded"
+          slack_message = "Charged Unlimited Subscriptions for #{user.email} at $#{(total_cost/100.to_f).round(2)}."
           channel = Rails.env.production? ? "#purchases" : "#slack-testing"
           SlackNotifier.notify(slack_message, channel)
 
-          recurring_athletes.each do |athlete|
-            old_sub = athlete.subscription
-            old_sub.auto_renew = false
-            old_sub.save
-            athlete.recurring_subscriptions.create(cost_in_pennies: old_sub.cost_in_pennies)
+          stripe_subscriptions.each do |recurring_subscription|
+            recurring_subscription.update(auto_renew: false)
+            new_sub = user.recurring_subscriptions.create(athlete_id: recurring_subscription.athlete_id, auto_renew: true, cost_in_pennies: recurring_subscription.cost_in_pennies)
+            unless new_sub.persisted?
+              SlackNotifier.notify("Failed to create new sub: ```#{new_sub.try(:attributes)}```", "#server-errors")
+            end
           end
         else
-          SmsMailerWorker.perform_async('3852599640', "There was an issue updating the subscription for #{user.email}.")
+          SlackNotifier.notify("There was an issue updating the subscription for #{user.email}\n```#{stripe_charge}```", "#server-errors")
         end
       end
     end
-    count
   end
 
   def send_summary(params)

@@ -24,7 +24,6 @@
 ##
 # Unused?
 #
-# emergency_contact
 # athlete_photo
 # first_name
 # middle_name
@@ -47,6 +46,9 @@ class Athlete < ApplicationRecord
   validates_attachment_content_type :athlete_photo, :content_type => /\Aimage\/.*\Z/
 
   before_save :fix_attributes
+
+  scope :verified, -> { where(verified: true) }
+  scope :unverified, -> { where(verified: false) }
 
   def self.pins_left
     bads = []
