@@ -21,7 +21,7 @@ class Cart < ApplicationRecord
       user_url = Rails.application.routes.url_helpers.admin_user_url(user)
       user_url_text = user.present? ? "<#{user_url}|Click here to view their profile.>" : ""
     end
-    slack_message = "#{email || user.try(:email)} has just made a purchase. #{user_url_text}\n"
+    slack_message = "#{user.try(:email) || email} has just made a purchase. #{user_url_text}\n"
 
     if is_physical?
       address = user.address
