@@ -33,8 +33,8 @@ class ApplicationMailer < ActionMailer::Base
     mail(to: ENV['PKUT_EMAIL'], subject: "Request for Contact")
   end
 
-  def expiring_waiver_mail(athlete_id)
-    @athlete = Dependent.find(athlete_id.to_i)
+  def expiring_waiver_mail(fast_pass_id)
+    @athlete = Athlete.find(fast_pass_id.to_i)
 
     mail(to: @athlete.user.email, subject: "#{@athlete.full_name}'s waiver expires soon!")
   end
@@ -42,7 +42,7 @@ class ApplicationMailer < ActionMailer::Base
   def notify_subscription_updating(user_id)
     @user = User.find(user_id)
     range = (10.days.from_now.beginning_of_day..10.days.from_now.end_of_day)
-    @expiring_athletes = @user.dependents.joins(:athlete_subscriptions).where('athlete_subscriptions.expires_at > ? AND athlete_subscriptions.expires_at < ?', range.min, range.max).where('athlete_subscriptions.auto_renew = true')
+    @expiring_athletes = @user.athletes.joins(:recurring_subscriptions).where('recurring_subscriptions.expires_at > ? AND recurring_subscriptions.expires_at < ?', range.min, range.max).where('recurring_subscriptions.auto_renew = true')
     @expiring_athletes = @expiring_athletes.select { |a| range.cover?(a.subscription.expires_at) }
     return nil unless @expiring_athletes.any?
 
@@ -73,14 +73,14 @@ class ApplicationMailer < ActionMailer::Base
     mail(to: @user.email, subject: "You are almost out of class credits!")
   end
 
-  def new_athlete_info_mail(athlete_ids)
-    @athletes = athlete_ids.map { |athlete_id| Dependent.find(athlete_id) }
+  def new_athlete_info_mail(fast_pass_ids)
+    @athletes = fast_pass_ids.map { |fast_pass_id| Athlete.find(fast_pass_id) }
 
     mail(to: @athletes.first.user.email, subject: "New Athlete Information")
   end
 
-  def pin_reset_mail(athlete_id)
-    @athlete = Dependent.find(athlete_id.to_i)
+  def pin_reset_mail(fast_pass_id)
+    @athlete = Athlete.find(fast_pass_id.to_i)
 
     mail(to: @athlete.user.email, subject: "Request for ID or Pin Reset")
   end

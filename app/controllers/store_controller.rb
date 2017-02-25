@@ -21,7 +21,7 @@ class StoreController < ApplicationController
   end
 
   def unsubscribe
-    athlete = Dependent.find(params[:id])
+    athlete = Athlete.find(params[:id])
     if athlete.current_subscription.update(auto_renew: false)
       redirect_to edit_user_path, notice: 'Successfully Unsubscribed'
     else

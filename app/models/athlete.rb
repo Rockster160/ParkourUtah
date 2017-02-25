@@ -1,13 +1,13 @@
 # == Schema Information
 #
-# Table name: dependents
+# Table name: athletes
 #
 #  id                         :integer          not null, primary key
 #  user_id                    :integer
 #  full_name                  :string
 #  emergency_contact          :string
-#  athlete_id                 :integer
-#  athlete_pin                :integer
+#  fast_pass_id               :integer
+#  fast_pass_pin              :integer
 #  athlete_photo_file_name    :string
 #  athlete_photo_content_type :string
 #  athlete_photo_file_size    :integer
@@ -21,13 +21,11 @@
 #  verified                   :boolean          default(FALSE)
 #
 
-# TODO Rename to 'Athlete'
-class Dependent < ApplicationRecord
-
+class Athlete < ApplicationRecord
   belongs_to :user
   has_many :waivers, dependent: :destroy
   has_many :trial_classes, dependent: :destroy
-  has_many :athlete_subscriptions, dependent: :destroy
+  has_many :recurring_subscriptions, dependent: :destroy
   has_many :attendances, dependent: :destroy
 
   has_attached_file :athlete_photo,
@@ -43,11 +41,11 @@ class Dependent < ApplicationRecord
   def self.find_or_create_by_name_and_dob(param, user)
     name = param["name"]
     dob = param["dob"]
-    athlete = Dependent.where(full_name: name.squish.split(' ').map(&:capitalize).join(' '), user_id: user.id).first
+    athlete = Athlete.where(full_name: name.squish.split(' ').map(&:capitalize).join(' '), user_id: user.id).first
     if athlete.nil?
       dob = format_dob(dob)
       athlete = if dob
-        athlete = user.dependents.new(full_name: name, date_of_birth: dob)
+        athlete = user.athletes.new(full_name: name, date_of_birth: dob)
         athlete.save ? athlete : nil
       else
         nil
@@ -56,9 +54,9 @@ class Dependent < ApplicationRecord
     athlete
   end
 
-  def valid_athlete_pin?(check_athlete_pin)
-    return false unless check_athlete_pin.present?
-    self.athlete_pin.to_s.rjust(4, "0") == check_athlete_pin.to_s.rjust(4, "0")
+  def valid_fast_pass_pin?(check_fast_pass_pin)
+    return false unless check_fast_pass_pin.present?
+    self.fast_pass_pin.to_s.rjust(4, "0") == check_fast_pass_pin.to_s.rjust(4, "0")
   end
 
   def attend_class(event, instructor)
@@ -104,7 +102,7 @@ class Dependent < ApplicationRecord
   end
 
   def has_access_until
-    athlete_subscriptions.active.order(:expires_at).last.expires_at
+    recurring_subscriptions.active.order(:expires_at).last.expires_at
   end
 
   def subscribed?
@@ -114,7 +112,7 @@ class Dependent < ApplicationRecord
   end
 
   def current_subscription
-    athlete_subscriptions.active.order(:expires_at).last
+    recurring_subscriptions.active.order(:expires_at).last
   end
 
   def signed_waiver?
@@ -158,7 +156,7 @@ class Dependent < ApplicationRecord
   end
 
   def generate_pin
-    self.athlete_id = Dependent.pins_left.sample.to_i
+    self.fast_pass_id = Athlete.pins_left.sample.to_i
     self.save
   end
 
@@ -170,7 +168,7 @@ class Dependent < ApplicationRecord
     end
     bads << 0
     bads << ENV["PKUT_PIN"].to_i
-    bads << Dependent.all.map { |user| user.athlete_id }
+    bads << Athlete.all.map { |user| user.fast_pass_id }
     ((0...9999).to_a - bads.flatten)
   end
 
@@ -182,7 +180,7 @@ class Dependent < ApplicationRecord
 
   def fix_attributes
     format_name
-    self.date_of_birth = Dependent.format_dob(self.date_of_birth)
+    self.date_of_birth = Athlete.format_dob(self.date_of_birth)
   end
 
   def format_name

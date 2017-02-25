@@ -44,13 +44,13 @@
     <% if athlete.has_unlimited_access? %>
       <span style="color: green;">--Has unlimited access until: <%= athlete.has_access_until.strftime('%B %e, %Y') %></span><br/>
     <% end %>
-    --<%= athlete.id %>: <strong><%= athlete.full_name %></strong> - ID: <%= athlete.zero_padded(athlete.athlete_id, 4) %><%= athlete.current_subscription.try(:auto_renew) ? '*' : '' %><br/>
+    --<%= athlete.id %>: <strong><%= athlete.full_name %></strong> - ID: <%= athlete.zero_padded(athlete.fast_pass_id, 4) %><%= athlete.current_subscription.try(:auto_renew) ? '*' : '' %><br/>
     <% if athlete.trials.count > 0 %>
-      --Has <%= athlete.trials.count %> trial class(es) remaining. <%= link_to 'Remove 1 Trial', update_trials_admin_user_path(@user, athlete_id: athlete.id, num: '-1'), method: :post if current_user.is_admin? %>
+      --Has <%= athlete.trials.count %> trial class(es) remaining. <%= link_to 'Remove 1 Trial', update_trials_admin_user_path(@user, fast_pass_id: athlete.id, num: '-1'), method: :post if current_user.is_admin? %>
       <br/>
     <% end %>
     <% if current_user.is_admin? %>
-      --<%= link_to 'Add Trial Class', update_trials_admin_user_path(@user, athlete_id: athlete.id, num: '1'), method: :post %><br/>
+      --<%= link_to 'Add Trial Class', update_trials_admin_user_path(@user, fast_pass_id: athlete.id, num: '1'), method: :post %><br/>
     <% end %>
 
     <%= render_modal("edit#{athlete.id}", "skinny-modal") do %>

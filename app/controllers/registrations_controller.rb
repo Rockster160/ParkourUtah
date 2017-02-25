@@ -3,7 +3,7 @@ class RegistrationsController < ApplicationController
   before_action :redirect_user_to_correct_step
 
   def step_4
-    @athletes = current_user.dependents.select {|athlete| athlete.signed_waiver? == false }
+    @athletes = current_user.athletes.select {|athlete| athlete.signed_waiver? == false }
   end
 
   def step_5
@@ -53,10 +53,10 @@ class RegistrationsController < ApplicationController
     valid = []
     params[:athlete].each do |token, athlete|
       if validate_athlete_attributes(athlete)
-        new_athlete = current_user.dependents.create(
+        new_athlete = current_user.athletes.create(
           full_name: athlete[:name],
           date_of_birth: athlete[:dob],
-          athlete_pin: athlete[:code]
+          fast_pass_pin: athlete[:code]
         )
         new_athlete.waivers.create(
           signed_for: new_athlete.full_name,
@@ -100,12 +100,12 @@ class RegistrationsController < ApplicationController
 
   def update_athletes
     valid = true
-    params[:athlete].each do |athlete_id, values|
-      athlete = Dependent.find(athlete_id)
+    params[:athlete].each do |fast_pass_id, values|
+      athlete = Athlete.find(fast_pass_id)
       temp_valid = athlete.update(
         full_name: values[:name],
         date_of_birth: values[:dob],
-        athlete_pin: values[:code]
+        fast_pass_pin: values[:code]
       )
       athlete.waiver.update(
         signed_for: values[:name]
@@ -118,7 +118,7 @@ class RegistrationsController < ApplicationController
   def post_step_4
     approved = []
     params[:agreed].each do |id, vals|
-      athlete = Dependent.find(id)
+      athlete = Athlete.find(id)
       if athlete.sign_waiver!
         approved << athlete.id
         athlete.generate_pin
@@ -127,7 +127,7 @@ class RegistrationsController < ApplicationController
 
     slack_message = "New User: <#{admin_user_url(current_user)}|#{current_user.id} #{current_user.email}>\n"
     current_user.athletes.each do |athlete|
-      slack_message << "#{athlete.id} #{athlete.full_name} - Athlete ID: #{athlete.zero_padded(athlete.athlete_id, 4)} Pin: #{athlete.zero_padded(athlete.athlete_pin, 4)}\n"
+      slack_message << "#{athlete.id} #{athlete.full_name} - Athlete ID: #{athlete.zero_padded(athlete.fast_pass_id, 4)} Pin: #{athlete.zero_padded(athlete.fast_pass_pin, 4)}\n"
     end
     slack_message << "Referred By: #{current_user.referrer}"
     channel = Rails.env.production? ? "#new-users" : "#slack-testing"

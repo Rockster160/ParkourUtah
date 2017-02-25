@@ -3,7 +3,7 @@
 # Table name: attendances
 #
 #  id             :integer          not null, primary key
-#  dependent_id   :integer
+#  athlete_id     :integer
 #  instructor_id  :integer
 #  event_id       :integer
 #  location       :string
@@ -18,13 +18,11 @@ class Attendance < ApplicationRecord
 
   attr_accessor :skip_validations
 
-  belongs_to :dependent
+  belongs_to :athlete
   belongs_to :instructor, class_name: "User"
   belongs_to :event
 
   validate :one_per_athlete
-
-  def athlete; dependent; end
 
   def sent!
     self.update(sent: true)
@@ -34,7 +32,7 @@ class Attendance < ApplicationRecord
 
   def one_per_athlete
     unless skip_validations
-      matching_attendances = self.class.where(dependent_id: self.dependent_id, event_id: self.event_id)
+      matching_attendances = self.class.where(athlete_id: self.athlete_id, event_id: self.event_id)
       if matching_attendances.any? { |a| a.id != self.id }
         errors.add(:base, "Athlete already attended this event.")
       end

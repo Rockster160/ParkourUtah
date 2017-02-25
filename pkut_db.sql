@@ -74,12 +74,12 @@ ALTER SEQUENCE addresses_id_seq OWNED BY addresses.id;
 
 
 --
--- Name: athlete_subscriptions; Type: TABLE; Schema: public; Owner: rocconicholls
+-- Name: recurring_subscriptions; Type: TABLE; Schema: public; Owner: rocconicholls
 --
 
-CREATE TABLE athlete_subscriptions (
+CREATE TABLE recurring_subscriptions (
     id integer NOT NULL,
-    dependent_id integer,
+    athlete_id integer,
     usages integer DEFAULT 0,
     expires_at timestamp without time zone,
     cost_in_pennies integer DEFAULT 0,
@@ -89,13 +89,13 @@ CREATE TABLE athlete_subscriptions (
 );
 
 
-ALTER TABLE athlete_subscriptions OWNER TO rocconicholls;
+ALTER TABLE recurring_subscriptions OWNER TO rocconicholls;
 
 --
--- Name: athlete_subscriptions_id_seq; Type: SEQUENCE; Schema: public; Owner: rocconicholls
+-- Name: recurring_subscriptions_id_seq; Type: SEQUENCE; Schema: public; Owner: rocconicholls
 --
 
-CREATE SEQUENCE athlete_subscriptions_id_seq
+CREATE SEQUENCE recurring_subscriptions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -103,13 +103,13 @@ CREATE SEQUENCE athlete_subscriptions_id_seq
     CACHE 1;
 
 
-ALTER TABLE athlete_subscriptions_id_seq OWNER TO rocconicholls;
+ALTER TABLE recurring_subscriptions_id_seq OWNER TO rocconicholls;
 
 --
--- Name: athlete_subscriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: rocconicholls
+-- Name: recurring_subscriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: rocconicholls
 --
 
-ALTER SEQUENCE athlete_subscriptions_id_seq OWNED BY athlete_subscriptions.id;
+ALTER SEQUENCE recurring_subscriptions_id_seq OWNED BY recurring_subscriptions.id;
 
 
 --
@@ -118,7 +118,7 @@ ALTER SEQUENCE athlete_subscriptions_id_seq OWNED BY athlete_subscriptions.id;
 
 CREATE TABLE attendances (
     id integer NOT NULL,
-    dependent_id integer,
+    athlete_id integer,
     instructor_id integer,
     event_id integer,
     location character varying,
@@ -304,16 +304,16 @@ ALTER SEQUENCE contact_requests_id_seq OWNED BY contact_requests.id;
 
 
 --
--- Name: dependents; Type: TABLE; Schema: public; Owner: rocconicholls
+-- Name: athletes; Type: TABLE; Schema: public; Owner: rocconicholls
 --
 
-CREATE TABLE dependents (
+CREATE TABLE athletes (
     id integer NOT NULL,
     user_id integer,
     full_name character varying,
     emergency_contact character varying,
-    athlete_id integer,
-    athlete_pin integer,
+    fast_pass_id integer,
+    fast_pass_pin integer,
     athlete_photo_file_name character varying,
     athlete_photo_content_type character varying,
     athlete_photo_file_size integer,
@@ -328,13 +328,13 @@ CREATE TABLE dependents (
 );
 
 
-ALTER TABLE dependents OWNER TO rocconicholls;
+ALTER TABLE athletes OWNER TO rocconicholls;
 
 --
--- Name: dependents_id_seq; Type: SEQUENCE; Schema: public; Owner: rocconicholls
+-- Name: athletes_id_seq; Type: SEQUENCE; Schema: public; Owner: rocconicholls
 --
 
-CREATE SEQUENCE dependents_id_seq
+CREATE SEQUENCE athletes_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -342,13 +342,13 @@ CREATE SEQUENCE dependents_id_seq
     CACHE 1;
 
 
-ALTER TABLE dependents_id_seq OWNER TO rocconicholls;
+ALTER TABLE athletes_id_seq OWNER TO rocconicholls;
 
 --
--- Name: dependents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: rocconicholls
+-- Name: athletes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: rocconicholls
 --
 
-ALTER SEQUENCE dependents_id_seq OWNED BY dependents.id;
+ALTER SEQUENCE athletes_id_seq OWNED BY athletes.id;
 
 
 --
@@ -766,7 +766,7 @@ ALTER SEQUENCE subscriptions_id_seq OWNED BY subscriptions.id;
 
 CREATE TABLE trial_classes (
     id integer NOT NULL,
-    dependent_id integer,
+    athlete_id integer,
     used boolean DEFAULT false,
     used_at timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
@@ -955,7 +955,7 @@ ALTER SEQUENCE venmos_id_seq OWNED BY venmos.id;
 
 CREATE TABLE waivers (
     id integer NOT NULL,
-    dependent_id integer,
+    athlete_id integer,
     signed boolean,
     signed_for character varying,
     signed_by character varying,
@@ -998,7 +998,7 @@ ALTER TABLE ONLY addresses ALTER COLUMN id SET DEFAULT nextval('addresses_id_seq
 -- Name: id; Type: DEFAULT; Schema: public; Owner: rocconicholls
 --
 
-ALTER TABLE ONLY athlete_subscriptions ALTER COLUMN id SET DEFAULT nextval('athlete_subscriptions_id_seq'::regclass);
+ALTER TABLE ONLY recurring_subscriptions ALTER COLUMN id SET DEFAULT nextval('recurring_subscriptions_id_seq'::regclass);
 
 
 --
@@ -1040,7 +1040,7 @@ ALTER TABLE ONLY contact_requests ALTER COLUMN id SET DEFAULT nextval('contact_r
 -- Name: id; Type: DEFAULT; Schema: public; Owner: rocconicholls
 --
 
-ALTER TABLE ONLY dependents ALTER COLUMN id SET DEFAULT nextval('dependents_id_seq'::regclass);
+ALTER TABLE ONLY athletes ALTER COLUMN id SET DEFAULT nextval('athletes_id_seq'::regclass);
 
 
 --
@@ -2963,10 +2963,10 @@ SELECT pg_catalog.setval('addresses_id_seq', 1837, true);
 
 
 --
--- Data for Name: athlete_subscriptions; Type: TABLE DATA; Schema: public; Owner: rocconicholls
+-- Data for Name: recurring_subscriptions; Type: TABLE DATA; Schema: public; Owner: rocconicholls
 --
 
-COPY athlete_subscriptions (id, dependent_id, usages, expires_at, cost_in_pennies, auto_renew, created_at, updated_at) FROM stdin;
+COPY recurring_subscriptions (id, athlete_id, usages, expires_at, cost_in_pennies, auto_renew, created_at, updated_at) FROM stdin;
 75	252	0	2016-08-01 13:00:04.377764	7000	f	2016-07-01 13:00:04.372956	2016-07-15 16:03:13.311073
 2	35	0	2015-07-02 21:47:06.308833	5000	f	2015-07-03 02:42:51.233816	2015-07-03 02:43:33.496544
 14	282	5	2015-09-07 13:00:04.950277	7000	f	2015-08-07 13:00:04.945275	2015-09-08 13:00:05.912965
@@ -3056,17 +3056,17 @@ COPY athlete_subscriptions (id, dependent_id, usages, expires_at, cost_in_pennie
 
 
 --
--- Name: athlete_subscriptions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: rocconicholls
+-- Name: recurring_subscriptions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: rocconicholls
 --
 
-SELECT pg_catalog.setval('athlete_subscriptions_id_seq', 88, true);
+SELECT pg_catalog.setval('recurring_subscriptions_id_seq', 88, true);
 
 
 --
 -- Data for Name: attendances; Type: TABLE DATA; Schema: public; Owner: rocconicholls
 --
 
-COPY attendances (id, dependent_id, instructor_id, event_id, location, created_at, updated_at, type_of_charge, sent) FROM stdin;
+COPY attendances (id, athlete_id, instructor_id, event_id, location, created_at, updated_at, type_of_charge, sent) FROM stdin;
 2	1	6	178	\N	2015-03-26 09:10:03.025015	2016-12-20 05:31:52.463351	Credits	f
 11	35	2	257	\N	2015-05-12 22:32:52.456528	2016-12-20 05:31:52.466889	Credits	t
 13	\N	7	259	\N	2015-05-13 22:36:19.288245	2016-12-20 05:31:52.469552	Credits	t
@@ -15225,7 +15225,7 @@ COPY contact_requests (id, user_agent, phone, name, email, body, success, create
 809	Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.109 Safari/537.36	123456	claudettely69	alberttf2@limaquebec.webmailious.top	 Hip available porn area  \r\nhttp://shemales.blogporn.in/?julianna \r\n  free adult entertainment free sex movies phone erot italian erotic erotic india	f	2016-03-15 22:28:00.49431	2016-03-15 22:28:00.49431
 810	Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36	123456	Draztict	drazzz56@klerom.in	Tramadol Addiction Mor Drug_uses Tramadol No Prescription Spasm %24100 Tramadol Fedex Fast No Prescription <a href=http://goo.gl/eHnpVl>buy tramadol fedex delivery</a>. Discount Prescription Tramadol Lowest Price Soma Or Tramadol Drugs Without Prescription Flexeril Controlled Substance Tramadol Ultram Seroquel Fatal Dose Effects Tramadol . Tramadol K28  Inexpensive Odor Prescription Tramadol . Site About Tramadol Sends Hexal Tramadol Hcl Acetaminophen Par  Ultram Lawsuits Tramadol Abuse Is Tramadol Good For A Migrane Overdose On Tramadol Breathing Tramadol 400 Mg Hydrochloride 	f	2016-03-16 19:21:36.894272	2016-03-16 19:21:36.894272
 811	Mozilla/5.0 (Linux; Android 5.1.1; SAMSUNG-SM-G920A Build/LMY47X) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/3.2 Chrome/38.0.2125.102 Mobile Safari/537.36	(801) 915-1328	Tara	tara714@comcast.net 	Hey can you email me and let me know the age ranges for beginner classes? Thanks 	t	2016-03-16 20:15:51.694218	2016-03-16 20:15:51.694218
-812	Mozilla/5.0 (Windows NT 10.0; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0	123456	Dustinneix	thobs6@gmai.com	Tramadol Does Not Work  Tramadol And Malignancy . Oxycodone Feels Good Does Tramadol Tramadol 200 Sr Pain Reliever  Tramadol Hydrochloride Acetaminophen Drug Information Tramadol Immediate Release Tablets Methadone Pill Injection Tramadol Hcl Acetaminophen Tramadol Articles . Railing Codeine Does Tramadol Tramadol For Arthritis Treatment Tramadol To Methadone <a href=http://www.netvibes.com/overnightdelivery>order tramadol without prescription</a>. Tramadol Movies With Hydrocodone Tramadol Independent Kentucky Buy Tramadol Online 37.5 Potentiators Tramadol Hcl Acetaminophen .	f	2016-03-16 20:20:41.035225	2016-03-16 20:20:41.035225
+812	Mozilla/5.0 (Windows NT 10.0; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0	123456	Dustinneix	thobs6@gmai.com	Tramadol Does Not Work  Tramadol And Malignancy . Oxycodone Feels Good Does Tramadol Tramadol 200 Sr Pain Reliever  Tramadol Hydrochloride Acetaminophen Drug Information Tramadol Immediate Release Tablets Methadone Pill Injection Tramadol Hcl Acetaminophen Tramadol Articles . Railing Codeine Does Tramadol Tramadol For Arthritis Treatment Tramadol To Methadone <a href=http://www.netvibes.com/overnightdelivery>order tramadol without prescription</a>. Tramadol Movies With Hydrocodone Tramadol Inathlete Kentucky Buy Tramadol Online 37.5 Potentiators Tramadol Hcl Acetaminophen .	f	2016-03-16 20:20:41.035225	2016-03-16 20:20:41.035225
 813	Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36	8014406883	jessie knudtson	jessieknudtson@yahoo.com	My son has been looking up parkour a lot lately and trying it out on his own. I would like to get more info please about what you do, i.e. training/lessons, times you are open, and pricing. Email is the best way to reach me since I cannot answer my phone during the day but if needed I can return calls during my breaks. Thank you for your time, Jessie	t	2016-03-16 23:39:17.101636	2016-03-16 23:40:39.885702
 814	Mozilla/5.0 (iPhone; CPU iPhone OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1	(801) 694-5506	Ashlee smart	Ashsmart@ymail.com	Just need to schedule a private lesson for my son Deagan. He has participated in a private lesson before with Rison. 	t	2016-03-17 21:58:02.942059	2016-03-17 21:58:02.942059
 1246	Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)		uiuemoagihn	ermjkk@uxdizy.com	Qc0jPA  <a href="http://flqifiossbur.com/">flqifiossbur</a>, [url=http://odkkajpjzutk.com/]odkkajpjzutk[/url], [link=http://cccpvzvvygjy.com/]cccpvzvvygjy[/link], http://jtbraesurczr.com/	f	2016-07-03 03:27:01.050209	2016-07-03 03:27:01.050209
@@ -16147,10 +16147,10 @@ SELECT pg_catalog.setval('contact_requests_id_seq', 1737, true);
 
 
 --
--- Data for Name: dependents; Type: TABLE DATA; Schema: public; Owner: rocconicholls
+-- Data for Name: athletes; Type: TABLE DATA; Schema: public; Owner: rocconicholls
 --
 
-COPY dependents (id, user_id, full_name, emergency_contact, athlete_id, athlete_pin, athlete_photo_file_name, athlete_photo_content_type, athlete_photo_file_size, athlete_photo_updated_at, created_at, updated_at, first_name, middle_name, last_name, date_of_birth, verified) FROM stdin;
+COPY athletes (id, user_id, full_name, emergency_contact, fast_pass_id, fast_pass_pin, athlete_photo_file_name, athlete_photo_content_type, athlete_photo_file_size, athlete_photo_updated_at, created_at, updated_at, first_name, middle_name, last_name, date_of_birth, verified) FROM stdin;
 503	516	Brandon Mills	\N	7790	4804	\N	\N	\N	\N	2015-08-11 21:07:59.368308	2015-08-11 21:11:11.191489	\N	\N	\N	04/08/2004	t
 504	516	Lincoln Mills	\N	4755	1288	\N	\N	\N	\N	2015-08-11 21:07:59.393236	2015-08-11 21:11:11.16003	\N	\N	\N	01/28/2008	t
 3	9	Marcos Jones	4352199529	4592	5456	\N	\N	\N	\N	2015-03-31 16:14:36.466091	2015-05-29 01:42:45.740799	\N	\N	\N	\N	t
@@ -17901,10 +17901,10 @@ COPY dependents (id, user_id, full_name, emergency_contact, athlete_id, athlete_
 
 
 --
--- Name: dependents_id_seq; Type: SEQUENCE SET; Schema: public; Owner: rocconicholls
+-- Name: athletes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: rocconicholls
 --
 
-SELECT pg_catalog.setval('dependents_id_seq', 1870, true);
+SELECT pg_catalog.setval('athletes_id_seq', 1870, true);
 
 
 --
@@ -23765,7 +23765,7 @@ SELECT pg_catalog.setval('subscriptions_id_seq', 465, true);
 -- Data for Name: trial_classes; Type: TABLE DATA; Schema: public; Owner: rocconicholls
 --
 
-COPY trial_classes (id, dependent_id, used, used_at, created_at, updated_at) FROM stdin;
+COPY trial_classes (id, athlete_id, used, used_at, created_at, updated_at) FROM stdin;
 1	74	f	\N	2015-07-01 00:43:30.845466	2015-07-01 00:43:30.845466
 2	74	f	\N	2015-07-01 00:43:30.859243	2015-07-01 00:43:30.859243
 3	13	f	\N	2015-07-01 00:43:30.878571	2015-07-01 00:43:30.878571
@@ -28373,7 +28373,7 @@ SELECT pg_catalog.setval('venmos_id_seq', 1, true);
 -- Data for Name: waivers; Type: TABLE DATA; Schema: public; Owner: rocconicholls
 --
 
-COPY waivers (id, dependent_id, signed, signed_for, signed_by, created_at, updated_at) FROM stdin;
+COPY waivers (id, athlete_id, signed, signed_for, signed_by, created_at, updated_at) FROM stdin;
 1	1	t	Rocco Nicholls	Rocco	2015-03-25 18:32:15.823114	2015-03-25 18:32:15.823114
 3	3	t	Marcos Jones	Marcos Jones	2015-03-31 16:16:23.416847	2015-03-31 16:16:23.416847
 4	4	t	Tristan	Tristan	2015-04-03 15:41:12.197576	2015-04-03 15:41:12.197576
@@ -30199,11 +30199,11 @@ ALTER TABLE ONLY addresses
 
 
 --
--- Name: athlete_subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: rocconicholls
+-- Name: recurring_subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: rocconicholls
 --
 
-ALTER TABLE ONLY athlete_subscriptions
-    ADD CONSTRAINT athlete_subscriptions_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY recurring_subscriptions
+    ADD CONSTRAINT recurring_subscriptions_pkey PRIMARY KEY (id);
 
 
 --
@@ -30247,11 +30247,11 @@ ALTER TABLE ONLY contact_requests
 
 
 --
--- Name: dependents_pkey; Type: CONSTRAINT; Schema: public; Owner: rocconicholls
+-- Name: athletes_pkey; Type: CONSTRAINT; Schema: public; Owner: rocconicholls
 --
 
-ALTER TABLE ONLY dependents
-    ADD CONSTRAINT dependents_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY athletes
+    ADD CONSTRAINT athletes_pkey PRIMARY KEY (id);
 
 
 --
@@ -30382,17 +30382,17 @@ CREATE INDEX index_addresses_on_user_id ON addresses USING btree (user_id);
 
 
 --
--- Name: index_athlete_subscriptions_on_dependent_id; Type: INDEX; Schema: public; Owner: rocconicholls
+-- Name: index_recurring_subscriptions_on_athlete_id; Type: INDEX; Schema: public; Owner: rocconicholls
 --
 
-CREATE INDEX index_athlete_subscriptions_on_dependent_id ON athlete_subscriptions USING btree (dependent_id);
+CREATE INDEX index_recurring_subscriptions_on_athlete_id ON recurring_subscriptions USING btree (athlete_id);
 
 
 --
--- Name: index_attendances_on_dependent_id; Type: INDEX; Schema: public; Owner: rocconicholls
+-- Name: index_attendances_on_athlete_id; Type: INDEX; Schema: public; Owner: rocconicholls
 --
 
-CREATE INDEX index_attendances_on_dependent_id ON attendances USING btree (dependent_id);
+CREATE INDEX index_attendances_on_athlete_id ON attendances USING btree (athlete_id);
 
 
 --
@@ -30424,10 +30424,10 @@ CREATE INDEX index_carts_on_user_id ON carts USING btree (user_id);
 
 
 --
--- Name: index_dependents_on_user_id; Type: INDEX; Schema: public; Owner: rocconicholls
+-- Name: index_athletes_on_user_id; Type: INDEX; Schema: public; Owner: rocconicholls
 --
 
-CREATE INDEX index_dependents_on_user_id ON dependents USING btree (user_id);
+CREATE INDEX index_athletes_on_user_id ON athletes USING btree (user_id);
 
 
 --
@@ -30494,10 +30494,10 @@ CREATE INDEX index_subscriptions_on_user_id ON subscriptions USING btree (user_i
 
 
 --
--- Name: index_trial_classes_on_dependent_id; Type: INDEX; Schema: public; Owner: rocconicholls
+-- Name: index_trial_classes_on_athlete_id; Type: INDEX; Schema: public; Owner: rocconicholls
 --
 
-CREATE INDEX index_trial_classes_on_dependent_id ON trial_classes USING btree (dependent_id);
+CREATE INDEX index_trial_classes_on_athlete_id ON trial_classes USING btree (athlete_id);
 
 
 --
@@ -30529,10 +30529,10 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 
 
 --
--- Name: index_waivers_on_dependent_id; Type: INDEX; Schema: public; Owner: rocconicholls
+-- Name: index_waivers_on_athlete_id; Type: INDEX; Schema: public; Owner: rocconicholls
 --
 
-CREATE INDEX index_waivers_on_dependent_id ON waivers USING btree (dependent_id);
+CREATE INDEX index_waivers_on_athlete_id ON waivers USING btree (athlete_id);
 
 
 --
@@ -30570,8 +30570,8 @@ ALTER TABLE ONLY emergency_contacts
 -- Name: fk_rails_c8349a1a63; Type: FK CONSTRAINT; Schema: public; Owner: rocconicholls
 --
 
-ALTER TABLE ONLY athlete_subscriptions
-    ADD CONSTRAINT fk_rails_c8349a1a63 FOREIGN KEY (dependent_id) REFERENCES dependents(id);
+ALTER TABLE ONLY recurring_subscriptions
+    ADD CONSTRAINT fk_rails_c8349a1a63 FOREIGN KEY (athlete_id) REFERENCES athletes(id);
 
 
 --
@@ -30595,7 +30595,7 @@ ALTER TABLE ONLY ratings
 --
 
 ALTER TABLE ONLY trial_classes
-    ADD CONSTRAINT fk_rails_cd4663e8e1 FOREIGN KEY (dependent_id) REFERENCES dependents(id);
+    ADD CONSTRAINT fk_rails_cd4663e8e1 FOREIGN KEY (athlete_id) REFERENCES athletes(id);
 
 
 --

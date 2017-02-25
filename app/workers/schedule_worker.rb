@@ -12,7 +12,7 @@ class ScheduleWorker
 
   # slack_message = "New User: <#{admin_user_path(current_user)}|#{current_user.id} #{current_user.email}>\n"
   # current_user.athletes.each do |athlete|
-  #   slack_message << "#{athlete.id} #{athlete.full_name} - Athlete ID: #{athlete.zero_padded(athlete.athlete_id, 4)} Pin: #{athlete.zero_padded(athlete.athlete_pin, 4)}\n"
+  #   slack_message << "#{athlete.id} #{athlete.full_name} - Athlete ID: #{athlete.zero_padded(athlete.fast_pass_id, 4)} Pin: #{athlete.zero_padded(athlete.fast_pass_pin, 4)}\n"
   # end
   # slack_message << "Referred By: #{current_user.referrer}"
   # channel = Rails.env.production? ? "#new-users" : "#slack-testing"
@@ -46,7 +46,7 @@ class ScheduleWorker
   end
 
   def waiver_checks(params)
-    Dependent.all.each do |athlete|
+    Athlete.all.each do |athlete|
       user = athlete.user
       if athlete.waiver.exp_date.to_date == weeks_from_now(1).to_date
         if user.notifications.email_waiver_expiring
@@ -61,9 +61,9 @@ class ScheduleWorker
   end
 
   def remind_recurring_payments(params)
-    athletes_expiring_soon = Dependent.joins(:athlete_subscriptions)
-      .where('athlete_subscriptions.expires_at > ? AND athlete_subscriptions.expires_at < ?', days_from_now(10).beginning_of_day, days_from_now(10).end_of_day)
-      .where('athlete_subscriptions.auto_renew = true')
+    athletes_expiring_soon = Athlete.joins(:recurring_subscriptions)
+      .where('recurring_subscriptions.expires_at > ? AND recurring_subscriptions.expires_at < ?', days_from_now(10).beginning_of_day, days_from_now(10).end_of_day)
+      .where('recurring_subscriptions.auto_renew = true')
     by_users = athletes_expiring_soon.group_by(&:user_id)
 
     by_users.each do |user_id, athletes|
@@ -105,7 +105,7 @@ class ScheduleWorker
             old_sub = athlete.subscription
             old_sub.auto_renew = false
             old_sub.save
-            athlete.athlete_subscriptions.create(cost_in_pennies: old_sub.cost_in_pennies)
+            athlete.recurring_subscriptions.create(cost_in_pennies: old_sub.cost_in_pennies)
           end
         else
           SmsMailerWorker.perform_async('3852599640', "There was an issue updating the subscription for #{user.email}.")

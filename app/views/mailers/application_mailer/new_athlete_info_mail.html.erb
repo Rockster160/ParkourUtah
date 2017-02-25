@@ -2,8 +2,8 @@
 <br/>
 <% @athletes.each do |athlete| %>
   <h4><%= athlete.full_name %></h4>
-  <p>Athlete ID is: <strong><%= athlete.zero_padded(athlete.athlete_id, 4) %></strong></p>
-  <p>Athlete PIN is: <strong><%= athlete.zero_padded(athlete.athlete_pin, 4) %></strong></p>
+  <p>Athlete ID is: <strong><%= athlete.zero_padded(athlete.fast_pass_id, 4) %></strong></p>
+  <p>Athlete PIN is: <strong><%= athlete.zero_padded(athlete.fast_pass_pin, 4) %></strong></p>
 <% end %>
 <p>Do NOT give out or forget your ID's or Access Codes.</p>
 <p>ID's are permanent and cannot be changed. They tell us who you are.</p>

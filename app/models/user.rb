@@ -71,8 +71,8 @@ class User < ApplicationRecord
 
   has_many :unlimited_subscriptions, dependent: :destroy
   has_many :carts,                   dependent: :destroy
-  has_many :dependents,              dependent: :destroy
-  has_many :subscriptions,           dependent: :destroy
+  has_many :athletes,                dependent: :destroy
+  has_many :event_subscriptions,     dependent: :destroy
   has_many :chat_room_users,         dependent: :destroy
   has_many :emergency_contacts,      dependent: :destroy
   has_many :cart_items,              through: :cart
@@ -122,8 +122,8 @@ class User < ApplicationRecord
   scope :by_signed_in, -> { order(last_sign_in_at: :desc) }
   scope :by_fuzzy_text, lambda { |text|
     text = "%#{text}%"
-    joins('LEFT OUTER JOIN dependents ON users.id = dependents.user_id')
-      .where("email ILIKE ? OR concat(users.first_name, ' ', users.last_name) ILIKE ? OR CAST(users.id AS TEXT) ILIKE ? OR dependents.full_name ILIKE ? OR CAST(dependents.athlete_id AS TEXT) ILIKE ?", text, text, text, text, text).uniq
+    joins('LEFT OUTER JOIN athletes ON users.id = athletes.user_id')
+      .where("email ILIKE ? OR concat(users.first_name, ' ', users.last_name) ILIKE ? OR CAST(users.id AS TEXT) ILIKE ? OR athletes.full_name ILIKE ? OR CAST(athletes.fast_pass_id AS TEXT) ILIKE ?", text, text, text, text, text).uniq
   }
   scope :by_phone_number, ->(number) { where("REGEXP_REPLACE(phone_number, '[^0-9]', '', 'g') ILIKE ?", "%#{strip_phone_number(number)}") }
   scope :instructors, -> { where("role > 0").order(:instructor_position) }
@@ -204,21 +204,21 @@ class User < ApplicationRecord
   end
 
   def athletes_with_unlimited_access
-    athletes.joins(:athlete_subscriptions).where("athlete_subscriptions.expires_at > ?", Time.zone.now)
+    athletes.joins(:recurring_subscriptions).where("recurring_subscriptions.expires_at > ?", Time.zone.now)
   end
 
   def subscribed_athletes
-    athletes.joins(:athlete_subscriptions).where(athlete_subscriptions: { auto_renew: true })
+    athletes.joins(:recurring_subscriptions).where(recurring_subscriptions: { auto_renew: true })
   end
 
-  def athlete_subscriptions
+  def recurring_subscriptions
     athletes_with_unlimited_access.map(&:subscription).compact
   end
 
   def subscriptions_cost
-    return 0 unless athlete_subscriptions
+    return 0 unless recurring_subscriptions
 
-    athlete_subscriptions.inject(0) { |sum, subscription| sum + subscription.cost_in_pennies }
+    recurring_subscriptions.inject(0) { |sum, subscription| sum + subscription.cost_in_pennies }
   end
 
   def emergency_numbers
@@ -226,19 +226,19 @@ class User < ApplicationRecord
   end
 
   def athletes
-    dependents
+    athletes
   end
 
   def non_verified_athletes
-    dependents.select { |d| !(d.verified) }
+    athletes.select { |d| !(d.verified) }
   end
 
   def athletes_by_waiver_expiration
-    dependents.sort_by { |d| d.waiver ? d.waiver.created_at : created_at }
+    athletes.sort_by { |d| d.waiver ? d.waiver.created_at : created_at }
   end
 
   def athletes_where_expired_past_or_soon
-    dependents.select { |d| !(d.waiver) || d.waiver.expires_soon? || !(d.waiver.is_active?) }
+    athletes.select { |d| !(d.waiver) || d.waiver.expires_soon? || !(d.waiver.is_active?) }
   end
 
   def is_subscribed_to?(event_schedule_id)

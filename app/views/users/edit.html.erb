@@ -14,14 +14,14 @@
       <div class="pkut-btn big-btn orange-btn-glowing forceOpen" data-toggle="modal" data-target="#verify_athletes">
         Click here to receive 2 trial classes!
       </div> <br>
-      <%= render partial: 'dependents/verify_athletes' %>
+      <%= render partial: 'athletes/verify_athletes' %>
     <% end %>
     <% if @user.unassigned_subscriptions_count > 0 %>
       <div class="pkut-btn big-btn forceOpen" data-toggle="modal" data-target="#assign_subscriptions">
         Assign subscriptions to students!
       </div> <br>
     <% end %>
-    <%= render partial: 'dependents/assign_subscriptions' %>
+    <%= render partial: 'athletes/assign_subscriptions' %>
     <a class="pkut-btn text-center forceOpen" data-toggle="modal" data-target="#notification_modal">Edit Notifications</a><br/>
     <%= render partial: 'devise/registrations/notifications' %>
     <%
@@ -164,7 +164,7 @@
     <div class="col-sm-9">
       <% @user.athletes_by_waiver_expiration.each_with_index do |athlete, pos| %>
         <div class="row">
-          <h4><%= athlete.full_name %> - ID:<%= athlete.zero_padded(athlete.athlete_id, 4) %></h4>
+          <h4><%= athlete.full_name %> - ID:<%= athlete.zero_padded(athlete.fast_pass_id, 4) %></h4>
           <% if athlete.trials.count > 0 %>
             <h4 style="color:yellow;">Trial Classes remaining: <%= athlete.trials.count %></h4>
           <% end %>
@@ -207,7 +207,7 @@
     <p>Enter the new desired pin for</p>
     <strong><%= athlete.full_name %></strong>
     <%= form_tag reset_pin_path(athlete) do %>
-      <%= telephone_field_tag "athlete_pin", '', placeholder: 'New Pin', class: 'pkut-textbox sm-textbox formatPin ', autocomplete: 'off', style: 'padding-top: 0;' %>
+      <%= telephone_field_tag "fast_pass_pin", '', placeholder: 'New Pin', class: 'pkut-textbox sm-textbox formatPin ', autocomplete: 'off', style: 'padding-top: 0;' %>
       <%= telephone_field_tag "pin_confirmation", '', placeholder: 'Confirm', class: 'pkut-textbox sm-textbox formatPin ', autocomplete: 'off', style: 'padding-top: 0;' %>
       <p>Please enter your current password below to verify:</p>
       <%= password_field_tag :password, '', autocomplete: 'off', class: 'pkut-textbox' %>

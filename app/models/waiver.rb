@@ -2,18 +2,18 @@
 #
 # Table name: waivers
 #
-#  id           :integer          not null, primary key
-#  dependent_id :integer
-#  signed       :boolean
-#  signed_for   :string
-#  signed_by    :string
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
+#  id         :integer          not null, primary key
+#  athlete_id :integer
+#  signed     :boolean
+#  signed_for :string
+#  signed_by  :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 
 class Waiver < ApplicationRecord
 
-  belongs_to :dependent
+  belongs_to :athlete
   validate :has_matching_name_as_athlete
   after_create :signed_false
 
@@ -30,7 +30,7 @@ class Waiver < ApplicationRecord
   end
 
   def has_matching_name_as_athlete
-    unless Dependent.find(self.dependent_id).full_name.squish.downcase == self.signed_for.squish.downcase
+    unless Athlete.find(self.athlete_id).full_name.squish.downcase == self.signed_for.squish.downcase
       errors.add(:signed_for, "Athlete name must match the one listed.")
     end
   end
