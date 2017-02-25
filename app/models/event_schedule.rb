@@ -33,7 +33,7 @@ class EventSchedule < ApplicationRecord
   has_many :events
   has_many :attendances, through: :events
   has_many :event_subscriptions, dependent: :destroy
-  has_many :subscribed_users, through: :subscriptions, source: :user
+  has_many :subscribed_users, through: :event_subscriptions, source: :user
 
   before_save :add_hash_to_colors
 

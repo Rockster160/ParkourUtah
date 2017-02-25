@@ -5,18 +5,14 @@
     <%= link_to "Back to Users Page", admin_users_path, class: 'pkut-btn' %><br/>
   <% end %>
   <%= link_to 'Back', :back, class: 'pkut-btn' %><br/>
-  <% if @user.stripe_subscription? %>
-    <h3 style="color: green;"><%= @user.id %>: <%= '!' unless @user.notifications.email_newsletter? %><%= @user.email %>*</h3>
-  <% else %>
-    <h3><%= @user.id %>: <%= '!' unless @user.notifications.email_newsletter? %><%= @user.email %></h3>
-  <% end %>
+  <h3><%= @user.id %>: <%= '!' unless @user.notifications.email_newsletter? %><%= @user.email %></h3>
   <%= link_to "Send Email", batch_email_admin_path(recipients: @user.email) if current_user.is_admin? %>
   <p>
     <strong>
       <%= '!' unless @user.notifications.sms_receivable? %>
       <%= @user.show_phone_number %>
     </strong>
-    
+
     <% if @user.notifications.sms_receivable? && current_user.is_admin? && @user.phone_number.present? %>
       <%= link_to("Send Text Message", phone_number_chat_rooms_path(@user.phone_number)) %>
     <% end %>

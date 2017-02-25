@@ -40,14 +40,14 @@ class EventSchedulesController < ApplicationController
 
   def subscribe
     user = params[:user_id].present? ? User.find(params[:user_id]) : current_user
-    user.subscriptions.create(event_schedule_id: params[:id])
+    user.event_subscriptions.find_or_create_by(event_schedule_id: params[:id])
     flash[:notice] = "You have successfully subscribed to this event."
     redirect_back fallback_location: root_path
   end
 
   def unsubscribe
     user = params[:user_id].present? ? User.find(params[:user_id]) : current_user
-    user.subscriptions.where(event_schedule_id: params[:id]).destroy_all
+    user.event_subscriptions.where(event_schedule_id: params[:id]).destroy_all
     flash[:notice] = "You have successfully unsubscribed from this event."
     redirect_back fallback_location: root_path
   end

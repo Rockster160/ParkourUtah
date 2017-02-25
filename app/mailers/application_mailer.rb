@@ -42,11 +42,14 @@ class ApplicationMailer < ActionMailer::Base
   def notify_subscription_updating(user_id)
     @user = User.find(user_id)
     range = (10.days.from_now.beginning_of_day..10.days.from_now.end_of_day)
-    @expiring_athletes = @user.athletes.joins(:recurring_subscriptions).where('recurring_subscriptions.expires_at > ? AND recurring_subscriptions.expires_at < ?', range.min, range.max).where('recurring_subscriptions.auto_renew = true')
-    @expiring_athletes = @expiring_athletes.select { |a| range.cover?(a.subscription.expires_at) }
+    @expiring_athletes = @user.athletes
+      .joins(:recurring_subscriptions)
+      .where(recurring_subscriptions: { expires_at: range })
+      .where(recurring_subscriptions: { auto_renew: true })
+    @expiring_athletes = @expiring_athletes.select { |expiring_athlete| range.cover?(expiring_athlete.has_access_until) }
     return nil unless @expiring_athletes.any?
 
-    mail(to: @user.email, subject: "Your recurring payment will charge again soon!")
+    mail(to: @user.email, subject: "Your recurring payment will charge again in 10 days!")
   end
 
   def customer_purchase_mail(cart_id, email)

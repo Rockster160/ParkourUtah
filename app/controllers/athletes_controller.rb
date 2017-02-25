@@ -64,13 +64,16 @@ class AthletesController < ApplicationController
     athlete = Athlete.find(params[:fast_pass_id])
     user = athlete.user
 
-    if user.unassigned_subscriptions_count > 0
-      if user.update(unassigned_subscriptions_count: user.unassigned_subscriptions_count-1)
-        athlete.recurring_subscriptions.create
+    if user.recurring_subscriptions.unassigned.count > 0
+      subscription = user.recurring_subscriptions.unassigned.last
+      if subscription.update(athlete_id: athlete.id)
+        redirect_to edit_user_path, notice: "Successfully assigned! This subscription will auto-charge each month from now on."
+      else
+        redirect_to edit_user_path, alert: "Failed to add the Subscription. The start and expiration dates will not be set until successfully assigned."
       end
+    else
+      redirect_to edit_user_path, alert: "No subscriptions to assign"
     end
-
-    redirect_back fallback_location: root_path
   end
 
   def update_waiver

@@ -69,7 +69,7 @@ class User < ApplicationRecord
   has_one  :address,                 dependent: :destroy
   has_one  :notifications,           dependent: :destroy
 
-  has_many :unlimited_subscriptions, dependent: :destroy
+  has_many :recurring_subscriptions, dependent: :destroy
   has_many :carts,                   dependent: :destroy
   has_many :athletes,                dependent: :destroy
   has_many :event_subscriptions,     dependent: :destroy
@@ -82,7 +82,7 @@ class User < ApplicationRecord
   has_many :attendances_taught, class_name: "Attendance",    foreign_key: "instructor_id"
   has_many :sent_messages,      class_name: "Message",       foreign_key: "sent_from_id"
 
-  has_many :subscribed_events, through: :subscriptions, source: "event_schedule"
+  has_many :subscribed_events, through: :event_subscriptions, source: "event_schedule"
 
   accepts_nested_attributes_for :emergency_contacts
   accepts_nested_attributes_for :address
@@ -204,45 +204,33 @@ class User < ApplicationRecord
   end
 
   def athletes_with_unlimited_access
-    athletes.joins(:recurring_subscriptions).where("recurring_subscriptions.expires_at > ?", Time.zone.now)
+    athletes.joins(:recurring_subscriptions).where("recurring_subscriptions.expires_at > ?", Time.zone.now).distinct
   end
 
   def subscribed_athletes
-    athletes.joins(:recurring_subscriptions).where(recurring_subscriptions: { auto_renew: true })
-  end
-
-  def recurring_subscriptions
-    athletes_with_unlimited_access.map(&:subscription).compact
+    athletes.joins(:recurring_subscriptions).where(recurring_subscriptions: { auto_renew: true }).distinct
   end
 
   def subscriptions_cost
     return 0 unless recurring_subscriptions
 
-    recurring_subscriptions.inject(0) { |sum, subscription| sum + subscription.cost_in_pennies }
+    recurring_subscriptions.map(&:cost_in_pennies).sum
   end
 
   def emergency_numbers
     self.emergency_contacts.map { |num| format_phone_number(num) }
   end
 
-  def athletes
-    athletes
-  end
-
-  def non_verified_athletes
-    athletes.select { |d| !(d.verified) }
-  end
-
   def athletes_by_waiver_expiration
-    athletes.sort_by { |d| d.waiver ? d.waiver.created_at : created_at }
+    athletes.sort_by { |athlete| athlete.waiver ? athlete.waiver.created_at : created_at }
   end
 
   def athletes_where_expired_past_or_soon
-    athletes.select { |d| !(d.waiver) || d.waiver.expires_soon? || !(d.waiver.is_active?) }
+    athletes.select { |athlete| !(athlete.waiver) || athlete.waiver.expires_soon? || !(athlete.waiver.is_active?) }
   end
 
   def is_subscribed_to?(event_schedule_id)
-    Subscription.where(user_id: self.id, event_schedule_id: event_schedule_id || 0).any?
+    event_subscriptions.where(event_schedule_id: event_schedule_id).any?
   end
 
   def charge_credits(price)

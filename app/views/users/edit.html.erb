@@ -16,7 +16,7 @@
       </div> <br>
       <%= render partial: 'athletes/verify_athletes' %>
     <% end %>
-    <% if @user.unassigned_subscriptions_count > 0 %>
+    <% if @user.recurring_subscriptions.unassigned.count > 0 %>
       <div class="pkut-btn big-btn forceOpen" data-toggle="modal" data-target="#assign_subscriptions">
         Assign subscriptions to students!
       </div> <br>

@@ -21,12 +21,22 @@
 #  verified                   :boolean          default(FALSE)
 #
 
+##
+# Unused?
+#
+# emergency_contact
+# athlete_photo
+# first_name
+# middle_name
+# last_name
 class Athlete < ApplicationRecord
+
   belongs_to :user
-  has_many :waivers, dependent: :destroy
-  has_many :trial_classes, dependent: :destroy
+
+  has_many :waivers,                 dependent: :destroy
+  has_many :trial_classes,           dependent: :destroy
   has_many :recurring_subscriptions, dependent: :destroy
-  has_many :attendances, dependent: :destroy
+  has_many :attendances,             dependent: :destroy
 
   has_attached_file :athlete_photo,
                :styles => { :medium => "300", :thumb => "100x100#" },
@@ -37,6 +47,18 @@ class Athlete < ApplicationRecord
   validates_attachment_content_type :athlete_photo, :content_type => /\Aimage\/.*\Z/
 
   before_save :fix_attributes
+
+  def self.pins_left
+    bads = []
+    10.times do |t|
+      bads << "666#{t}".to_i
+      bads << "#{t}666".to_i
+    end
+    bads << 0
+    bads << ENV["PKUT_PIN"].to_i
+    bads << Athlete.all.map { |user| user.fast_pass_id }
+    ((0...9999).to_a - bads.flatten)
+  end
 
   def self.find_or_create_by_name_and_dob(param, user)
     name = param["name"]
@@ -71,7 +93,7 @@ class Athlete < ApplicationRecord
   def charge_class(event)
     event_cost = event.cost_in_dollars.to_i
     if event.accepts_unlimited_classes? && has_unlimited_access?
-      current_subscription.use! ? 'Unlimited Subscription' : false
+      use_subscription! ? 'Unlimited Subscription' : false
     elsif event.accepts_trial_classes? && has_trial?
       use_trial! ? 'Trial Class' : false
     elsif user.credits >= event_cost
@@ -81,18 +103,15 @@ class Athlete < ApplicationRecord
     end
   end
 
-  def trials
+  def unused_trials
     trial_classes.where(used: false)
   end
-
   def has_trial?
-    trials.any?
+    unused_trials.any?
   end
-
   def trial
-    trials.first
+    unused_trials.first
   end
-
   def use_trial!
     trial.try(:use!) || false
   end
@@ -100,19 +119,17 @@ class Athlete < ApplicationRecord
   def has_unlimited_access?
     current_subscription.try(:active?) || false
   end
-
   def has_access_until
-    recurring_subscriptions.active.order(:expires_at).last.expires_at
+    current_subscription.try(:expires_at)
   end
-
   def subscribed?
-    return false unless current_subscription
-
-    current_subscription.auto_renew
+    current_subscription.try(:auto_renew?) || false
   end
-
   def current_subscription
-    recurring_subscriptions.active.order(:expires_at).last
+    recurring_subscriptions.active.by_most_recent(:expires_at).first
+  end
+  def use_subscription!
+    current_subscription.try(:use!) || false
   end
 
   def signed_waiver?
@@ -126,17 +143,10 @@ class Athlete < ApplicationRecord
     self.waiver.sign!
   end
 
-  def zero_padded(num, digits)
-    str = ""
-    (digits.to_i - num.to_s.length).times {str << "0"}
-    str << num.to_s
-    str
-  end
-
   def waiver
     waivers = self.waivers.group_by { |waiver| waiver.is_active? }[true]
     waivers ||= self.waivers
-    waivers.sort_by(&:created_at).last
+    waivers.by_most_recent(:created_at).first
   end
 
   def emergency_phone
@@ -160,18 +170,6 @@ class Athlete < ApplicationRecord
     self.save
   end
 
-  def self.pins_left
-    bads = []
-    10.times do |t|
-      bads << "666#{t}".to_i
-      bads << "#{t}666".to_i
-    end
-    bads << 0
-    bads << ENV["PKUT_PIN"].to_i
-    bads << Athlete.all.map { |user| user.fast_pass_id }
-    ((0...9999).to_a - bads.flatten)
-  end
-
   def sign_up_verified
     2.times { self.trial_classes.create }
   end
@@ -184,7 +182,7 @@ class Athlete < ApplicationRecord
   end
 
   def format_name
-    self.full_name = self.full_name.squish.split(' ').map(&:capitalize).join(' ')
+    self.full_name = self.full_name.squish.titleize
   end
 
   def self.format_dob(dob)

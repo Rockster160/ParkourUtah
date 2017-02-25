@@ -4,11 +4,7 @@
   <div>Users: <%= @users.total_count %></div>
   <div><%= paginate @users %></div>
   <% @users.each do |user| %>
-    <% if user.stripe_subscription? %>
-      <h3 style="color: green;"><%= user.id %>: <%= '!' unless user.notifications.email_newsletter? %><%= user.email %>*</h3>
-    <% else %>
-      <h3><%= user.id %>: <%= '!' unless user.notifications.email_newsletter? %><%= user.email %></h3>
-    <% end %>
+    <h3><%= user.id %>: <%= '!' unless user.notifications.email_newsletter? %><%= user.email %></h3>
     <%= link_to 'View User Management Page', admin_user_path(user) %>
     <p><strong><%= '!' unless user.notifications.sms_receivable? %><%= user.show_phone_number %></strong></p>
     <p>Credits: <%= user.credits %>

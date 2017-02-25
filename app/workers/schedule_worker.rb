@@ -26,9 +26,9 @@ class ScheduleWorker
 
   def send_class_text(params)
     date_range = minutes_from_now(110)..minutes_from_now(130)
-    Subscription.find_each do |subscriber|
-      user = subscriber.user
-      user.subscribed_events.joins(:events).where(events: {date: date_range}).each do |schedule|
+    EventSubscription.find_each do |subscribed_event|
+      user = subscribed_event.user
+      user.subscribed_events.joins(:events).where(events: { date: date_range }).each do |schedule|
         event = schedule.events.where(date: date_range).first
         next if event.cancelled?
         if user.notifications.text_class_reminder && user.notifications.sms_receivable
@@ -62,8 +62,8 @@ class ScheduleWorker
 
   def remind_recurring_payments(params)
     athletes_expiring_soon = Athlete.joins(:recurring_subscriptions)
-      .where('recurring_subscriptions.expires_at > ? AND recurring_subscriptions.expires_at < ?', days_from_now(10).beginning_of_day, days_from_now(10).end_of_day)
-      .where('recurring_subscriptions.auto_renew = true')
+      .where(recurring_subscriptions: { expires_at: (days_from_now(10).beginning_of_day)..(days_from_now(10).end_of_day) })
+      .where(recurring_subscriptions: { auto_renew: true })
     by_users = athletes_expiring_soon.group_by(&:user_id)
 
     by_users.each do |user_id, athletes|
