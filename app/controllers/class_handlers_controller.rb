@@ -36,7 +36,9 @@ class ClassHandlersController < ApplicationController
     elsif !@athlete.valid_athlete_pin?(params[:pin])
       flash[:alert] = "Incorrect Athlete Pin."
       return redirect_to athlete_pin_class_handler_path(@event, athlete_id: params[:athlete_id])
-    elsif !@athlete.attend_class(@event, current_user)
+    elsif @athlete.attend_class(@event, current_user)
+      flash[:notice] = "Athlete successfully added to class!"
+    else
       if @athlete.attendances.where(event_id: @event.id).any?
         flash[:alert] = "Athlete is already attending class."
       elsif @athlete.user.credits < @event.cost_in_dollars
@@ -45,8 +47,6 @@ class ClassHandlersController < ApplicationController
         SlackNotifier.notify("Failed to add athlete: #{@athlete.id}: #{@athlete.full_name}", "#server-errors")
         flash[:alert] = "Failed to add Athlete to class."
       end
-    else
-      flash[:notice] = "Athlete successfully added to class!"
     end
     redirect_to athlete_id_class_handler_path(@event)
   end

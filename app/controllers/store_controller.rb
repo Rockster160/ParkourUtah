@@ -139,7 +139,7 @@ class StoreController < ApplicationController
       rescue Stripe::CardError => e
         stripe_charge = {failure_message: "Failed to Charge: #{e}"}
       rescue
-        stripe_charge = {failure_message: "Failed to Charge, try logging out and back in or trying a different browser?"}
+        stripe_charge = {failure_message: "Failed to Charge, try logging out and back in or trying a different browser."}
       end
     end
     order_success = stripe_charge.nil? || stripe_charge.try(:status) == "succeeded"
