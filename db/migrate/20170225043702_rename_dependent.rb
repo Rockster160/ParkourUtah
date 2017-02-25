@@ -25,8 +25,9 @@ class RenameDependent < ActiveRecord::Migration[5.0]
         RecurringSubscription.find_each do |subscription|
           print subscription.update(user_id: subscription.try(:athlete).try(:user_id)) ? "\e[32m.\e[0m" : "\e[31m.\e[0m"
         end
+        puts ""
         User.find_each do |user|
-          print "\n#{user.id}"
+          print "#{user.id}"
           # Move SMS receivable to User
           print user.update(can_receive_sms: user.try(:notifications).try(:sms_receivable)) ? "\e[32m.\e[0m" : "\e[31m.\e[0m"
           # Backfill unassigned subscriptions
