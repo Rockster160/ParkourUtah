@@ -27,20 +27,19 @@ class ScheduleWorker
 
   def send_class_text(params)
     date_range = minutes_from_now(110)..minutes_from_now(130)
-    EventSubscription.find_each do |subscribed_event|
-      user = subscribed_event.user
-      user.subscribed_events.joins(:events).where(events: { date: date_range }).each do |schedule|
-        event = schedule.events.where(date: date_range).first
-        next if event.cancelled?
+    Event.joins(event_schedule: :event_subscriptions).where(date: date_range).find_each do |subscribed_event|
+      next if subscribed_event.cancelled?
+      subscribed_users = subscribed_event.event_schedule.subscribed_users
+      subscribed_users.each do |user|
         if user.notifications.text_class_reminder && user.notifications.sms_receivable
           num = user.phone_number
           if num.length == 10
-            msg = "Hope to see you at our #{event.title} class today at #{event.date.strftime('%-l:%M')}!"
+            msg = "Hope to see you at our #{subscribed_event.title} class today at #{subscribed_event.date.strftime('%-l:%M')}!"
             Message.text.create(body: msg, chat_room_name: num, sent_from_id: 0).deliver
           end
         end
         if user.notifications.email_class_reminder?
-          ::ClassReminderMailerWorker.perform_async(user.id, "Hope to see you at our #{event.title} class today at #{event.date.strftime('%-l:%M')}!")
+          ::ClassReminderMailerWorker.perform_async(user.id, "Hope to see you at our #{subscribed_event.title} class today at #{subscribed_event.date.strftime('%-l:%M')}!")
         end
       end
     end

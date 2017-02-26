@@ -1,5 +1,6 @@
 class EventSchedulesController < ApplicationController
-  before_action :validate_user, only: [ :create, :new ]
+  before_action :validate_admin, except: [ :show, :subscribe, :unsubscribe ]
+  before_action :validate_instructor, only: [ :show ]
 
   def index
     @event_schedules = EventSchedule.in_the_future
@@ -66,13 +67,6 @@ class EventSchedulesController < ApplicationController
   end
 
   private
-
-  def validate_user
-    unless user_signed_in? && current_user.is_admin?
-      flash[:alert] = "You are not permitted to create Events."
-      redirect_to root_path
-    end
-  end
 
   def event_schedule_params
     params.require(:event_schedule).permit(
