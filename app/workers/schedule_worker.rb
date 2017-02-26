@@ -1,5 +1,6 @@
 class ScheduleWorker
   include Sidekiq::Worker
+  include ActionView::Helpers::NumberHelper
   sidekiq_options retry: false
 
   def perform(task_values)
@@ -48,12 +49,13 @@ class ScheduleWorker
   def waiver_checks(params)
     Athlete.find_each do |athlete|
       user = athlete.user
+      next unless athlete.waiver.present?
       if athlete.waiver.expiry_date.to_date == weeks_from_now(1).to_date
         if user.notifications.email_waiver_expiring
-          ::ExpiringWaiverMailerWorker.perform_async(athlete.id)
+          ApplicationMailer.expiring_waiver_mail(athlete.id).deliver
         end
         if user.notifications.text_waiver_expiring && user.notifications.sms_receivable
-          msg = "The waiver belonging to #{athlete.full_name} is no longer active as of #{athlete.waiver.expiry_date.strftime('%B %e')}. Head up to ParkourUtah.com to get it renewed!"
+          msg = "The waiver belonging to #{athlete.full_name} is no longer active as of #{athlete.waiver.expiry_date.strftime('%B %-d')}. Head up to ParkourUtah.com to get it renewed!"
           Message.text.create(body: msg, chat_room_name: user.phone_number, sent_from_id: 0).deliver
         end
       end
@@ -67,7 +69,7 @@ class ScheduleWorker
     by_users = athletes_expiring_soon.group_by(&:user_id)
 
     by_users.each do |user_id, athletes|
-      ExpiringWaiverMailer.notify_subscription_updating(user_id).deliver_now
+      ApplicationMailer.notify_subscription_updating(user_id).deliver
 
       slack_message = "Unlimited Subscriptions to update in 10 days: #{athletes.map(&:full_name).join(", ")}"
       channel = Rails.env.production? ? "#purchases" : "#slack-testing"
@@ -87,12 +89,12 @@ class ScheduleWorker
             customer: stripe_subscriptions.first.stripe_id
           })
         rescue Stripe::CardError => e
+          stripe_charge = {failure_message: "Stripe Error: Failed to Charge: #{e}"}
+        rescue => e
           stripe_charge = {failure_message: "Failed to Charge: #{e}"}
-        rescue
-          stripe_charge = {failure_message: "Failed to Charge, try logging out and back in or trying a different browser."}
         end
         if stripe_charge.try(:status) == "succeeded"
-          slack_message = "Charged Unlimited Subscriptions for #{user.email} at $#{(total_cost/100.to_f).round(2)}."
+          slack_message = "Charged Unlimited Subscriptions for #{user.email} at #{number_to_currency(total_cost/100.to_f)}."
           channel = Rails.env.production? ? "#purchases" : "#slack-testing"
           SlackNotifier.notify(slack_message, channel)
 
@@ -119,7 +121,7 @@ class ScheduleWorker
     when "month" then [last_week.beginning_of_month, last_week.end_of_month]
     end
     summary = ClassSummaryCalculator.new(start_date: start_date, end_date: end_date).generate
-    ApplicationMailer.summary_mail(summary, nil, params["scope"] == "month").deliver_now
+    ApplicationMailer.summary_mail(summary, nil, params["scope"] == "month").deliver
   end
 
   def pull_logs_from_s3(params)

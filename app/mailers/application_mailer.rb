@@ -33,8 +33,8 @@ class ApplicationMailer < ActionMailer::Base
     mail(to: ENV['PKUT_EMAIL'], subject: "Request for Contact")
   end
 
-  def expiring_waiver_mail(fast_pass_id)
-    @athlete = Athlete.find(fast_pass_id.to_i)
+  def expiring_waiver_mail(athlete_id)
+    @athlete = Athlete.find(athlete_id)
 
     mail(to: @athlete.user.email, subject: "#{@athlete.full_name}'s waiver expires soon!")
   end

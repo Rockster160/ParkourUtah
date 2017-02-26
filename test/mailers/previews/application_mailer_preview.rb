@@ -26,8 +26,7 @@ class ApplicationMailerPreview < ActionMailer::Preview
   end
 
   def expiring_waiver_mail
-    fast_pass_id = User[4].athletes.first.id
-    ApplicationMailer.expiring_waiver_mail(fast_pass_id)
+    ApplicationMailer.expiring_waiver_mail(4)
   end
 
   def notify_subscription_updating
