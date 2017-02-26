@@ -65,12 +65,4 @@ class UsersController < ApplicationController
     )
   end
 
-  def address_params
-    params.require(:address).permit(:line1, :line2, :city, :state, :zip)
-  end
-
-  def ec_contact_params
-    params.require(:emergency_contacts).permit(:name, :number)
-  end
-
 end

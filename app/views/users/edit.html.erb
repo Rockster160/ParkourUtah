@@ -10,18 +10,18 @@
 <div class="central-container form-offset">
 
   <div class="row text-center">
-    <% if @user.non_verified_athletes.count > 0 %>
+    <% if @user.athletes.unverified.count > 0 %>
       <div class="pkut-btn big-btn orange-btn-glowing forceOpen" data-toggle="modal" data-target="#verify_athletes">
         Click here to receive 2 trial classes!
       </div> <br>
-      <%= render partial: 'dependents/verify_athletes' %>
+      <%= render partial: 'athletes/verify_athletes' %>
     <% end %>
-    <% if @user.unassigned_subscriptions_count > 0 %>
+    <% if @user.recurring_subscriptions.unassigned.count > 0 %>
       <div class="pkut-btn big-btn forceOpen" data-toggle="modal" data-target="#assign_subscriptions">
         Assign subscriptions to students!
       </div> <br>
     <% end %>
-    <%= render partial: 'dependents/assign_subscriptions' %>
+    <%= render partial: 'athletes/assign_subscriptions' %>
     <a class="pkut-btn text-center forceOpen" data-toggle="modal" data-target="#notification_modal">Edit Notifications</a><br/>
     <%= render partial: 'devise/registrations/notifications' %>
     <%
@@ -164,9 +164,9 @@
     <div class="col-sm-9">
       <% @user.athletes_by_waiver_expiration.each_with_index do |athlete, pos| %>
         <div class="row">
-          <h4><%= athlete.full_name %> - ID:<%= athlete.zero_padded(athlete.athlete_id, 4) %></h4>
-          <% if athlete.trials.count > 0 %>
-            <h4 style="color:yellow;">Trial Classes remaining: <%= athlete.trials.count %></h4>
+          <h4><%= athlete.full_name %> - ID:<%= athlete.fast_pass_id.to_s.rjust(4, "0") %></h4>
+          <% if athlete.unused_trials.count > 0 %>
+            <h4 style="color:yellow;">Trial Classes remaining: <%= athlete.unused_trials.count %></h4>
           <% end %>
           <% if athlete.has_unlimited_access? %>
             <p>Has unlimited classes until: <%= athlete.has_access_until.strftime('%B %e, %Y') %></p>
@@ -181,12 +181,12 @@
 
           <% if athlete.signed_waiver? && athlete.waiver.is_active? %>
             <% if athlete.waiver.expires_soon? %>
-              <%= link_to waivers_path(athlete.id) do  %>
-                <span class="pkut-header title">Waiver active until <%= athlete.waiver.exp_date.strftime('%B %-d, %Y') %></span>
+              <%= link_to waivers_path do  %>
+                <span class="pkut-header title">Waiver active until <%= athlete.waiver.expiry_date.strftime('%B %-d, %Y') %></span>
                 Update Waiver
               <% end %>
             <% else %>
-                Waiver active until <%= athlete.waiver.exp_date.strftime('%B %-d, %Y') %>
+                Waiver active until <%= athlete.waiver.expiry_date.strftime('%B %-d, %Y') %>
             <% end %>
           <% else %>
             <%= link_to "Must have waiver signed before attending class.", waivers_path, class: 'fancy-link' %>
@@ -207,7 +207,7 @@
     <p>Enter the new desired pin for</p>
     <strong><%= athlete.full_name %></strong>
     <%= form_tag reset_pin_path(athlete) do %>
-      <%= telephone_field_tag "athlete_pin", '', placeholder: 'New Pin', class: 'pkut-textbox sm-textbox formatPin ', autocomplete: 'off', style: 'padding-top: 0;' %>
+      <%= telephone_field_tag "fast_pass_pin", '', placeholder: 'New Pin', class: 'pkut-textbox sm-textbox formatPin ', autocomplete: 'off', style: 'padding-top: 0;' %>
       <%= telephone_field_tag "pin_confirmation", '', placeholder: 'Confirm', class: 'pkut-textbox sm-textbox formatPin ', autocomplete: 'off', style: 'padding-top: 0;' %>
       <p>Please enter your current password below to verify:</p>
       <%= password_field_tag :password, '', autocomplete: 'off', class: 'pkut-textbox' %>

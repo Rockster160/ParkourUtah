@@ -21,7 +21,7 @@ class StoreController < ApplicationController
   end
 
   def unsubscribe
-    athlete = Dependent.find(params[:id])
+    athlete = Athlete.find(params[:id])
     if athlete.current_subscription.update(auto_renew: false)
       redirect_to edit_user_path, notice: 'Successfully Unsubscribed'
     else
@@ -100,10 +100,7 @@ class StoreController < ApplicationController
     else
       if user_signed_in?
         @cart_is_subscription = @cart.items.any?(&:is_subscription)
-        if @cart_is_subscription
-          customer = create_customer
-          current_user.update(stripe_id: customer.id) if customer
-        end
+        create_customer if @cart_is_subscription
         purchase_cart
       else
         categories = @cart.items.map(&:category).uniq
@@ -121,11 +118,10 @@ class StoreController < ApplicationController
   def create_customer
     Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
     token = params[:stripeToken]
-    customer = Stripe::Customer.create(
-      :source => token,
-      :description => params[:stripeEmail]
+    @customer = Stripe::Customer.create(
+      source: token,
+      description: params[:stripeEmail]
     )
-    customer
   end
 
   def create_charge
@@ -135,10 +131,11 @@ class StoreController < ApplicationController
         stripe_charge = Stripe::Charge.create({
           amount: @cart.total,
           currency: "usd"
-        }.merge(@cart_is_subscription ? {customer: current_user.stripe_id} : {source: params[:stripeToken]}))
+        }.merge(@customer.present? ? {customer: @customer.id} : {source: params[:stripeToken]}))
       rescue Stripe::CardError => e
         stripe_charge = {failure_message: "Failed to Charge: #{e}"}
-      rescue
+      rescue => e
+        CustomLogger.log("\e[31mOther error: \n#{e}\e[0m")
         stripe_charge = {failure_message: "Failed to Charge, try logging out and back in or trying a different browser."}
       end
     end
@@ -151,8 +148,12 @@ class StoreController < ApplicationController
           current_user.update(credits: (current_user.credits + (order.amount * line_item.credits))) if user_signed_in?
         end
         if line_item.is_subscription? && user_signed_in?
-          current_user.update(stripe_subscription: true, subscription_cost: line_item.cost_in_pennies)
-          current_user.update(unassigned_subscriptions_count: current_user.unassigned_subscriptions_count + order.amount)
+          order.amount.times do
+            new_sub = current_user.recurring_subscriptions.create(cost_in_pennies: line_item.cost_in_pennies, stripe_id: @customer.try(:id))
+            unless new_sub.persisted?
+              CustomLogger.log("Subscription Error! User: #{current_user.try(:id)} Item: #{line_item.try(:id)} Cost: #{line_item.try(:cost_in_pennies)} CustID: #{@customer.try(:id)}")
+            end
+          end
         end
       end
     else

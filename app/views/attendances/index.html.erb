@@ -4,7 +4,7 @@
   <% @attendances.group_by {|a| a.created_at.to_date}.each do |date, attendances| %>
     <h3><%= date.strftime("%B %-d, %Y") %></h3>
     <ul>
-      <% attendances.each do |attendance| %>
+      <% attendances.sort_by(&:created_at).each do |attendance| %>
         <% next unless attendance.athlete.present? %>
         <li style="margin-top: 10px;">
           <strong>Class:</strong> <%= link_to attendance.event.title, event_schedule_path(attendance.event.event_schedule) %><br>

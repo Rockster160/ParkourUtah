@@ -28,8 +28,8 @@ $(document).ready(function(){
     templates: {
       suggestion: function(data) {
         var athletes = '';
-        $(data.user.dependents).each(function(e) {
-          athletes += ('&nbsp;&nbsp;&nbsp;&nbsp;<span>' + this.full_name.substring(0, 30) + ' - ' + this.athlete_id + '</span><br/>')
+        $(data.user.athletes).each(function(e) {
+          athletes += ('&nbsp;&nbsp;&nbsp;&nbsp;<span>' + this.full_name.substring(0, 30) + ' - ' + this.fast_pass_id + '</span><br/>')
         })
         return '<div><strong>' +
         data.user.email.substring(0, 50) +

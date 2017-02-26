@@ -22,8 +22,8 @@ module ParkourUtah
     config.assets.precompile += ['', '']
     config.public_file_server.enabled = false
     config.assets.initialize_on_precompile true
-    config.autoload_paths += %W(#{config.root}/app/workers)
-    config.eager_load_paths += %W(#{config.root}/app/workers)
+    config.autoload_paths += %W(#{config.root}/app/workers #{config.root}/lib)
+    config.eager_load_paths += %W(#{config.root}/app/workers #{config.root}/lib)
     config.exceptions_app = self.routes
 
     config.time_zone = 'Mountain Time (US & Canada)'

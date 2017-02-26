@@ -59,8 +59,8 @@ Rails.application.routes.draw do
 
   resources :class_handlers, path: 'class', only: [] do
     member do
-      get :athlete_id
-      get :athlete_pin
+      get :fast_pass_id
+      get :fast_pass_pin
       get :logs
       post :join_class
     end
@@ -107,19 +107,19 @@ Rails.application.routes.draw do
 
   delete 'unsubscribe_monthly/:id' => 'store#unsubscribe', as: 'unsubscribe_monthly_subscription'
 
-  get 'athletes/new' => 'dependents#new', as: 'new_athlete'
-  post 'athletes/new' => 'dependents#create'
-  # post 'athletes/create' => 'dependents#create'
-  post 'athletes/update/:athlete_id' => 'dependents#update'
-  post 'athletes/reset/:athlete_id' => 'dependents#reset_pin', as: 'reset_pin'
-  delete 'athlete/:id/delete' => 'dependents#destroy', as: 'destroy_athlete'
-  post 'athletes/verify' => 'dependents#verify', as: 'verify_athletes'
-  post 'athletes/assign_subscription/:athlete_id' => 'dependents#assign_subscription', as: 'assign_subscription'
-  patch 'athletes/update_photo/:id' => 'dependents#update_photo'
+  get 'athletes/new' => 'athletes#new', as: 'new_athlete'
+  post 'athletes/new' => 'athletes#create'
+  # post 'athletes/create' => 'athletes#create'
+  post 'athletes/update/:fast_pass_id' => 'athletes#update'
+  post 'athletes/reset/:fast_pass_id' => 'athletes#reset_pin', as: 'reset_pin'
+  delete 'athlete/:id/delete' => 'athletes#destroy', as: 'destroy_athlete'
+  post 'athletes/verify' => 'athletes#verify', as: 'verify_athletes'
+  post 'athletes/assign_subscription/:fast_pass_id' => 'athletes#assign_subscription', as: 'assign_subscription'
+  patch 'athletes/update_photo/:id' => 'athletes#update_photo'
 
-  get 'waivers' => 'dependents#sign_waiver', as: 'waivers'
-  post 'waivers' => 'dependents#update_waiver'
-  post 'delete_athlete/:athlete_id' => 'dependents#delete_athlete'
+  get 'waivers' => 'athletes#sign_waiver', as: 'waivers'
+  post 'waivers' => 'athletes#update_waiver'
+  post 'delete_athlete/:fast_pass_id' => 'athletes#delete_athlete'
 
   get "users/sign_up", action: "new", controller: "users"
   get "users/edit", action: "edit", controller: "users"

@@ -36,7 +36,7 @@
 #  stats                          :string
 #  title                          :string
 #  nickname                       :string
-#  email_subscription             :boolean          default(TRUE)
+#  can_receive_emails             :boolean          default(TRUE)
 #  stripe_id                      :string
 #  date_of_birth                  :datetime
 #  drivers_license_number         :string
@@ -48,17 +48,22 @@
 #  subscription_cost              :integer          default(5000)
 #  unassigned_subscriptions_count :integer          default(0)
 #  should_display_on_front_page   :boolean          default(TRUE)
+#  can_receive_sms                :boolean          default(TRUE)
+#  full_name                      :string
 #
 
 # Ununsed?
 # first_name
 # last_name
-# email_subscription
 # date_of_birth
 # drivers_license_number
 # drivers_license_state
 # reset_password_token
 # confirmation_token
+# stripe_id
+# stripe_subscription
+# subscription_cost
+# unassigned_subscriptions_count
 
 class User < ApplicationRecord
   extend ApplicationHelper
@@ -69,10 +74,10 @@ class User < ApplicationRecord
   has_one  :address,                 dependent: :destroy
   has_one  :notifications,           dependent: :destroy
 
-  has_many :unlimited_subscriptions, dependent: :destroy
+  has_many :recurring_subscriptions, dependent: :destroy
   has_many :carts,                   dependent: :destroy
-  has_many :dependents,              dependent: :destroy
-  has_many :subscriptions,           dependent: :destroy
+  has_many :athletes,                dependent: :destroy
+  has_many :event_subscriptions,     dependent: :destroy
   has_many :chat_room_users,         dependent: :destroy
   has_many :emergency_contacts,      dependent: :destroy
   has_many :cart_items,              through: :cart
@@ -82,7 +87,7 @@ class User < ApplicationRecord
   has_many :attendances_taught, class_name: "Attendance",    foreign_key: "instructor_id"
   has_many :sent_messages,      class_name: "Message",       foreign_key: "sent_from_id"
 
-  has_many :subscribed_events, through: :subscriptions, source: "event_schedule"
+  has_many :subscribed_events, through: :event_subscriptions, source: "event_schedule"
 
   accepts_nested_attributes_for :emergency_contacts
   accepts_nested_attributes_for :address
@@ -119,11 +124,11 @@ class User < ApplicationRecord
   validate :positive_credits
 
   scope :online, -> { where('last_sign_in_at > ?', 10.minutes.ago) }
-  scope :by_signed_in, -> { order(last_sign_in_at: :desc) }
+  scope :by_signed_in, -> { by_most_recent(:last_sign_in_at) }
   scope :by_fuzzy_text, lambda { |text|
     text = "%#{text}%"
-    joins('LEFT OUTER JOIN dependents ON users.id = dependents.user_id')
-      .where("email ILIKE ? OR concat(users.first_name, ' ', users.last_name) ILIKE ? OR CAST(users.id AS TEXT) ILIKE ? OR dependents.full_name ILIKE ? OR CAST(dependents.athlete_id AS TEXT) ILIKE ?", text, text, text, text, text).uniq
+    joins('LEFT OUTER JOIN athletes ON users.id = athletes.user_id')
+      .where("email ILIKE ? OR concat(users.first_name, ' ', users.last_name) ILIKE ? OR CAST(users.id AS TEXT) ILIKE ? OR athletes.full_name ILIKE ? OR CAST(athletes.fast_pass_id AS TEXT) ILIKE ?", text, text, text, text, text).uniq
   }
   scope :by_phone_number, ->(number) { where("REGEXP_REPLACE(phone_number, '[^0-9]', '', 'g') ILIKE ?", "%#{strip_phone_number(number)}") }
   scope :instructors, -> { where("role > 0").order(:instructor_position) }
@@ -142,11 +147,6 @@ class User < ApplicationRecord
     by_signed_in.first
   end
 
-  def self.every(&block)
-    return self.all.to_enum unless block_given?
-    self.all.each {|user| block.call(user)}
-  end
-
   def self.remove_number_from_texting(num)
     if user = find_by_phone_number(num)
       user.notifications.update(sms_receivable: false)
@@ -160,19 +160,6 @@ class User < ApplicationRecord
     instructors.each_with_index do |instructor, pos|
       instructor.update(instructor_position: pos+1)
     end
-  end
-
-  def self.by_trial_expired_days_ago(days)
-    users = []
-    every do |user|
-      has_expired_athlete = false
-      user.athletes.each do |athlete|
-        if athlete.created_at.to_date == (Time.now - days.days).to_date && !athlete.verified
-          users << user
-        end
-      end
-    end
-    users
   end
 
   def unsubscribe_from(notification_type)
@@ -189,10 +176,6 @@ class User < ApplicationRecord
     self.save!
   end
 
-  def full_name
-    "#{self.first_name.capitalize} #{self.last_name.capitalize}"
-  end
-
   def display_name
     return nickname if nickname.present?
     return full_name if full_name.present?
@@ -204,45 +187,33 @@ class User < ApplicationRecord
   end
 
   def athletes_with_unlimited_access
-    athletes.joins(:athlete_subscriptions).where("athlete_subscriptions.expires_at > ?", Time.zone.now)
+    athletes.joins(:recurring_subscriptions).where("recurring_subscriptions.expires_at > ?", Time.zone.now).distinct
   end
 
   def subscribed_athletes
-    athletes.joins(:athlete_subscriptions).where(athlete_subscriptions: { auto_renew: true })
-  end
-
-  def athlete_subscriptions
-    athletes_with_unlimited_access.map(&:subscription).compact
+    athletes.joins(:recurring_subscriptions).where(recurring_subscriptions: { auto_renew: true }).distinct
   end
 
   def subscriptions_cost
-    return 0 unless athlete_subscriptions
+    return 0 unless recurring_subscriptions
 
-    athlete_subscriptions.inject(0) { |sum, subscription| sum + subscription.cost_in_pennies }
+    recurring_subscriptions.map(&:cost_in_pennies).sum
   end
 
   def emergency_numbers
     self.emergency_contacts.map { |num| format_phone_number(num) }
   end
 
-  def athletes
-    dependents
-  end
-
-  def non_verified_athletes
-    dependents.select { |d| !(d.verified) }
-  end
-
   def athletes_by_waiver_expiration
-    dependents.sort_by { |d| d.waiver ? d.waiver.created_at : created_at }
+    athletes.sort_by { |athlete| athlete.waiver ? athlete.waiver.created_at : created_at }
   end
 
   def athletes_where_expired_past_or_soon
-    dependents.select { |d| !(d.waiver) || d.waiver.expires_soon? || !(d.waiver.is_active?) }
+    athletes.select { |athlete| !(athlete.waiver) || athlete.waiver.expires_soon? || !(athlete.waiver.is_active?) }
   end
 
   def is_subscribed_to?(event_schedule_id)
-    Subscription.where(user_id: self.id, event_schedule_id: event_schedule_id || 0).any?
+    event_subscriptions.where(event_schedule_id: event_schedule_id).any?
   end
 
   def charge_credits(price)
@@ -260,7 +231,18 @@ class User < ApplicationRecord
   end
 
   def create_default_notifications
-    self.notifications ||= Notifications.new
+    self.notifications ||= Notifications.new({
+      email_newsletter:      true,
+      email_class_reminder:  true,
+      email_low_credits:     true,
+      email_waiver_expiring: true,
+      text_class_reminder:   false,
+      text_low_credits:      false,
+      text_waiver_expiring:  false,
+      sms_receivable:        true,
+      text_class_cancelled:  true,
+      email_class_cancelled: true
+    })
   end
 
   def send_welcome_email

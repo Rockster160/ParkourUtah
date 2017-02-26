@@ -1,14 +1,14 @@
-class DependentsController < ApplicationController
+class AthletesController < ApplicationController
   layout 'application', except: [:secret]
 
   def new
-    @dependent = Dependent.new
+    @athlete = Athlete.new
   end
 
   def create
     if params[:athletes]
       potentials = params[:athletes].count
-      athletes = params[:athletes].map { |param| Dependent.find_or_create_by_name_and_dob(param[1], current_user) }
+      athletes = params[:athletes].map { |param| Athlete.find_or_create_by_name_and_dob(param[1], current_user) }
       if potentials == athletes.compact.count
         flash[:notice] = "Success! Now fill out a waiver to get the Athlete Access Codes."
       else
@@ -22,7 +22,7 @@ class DependentsController < ApplicationController
   end
 
   def update_photo
-    athlete = Dependent.find(params[:id])
+    athlete = Athlete.find(params[:id])
 
     if athlete.update(athlete_photo: params[:athlete_photo])
       redirect_back fallback_location: root_path, notice: 'Image successfully updated.'
@@ -32,10 +32,10 @@ class DependentsController < ApplicationController
   end
 
   def update
-    pin = params[:athlete_pin]
-    confirm = params[:confirm_athlete_pin]
+    pin = params[:fast_pass_pin]
+    confirm = params[:confirm_fast_pass_pin]
     if pin == confirm
-      if Dependent.find(params[:athlete_id]).update(athlete_pin: pin)
+      if Athlete.find(params[:fast_pass_id]).update(fast_pass_pin: pin)
         flash[:notice] = "Pin successfully updated."
         redirect_to edit_user_path
       else
@@ -49,9 +49,9 @@ class DependentsController < ApplicationController
   end
 
   def verify
-    params[:athlete].each do |athlete_id, codes|
-      athlete = Dependent.find(athlete_id)
-      if athlete.athlete_id == codes[:athlete_id].to_i && athlete.athlete_pin == codes[:athlete_pin].to_i
+    params[:athlete].each do |fast_pass_id, codes|
+      athlete = Athlete.find(fast_pass_id)
+      if athlete.fast_pass_id == codes[:fast_pass_id].to_i && athlete.fast_pass_pin == codes[:fast_pass_pin].to_i
         if athlete.update(verified: true)
           athlete.sign_up_verified
         end
@@ -61,28 +61,31 @@ class DependentsController < ApplicationController
   end
 
   def assign_subscription
-    athlete = Dependent.find(params[:athlete_id])
+    athlete = Athlete.find(params[:fast_pass_id])
     user = athlete.user
 
-    if user.unassigned_subscriptions_count > 0
-      if user.update(unassigned_subscriptions_count: user.unassigned_subscriptions_count-1)
-        athlete.athlete_subscriptions.create
+    if user.recurring_subscriptions.unassigned.count > 0
+      subscription = user.recurring_subscriptions.unassigned.last
+      if subscription.assign_to_athlete(athlete)
+        redirect_to edit_user_path, notice: "Successfully assigned! This subscription will auto-charge each month from now on."
+      else
+        redirect_to edit_user_path, alert: "Failed to add the Subscription. The start and expiration dates will not be set until successfully assigned."
       end
+    else
+      redirect_to edit_user_path, alert: "No subscriptions to assign"
     end
-
-    redirect_back fallback_location: root_path
   end
 
   def update_waiver
     @valid = []
-    @new_athlete_ids = []
+    @new_fast_pass_ids = []
 
     add_new_athletes_from_waivers
 
     update_existing_athlete_waivers
 
-    if @new_athlete_ids.count > 0
-      ::NewAthleteInfoMailerWorker.perform_async(@new_athlete_ids)
+    if @new_fast_pass_ids.count > 0
+      ::NewAthleteInfoMailerWorker.perform_async(@new_fast_pass_ids)
     end
     if @valid.count == 1
       redirect_to step_4_path, notice: "Success! #{@valid.count} waiver updated/created."
@@ -95,8 +98,8 @@ class DependentsController < ApplicationController
 
   def update_existing_athlete_waivers
     if params[:update_athlete].present?
-      params[:update_athlete].each do |athlete_id, athlete_params|
-        athlete = Dependent.find(athlete_id)
+      params[:update_athlete].each do |fast_pass_id, athlete_params|
+        athlete = Athlete.find(fast_pass_id)
         if validate_athlete_attributes(athlete_params)
           athlete.waivers.create({
             signed_for: athlete.full_name,
@@ -112,17 +115,17 @@ class DependentsController < ApplicationController
     if params[:athlete].present?
       params[:athlete].each do |token, athlete|
         if validate_athlete_attributes(athlete)
-          new_athlete = current_user.dependents.create({
+          new_athlete = current_user.athletes.create({
             full_name: athlete[:name],
             date_of_birth: athlete[:dob],
-            athlete_pin: athlete[:code]
+            fast_pass_pin: athlete[:code]
           })
           new_athlete.waivers.create({
             signed_for: new_athlete.full_name,
             signed_by: params[:signed_by],
           })
           if new_athlete.sign_waiver!
-            @new_athlete_ids << new_athlete.id
+            @new_fast_pass_ids << new_athlete.id
             new_athlete.generate_pin
             @valid << new_athlete
           end
@@ -144,15 +147,15 @@ class DependentsController < ApplicationController
   end
 
   def delete_athlete
-    athlete = Dependent.find(params[:athlete_id])
+    athlete = Athlete.find(params[:fast_pass_id])
     athlete.destroy
     redirect_back fallback_location: root_path, notice: "Athlete successfully deleted."
   end
 
   def reset_pin
     if current_user.valid_password?(params[:password])
-      @athlete = Dependent.find(params[:athlete_id])
-      if params[:athlete_pin] == params[:pin_confirmation] && @athlete.update(athlete_pin: params[:athlete_pin].to_i)
+      @athlete = Athlete.find(params[:fast_pass_id])
+      if params[:fast_pass_pin] == params[:pin_confirmation] && @athlete.update(fast_pass_pin: params[:fast_pass_pin].to_i)
         redirect_to edit_user_path, notice: "Successfully updated pin for #{@athlete.full_name}."
       else
         redirect_to edit_user_path, alert: 'The pins you entered did not match.'
@@ -163,7 +166,7 @@ class DependentsController < ApplicationController
   end
 
   def destroy
-    athlete = Dependent.find(params[:id])
+    athlete = Athlete.find(params[:id])
     if athlete.destroy
       redirect_back fallback_location: root_path, notice: "Athlete successfully deleted."
     else
@@ -173,13 +176,13 @@ class DependentsController < ApplicationController
 
   private
 
-  def dependent_params
-    params[:dependent][:emergency_contact] = params[:dependent][:emergency_contact].split('').map {|x| x[/\d+/]}.compact.join('')
-    params.require(:dependent).permit(:full_name, :emergency_contact, :athlete_pin, :user_id)
+  def athlete_params
+    params[:athlete][:emergency_contact] = params[:athlete][:emergency_contact].split('').map {|x| x[/\d+/]}.compact.join('')
+    params.require(:athlete).permit(:full_name, :emergency_contact, :fast_pass_pin, :user_id)
   end
 
   def waiver_params
-    params.require(:waiver).permit(:signed, :athlete_id, :signed_for, :signed_by)
+    params.require(:waiver).permit(:signed, :fast_pass_id, :signed_for, :signed_by)
   end
 
 end

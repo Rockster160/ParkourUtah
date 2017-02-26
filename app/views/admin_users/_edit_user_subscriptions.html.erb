@@ -5,7 +5,7 @@
     <hr>
     <div class="row">
       <p>This user is currently set up to auto-pay for monthly subscriptions.</p>
-      <% @user.subscribed_athletes.sort_by {|a|a.current_subscription.expires_at}.each do |athlete| %>
+      <% @user.subscribed_athletes.sort_by {|athlete|athlete.current_subscription.expires_at}.each do |athlete| %>
         <% subscription = athlete.current_subscription %>
         <div class="row">
           <div class="col-xs-6">

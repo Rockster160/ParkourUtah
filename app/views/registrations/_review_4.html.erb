@@ -59,11 +59,12 @@
         Address:
       </div>
       <div class="col-sm-8">
-          <%= text_field_tag 'address[line1]', "#{current_user.address.line1}", placeholder: 'Address 1', class: "pkut-textbox customRequired" %>
-          <%= text_field_tag 'address[line2]', "#{current_user.address.line2}", placeholder: 'Address 2', class: "pkut-textbox" %>
-          <%= text_field_tag 'address[city]', "#{current_user.address.city}", placeholder: 'City', class: "pkut-textbox textbox-2col-5max customRequired" %>
-          <%= text_field_tag 'address[state]', "#{current_user.address.state}", placeholder: 'State', class: "pkut-textbox textbox-1col-5max customRequired" %>
-          <%= text_field_tag 'address[zip]', "#{current_user.address.zip}", placeholder: 'Zip Code', class: "restrictNumeric pkut-textbox textbox-2col-5max customRequired" %>
+        <%= text_field_tag 'address[line1]', "#{current_user.address.line1}", placeholder: 'Address 1', class: "pkut-textbox customRequired" %>
+        <%= text_field_tag 'address[line2]', "#{current_user.address.line2}", placeholder: 'Address 2', class: "pkut-textbox" %>
+        <br>
+        <%= text_field_tag 'address[city]', "#{current_user.address.city}", placeholder: 'City', class: "pkut-textbox textbox-2col-5max customRequired" %>
+        <%= text_field_tag 'address[state]', "#{current_user.address.state}", placeholder: 'State', class: "pkut-textbox textbox-1col-5max customRequired" %>
+        <%= text_field_tag 'address[zip]', "#{current_user.address.zip}", placeholder: 'Zip Code', class: "restrictNumeric pkut-textbox textbox-2col-5max customRequired" %>
       </div>
     </div>
     <br/>
@@ -76,11 +77,8 @@
         <% @athletes.each do |athlete| %>
           <%= text_field_tag "athlete[#{athlete.id}][name]", athlete.full_name, placeholder: 'Full Name', class: "pkut-textbox formatName textbox-2col-5max" %>
           <%= text_field_tag "athlete[#{athlete.id}][dob]", athlete.date_of_birth, placeholder: 'MM/DD/YYYY', class: "pkut-textbox formatDOB textbox-2col-5max" %>
-          <span class="show-required"><%= text_field_tag "athlete[#{athlete.id}][code]", athlete.zero_padded(athlete.athlete_pin, 4), placeholder: 'ex:1234', class: "pkut-textbox formatPin textbox-1col-5max" %></span>
-          <!-- <span class="pkut-checkbox text-right"> -->
-            <%#= check_box_tag "athlete[#{athlete.id}][keep]", '', true %>
-            <%#= label_tag "athlete[#{athlete.id}][keep]", '' %>
-          <!-- </span> -->
+          <span class="show-required"><%= text_field_tag "athlete[#{athlete.id}][code]", athlete.fast_pass_pin.to_s.rjust(4, "0"), placeholder: 'ex:1234', class: "pkut-textbox formatPin textbox-1col-5max" %></span>
+          <br>
         <% end %>
       </div>
     </div>
