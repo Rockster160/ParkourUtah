@@ -27,8 +27,9 @@ class ScheduleWorker
 
   def send_class_text(params)
     date_range = minutes_from_now(110)..minutes_from_now(130)
-    Event.joins(event_schedule: :event_subscriptions).where(date: date_range).find_each do |subscribed_event|
+    EventSchedule.joins(:event_subscriptions).events_today.find_each do |subscribed_event|
       next if subscribed_event.cancelled?
+      next unless date_range.cover?(subscribed_event.date)
       subscribed_users = subscribed_event.event_schedule.subscribed_users
       subscribed_users.each do |user|
         if user.notifications.text_class_reminder && user.notifications.sms_receivable
