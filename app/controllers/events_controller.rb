@@ -50,7 +50,7 @@ class EventsController < ApplicationController
   private
 
   def event_params
-    params.require(:event).permit(:str_date, :current_time_of_day)
+    params.require(:event).permit(:str_date, :time_of_day)
   end
 
   def set_event_schedule
