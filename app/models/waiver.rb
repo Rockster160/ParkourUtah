@@ -2,35 +2,42 @@
 #
 # Table name: waivers
 #
-#  id         :integer          not null, primary key
-#  athlete_id :integer
-#  signed     :boolean
-#  signed_for :string
-#  signed_by  :string
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id          :integer          not null, primary key
+#  athlete_id  :integer
+#  signed      :boolean
+#  signed_for  :string
+#  signed_by   :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  expiry_date :datetime
 #
 
 class Waiver < ApplicationRecord
+  include Defaults
 
   belongs_to :athlete
   validate :has_matching_name_as_athlete
-  after_create :signed_false
 
-  def exp_date
-    (self.created_at + 1.year - 1.day)
-  end
+  default_on_create signed: false
+  default_on_create expiry_date: 1.year.from_now - 1.day
+
+  scope :signed, -> { where(signed: true) }
+  scope :active, -> { where("expiry_date < ?", Time.zone.now) }
+  scope :expires_soon, -> { where("expiry_date IS NULL OR expiry_date >= ?", Time.zone.now - 1.week) }
 
   def expires_soon?
-    (Time.zone.now >= (self.exp_date.to_date - 1.week) && self.signed)
+    return true if expiry_date.nil?
+    (Time.zone.now >= (self.expiry_date - 1.week) && self.signed)
   end
 
   def is_active?
-    (Time.zone.now < self.exp_date.to_date && self.signed?)
+    return false if expiry_date.nil?
+    (Time.zone.now < self.expiry_date && self.signed?)
   end
 
   def has_matching_name_as_athlete
-    unless Athlete.find(self.athlete_id).full_name.squish.downcase == self.signed_for.squish.downcase
+    return unless athlete.present?
+    unless athlete.full_name.squish.downcase == self.signed_for.squish.downcase
       errors.add(:signed_for, "Athlete name must match the one listed.")
     end
   end
@@ -38,10 +45,6 @@ class Waiver < ApplicationRecord
   def sign!
     self.signed = true
     self.save!
-  end
-
-  def signed_false
-    self.signed = false
   end
 
 end

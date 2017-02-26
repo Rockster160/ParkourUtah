@@ -25,6 +25,8 @@ class RecurringSubscription < ApplicationRecord
   scope :active, -> { assigned.where("expires_at > ?", Time.zone.now) }
   scope :inactive, -> { assigned.where("expires_at <= ?", Time.zone.now) }
 
+  after_update :set_default_expiration_date
+
   def active?; self.expires_at.to_date > Time.zone.now.to_date; end
   def inactive?; self.expires_at.to_date <= Time.zone.now.to_date; end
 
@@ -35,7 +37,7 @@ class RecurringSubscription < ApplicationRecord
   end
 
   def cost
-    (cost_in_pennies.to_f / 100).round(2)
+    (cost_in_pennies / 100.to_f).round(2)
   end
 
   def assign_to_athlete(new_athlete)
@@ -46,14 +48,15 @@ class RecurringSubscription < ApplicationRecord
   end
 
   def set_default_expiration_date
-    return unless self.id.nil?
     return if athlete.nil?
+    return if expires_at.present?
     extended_time = if athlete.has_unlimited_access?
       athlete.has_access_until + 1.month
     else
       1.month.from_now
     end
-    self.expires_at = extended_time unless expires_at
+    self.expires_at = extended_time
+    self.save
   end
 
 end

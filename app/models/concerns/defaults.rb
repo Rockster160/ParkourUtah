@@ -23,16 +23,16 @@ module Defaults
 
   # Added to class of object
   class_methods do
-    def default(attribute, value = nil, &block)
-      defaults[attribute] = value
-      # Allow the passing of blocks
-      defaults[attribute] = block if block_given?
+    def default(attribute_hash)
+      attribute_hash.each do |attr_key, attr_val|
+        created_defaults[attr_key] = attr_val
+      end
     end
 
-    def default_on_create(attribute, value = nil, &block)
-      created_defaults[attribute] = value
-      # Allow the passing of blocks
-      created_defaults[attribute] = block if block_given?
+    def default_on_create(attribute_hash)
+      attribute_hash.each do |attr_key, attr_val|
+        created_defaults[attr_key] = attr_val
+      end
     end
 
     def defaults

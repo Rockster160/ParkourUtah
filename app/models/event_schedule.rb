@@ -37,9 +37,9 @@ class EventSchedule < ApplicationRecord
 
   before_save :add_hash_to_colors
 
-  default_on_create :color, "##{6.times.map { rand(16).to_s(16) }.join('')}"
-  default_on_create :payment_per_student, 4
-  default_on_create :min_payment_per_session, 15
+  default_on_create color: "##{6.times.map { rand(16).to_s(16) }.join('')}"
+  default_on_create payment_per_student: 4
+  default_on_create min_payment_per_session: 15
 
   validates :start_date, :hour_of_day, :minute_of_day, :day_of_week, :cost_in_pennies, :title, :city, :color, presence: true
   validate :has_either_address_or_spot

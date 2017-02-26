@@ -231,7 +231,18 @@ class User < ApplicationRecord
   end
 
   def create_default_notifications
-    self.notifications ||= Notifications.new
+    self.notifications ||= Notifications.new({
+      email_newsletter:      true,
+      email_class_reminder:  true,
+      email_low_credits:     true,
+      email_waiver_expiring: true,
+      text_class_reminder:   false,
+      text_low_credits:      false,
+      text_waiver_expiring:  false,
+      sms_receivable:        true,
+      text_class_cancelled:  true,
+      email_class_cancelled: true
+    })
   end
 
   def send_welcome_email

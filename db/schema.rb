@@ -361,8 +361,9 @@ ActiveRecord::Schema.define(version: 20170225043702) do
     t.boolean  "signed"
     t.string   "signed_for"
     t.string   "signed_by"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.datetime "expiry_date"
     t.index ["athlete_id"], name: "index_waivers_on_athlete_id", using: :btree
   end
 

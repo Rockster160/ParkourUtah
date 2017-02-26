@@ -164,7 +164,7 @@
     <div class="col-sm-9">
       <% @user.athletes_by_waiver_expiration.each_with_index do |athlete, pos| %>
         <div class="row">
-          <h4><%= athlete.full_name %> - ID:<%= athlete.fast_pass_id.rjust(4, "0") %></h4>
+          <h4><%= athlete.full_name %> - ID:<%= athlete.fast_pass_id.to_s.rjust(4, "0") %></h4>
           <% if athlete.unused_trials.count > 0 %>
             <h4 style="color:yellow;">Trial Classes remaining: <%= athlete.unused_trials.count %></h4>
           <% end %>
@@ -181,12 +181,12 @@
 
           <% if athlete.signed_waiver? && athlete.waiver.is_active? %>
             <% if athlete.waiver.expires_soon? %>
-              <%= link_to waivers_path(athlete.id) do  %>
-                <span class="pkut-header title">Waiver active until <%= athlete.waiver.exp_date.strftime('%B %-d, %Y') %></span>
+              <%= link_to waivers_path do  %>
+                <span class="pkut-header title">Waiver active until <%= athlete.waiver.expiry_date.strftime('%B %-d, %Y') %></span>
                 Update Waiver
               <% end %>
             <% else %>
-                Waiver active until <%= athlete.waiver.exp_date.strftime('%B %-d, %Y') %>
+                Waiver active until <%= athlete.waiver.expiry_date.strftime('%B %-d, %Y') %>
             <% end %>
           <% else %>
             <%= link_to "Must have waiver signed before attending class.", waivers_path, class: 'fancy-link' %>

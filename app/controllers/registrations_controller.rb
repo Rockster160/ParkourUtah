@@ -36,6 +36,7 @@ class RegistrationsController < ApplicationController
     new_value = params[:smsalert] ? true : false
     current_user.notifications.update_attributes(
       text_class_reminder: new_value,
+      text_class_cancelled: new_value,
       text_low_credits: new_value,
       text_waiver_expiring: new_value
     )
@@ -127,7 +128,7 @@ class RegistrationsController < ApplicationController
 
     slack_message = "New User: <#{admin_user_url(current_user)}|#{current_user.id} #{current_user.email}>\n"
     current_user.athletes.each do |athlete|
-      slack_message << "#{athlete.id} #{athlete.full_name} - Athlete ID: #{athlete.fast_pass_id.rjust(4, "0")} Pin: #{athlete.fast_pass_pin.rjust(4, "0")}\n"
+      slack_message << "#{athlete.id} #{athlete.full_name} - Athlete ID: #{athlete.fast_pass_id.to_s.rjust(4, "0")} Pin: #{athlete.fast_pass_pin.to_s.rjust(4, "0")}\n"
     end
     slack_message << "Referred By: #{current_user.referrer}"
     channel = Rails.env.production? ? "#new-users" : "#slack-testing"

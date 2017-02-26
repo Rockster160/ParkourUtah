@@ -15,15 +15,15 @@ Rails.application.configure do
   config.action_cable.url = "ws://localhost:7545/cable"
   config.action_cable.allowed_request_origins = ["http://localhost:7545"]
 
-  # ActionMailer::Base.delivery_method = :smtp
-  # ActionMailer::Base.smtp_settings = {
-  #   :address              => 'email-smtp.us-west-2.amazonaws.com',
-  #   :port                 => 587,
-  #   :user_name            => ENV['PKUT_AWS_EMAILNAME'],
-  #   :password             => ENV['PKUT_AWS_EMAIL_PASS'],
-  #   :authentication       => :plain,
-  #   :enable_starttls_auto => true
-  # }
+  ActionMailer::Base.delivery_method = :smtp
+  ActionMailer::Base.smtp_settings = {
+    :address              => 'email-smtp.us-west-2.amazonaws.com',
+    :port                 => 587,
+    :user_name            => ENV['PKUT_AWS_EMAILNAME'],
+    :password             => ENV['PKUT_AWS_EMAIL_PASS'],
+    :authentication       => :plain,
+    :enable_starttls_auto => true
+  }
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.perform_deliveries = false
 

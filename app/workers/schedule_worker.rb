@@ -12,7 +12,7 @@ class ScheduleWorker
 
   # slack_message = "New User: <#{admin_user_path(current_user)}|#{current_user.id} #{current_user.email}>\n"
   # current_user.athletes.each do |athlete|
-  #   slack_message << "#{athlete.id} #{athlete.full_name} - Athlete ID: #{athlete.fast_pass_id.rjust(4, "0")} Pin: #{athlete.fast_pass_pin.rjust(4, "0")}\n"
+  #   slack_message << "#{athlete.id} #{athlete.full_name} - Athlete ID: #{athlete.fast_pass_id.to_s.rjust(4, "0")} Pin: #{athlete.fast_pass_pin.to_s.rjust(4, "0")}\n"
   # end
   # slack_message << "Referred By: #{current_user.referrer}"
   # channel = Rails.env.production? ? "#new-users" : "#slack-testing"
@@ -48,12 +48,12 @@ class ScheduleWorker
   def waiver_checks(params)
     Athlete.find_each do |athlete|
       user = athlete.user
-      if athlete.waiver.exp_date.to_date == weeks_from_now(1).to_date
+      if athlete.waiver.expiry_date.to_date == weeks_from_now(1).to_date
         if user.notifications.email_waiver_expiring
           ::ExpiringWaiverMailerWorker.perform_async(athlete.id)
         end
         if user.notifications.text_waiver_expiring && user.notifications.sms_receivable
-          msg = "The waiver belonging to #{athlete.full_name} is no longer active as of #{athlete.waiver.exp_date.strftime('%B %e')}. Head up to ParkourUtah.com to get it renewed!"
+          msg = "The waiver belonging to #{athlete.full_name} is no longer active as of #{athlete.waiver.expiry_date.strftime('%B %e')}. Head up to ParkourUtah.com to get it renewed!"
           Message.text.create(body: msg, chat_room_name: user.phone_number, sent_from_id: 0).deliver
         end
       end

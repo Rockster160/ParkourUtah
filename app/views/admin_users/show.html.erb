@@ -40,7 +40,7 @@
     <% if athlete.has_unlimited_access? %>
       <span style="color: green;">--Has unlimited access until: <%= athlete.has_access_until.strftime('%B %e, %Y') %></span><br/>
     <% end %>
-    --<%= athlete.id %>: <strong><%= athlete.full_name %></strong> - ID: <%= athlete.fast_pass_id.rjust(4, "0") %><%= athlete.current_subscription.try(:auto_renew) ? '*' : '' %><br/>
+    --<%= athlete.id %>: <strong><%= athlete.full_name %></strong> - ID: <%= athlete.fast_pass_id.to_s.rjust(4, "0") %><%= athlete.current_subscription.try(:auto_renew) ? '*' : '' %><br/>
     <% if athlete.unused_trials.count > 0 %>
       --Has <%= athlete.unused_trials.count %> trial class(es) remaining. <%= link_to 'Remove 1 Trial', update_trials_admin_user_path(@user, fast_pass_id: athlete.id, num: '-1'), method: :post if current_user.is_admin? %>
       <br/>
@@ -56,7 +56,7 @@
     <% end %>
 
     --Birthday: <%= athlete.date_of_birth %><br/>
-    --Waiver expires: <%= athlete.waiver ? athlete.waiver.exp_date.strftime('%B %e, %Y') : "No waiver signed" %><br/>
+    --Waiver expires: <%= athlete.waiver ? athlete.waiver.expiry_date.strftime('%B %e, %Y') : "No waiver signed" %><br/>
     <% if current_user.is_admin? %>
       --<a alt="..." class="pkut-header forceOpen" data-toggle="modal" data-target="#edit<%= athlete.id %>">Delete Athlete</a><br/><br/>
     <% end %>

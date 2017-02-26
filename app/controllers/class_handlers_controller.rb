@@ -3,7 +3,7 @@ class ClassHandlersController < ApplicationController
   before_action :set_event_schedule
   before_action :set_high_flashes
 
-  def athlete_xid
+  def fast_pass_id
     if @event_schedule.present?
       @event = @event_schedule.event_by_id(params[:id], with_date: params[:date])
     else

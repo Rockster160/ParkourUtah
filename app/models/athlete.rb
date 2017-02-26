@@ -146,8 +146,6 @@ class Athlete < ApplicationRecord
   end
 
   def waiver
-    waivers = self.waivers.group_by { |waiver| waiver.is_active? }[true]
-    waivers ||= self.waivers
     waivers.by_most_recent(:created_at).first
   end
 

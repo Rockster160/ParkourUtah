@@ -8,7 +8,7 @@
         </div>
         <div class="col-sm-6">
           <%= text_field_tag "update_athlete[#{athlete.id}][dob]", '', placeholder: 'MM/DD/YYYY', value: athlete.date_of_birth, class: "pkut-textbox sm-textbox formatDOB" %>
-          <%= text_field_tag "update_athlete[#{athlete.id}][code]", '', placeholder: 'ex:1234', value: athlete.fast_pass_pin.rjust(4, "0"), class: "pkut-textbox xs-textbox formatPin" %>
+          <%= text_field_tag "update_athlete[#{athlete.id}][code]", '', placeholder: 'ex:1234', value: athlete.fast_pass_pin.to_s.rjust(4, "0"), class: "pkut-textbox xs-textbox formatPin" %>
           <a alt="..." data-toggle="modal" data-target="#destroy_athlete"><%= icon("times-circle-o", '', class: 'fa-2x delete-athlete hover-btn', id: athlete.id) %></a><br/>
         </div>
       </div>
@@ -19,10 +19,10 @@
     <div class="athlete-container">
       <div class="row athlete-input-info">
         <div class="col-sm-6">
-          <%= text_field_tag "athlete[#{token}][name]", 'Ardesian Gray', placeholder: 'Full Name', class: "pkut-textbox formatName" %>
+          <%= text_field_tag "athlete[#{token}][name]", '', placeholder: 'Full Name', class: "pkut-textbox formatName" %>
         </div>
         <div class="col-sm-6">
-          <%= telephone_field_tag "athlete[#{token}][dob]", '03/26/1993', placeholder: 'MM/DD/YYYY', class: "pkut-textbox sm-textbox formatDOB" %><span class="show-required"><a alt="..." data-toggle="modal" data-target="#what_is" class="hover-btn forceOpen what-is-pin"><sup>(What is this?)</sup></a><%= telephone_field_tag "athlete[#{token}][code]", '1234', placeholder: 'ex:1234', class: "pkut-textbox xs-textbox formatPin" %></span> <%= icon("times-circle-o", '', class: 'fa-2x kill-athlete hover-btn') %>
+          <%= telephone_field_tag "athlete[#{token}][dob]", '', placeholder: 'MM/DD/YYYY', class: "pkut-textbox sm-textbox formatDOB" %><span class="show-required"><a alt="..." data-toggle="modal" data-target="#what_is" class="hover-btn forceOpen what-is-pin"><sup>(What is this?)</sup></a><%= telephone_field_tag "athlete[#{token}][code]", '', placeholder: 'ex:1234', class: "pkut-textbox xs-textbox formatPin" %></span> <%= icon("times-circle-o", '', class: 'fa-2x kill-athlete hover-btn') %>
         </div>
       </div>
     </div>

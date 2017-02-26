@@ -17,6 +17,7 @@ class RenameDependent < ActiveRecord::Migration[5.0]
     add_column :users, :full_name, :string
     add_column :recurring_subscriptions, :stripe_id, :string
     add_column :recurring_subscriptions, :user_id, :integer, foreign_key: true, index: true
+    add_column :waivers, :expiry_date, :datetime
 
     reversible do |migration|
       migration.up do
@@ -24,6 +25,9 @@ class RenameDependent < ActiveRecord::Migration[5.0]
         puts "Backfill user attached to subscriptions"
         RecurringSubscription.find_each do |subscription|
           print subscription.update(user_id: subscription.try(:athlete).try(:user_id)) ? "\e[32m.\e[0m" : "\e[31m.\e[0m"
+        end
+        Waiver.find_each do |waiver|
+          print waiver.update(expiry_date: waiver.created_at + 1.year - 1.day) ? "\e[32m.\e[0m" : "\e[31m.\e[0m"
         end
         puts ""
         User.find_each do |user|

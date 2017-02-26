@@ -130,12 +130,12 @@ class StoreController < ApplicationController
       begin
         stripe_charge = Stripe::Charge.create({
           amount: @cart.total,
-          currency: "usd",
-          source: params[:stripeToken]
-        })
+          currency: "usd"
+        }.merge(@customer.present? ? {customer: @customer.id} : {source: params[:stripeToken]}))
       rescue Stripe::CardError => e
         stripe_charge = {failure_message: "Failed to Charge: #{e}"}
-      rescue
+      rescue => e
+        CustomLogger.log("\e[31mOther error: \n#{e}\e[0m")
         stripe_charge = {failure_message: "Failed to Charge, try logging out and back in or trying a different browser."}
       end
     end
