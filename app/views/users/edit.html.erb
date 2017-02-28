@@ -206,7 +206,7 @@
     <h2 class="pkut-header">Reset PIN</h2>
     <p>Enter the new desired pin for</p>
     <strong><%= athlete.full_name %></strong>
-    <%= form_tag reset_pin_path(athlete) do %>
+    <%= form_tag reset_pin_athletes_path(athlete) do %>
       <%= telephone_field_tag "fast_pass_pin", '', placeholder: 'New Pin', class: 'pkut-textbox sm-textbox formatPin ', autocomplete: 'off', style: 'padding-top: 0;' %>
       <%= telephone_field_tag "pin_confirmation", '', placeholder: 'Confirm', class: 'pkut-textbox sm-textbox formatPin ', autocomplete: 'off', style: 'padding-top: 0;' %>
       <p>Please enter your current password below to verify:</p>
