@@ -22,7 +22,7 @@ $(document).ready(function() {
       athletes
       '</div>';
     },
-    optionSelected: function(selected_value) {
+    optionSelected: function(field, option, selected_value) {
       window.location.href = "/admin/users/" + selected_value;
     }
   });
