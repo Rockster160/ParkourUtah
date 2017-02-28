@@ -111,7 +111,11 @@ class EventSchedule < ApplicationRecord
   def event_by_id(new_or_id, options={})
     if new_or_id == "new"
       options[:additional_params] ||= {}
-      options[:additional_params][:date] = Time.zone.parse(options[:with_date]) if options[:with_date]
+      if options[:with_date]
+        date_stamp = Time.zone.parse(options[:with_date])
+        new_datetime = Time.zone.local(date_stamp.year, date_stamp.month, date_stamp.day, hour_of_day, minute_of_day)
+      end
+      options[:additional_params][:date] = new_datetime
       events.new(options[:additional_params])
     else
       events.find(new_or_id)

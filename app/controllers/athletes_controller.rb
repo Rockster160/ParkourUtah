@@ -1,6 +1,16 @@
 class AthletesController < ApplicationController
   layout 'application', except: [:secret]
 
+  def index
+    @athletes = Athlete.by_most_recent(:created_at)
+    @athletes = @athletes.by_fuzzy_text(params[:by_fuzzy_text]) if params[:by_fuzzy_text]
+
+    respond_to do |format|
+      format.json { render json: @athletes }
+      format.html
+    end
+  end
+
   def new
     @athlete = Athlete.new
   end

@@ -66,7 +66,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :attendances, only: [ :index ]
+  resources :attendances, only: [ :index, :new, :create, :destroy  ]
   resources :aws_loggers, only: [ :index, :show ]
   resources :contact_requests, only: [ :index, :show ]
   resources :chat_rooms, path: "chat", only: [ :index, :show ] do
@@ -107,15 +107,14 @@ Rails.application.routes.draw do
 
   delete 'unsubscribe_monthly/:id' => 'store#unsubscribe', as: 'unsubscribe_monthly_subscription'
 
-  get 'athletes/new' => 'athletes#new', as: 'new_athlete'
-  post 'athletes/new' => 'athletes#create'
-  # post 'athletes/create' => 'athletes#create'
-  post 'athletes/update/:fast_pass_id' => 'athletes#update'
-  post 'athletes/reset/:fast_pass_id' => 'athletes#reset_pin', as: 'reset_pin'
-  delete 'athlete/:id/delete' => 'athletes#destroy', as: 'destroy_athlete'
-  post 'athletes/verify' => 'athletes#verify', as: 'verify_athletes'
-  post 'athletes/assign_subscription/:fast_pass_id' => 'athletes#assign_subscription', as: 'assign_subscription'
-  patch 'athletes/update_photo/:id' => 'athletes#update_photo'
+  resources :athletes do
+    collection do
+      post :reset_pin
+      post :verify
+      post :assign_subscription
+      patch :update_photo
+    end
+  end
 
   get 'waivers' => 'athletes#sign_waiver', as: 'waivers'
   post 'waivers' => 'athletes#update_waiver'

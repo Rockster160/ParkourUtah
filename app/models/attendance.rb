@@ -13,16 +13,33 @@
 #  sent           :boolean          default(FALSE)
 #
 
-# TODO Rename associations to be better
+##
+# Unused
+#
+# location
 class Attendance < ApplicationRecord
 
-  attr_accessor :skip_validations
+  attr_accessor :skip_validations, :event_date
 
   belongs_to :athlete
   belongs_to :instructor, class_name: "User"
   belongs_to :event
 
   validate :one_per_athlete
+
+  # enum type_of_charge: {
+  #   credits: 0,
+  #   unlimited: 1,
+  #   trial: 2
+  # }
+
+  def self.type_of_charges
+    [
+      "Credits",
+      "Unlimited Subscription",
+      "Trial Class"
+    ]
+  end
 
   def sent!
     self.update(sent: true)

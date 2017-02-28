@@ -1,7 +1,10 @@
 <div class="central-container">
   <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
   <div class="text-center"><%= paginate @attendances %></div>
-  <% @attendances.group_by {|a| a.created_at.to_date}.each do |date, attendances| %>
+  <%= link_to new_attendance_path, class: "pkut-btn" do %>
+    <i class="fa fa-plus"></i> Add Attendance
+  <% end %>
+  <% @attendances.group_by {|a| a.event.date.to_date}.each do |date, attendances| %>
     <h3><%= date.strftime("%B %-d, %Y") %></h3>
     <ul>
       <% attendances.sort_by(&:created_at).each do |attendance| %>

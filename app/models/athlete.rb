@@ -49,6 +49,10 @@ class Athlete < ApplicationRecord
 
   scope :verified, -> { where(verified: true) }
   scope :unverified, -> { where(verified: false) }
+  scope :by_fuzzy_text, ->(text) {
+    text = "%#{text}%"
+    joins(:user).where("users.email ILIKE :text OR athletes.full_name ILIKE :text OR CAST(athletes.fast_pass_id AS TEXT) ILIKE :text", text: text).uniq
+  }
 
   def self.pins_left
     bads = []

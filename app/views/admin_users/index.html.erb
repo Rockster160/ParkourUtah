@@ -1,6 +1,6 @@
 <div class="central-container form-offset">
   <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br/><br/>
-  <div><%= text_field_tag(:by_fuzzy_text, 'Search', id: 'user_index_search_field', class: 'form-control', autocomplete: "off", autofocus: true) %></div>
+  <%= text_field_tag :q, '', { id: "user_index_search_field", "data-index-url": admin_users_path, placeholder: "Search", class: "pkut-textbox" } %>
   <div>Users: <%= @users.total_count %></div>
   <div><%= paginate @users %></div>
   <% @users.each do |user| %>

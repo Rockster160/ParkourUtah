@@ -176,7 +176,7 @@
           <%= render_modal("edit#{athlete.id}", "skinny-modal") do %>
             <h3 class="pkut-header"><%= athlete.full_name %></h3>
             <p>This will permanently delete this athlete. Are you sure? This action cannot be undone.<p>
-            <%= link_to "Delete", destroy_athlete_path(athlete.id), class: 'pkut-btn', method: :delete %>
+            <%= link_to "Delete", athlete_path(athlete.id), class: 'pkut-btn', method: :delete %>
           <% end %>
 
           <% if athlete.signed_waiver? && athlete.waiver.is_active? %>

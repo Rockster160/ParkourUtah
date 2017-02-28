@@ -1,48 +1,51 @@
-$(document).ready(function(){
+$(document).ready(function() {
 
-  var users = new Bloodhound({
-    limit: 5,
-    remote: {
-      url: '/admin/users?by_fuzzy_text=%QUERY',
-      wildcard: '%QUERY',
-      filter: function(x) {
-        return $.map(x, function(item) {
-          return { user: item }
-        });
-      },
+  $("#user_index_search_field").searchable({
+    getOptionsFromUrl: $("#user_index_search_field").attr("data-index-url"),
+    paramKey: "by_fuzzy_text",
+    arrayOfOptionsFromUrlResponse: function(data) {
+      return data;
     },
-    datumTokenizer: function(user) {
-      return Bloodhound.tokenizers.whitespace(user.name);
+    valueFromOption: function(option) {
+      return option.id;
     },
-    queryTokenizer: Bloodhound.tokenizers.whitespace
-  });
-
-  users.initialize();
-
-  $('#user_index_search_field').typeahead({
-    highlight: true,
-    hint: true
-  }, {
-    source: users.ttAdapter(),
-    name: 'users',
-    templates: {
-      suggestion: function(data) {
-        var athletes = '';
-        $(data.user.athletes).each(function(e) {
-          athletes += ('&nbsp;&nbsp;&nbsp;&nbsp;<span>' + this.full_name.substring(0, 30) + ' - ' + this.fast_pass_id + '</span><br/>')
-        })
-        return '<div><strong>' +
-        data.user.email.substring(0, 50) +
-        '</strong><span class="pull-right">' +
-        data.user.id +
-        '</span><br/>' +
-        athletes
-        '</div>'
-      }
+    templateFromOption: function(option) {
+      var athletes = '';
+      $(option.athletes).each(function(e) {
+        athletes += ('<span class="dropdown-athlete">' + this.full_name.substring(0, 30) + ' - ' + this.fast_pass_id + '</span><br/>')
+      })
+      return '<div class="dropdown-option"><span class="dropdown-email">' +
+      option.email +
+      '</span><span class="dropdown-id">' +
+      option.id +
+      '</span><br/>' +
+      athletes
+      '</div>';
+    },
+    optionSelected: function(selected_value) {
+      window.location.href = "/admin/users/" + selected_value;
     }
   });
 
-  $('#user_index_search_field').on('typeahead:selected', function(obj, datum, name) {
-    window.location.href = "/admin/users/" + datum.user.id
+  $("#athlete_index_search_field").searchable({
+    getOptionsFromUrl: $("#athlete_index_search_field").attr("data-index-url"),
+    paramKey: "by_fuzzy_text",
+    arrayOfOptionsFromUrlResponse: function(data) {
+      return data;
+    },
+    valueFromOption: function(option) {
+      return option.id;
+    },
+    templateFromOption: function(option) {
+      return '<div class="dropdown-option">' + option.id + ' - ' + option.full_name + '</div>';
+    },
+    optionSelected: function(field, option, selected_value) {
+      $('#athlete_index_search_field').val($(option).html());
+    }
   });
-});
+
+  $('.searchable-dropdown').searchableFromSelect({
+    additional_classes: "pkut-textbox"
+  })
+
+})

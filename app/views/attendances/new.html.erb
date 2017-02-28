@@ -1,0 +1,36 @@
+<div class="central-container text-center">
+  <%= form_for @attendance do |f| %>
+    <% if @errors&.any? %>
+      <div class="errors-container">
+        <ul>
+          <% @errors.each do |error| %>
+            <li><%= error %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <% if @date.present? %>
+      <h3>For Date: <%= @attendance.event_date.to_formatted_s(:simple) %></h3>
+      <div><%= link_to "Change date", new_attendance_path, class: "pkut-btn" %></div>
+      <%= f.hidden_field :event_date %>
+      <%= f.text_field :athlete_id, { id: "athlete_index_search_field", "data-index-url": athletes_path, placeholder: "Search Athletes", class: "pkut-textbox" } %>
+      <div class="searchable-dropdown-container"><%= f.select :instructor_id, User.instructors.map { |instructor| [instructor.full_name, instructor.id] }, { selected: @attendance.instructor_id || current_user.id }, class: "pkut-dropdown" %></div>
+      <div class="searchable-dropdown-container"><%= f.select :type_of_charge, Attendance.type_of_charges.map { |charge_type| [charge_type, charge_type] }, { selected: @attendance.type_of_charge }, class: "pkut-dropdown" %></div>
+      <p>Note: Creating this attendance will <strong>NOT</strong> charge the student credits, use a trial class, or mark their Unlimited subscription as used. It will create the attendance and will show up in the Summary as if the student attended class, but regular charges are not applied when attendances are created through this method.</p>
+      <p>If you would like to still charge the student, that may be done so through subtracting credits from their account through the Admin portal.</p>
+      <% if @events.present? %>
+        <div class="searchable-dropdown-container"><%= f.select :event_id, @events.map { |event| [event.title, event.id || "new"] }, { selected: @attendance.event_id }, class: "pkut-dropdown" %></div>
+      <% end %>
+      <%= f.submit class: "pkut-btn" %>
+    <% else %>
+      <h3>Select a date for the Attendance to occur.</h3>
+      <%= f.text_field :event_date, class: "pkut-textbox datepicker-field" %>
+      <%= f.hidden_field :athlete_id %>
+      <%= f.hidden_field :instructor_id %>
+      <%= f.hidden_field :event_id %>
+      <%= f.hidden_field :type_of_charge %>
+      <%= f.submit "Select Date", class: "pkut-btn" %>
+    <% end %>
+  <% end %>
+</div>
