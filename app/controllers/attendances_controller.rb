@@ -21,6 +21,15 @@ class AttendancesController < ApplicationController
     end
   end
 
+  def destroy
+    attendance = Attendance.find(params[:id])
+    if attendance.destroy
+      redirect_back fallback_location: attendances_path, notice: "Successfully destroyed the Attendance."
+    else
+      redirect_back fallback_location: attendances_path, alert: "Failed to destroy the Attendance"
+    end
+  end
+
   private
 
   def set_events_from_date

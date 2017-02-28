@@ -3,4 +3,7 @@
 
 a {
   color: blue;
+  &.danger {
+    color: $pkut-red;
+  }
 }
