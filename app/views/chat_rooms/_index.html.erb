@@ -1,0 +1,22 @@
+<% chat_rooms.each do |room| %>
+  <% unresponded_question = room.last_message&.question? && !room.last_message&.from_instructor? %>
+
+  <a href="<%= chat_room_path(room) %>" class="chat-room-box <%= 'question' if unresponded_question %>">
+    <div class="support-icons">
+      <% if room.text? %>
+        <i class="fa fa-mobile"></i>
+      <% end %>
+      <% if unresponded_question %>
+        <i class="fa fa-question"></i>
+      <% end %>
+    </div>
+    <div class="timestamp"> <i class="fa fa-clock-o"></i> <%= timeago(room.last_message.try(:created_at) || room.updated_at) %></div>
+    <div class="room-name"><%= room.display_name %></div>
+    <div class="room-last-message">
+      <% if (last_sender_name = room.last_message.try(:sender_name)).present? %>
+        <span class="last-sender"><%= last_sender_name %>:</span>
+      <% end %>
+      <%= room.last_message_text %>
+    </div>
+  </a>
+<% end %>

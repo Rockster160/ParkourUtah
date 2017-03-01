@@ -27,7 +27,7 @@ class Message < ApplicationRecord
 
   after_create_commit :broadcast_creation
   after_create_commit :try_to_notify_slack_of_unread_message
-  after_create_commit { chat_room.touch if chat_room.persisted? }
+  after_create_commit { chat_room.new_message! }
 
   scope :read, -> { where.not(read_at: nil) }
   scope :unread, -> { where(read_at: nil) }
@@ -54,7 +54,6 @@ class Message < ApplicationRecord
   end
 
   def question?
-    return true
     body.include?("?")
   end
 

@@ -4,7 +4,7 @@ class ChatRoomsController < ApplicationController
   before_action :verify_user_has_permission_to_view_room, only: [ :show ]
 
   def index
-    @chat_rooms = ChatRoom.joins(:messages).distinct.viewable_by_user(current_user).order(updated_at: :desc).page(params[:page])
+    @chat_rooms = current_user.chat_rooms.by_most_recent(:last_message_received_at).page(params[:page])
   end
 
   def by_phone_number
@@ -12,7 +12,7 @@ class ChatRoomsController < ApplicationController
   end
 
   def show
-    @messages = chat_room.messages.order(created_at: :desc)
+    @messages = chat_room.messages.by_most_recent(:created_at)
   end
 
   private

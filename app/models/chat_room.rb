@@ -2,20 +2,24 @@
 #
 # Table name: chat_rooms
 #
-#  id               :integer          not null, primary key
-#  name             :string
-#  visibility_level :integer
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  message_type     :integer
+#  id                       :integer          not null, primary key
+#  name                     :string
+#  visibility_level         :integer
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  message_type             :integer
+#  last_message_received_at :datetime
 #
 
 class ChatRoom < ApplicationRecord
   include Defaults
   include ApplicationHelper
+
   has_many :chat_room_users
   has_many :users, through: :chat_room_users
   has_many :messages
+
+  after_create :add_chat_room_users
 
   default_on_create visibility_level: 0 # admin
   enum visibility_level: {
@@ -79,6 +83,22 @@ class ChatRoom < ApplicationRecord
 
   def last_message_text
     last_message.try(:body) || "No Text"
+  end
+
+  def new_message!
+    update(last_message_received_at: messages.by_most_recent(:created_at).first.created_at) if messages.any?
+    chat_room_users.each { |chu| chu.update(has_unread_messages: true) }
+  end
+
+  private
+
+  def add_chat_room_users
+    if text?
+      chat_room_users.find_or_create_by(user_id: support_user.id) if support_user.present?
+      User.admins.each do |admin|
+        chat_room_users.find_or_create_by(user_id: admin.id)
+      end
+    end
   end
 
 end
