@@ -50,7 +50,12 @@ class Message < ApplicationRecord
   end
 
   def from_instructor?
-    return !!sent_from.try(:instructor?)
+    return sent_from_id == 0 || !!sent_from.try(:instructor?)
+  end
+
+  def question?
+    return true
+    body.include?("?")
   end
 
   def sender_name

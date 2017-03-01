@@ -4,6 +4,7 @@
 $alert-color: $pkut-grey-dark;
 $sent-color: $pkut-red-dark;
 $received-color: #FAFAFA;
+$question-color: #9C27B0;
 
 .chat-rooms-container {
   margin-top: 20px;
@@ -17,14 +18,15 @@ $received-color: #FAFAFA;
 
     font-weight: 100;
     color: $pkut-grey-dark;
-    // background-color: $pkut-grey-light;
     background-color:  rgba(255,255,255,0.75);
-    // border: 1px solid $pkut-grey-dark;
     border: 1px solid $pkut-grey-light;
-    .support-icon {
+    .support-icons {
       position: absolute;
       top: 5px; right: 5px;
       font-size: 20px;
+      .fa-question {
+        color: $question-color;
+      }
     }
     .timestamp {
       .fa { color: black; }
@@ -46,6 +48,10 @@ $received-color: #FAFAFA;
       .last-sender {
         color: $pkut-red;
       }
+    }
+    &.question {
+      border-color: $question-color;
+      border-width: 2px;
     }
     &:hover {
       cursor: pointer;
