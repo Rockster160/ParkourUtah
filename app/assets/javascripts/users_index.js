@@ -21,10 +21,9 @@ $(document).ready(function() {
       '</span><br/>' +
       athletes
       '</div>';
-    },
-    optionSelected: function(field, option, selected_value) {
-      window.location.href = "/admin/users/" + selected_value;
     }
+  }).on("searchable:selected", function(field, user, opt_value) {
+    window.location.href = "/admin/users/" + selected_value;
   });
 
   $("#athlete_index_search_field").searchable({
@@ -38,14 +37,13 @@ $(document).ready(function() {
     },
     templateFromOption: function(option) {
       return '<div class="dropdown-option">' + option.id + ' - ' + option.full_name + '</div>';
-    },
-    optionSelected: function(field, option, selected_value) {
-      $('#athlete_index_search_field').val($(option).html());
     }
+  }).on("searchable:selected", function(field, athlete, opt_value) {
+    $('#athlete_index_search_field').val(athlete.id + ' - ' + athlete.full_name);
   });
 
-  $('.searchable-dropdown').searchableFromSelect({
-    additional_classes: "pkut-textbox"
-  })
+  // $('.searchable-dropdown').searchableFromSelect({
+  //   additional_classes: "pkut-textbox"
+  // })
 
 })

@@ -6,17 +6,15 @@
     // Delegate clicks on the Dropdown Options since they are generated elements
     // Selects the current option.
     $target = $(e.target);
-    $option = $target.hasClass('searchable-dropdown-option-wrapper') ? $target : $(e.target).parents('.searchable-dropdown-option-wrapper');
+    $option = $target.hasClass('js-searchable-option-wrapper') ? $target : $(e.target).parents('.js-searchable-option-wrapper');
     if ($option.length > 0) {
       $('[data-uniq-searchable-id=' + $option.attr("data-option-for") + ']').trigger('selected-option', $option.attr('data-selected-value'));
     }
-  }).on('mouseenter', '.searchable-dropdown-option-wrapper', function() {
+  }).on('mouseenter', '.js-searchable-option-wrapper', function() {
     // Delegate hover over Dropdown Options
     // Add a class while being hover to only the object being hovered.
-    $('.searchable-dropdown-option-wrapper').removeClass('searchable-toSelect');
+    $('.js-searchable-option-wrapper').removeClass('searchable-toSelect');
     $(this).addClass('searchable-toSelect');
-  }).on('keyup', function() {
-    $('.searchable-dropdown-menu').remove();
   })
 
   $.fn.searchable = function(options) {
@@ -28,18 +26,16 @@
         storeUrlOptions = options["storeUrlOptions"] || false,
         arrayOfOptionsFromUrlResponse = options["arrayOfOptionsFromUrlResponse"] || function(data) { throw "Must define how to retrieve the array of options from the endpoint with `arrayOfOptionsFromUrlResponse`" },
         valueFromOption = options["valueFromOption"] || function(option) { throw "Must define how to retrieve the desired return value with `valueFromOption`" },
-        buildInnerOptionFromTemplate = options["templateFromOption"] || function(option) { throw "Must define a template to display each option with `templateFromOption`" },
-        optionSelectedCallback = options["optionSelected"] || function(field, option, option_value) { console.log("Option Selected, but no callback has been defined. Define as: `function(field, option, option_value)`"); },
-        afterSelectedCallback = options["afterSelected"] || function(field, option, option_value) {};
+        buildInnerOptionFromTemplate = options["templateFromOption"] || function(option) { throw "Must define a template to display each option with `templateFromOption`" };
 
     $(this).each(function() {
       var $searchableField = $(this), current_uniq_id = unique_searchable_id, paramKey = options["paramKey"] || $searchableField.attr("name") || "q";
       unique_searchable_id += 1;
 
       $searchableField.attr("data-uniq-searchable-id", current_uniq_id);
-      $searchableField.attr("autocorrect", "false");
-      $searchableField.attr("autocomplete", "false");
-      $searchableField.attr("autocapitalize", "false");
+      $searchableField.attr("autocorrect", "off");
+      $searchableField.attr("autocomplete", "off");
+      $searchableField.attr("autocapitalize", "off");
 
       $searchableField.on('keydown', function(e) {
         // Have to use `keydown` to detect arrow keys properly
@@ -47,19 +43,19 @@
         if (e.which === keyEventUp || e.which === keyEventDown) {
           e.preventDefault();
           if (e.which === keyEventUp) { // up
-            var next_option = $('.searchable-dropdown-option-wrapper.searchable-toSelect').prev();
+            var next_option = $('.js-searchable-option-wrapper.searchable-toSelect').prev();
           } else { // down
-            var next_option = $('.searchable-dropdown-option-wrapper.searchable-toSelect + .searchable-dropdown-option-wrapper');
+            var next_option = $('.js-searchable-option-wrapper.searchable-toSelect + .js-searchable-option-wrapper');
           }
           if (next_option.length > 0) {
-            $('.searchable-dropdown-option-wrapper.searchable-toSelect').removeClass('searchable-toSelect');
+            $('.js-searchable-option-wrapper.searchable-toSelect').removeClass('searchable-toSelect');
             next_option.addClass('searchable-toSelect');
           }
         }
         // Select the option if the Enter key is pressed.
         if (e.which === keyEventEnter) {
           e.preventDefault();
-          var first_option = $('.searchable-dropdown-option-wrapper.searchable-toSelect').first();
+          var first_option = $('.js-searchable-option-wrapper.searchable-toSelect').first();
           selectOption(first_option);
           return false;
         }
@@ -80,12 +76,12 @@
         // When the dropdown loses focus, get rid of the dropdown.
         hideDropdowns();
       }).on('selected-option', function(evt, optionVal) {
-        var option = $('.searchable-dropdown-option-wrapper[data-selected-value="' + optionVal + '"]');
+        var option = $('.js-searchable-option-wrapper[data-selected-value="' + optionVal + '"]');
         selectOption(option);
       })
 
       var hideDropdowns = function() {
-        $('.searchable-dropdown-menu').remove();
+        $('.js-searchable-menu').remove();
       }
 
       var findOptionsFromSearchString = function(search_string)  {
@@ -103,10 +99,10 @@
           search_string = search_string.toLowerCase();
           $(validOptions).each(function(idx, ele) {
             if (!$.isEmptyObject(ele)) {
-              var optionText = ele.text, optionVal = ele.value.toLowerCase(), string_valid = true;
+              var optionText = ele.text.toLowerCase(), optionVal = ele.value.toLowerCase(), string_valid = true;
               if (foundCount < dropdownMaxValues) {
                 $(search_string.split('')).each(function() {
-                  var char_index = optionText.indexOf(ele);
+                  var char_index = optionText.indexOf(this);
                   if (char_index < 0 || !string_valid) {
                     string_valid = false;
                   }
@@ -118,17 +114,18 @@
               }
             }
           })
+          // debugger
           populateDropdownWithOptions(foundOptions);
         }
       }
 
       var showOptionsInSearchableDropdown = function(options) {
         hideDropdowns();
-        var drop_down = $('<div/>').addClass("searchable-dropdown-menu").attr('data-searching-for', $searchableField.attr("data-uniq-searchable-id"));
+        var drop_down = $('<div/>').addClass("js-searchable-menu").attr('data-searching-for', $searchableField.attr("data-uniq-searchable-id"));
         $(options).each(function(idx, ele) {
           var optionVal = valueFromOption(ele).toString().toLowerCase();
           var dropdown_option = $(
-            '<div class="searchable-dropdown-option-wrapper" data-selected-value="' + optionVal + '" data-option-for=' + $searchableField.attr("data-uniq-searchable-id") + '>' +
+            '<div class="js-searchable-option-wrapper" data-selected-value="' + optionVal + '" data-option-for=' + $searchableField.attr("data-uniq-searchable-id") + '>' +
             buildInnerOptionFromTemplate(ele) +
             '</div>'
           );
@@ -150,13 +147,18 @@
         options = options || [];
         inputHasChanged = false;
         showOptionsInSearchableDropdown(options);
-        $('.searchable-dropdown-option-wrapper').first().addClass('searchable-toSelect');
+        $('.js-searchable-option-wrapper').first().addClass('searchable-toSelect');
       }
 
       var selectOption = function(searchable_dropdown_element) {
-        var option_value = $(searchable_dropdown_element).attr("data-selected-value");
-        optionSelectedCallback($searchableField, searchable_dropdown_element.html(), option_value);
-        afterSelectedCallback($searchableField, searchable_dropdown_element.html(), option_value);
+        var option_value = $(searchable_dropdown_element).attr("data-selected-value"), selected_option;
+        $(optionsList).each(function() {
+          if (valueFromOption(this).toString().toLowerCase() == option_value) {
+            selected_option = this;
+            return;
+          }
+        })
+        $searchableField.trigger('searchable:selected', selected_option);
         $searchableField.blur();
       }
 
@@ -175,7 +177,7 @@
       }
 
       var displayLoadingContainerForDropdown = function() {
-        var drop_down = $('<div/>').addClass("searchable-dropdown-menu").attr('data-searching-for', $searchableField.attr("data-uniq-searchable-id"));
+        var drop_down = $('<div/>').addClass("js-searchable-menu").attr('data-searching-for', $searchableField.attr("data-uniq-searchable-id"));
         var loading_container = $('<div/>', {style: "text-align: center;", class: "searchable-loading-container"}).html("Loading...")
         drop_down.append(loading_container);
         var offset = $searchableField.offset();
@@ -185,6 +187,7 @@
         $('body').append(drop_down);
       }
     })
+    return this;
   }
 
   $.fn.searchableFromSelect = function(options) {
@@ -223,17 +226,17 @@
           return option.value;
         },
         templateFromOption: function(option) {
-          return '<div class="searchable-dropdown-option">' + option.text + '</div>';
-        },
-        optionSelected: function(field, option, option_value) {
-          if (option_value) {
-            var option = $(dropdown).find('option[value=' + option_value + ']');
-            $(option).prop('selected', true);
-            $(option).parents('select').change();
-            search_field.val('');
-          }
+          return '<div>' + option.text + '</div>';
+        }
+      }).on("searchable:selected", function(evt, selected_option) {
+        if (selected_option.value) {
+          var option = $(dropdown).find('option[value=' + selected_option.value + ']');
+          $(option).prop('selected', true);
+          $(option).parents('select').change();
+          search_field.val('');
         }
       })
     })
+    return this;
   }
 }( jQuery ));

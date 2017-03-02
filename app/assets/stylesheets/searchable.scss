@@ -1,4 +1,4 @@
-.searchable-dropdown-menu {
+.js-searchable-menu {
   z-index: 10000;
   position: fixed;
   height: auto;
@@ -13,7 +13,7 @@
     color: black;
   }
 
-  .searchable-dropdown-option-wrapper {
+  .js-searchable-option-wrapper {
     width: 100%;
     overflow: hidden;
     cursor: pointer;
@@ -43,95 +43,12 @@
   }
 }
 
-.searchable-dropdown-container {
+.js-searchable-container {
   margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid black;
-  .searchable-dropdown {
+  .js-searchable {
     margin: 0 auto;
     display: block;
   }
 }
-
-// <%= form_for @surveys.last do |f| %>
-// <div class="form-group">
-//   <%= f.text_field :description, { class: "searchable-field", "data-index-url": organizations_path } %>
-//   <%= f.collection_select :id, ::Comrade::Organization.pluck(:id, :name), :first, :last, { include_blank: true }, { class: "orca-select searchable-dropdown" } %>
-// </div>
-// <% end %>
-
-// $(document).ready(function() {
-//
-//   $('.searchable-dropdown').searchableFromSelect();
-//   $('.searchable-field').searchable({
-//     getOptionsFromUrl: $('.searchable-field').attr("data-index-url"),
-//     paramKey: "by_fuzzy_text",
-//     arrayOfOptionsFromUrlResponse: function(data) {
-//       return data["organizations"];
-//     },
-//     valueFromOption: function(option) {
-//       return option.id;
-//     },
-//     templateFromOption: function(option) {
-//       return '<div class="searchable-dropdown-option">' + option.name + '</div>';
-//     },
-//     optionSelectedCallback: function(option) {
-//
-//     }
-//   });
-//
-// })
-//
-// .tt-menu {
-//   background: white;
-// }
-//
-// .tt-selectable:hover {
-//   cursor: pointer;
-//   color: #FFF;
-//   background-color: #0097CF;
-// }
-//
-// .tt-highlight {
-//   color: red;
-// }
-//
-// .tt-hint {
-//   color: #999
-// }
-//
-// .tt-dropdown-menu {
-//   width: 422px;
-//   margin-top: 12px;
-//   padding: 8px 0;
-//   background-color: #FFF;
-//   border: 1px solid #CCC;
-//   border: 1px solid rgba(0, 0, 0, 0.2);
-//   border-radius: 8px;
-//   box-shadow: 0 5px 10px rgba(0,0,0,.2);
-// }
-//
-// .tt-suggestion {
-//   padding: 3px 20px;
-//   font-size: 18px;
-//   line-height: 24px;
-// }
-//
-// .tt-suggestion.tt-cursor {
-//
-// }
-//
-// .tt-suggestion p {
-//   margin: 0;
-// }
-//
-// .btn {
-//   margin-top: 20px;
-// }
-//
-// .label > label {
-//   color: black;
-//   font-size: 12px;
-//
-//   margin-left: -12px;
-// }

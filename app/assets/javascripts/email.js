@@ -1,4 +1,3 @@
-const KEY_EVENT_TAB = 9;
 email_template_preview_timer = null;
 $(document).ready(function() {
 

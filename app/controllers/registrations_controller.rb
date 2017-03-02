@@ -17,7 +17,7 @@ class RegistrationsController < ApplicationController
     notification = update_notifications
     address = current_user.address.update(address_params)
     ec_contact = current_user.emergency_contacts.new(ec_contact_params)
-    contact = ec_contact.save!
+    contact = ec_contact.save
     if update_self && notification && address && contact
       current_user.update(registration_step: 3)
       redirect_to step_3_path, notice: "Success!"

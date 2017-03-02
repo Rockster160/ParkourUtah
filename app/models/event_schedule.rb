@@ -30,7 +30,7 @@ class EventSchedule < ApplicationRecord
 
   belongs_to :instructor, class_name: "User"
   belongs_to :spot, optional: true
-  has_many :events
+  has_many :events, dependent: :destroy
   has_many :attendances, through: :events
   has_many :event_subscriptions, dependent: :destroy
   has_many :subscribed_users, through: :event_subscriptions, source: :user
