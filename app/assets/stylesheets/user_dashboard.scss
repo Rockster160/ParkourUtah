@@ -1,3 +1,6 @@
+@import "config/variables";
+@import 'config/font-imports';
+
 $tab-height: 30px;
 $nav-bar-height: 51px; // Don't change me
 .user-dashboard-page {
@@ -7,27 +10,14 @@ $nav-bar-height: 51px; // Don't change me
   .tabs-container {
     margin: 100px 50px 0;
     position: relative;
+    text-align: center;
     .tab-container {
       display: inline-block;
-
+      text-align: left;
       label {
-        &.account-tab {
-          .tab, .tab-content { background: red; }
-        }
-        &.athletes-tab {
-          .tab, .tab-content { background: green; }
-        }
-        &.notifications-tab {
-          .tab, .tab-content { background: purple; }
-        }
-        &.subscriptions-tab {
-          .tab, .tab-content { background: yellow; }
-        }
-        &.contacts-tab {
-          .tab, .tab-content { background: orange; }
-        }
-
+        
         .tab {
+          background: $pkut-grey-white;
           cursor: pointer;
           padding-left: 15px;
           border: 2px solid black;
@@ -40,8 +30,8 @@ $nav-bar-height: 51px; // Don't change me
           position: absolute;
           top: $tab-height; left: 0; right: 0;
           width: 100%;
-
-          padding: 50px;
+          padding: 25px;
+          margin-bottom: 50px;
         }
       }
 
@@ -56,6 +46,7 @@ $nav-bar-height: 51px; // Don't change me
         &:checked + label {
           .tab {
             border-bottom: none;
+            background: $mat-grey-light;
           }
           .tab-content {
             visibility: visible;
