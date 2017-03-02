@@ -27,7 +27,7 @@ class ScheduleWorker
 
   def send_class_text(params)
     date_range = minutes_from_now(110)..minutes_from_now(130)
-    EventSchedule.joins(:event_subscriptions).events_today.each do |subscribed_event|
+    EventSchedule.joins(:event_subscriptions).distinct.events_today.each do |subscribed_event|
       next if subscribed_event.cancelled?
       next unless date_range.cover?(subscribed_event.date)
       subscribed_users = subscribed_event.event_schedule.subscribed_users
