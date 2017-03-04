@@ -17,7 +17,7 @@ class Address < ApplicationRecord
 
   belongs_to :user
 
-  validates_presence_of :line1, :line2, :city, :state, :zip
+  validates_presence_of :line1, :city, :state, :zip
 
   def show_address(str)
     str.gsub!("%l1", self.line1)

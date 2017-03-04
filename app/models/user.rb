@@ -149,7 +149,7 @@ class User < ApplicationRecord
 
   def self.remove_number_from_texting(num)
     if user = find_by_phone_number(num)
-      user.notifications.update(sms_receivable: false)
+      user.notifications.update(can_receive_sms: false)
       "Success!"
     else
       "Fail."
@@ -191,7 +191,7 @@ class User < ApplicationRecord
   end
 
   def subscribed_athletes
-    athletes.joins(:recurring_subscriptions).where(recurring_subscriptions: { auto_renew: true }).distinct
+    athletes_with_unlimited_access.where(recurring_subscriptions: { auto_renew: true })
   end
 
   def subscriptions_cost
@@ -230,6 +230,7 @@ class User < ApplicationRecord
     new_value = params[:sms_alert] ? true : false
   end
 
+  def sms_alert; notifications.text_waiver_expiring?; end
   def sms_alert=(bool)
     notifications.assign_attributes(
       text_class_reminder: bool,
@@ -253,7 +254,7 @@ class User < ApplicationRecord
       text_waiver_expiring:  false,
       text_class_cancelled:  false,
 
-      sms_receivable:        true
+      can_receive_sms:        true
     })
   end
 
@@ -263,10 +264,6 @@ class User < ApplicationRecord
 
   def cart
     self.carts.order(created_at: :desc).first
-  end
-
-  def show_phone_number
-    format_phone_number(self.phone_number)
   end
 
   def show_address(str)

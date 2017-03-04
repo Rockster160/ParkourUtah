@@ -1,5 +1,5 @@
 <% support_user = @chat_room.support_user %>
-<% blacklisted = @chat_room.text? && (support_user.present? && !support_user.sms_receivable?) %>
+<% blacklisted = @chat_room.text? && (support_user.present? && !support_user.can_receive_sms?) %>
 
 <div class="central-container">
   <%= link_to "Chat Rooms", chat_rooms_path, class: "pkut-btn" %>
@@ -18,9 +18,9 @@
 
   <% if @chat_room.text? %>
     <% if blacklisted %>
-      <h4>This chat room is linked via text, so messages sent from here will be delivered to the phone number: <div class="text-center"><%= format_phone_number(@chat_room.name) %></div></h4>
-    <% else %>
       <h4 class="pkut-header">This user has opted to not receive text messages from ParkourUtah, so messages attempted to deliver will fail.</h4>
+    <% else %>
+      <h4>This chat room is linked via text, so messages sent from here will be delivered to the phone number: <div class="text-center"><%= format_phone_number(@chat_room.name) %></div></h4>
     <% end %>
   <% end %>
 

@@ -26,6 +26,7 @@ class RegistrationsController < ApplicationController
   end
 
   def post_step_3
+    return redirect_to step_3_path, alert: "Failed to submit waiver." unless params[:athlete].present?
     valid = []
     params[:athlete].each do |token, athlete|
       if validate_athlete_attributes(athlete)
@@ -58,7 +59,7 @@ class RegistrationsController < ApplicationController
   end
 
   def fix_step_4
-    if @user.update(address_params)
+    if update_athletes && @user.update(user_params)
       redirect_to step_4_path, notice: "We've updated the requested changes."
     else
       redirect_back fallback_location: root_path, alert: "Something went wrong."
@@ -122,7 +123,7 @@ class RegistrationsController < ApplicationController
         :text_low_credits,
         :email_waiver_expiring,
         :text_waiver_expiring,
-        :sms_receivable,
+        :can_receive_sms,
         :text_class_cancelled,
         :email_class_cancelled,
         :email_newsletter

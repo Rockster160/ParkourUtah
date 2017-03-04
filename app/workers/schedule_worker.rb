@@ -32,7 +32,7 @@ class ScheduleWorker
       next unless date_range.cover?(subscribed_event.date)
       subscribed_users = subscribed_event.event_schedule.subscribed_users
       subscribed_users.each do |user|
-        if user.notifications.text_class_reminder && user.notifications.sms_receivable
+        if user.notifications.text_class_reminder && user.can_receive_sms
           num = user.phone_number
           if num.length == 10
             msg = "Hope to see you at our #{subscribed_event.title} class today at #{subscribed_event.date.strftime('%-l:%M')}!"
@@ -54,7 +54,7 @@ class ScheduleWorker
         if user.notifications.email_waiver_expiring
           ApplicationMailer.expiring_waiver_mail(athlete.id).deliver
         end
-        if user.notifications.text_waiver_expiring && user.notifications.sms_receivable
+        if user.notifications.text_waiver_expiring && user.can_receive_sms
           msg = "The waiver belonging to #{athlete.full_name} is no longer active as of #{athlete.waiver.expiry_date.strftime('%B %-d')}. Head up to ParkourUtah.com to get it renewed!"
           Message.text.create(body: msg, chat_room_name: user.phone_number, sent_from_id: 0).deliver
         end

@@ -6,7 +6,7 @@
   <% @users.each do |user| %>
     <h3><%= user.id %>: <%= '!' unless user.notifications.email_newsletter? %><%= user.email %></h3>
     <%= link_to 'View User Management Page', admin_user_path(user) %>
-    <p><strong><%= '!' unless user.notifications.sms_receivable? %><%= user.show_phone_number %></strong></p>
+    <p><strong><%= '!' unless user.can_receive_sms? %><%= format_phone_number(user.phone_number) %></strong></p>
     <p>Credits: <%= user.credits %>
     <p><a href="<%= attendance_admin_user_path(user) %>">Attendance History</a></p>
     <p>Last seen:

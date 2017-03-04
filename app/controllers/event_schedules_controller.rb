@@ -56,7 +56,7 @@ class EventSchedulesController < ApplicationController
   def send_message_to_subscribers
     event_schedule = EventSchedule.find(params[:id])
     event_schedule.subscribed_users.each do |user|
-      if user.notifications.text_class_cancelled? && user.notifications.sms_receivable?
+      if user.notifications.text_class_cancelled? && user.can_receive_sms?
         Message.text.create(body: params[:message], chat_room_name: user.phone_number, sent_from_id: 0).deliver
       end
       if user.notifications.email_class_cancelled?

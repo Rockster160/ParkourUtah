@@ -19,7 +19,7 @@
         <span>Phone Number:</span>
       </div>
       <div class="col-sm-8">
-        <span class="pkut-link title open-review-modal"><%= current_user.show_phone_number %></span>
+        <span class="pkut-link title open-review-modal"><%= format_phone_number(current_user.phone_number) %></span>
       </div>
     </div>
     <br/>
@@ -37,7 +37,7 @@
         <span>Emergency Contact Number:</span>
       </div>
       <div class="col-sm-8">
-        <span class="pkut-link title open-review-modal"><%= current_user.emergency_contacts.last.show_phone_number %></span>
+        <span class="pkut-link title open-review-modal"><%= format_phone_number(current_user.emergency_contacts.last.number) %></span>
       </div>
     </div>
     <br/>

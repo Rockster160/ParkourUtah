@@ -26,6 +26,13 @@ var ready = function() {
     });
   });
 
+  $('#modal-submit input, #signed_by').keydown(function(e) {
+    if (e.keyCode == 13) {
+      e.preventDefault();
+      return false;
+    }
+  })
+
   $('.submit-modal-form').click(function(e) {
     var $form = $('#modal-submit');
     $('.modal-form-field').each(function() {

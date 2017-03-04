@@ -33,7 +33,7 @@ class RenameDependent < ActiveRecord::Migration[5.0]
         User.find_each do |user|
           print "#{user.id}"
           # Move SMS receivable to User
-          print user.update(can_receive_sms: user.try(:notifications).try(:sms_receivable)) ? "\e[32m.\e[0m" : "\e[31m.\e[0m"
+          print user.update(can_receive_sms: user.try(:notifications).try(:can_receive_sms)) ? "\e[32m.\e[0m" : "\e[31m.\e[0m"
           # Backfill unassigned subscriptions
           user.unassigned_subscriptions_count.times do
             print user.recurring_subscriptions.create(cost_in_pennies: user.subscription_cost, stripe_id: user.stripe_id).persisted? ? "\e[32m.\e[0m" : "\e[31m.\e[0m"
@@ -50,7 +50,7 @@ class RenameDependent < ActiveRecord::Migration[5.0]
 end
 =begin
 BACKUP THE DATABASE BEFORE REMOVING THESE ATTRIBUTES
-  remove_column :notifications, :sms_receivable, :boolean
+  remove_column :notifications, :can_receive_sms, :boolean
 
   drop_table :unlimited_subscriptions
   <delete unlimited_subscriptions file/model>

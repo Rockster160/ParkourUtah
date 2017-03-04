@@ -235,7 +235,7 @@ ActiveRecord::Schema.define(version: 20170301015017) do
     t.boolean "text_low_credits",      default: false
     t.boolean "email_waiver_expiring", default: false
     t.boolean "text_waiver_expiring",  default: false
-    t.boolean "sms_receivable"
+    t.boolean "can_receive_sms"
     t.boolean "text_class_cancelled",  default: false
     t.boolean "email_class_cancelled", default: false
     t.boolean "email_newsletter",      default: true

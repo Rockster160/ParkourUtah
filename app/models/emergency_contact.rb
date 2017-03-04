@@ -20,8 +20,4 @@ class EmergencyContact < ApplicationRecord
     self.number = strip_phone_number(number)
   end
 
-  def show_phone_number
-    format_phone_number(self.number)
-  end
-
 end
