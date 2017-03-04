@@ -167,7 +167,7 @@ class StoreController < ApplicationController
     Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
 
     if user_signed_in?
-      if current_user.address && current_user.address.is_valid?
+      if current_user.address && current_user.address.valid?
         if create_charge
           ApplicationMailer.customer_purchase_mail(current_user.cart.id, @cart.email).deliver_later unless Rails.env.development?
           @cart.notify_slack_of_purchase

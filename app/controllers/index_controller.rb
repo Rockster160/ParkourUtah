@@ -105,7 +105,7 @@ class IndexController < ApplicationController
     current_user.address ||= Address.new
     if params[:address]
       current_user.address.update(params[:address].permit(:line1, :line2, :city, :state, :zip))
-      if current_user.address.is_valid?
+      if current_user.address.valid?
         flash[:notice] = "Your address has been successfully updated!"
       else
         flash[:alert] = "There was an error saving your address."
