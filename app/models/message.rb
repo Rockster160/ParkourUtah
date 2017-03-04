@@ -78,9 +78,10 @@ class Message < ApplicationRecord
   end
 
   def deliver
-    # Messages receivable? Show before allowing an instructor to send a message
-    if chat_room.present? && chat_room.text?
+    if chat_room.present? && chat_room.text? && chat_room.support_user.try(:sms_receivable?)
       SmsMailerWorker.perform_async(chat_room.name, body)
+    else
+      error!("This user has Blacklisted ParkourUtah and cannot receive text messages from us.")
     end
   end
 

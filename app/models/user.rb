@@ -69,6 +69,9 @@ class User < ApplicationRecord
   extend ApplicationHelper
   include ApplicationHelper
 
+  devise :database_authenticatable, :registerable, :confirmable,
+         :recoverable, :rememberable, :trackable, :validatable
+
   LOW_CREDIT_ALERT = 30
 
   has_one  :address,                 dependent: :destroy
@@ -91,16 +94,13 @@ class User < ApplicationRecord
 
   accepts_nested_attributes_for :emergency_contacts
   accepts_nested_attributes_for :address
+  accepts_nested_attributes_for :notifications
 
+  before_validation { self.phone_number = strip_phone_number(self.phone_number) }
   after_create :assign_cart
-  after_create :create_blank_address
   after_create :create_default_notifications
   after_create :send_welcome_email
-  before_save :remove_non_digit_characters_from_phone_number
-  before_destroy :clear_associations
 
-  devise :database_authenticatable, :registerable, :confirmable,
-         :recoverable, :rememberable, :trackable, :validatable
 
   has_attached_file :avatar,
                     :styles => { :medium => "300x400>", :thumb => "120x160" },
@@ -173,7 +173,7 @@ class User < ApplicationRecord
 
   def still_signed_in!
     self.last_sign_in_at = Time.zone.now
-    self.save!
+    self.save!(validate: false)
   end
 
   def display_name
@@ -226,37 +226,39 @@ class User < ApplicationRecord
     self.carts.create
   end
 
-  def create_blank_address
-    self.address = Address.new
+  def update_notifications
+    new_value = params[:sms_alert] ? true : false
+  end
+
+  def sms_alert=(bool)
+    notifications.assign_attributes(
+      text_class_reminder: bool,
+      text_class_cancelled: bool,
+      text_low_credits: bool,
+      text_waiver_expiring: bool
+    )
   end
 
   def create_default_notifications
     self.notifications ||= Notifications.new({
       email_newsletter:      true,
+
       email_class_reminder:  true,
       email_low_credits:     true,
       email_waiver_expiring: true,
+      email_class_cancelled: true,
+
       text_class_reminder:   false,
       text_low_credits:      false,
       text_waiver_expiring:  false,
-      sms_receivable:        true,
-      text_class_cancelled:  true,
-      email_class_cancelled: true
+      text_class_cancelled:  false,
+
+      sms_receivable:        true
     })
   end
 
   def send_welcome_email
     SendWelcomeEmailWorker.perform_async(self.email)
-  end
-
-  def phone_number_is_valid?
-    return false unless self.phone_number
-    phone = self.phone_number.gsub(/[^\d]/, '')
-    (phone.length == 10)
-  end
-
-  def sms_receivable?
-    notifications.try(:sms_receivable) || false
   end
 
   def cart
@@ -277,31 +279,19 @@ class User < ApplicationRecord
     if self.notifications.email_low_credits
       ::LowCreditsMailerWorker.perform_async(self.id)
     end
-    if self.notifications.text_low_credits && self.notifications.sms_receivable
+    if self.notifications.text_low_credits
       num = self.phone_number
       msg = "You are low on Credits! Head up to ParkourUtah.com/store to get some more so you have some for next time."
       Message.text.create(body: msg, chat_room_name: num, sent_from_id: 0).deliver
     end
   end
 
-  def clear_associations
-    self.carts.destroy_all
-    self.address.destroy
-  end
-
   def valid_phone_number
-    return false unless self.phone_number
-    phone = self.phone_number.gsub(/[^\d]/, '')
+    return false unless self.registration_step > 2
+    phone = self.phone_number.to_s.gsub(/[^\d]/, '')
     unless phone.length == 10
-      errors.add(:phone_number, "must have 10 digits.")
+      errors.add(:phone_number, "must be a valid, 10 digit number.")
     end
-    unless self.phone_number_is_valid?
-      errors.add(:phone_number, "must be a valid phone number.")
-    end
-  end
-
-  def remove_non_digit_characters_from_phone_number
-    self.phone_number = strip_phone_number(phone_number) if attribute_present?("phone_number")
   end
 
   def split_name
@@ -312,14 +302,13 @@ class User < ApplicationRecord
     end
   end
 
-  def confirmation_required?
-    false # Leave this- it bypasses Devise's confirmable method
-  end
-
   def positive_credits
     if self.credits < 0
       errors.add(:credits, "cannot be negative.")
     end
   end
+
+  # Leave this- it bypasses Devise's confirmable method
+  def confirmation_required?; false; end
 
 end

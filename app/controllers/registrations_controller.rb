@@ -3,58 +3,33 @@ class RegistrationsController < ApplicationController
   before_action :redirect_user_to_correct_step
 
   def step_4
-    @athletes = current_user.athletes.select {|athlete| athlete.signed_waiver? == false }
+    @athletes = @user.athletes.select {|athlete| athlete.signed_waiver? == false }
   end
 
   def step_5
-    if current_user.registration_step == 5
-      current_user.update(registration_complete: true)
+    if @user.registration_step == 5
+      @user.update(registration_complete: true)
     end
+  end
+
+  def step_2
+    @user = @user
   end
 
   def post_step_2
-    update_self = current_user.update(user_params)
-    notification = update_notifications
-    address = current_user.address.update(address_params)
-    ec_contact = current_user.emergency_contacts.new(ec_contact_params)
-    contact = ec_contact.save
-    if update_self && notification && address && contact
-      current_user.update(registration_step: 3)
+    if @user.update(user_params.merge(registration_step: 3))
       redirect_to step_3_path, notice: "Success!"
     else
-      redirect_back fallback_location: root_path, alert: "Something went wrong."
+      flash.now[:alert] = "Looks like we're missing some information."
+      render :step_2
     end
-  end
-
-  def user_params
-    params[:user][:phone_number] = params[:user][:phone]
-    params[:user][:referrer] = params[:user][:referrer_dropdown] == "Word of Mouth" ? params[:user][:referrer_text] : params[:user][:referrer_dropdown]
-    params.require(:user).permit(:phone_number, :email, :referrer)
-  end
-
-  def update_notifications
-    new_value = params[:smsalert] ? true : false
-    current_user.notifications.update_attributes(
-      text_class_reminder: new_value,
-      text_class_cancelled: new_value,
-      text_low_credits: new_value,
-      text_waiver_expiring: new_value
-    )
-  end
-
-  def address_params
-    params.require(:address).permit(:line1, :line2, :city, :state, :zip)
-  end
-
-  def ec_contact_params
-    params.require(:ec_contact).permit(:name, :number)
   end
 
   def post_step_3
     valid = []
     params[:athlete].each do |token, athlete|
       if validate_athlete_attributes(athlete)
-        new_athlete = current_user.athletes.create(
+        new_athlete = @user.athletes.create(
           full_name: athlete[:name],
           date_of_birth: athlete[:dob],
           fast_pass_pin: athlete[:code]
@@ -66,12 +41,9 @@ class RegistrationsController < ApplicationController
         valid << new_athlete
       end
     end
-    if valid.count == 1
-      current_user.update(registration_step: 4)
-      redirect_to step_4_path, notice: "Success! #{valid.count} waiver created."
-    elsif valid.count > 1
-      current_user.update(registration_step: 4)
-      redirect_to step_4_path, notice: "Success! #{valid.count} waivers created."
+    if valid.count >= 1
+      @user.update(registration_step: 4)
+      redirect_to step_4_path, notice: "Success! #{valid.count} #{'waiver'.pluralize(valid.count)} created."
     else
       redirect_back fallback_location: root_path, alert: "An error occurred."
     end
@@ -86,13 +58,7 @@ class RegistrationsController < ApplicationController
   end
 
   def fix_step_4
-    update_self = current_user.update(user_params)
-    notification = update_notifications
-    address = current_user.address.update(address_params)
-    ec_contact = current_user.emergency_contacts.new(ec_contact_params)
-    contact = ec_contact.save!
-    athletes = update_athletes
-    if update_self && notification && address && contact && update_athletes
+    if @user.update(address_params)
       redirect_to step_4_path, notice: "We've updated the requested changes."
     else
       redirect_back fallback_location: root_path, alert: "Something went wrong."
@@ -126,24 +92,61 @@ class RegistrationsController < ApplicationController
       end
     end
 
-    slack_message = "New User: <#{admin_user_url(current_user)}|#{current_user.id} #{current_user.email}>\n"
-    current_user.athletes.each do |athlete|
+    slack_message = "New User: <#{admin_user_url(@user)}|#{@user.id} #{@user.email}>\n"
+    @user.athletes.each do |athlete|
       slack_message << "#{athlete.id} #{athlete.full_name} - Athlete ID: #{athlete.fast_pass_id.to_s.rjust(4, "0")} Pin: #{athlete.fast_pass_pin.to_s.rjust(4, "0")}\n"
     end
-    slack_message << "Referred By: #{current_user.referrer}"
+    slack_message << "Referred By: #{@user.referrer}"
     channel = Rails.env.production? ? "#new-users" : "#slack-testing"
     SlackNotifier.notify(slack_message, channel)
 
     ::NewAthleteInfoMailerWorker.perform_async(approved.compact)
-    current_user.update(registration_step: 5)
+    @user.update(registration_step: 5)
     redirect_to step_5_path
   end
 
   private
 
+  def user_params
+    params[:user][:referrer] = params[:user][:referrer] == "Word of Mouth" ? params[:user][:referrer_text] : params[:user][:referrer]
+    params.require(:user).permit([
+      :phone_number,
+      :email,
+      :referrer,
+      :sms_alert,
+      notifications_attributes: [
+        :id,
+        :email_class_reminder,
+        :text_class_reminder,
+        :email_low_credits,
+        :text_low_credits,
+        :email_waiver_expiring,
+        :text_waiver_expiring,
+        :sms_receivable,
+        :text_class_cancelled,
+        :email_class_cancelled,
+        :email_newsletter
+      ],
+      emergency_contacts_attributes: [
+        :id,
+        :number,
+        :name
+      ],
+      address_attributes: [
+        :id,
+        :line1,
+        :line2,
+        :city,
+        :state,
+        :zip
+      ]
+    ])
+  end
+
   def verify_user_signed_in
+    @user = current_user
     if user_signed_in?
-      if current_user.registration_complete?
+      if @user.registration_complete?
         redirect_to edit_user_path
       end
     else
@@ -156,8 +159,8 @@ class RegistrationsController < ApplicationController
   end
 
   def redirect_user_to_correct_step
-    unless current_step == current_user.registration_step
-      redirect_to case current_user.registration_step
+    unless current_step == @user.registration_step
+      redirect_to case @user.registration_step
       when 2 then step_2_path
       when 3 then step_3_path
       when 4 then step_4_path

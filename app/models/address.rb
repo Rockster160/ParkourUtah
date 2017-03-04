@@ -17,22 +17,7 @@ class Address < ApplicationRecord
 
   belongs_to :user
 
-  before_create :make_empty_fields
-
-  def make_empty_fields
-    self.line1 ||= ""
-    self.line2 ||= ""
-    self.city ||= ""
-    self.state ||= ""
-    self.zip ||= ""
-  end
-
-  def is_valid?
-    self.line1.length > 0 &&
-    self.city.length > 0 &&
-    self.state.length > 0 &&
-    self.zip.length > 0
-  end
+  validates_presence_of :line1, :line2, :city, :state, :zip
 
   def show_address(str)
     str.gsub!("%l1", self.line1)

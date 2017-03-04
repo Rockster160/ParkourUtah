@@ -13,11 +13,11 @@ class EmergencyContact < ApplicationRecord
 
   belongs_to :user
 
-  before_save :format_phone
+  before_save :strip_phone
   validates_presence_of :name, :number
 
-  def format_phone
-    self.number = number.gsub(/[^0-9]/, "") if attribute_present?("number")
+  def strip_phone
+    self.number = strip_phone_number(number)
   end
 
   def show_phone_number
