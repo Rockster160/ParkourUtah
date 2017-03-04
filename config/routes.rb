@@ -108,8 +108,10 @@ Rails.application.routes.draw do
   delete 'unsubscribe_monthly/:id' => 'store#unsubscribe', as: 'unsubscribe_monthly_subscription'
 
   resources :athletes do
-    collection do
+    member do
       post :reset_pin
+    end
+    collection do
       post :verify
       post :assign_subscription
       patch :update_photo

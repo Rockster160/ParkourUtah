@@ -59,8 +59,8 @@ class AthletesController < ApplicationController
   end
 
   def verify
-    params[:athlete].each do |fast_pass_id, codes|
-      athlete = Athlete.find(fast_pass_id)
+    params[:athlete].each do |athlete_id, codes|
+      athlete = Athlete.find(athlete_id)
       if athlete.fast_pass_id == codes[:fast_pass_id].to_i && athlete.fast_pass_pin == codes[:fast_pass_pin].to_i
         if athlete.update(verified: true)
           athlete.sign_up_verified
@@ -71,7 +71,7 @@ class AthletesController < ApplicationController
   end
 
   def assign_subscription
-    athlete = Athlete.find(params[:fast_pass_id])
+    athlete = Athlete.find(params[:athlete_id])
     user = athlete.user
 
     if user.recurring_subscriptions.unassigned.count > 0
@@ -108,8 +108,8 @@ class AthletesController < ApplicationController
 
   def update_existing_athlete_waivers
     if params[:update_athlete].present?
-      params[:update_athlete].each do |fast_pass_id, athlete_params|
-        athlete = Athlete.find(fast_pass_id)
+      params[:update_athlete].each do |athlete_id, athlete_params|
+        athlete = Athlete.find(athlete_id)
         if validate_athlete_attributes(athlete_params)
           athlete.waivers.create({
             signed_for: athlete.full_name,
@@ -164,7 +164,7 @@ class AthletesController < ApplicationController
 
   def reset_pin
     if current_user.valid_password?(params[:password])
-      @athlete = Athlete.find(params[:fast_pass_id])
+      @athlete = Athlete.find(params[:id])
       if params[:fast_pass_pin] == params[:pin_confirmation] && @athlete.update(fast_pass_pin: params[:fast_pass_pin].to_i)
         redirect_to edit_user_path, notice: "Successfully updated pin for #{@athlete.full_name}."
       else
