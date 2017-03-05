@@ -1,4 +1,5 @@
 class AthletesController < ApplicationController
+  before_action :validate_user_signed_in
   layout 'application', except: [ :secret ]
 
   def index
@@ -153,7 +154,7 @@ class AthletesController < ApplicationController
   end
 
   def sign_waiver
-    @athletes = current_user.try(:athletes_where_expired_past_or_soon) || []
+    @athletes = current_user.athletes_where_expired_past_or_soon
   end
 
   def delete_athlete
