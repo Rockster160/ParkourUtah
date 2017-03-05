@@ -259,7 +259,7 @@ class User < ApplicationRecord
   end
 
   def send_welcome_email
-    SendWelcomeEmailWorker.perform_async(self.email)
+    ApplicationMailer.welcome_mail(self.email).deliver_later
   end
 
   def cart
@@ -274,7 +274,7 @@ class User < ApplicationRecord
 
   def send_alert_for_low_credits
     if self.notifications.email_low_credits
-      ::LowCreditsMailerWorker.perform_async(self.id)
+      ApplicationMailer.low_credits_mail(self.id).deliver_later
     end
     if self.notifications.text_low_credits
       num = self.phone_number

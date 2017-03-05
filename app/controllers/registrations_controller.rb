@@ -95,13 +95,13 @@ class RegistrationsController < ApplicationController
 
     slack_message = "New User: <#{admin_user_url(@user)}|#{@user.id} #{@user.email}>\n"
     @user.athletes.each do |athlete|
-      slack_message << "#{athlete.id} #{athlete.full_name} - Athlete ID: #{athlete.fast_pass_id.to_s.rjust(4, "0")} Pin: #{athlete.fast_pass_pin.to_s.rjust(4, "0")}\n"
+      slack_message << " - *#{athlete.id} #{athlete.full_name}* - Athlete ID: #{athlete.fast_pass_id.to_s.rjust(4, "0")} Pin: #{athlete.fast_pass_pin.to_s.rjust(4, "0")}\n"
     end
     slack_message << "Referred By: #{@user.referrer}"
     channel = Rails.env.production? ? "#new-users" : "#slack-testing"
     SlackNotifier.notify(slack_message, channel)
 
-    ::NewAthleteInfoMailerWorker.perform_async(approved.compact)
+    ApplicationMailer.new_athlete_info_mail(approved.compact).deliver_later
     @user.update(registration_step: 5)
     redirect_to step_5_path
   end

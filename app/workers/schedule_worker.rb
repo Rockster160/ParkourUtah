@@ -40,7 +40,7 @@ class ScheduleWorker
           end
         end
         if user.notifications.email_class_reminder?
-          ::ClassReminderMailerWorker.perform_async(user.id, "Hope to see you at our #{subscribed_event.title} class today at #{subscribed_event.date.strftime('%-l:%M')}!")
+          ApplicationMailer.class_reminder_mail(user.id, "Hope to see you at our #{subscribed_event.title} class today at #{subscribed_event.date.strftime('%-l:%M')}!").deliver_later
         end
       end
     end

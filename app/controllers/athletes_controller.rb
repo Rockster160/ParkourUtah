@@ -95,7 +95,7 @@ class AthletesController < ApplicationController
     update_existing_athlete_waivers
 
     if @new_fast_pass_ids.count > 0
-      ::NewAthleteInfoMailerWorker.perform_async(@new_fast_pass_ids)
+      ApplicationMailer.new_athlete_info_mail(@new_fast_pass_ids).deliver_later
     end
     if @valid.count == 1
       redirect_to step_4_path, notice: "Success! #{@valid.count} waiver updated/created."
