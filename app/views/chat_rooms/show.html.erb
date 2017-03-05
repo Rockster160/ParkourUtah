@@ -17,7 +17,7 @@
   <% end %>
 
   <% if @chat_room.text? %>
-    <% if blacklisted %>
+    <% if @chat_room.blacklisted? %>
       <h4 class="pkut-header">This user has opted to not receive text messages from ParkourUtah, so messages attempted to deliver will fail.</h4>
     <% else %>
       <h4>This chat room is linked via text, so messages sent from here will be delivered to the phone number: <div class="text-center"><%= format_phone_number(@chat_room.name) %></div></h4>
@@ -28,7 +28,7 @@
     <div class="message-form" data-messages-url="<%= chat_room_messages_path(@chat_room) %>">
       <div class="messages-container" data-room-id="<%= @chat_room.id %>" data-current-user-id="<%= current_user.try(:id) || 'x' %>">
         <%# JS renders messages here %>
-        <% if blacklisted %>
+        <% if @chat_room.blacklisted? %>
           <div class="chat-message important-alert-message">
             <div class="message-body">
               <strong>BLACKLISTED</strong> <br>

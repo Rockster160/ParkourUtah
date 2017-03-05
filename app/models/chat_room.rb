@@ -77,6 +77,10 @@ class ChatRoom < ApplicationRecord
     return User.by_phone_number(name).first
   end
 
+  def blacklisted?
+    text? && (support_user.present? && !support_user.can_receive_sms?)
+  end
+
   def last_message
     messages.order(created_at: :desc).first
   end

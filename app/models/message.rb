@@ -78,11 +78,15 @@ class Message < ApplicationRecord
   end
 
   def deliver
-    if chat_room.present? && chat_room.text? && (chat_room.support_user.nil? || chat_room.support_user.try(:can_receive_sms?))
+    if chat_room.present? && chat_room.text? && !blacklisted?
       SmsMailerWorker.perform_async(chat_room.name, body)
     else
       error!("This user has Blacklisted ParkourUtah and cannot receive text messages from us.")
     end
+  end
+
+  def blacklisted?
+    chat_room.blacklisted?
   end
 
   def notify_slack
