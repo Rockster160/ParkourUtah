@@ -10,7 +10,7 @@
 #  text_low_credits      :boolean          default(FALSE)
 #  email_waiver_expiring :boolean          default(FALSE)
 #  text_waiver_expiring  :boolean          default(FALSE)
-#  can_receive_sms        :boolean
+#  sms_receivable        :boolean
 #  text_class_cancelled  :boolean          default(FALSE)
 #  email_class_cancelled :boolean          default(FALSE)
 #  email_newsletter      :boolean          default(TRUE)

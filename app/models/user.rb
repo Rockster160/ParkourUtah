@@ -252,9 +252,7 @@ class User < ApplicationRecord
       text_class_reminder:   false,
       text_low_credits:      false,
       text_waiver_expiring:  false,
-      text_class_cancelled:  false,
-
-      can_receive_sms:        true
+      text_class_cancelled:  false
     })
   end
 
