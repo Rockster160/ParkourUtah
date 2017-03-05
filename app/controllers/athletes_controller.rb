@@ -1,5 +1,5 @@
 class AthletesController < ApplicationController
-  layout 'application', except: [:secret]
+  layout 'application', except: [ :secret ]
 
   def index
     @athletes = Athlete.by_most_recent(:created_at)
@@ -153,7 +153,7 @@ class AthletesController < ApplicationController
   end
 
   def sign_waiver
-    @athletes = current_user.athletes_where_expired_past_or_soon
+    @athletes = current_user.try(:athletes_where_expired_past_or_soon) || []
   end
 
   def delete_athlete
