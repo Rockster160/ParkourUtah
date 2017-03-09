@@ -6,24 +6,21 @@ $(document).ready(function() {
     arrayOfOptionsFromUrlResponse: function(data) {
       return data;
     },
-    valueFromOption: function(option) {
-      return option.id;
-    },
-    templateFromOption: function(option) {
+    templateFromOption: function(user) {
       var athletes = '';
-      $(option.athletes).each(function(e) {
+      $(user.athletes).each(function(e) {
         athletes += ('<span class="dropdown-athlete">' + this.full_name.substring(0, 30) + ' - ' + this.fast_pass_id + '</span><br/>')
       })
       return '<div class="dropdown-option"><span class="dropdown-email">' +
-      option.email +
+      user.email +
       '</span><span class="dropdown-id">' +
-      option.id +
+      user.id +
       '</span><br/>' +
       athletes
       '</div>';
     }
-  }).on("searchable:selected", function(field, user, opt_value) {
-    window.location.href = "/admin/users/" + selected_value;
+  }).on("searchable:selected", function(evt, user) {
+    window.location.href = "/admin/users/" + user.id;
   });
 
   $("#athlete_index_search_field").searchable({
@@ -32,13 +29,10 @@ $(document).ready(function() {
     arrayOfOptionsFromUrlResponse: function(data) {
       return data;
     },
-    valueFromOption: function(option) {
-      return option.id;
-    },
     templateFromOption: function(option) {
       return '<div class="dropdown-option">' + option.id + ' - ' + option.full_name + '</div>';
     }
-  }).on("searchable:selected", function(field, athlete, opt_value) {
+  }).on("searchable:selected", function(evt, athlete) {
     $('#athlete_index_search_field').val(athlete.id + ' - ' + athlete.full_name);
   });
 
