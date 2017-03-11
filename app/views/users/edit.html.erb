@@ -24,6 +24,14 @@
     <%= render partial: 'athletes/assign_subscriptions' %>
     <a class="pkut-btn text-center forceOpen" data-toggle="modal" data-target="#notification_modal">Edit Notifications</a><br/>
     <%= render partial: 'devise/registrations/notifications' %>
+    <% unless @user.can_receive_sms? %>
+      <div class="row pkut-header">
+        <h5>Uh oh! Looks like you blacklisted ParkourUtah's number.</h5>
+        <h5>It's okay- it happens when you respond with just the word "STOP" to one of our messages- but it stops us from notifying you regarding the things you want to be notified on!</h5>
+        <h5>These can be helpful- like letting you know that one of your waivers are about to expire.</h5>
+        <h5>We let you customize when you hear from us. Just click on the "Notifications" button in order to choose when you want to hear from us.</h5>
+      </div>
+    <% end %>
     <%
       has_subscriptions = @user.subscribed_athletes.any? ||
       @user.athletes_with_unlimited_access.count > 0 ||
@@ -36,7 +44,6 @@
     <% end %>
   </div>
   <br/>
-
 
   <%= render partial: 'layouts/error_container', locals: { resource: @user } %>
 
