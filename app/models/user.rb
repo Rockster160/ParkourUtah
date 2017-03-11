@@ -100,6 +100,7 @@ class User < ApplicationRecord
   after_create :assign_cart
   after_create :create_default_notifications
   after_create :send_welcome_email
+  after_update :allow_user_to_receive_sms_again
 
 
   has_attached_file :avatar,
@@ -149,7 +150,7 @@ class User < ApplicationRecord
 
   def self.remove_number_from_texting(num)
     if user = find_by_phone_number(num)
-      user.notifications.update(can_receive_sms: false)
+      user.update(can_receive_sms: false)
       "Success!"
     else
       "Fail."
@@ -300,6 +301,12 @@ class User < ApplicationRecord
   def positive_credits
     if self.credits < 0
       errors.add(:credits, "cannot be negative.")
+    end
+  end
+
+  def allow_user_to_receive_sms_again
+    if !can_receive_sms && phone_number_changed?
+      update(can_receive_sms: true)
     end
   end
 

@@ -8,13 +8,13 @@
   <h3><%= @user.id %>: <%= '!' unless @user.notifications.email_newsletter? %><%= @user.email %></h3>
   <%= link_to "Send Email", batch_email_admin_path(recipients: @user.email) if current_user.is_admin? %>
   <p>
-    <strong>
-      <%= '!' unless @user.can_receive_sms? %>
-      <%= format_phone_number(@user.phone_number) %>
-    </strong>
-
-    <% if @user.can_receive_sms? && current_user.is_admin? && @user.phone_number.present? %>
-      <%= link_to("Send Text Message", phone_number_chat_rooms_path(@user.phone_number)) %>
+    <% if @user.can_receive_sms? %>
+      <strong><%= format_phone_number(@user.phone_number) %></strong>
+      <% if current_user.is_admin? && @user.phone_number.present? %>
+        <%= link_to("Send Text Message", phone_number_chat_rooms_path(@user.phone_number)) %>
+      <% end %>
+    <% else %>
+      <s class="pkut-header"><%= format_phone_number(@user.phone_number) %></s>
     <% end %>
   </p>
   <% if current_user.is_admin? %>

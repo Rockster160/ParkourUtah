@@ -4,7 +4,7 @@ class IndexController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def can_receive_sms
-    current_user.notifications.update(can_receive_sms: true)
+    current_user.update(can_receive_sms: true)
     num = current_user.phone_number
     msg = "Thank you! You will once again be able to receive text message notifications from ParkourUtah."
     Message.text.create(body: msg, chat_room_name: num, sent_from_id: 0).deliver

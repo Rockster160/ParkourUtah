@@ -18,7 +18,7 @@ class SmsMailerWorker
           if e.message == "The message From/To pair violates a blacklist rule."
             m.error!("Blacklisted")
             if user = User.find_by_phone_number(num)
-              user.notifications.update(can_receive_sms: false)
+              user.update(can_receive_sms: false)
             else
               SmsMailerWorker.perform_async('+13852599640', "No user found!! Number: #{num}")
             end

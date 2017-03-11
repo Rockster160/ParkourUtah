@@ -20,7 +20,7 @@
       var searchable_id = $menu.attr("data-searching-for");
       $searchableField = $('[data-uniq-searchable-id=' + searchable_id + ']');
 
-      var offset = $searchableField.position();
+      var offset = $searchableField.offset();
       var posY = offset.top + $searchableField.outerHeight(true);
       var posX = offset.left;
       if (!isUsingMobileDevice()) {
@@ -42,7 +42,7 @@
     repositionSearchableMenu();
   })
 
-  $(document).on('mousedown touchstart', function(e) {
+  $(document).on('mousedown touchend', function(e) {
     // Delegate clicks on the Dropdown Options since they are generated elements
     // Selects the current option.
     $target = $(e.target);
@@ -51,7 +51,7 @@
       var option_obj = decodeStrToObj($option.attr('data-json'));
       $('[data-uniq-searchable-id=' + $option.attr("data-option-for") + ']').trigger('selected-option', option_obj);
     }
-  }).on('mouseenter', '.js-searchable-option-wrapper', function() {
+  }).on('mouseenter touchstart', '.js-searchable-option-wrapper', function() {
     // Delegate hover over Dropdown Options
     // Add a class while being hover to only the object being hovered.
     $('.js-searchable-option-wrapper').removeClass('searchable-toSelect');
@@ -176,7 +176,7 @@
           drop_down.append(dropdown_option);
         });
 
-repositionSearchableMenu(drop_down);
+        repositionSearchableMenu(drop_down);
         if (Object.keys(options).length > 0) { $('body').append(drop_down); }
       }
 
@@ -268,7 +268,7 @@ repositionSearchableMenu(drop_down);
         var drop_down = $('<div/>').addClass("js-searchable-menu").attr('data-searching-for', $searchableField.attr("data-uniq-searchable-id"));
         var loading_container = $('<div/>', {style: "text-align: center;", class: "searchable-loading-container"}).html("Loading...")
         drop_down.append(loading_container);
-repositionSearchableMenu(drop_down);
+        repositionSearchableMenu(drop_down);
         $('body').append(drop_down);
       }
     })

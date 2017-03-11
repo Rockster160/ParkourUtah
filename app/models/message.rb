@@ -96,7 +96,7 @@ class Message < ApplicationRecord
     slack_message = ""
 
     if opt_out
-      sent_from.notifications.update(can_receive_sms: false) if sent_from.present? && sent_from.notifications.present?
+      sent_from.update(can_receive_sms: false) if sent_from.present? && sent_from.notifications.present?
       slack_message += "#{format_phone_number(phone_number)} has opted out of text messages from PKUT.\nThey will no longer receive text messages from us (Including messages sent from the admin text messaging page).\nIn order to re-enable messages, they must send a text message saying \"START\" to us, and then log in to their account, Home, then click Notifications, then the button that says 'Text Me!'\nIf the message sends successfully, they will be able to receive text messages from us again.\n"
     else
       escaped_body = body.split("\n").map { |line| "\n>#{line}" }.join("")
