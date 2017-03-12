@@ -1,4 +1,5 @@
 var last_message_timestamp = 0;
+received_sound = new Audio('https://www.soundjay.com/button/sounds/button-47.mp3');
 
 $(document).ready(function() {
   if ($('.messages-container').length > 0) {
@@ -7,6 +8,7 @@ $(document).ready(function() {
     var room_id = "room_" + $('.messages-container').attr('data-room-id');
     var user_id = "user_" + $('.messages-container').attr('data-current-user-id');
     var currently_typing = {};
+    var unread_count = 0;
 
     App.global_chat = App.cable.subscriptions.create({
       channel: "ChatChannel",
@@ -18,37 +20,11 @@ $(document).ready(function() {
       },
       received: function(data) {
         if (data["is_typing"] != undefined) {
-          var typing_user_id = data["typing_user_id"];
-          if (typing_user_id != $('.messages-container').attr('data-current-user-id')) {
-            currently_typing[typing_user_id] = currently_typing[typing_user_id] || {};
-            currently_typing[typing_user_id].name = data["is_typing"];
-            clearTimeout(currently_typing[typing_user_id].timeout);
-            currently_typing[typing_user_id].timeout = setTimeout(function() {
-              currently_typing[typing_user_id] = {};
-              refreshTypingContainer();
-            }, 3000)
-            refreshTypingContainer();
-          }
+          userIsTyping(data)
         } else if (data["error"] != undefined) {
-          var error = data["error"]
-          $('.chat-message[data-read-id=' + error["message_id"] + '] > .message-body').append('<div class="text-error-message">Error: ' + error["message"] + '</div>')
-          scrollBottomOfMessages();
-          refreshTimeago();
+          messageErrored(data["error"])
         } else if (data["message"] != undefined) {
-          $('.messages-container').append(data["message"]);
-          $('.messages-container').append($('.typing-container'));
-          var current_user_id = $('.messages-container').attr('data-current-user-id') || 'none';
-          $('.chat-message[data-sent-by-id=' + current_user_id + ']').removeClass('received').addClass('sent');
-          scrollBottomOfMessages();
-          refreshTimeago();
-          last_message_timestamp = $('time.timeago').map(function() { return $(this).attr("datetime"); }).sort(function(a, b) { return a-b; }).last()[0];
-          var read_ids = $('.chat-message').map(function() { return $(this).attr("data-read-id"); });
-          // FIXME: Only read messages I receive
-          // var read_ids = $('.chat-message.received').map(function() { return $(this).attr("data-read-id"); });
-          if (read_ids.length > 0) {
-            var url = $('.message-form').attr('data-messages-url') + '/mark_messages_as_read';
-            $.post(url, {ids: read_ids.toArray()})
-          }
+          receivedMessage(data["message"])
         } else {
           console.log("Unknown error: " + data);
         }
@@ -67,6 +43,10 @@ $(document).ready(function() {
       }
     });
 
+    $(window).focus(function() {
+      markMessagesAsRead()
+    })
+
     $('.messages-form .new-message-field').keypress(function(evt) {
       var $form = $('.messages-form');
       if (evt.keyCode == KEY_EVENT_ENTER && !evt.shiftKey) {
@@ -74,7 +54,73 @@ $(document).ready(function() {
       } else if (evt.keyCode != KEY_EVENT_BACKSPACE && evt.keyCode != KEY_EVENT_DELETE) {
         App.global_chat.user_is_typing();
       }
+    }).focus(function() {
+      markMessagesAsRead()
     })
+
+    markMessagesAsRead = function() {
+      unread_count = 0;
+      updatePageTitleWithUnreads();
+      var read_ids = $('.chat-message.received').map(function() { return $(this).attr("data-read-id"); });
+      if (read_ids.length > 0) {
+        var url = $('.message-form').attr('data-messages-url') + '/mark_messages_as_read';
+        $.post(url, {ids: read_ids.toArray()})
+      }
+    }
+
+    userIsTyping = function(data) {
+      var typing_user_id = data["typing_user_id"];
+      if (typing_user_id != $('.messages-container').attr('data-current-user-id')) {
+        currently_typing[typing_user_id] = currently_typing[typing_user_id] || {};
+        currently_typing[typing_user_id].name = data["is_typing"];
+        clearTimeout(currently_typing[typing_user_id].timeout);
+        currently_typing[typing_user_id].timeout = setTimeout(function() {
+          currently_typing[typing_user_id] = {};
+          refreshTypingContainer();
+        }, 3000)
+        refreshTypingContainer();
+      }
+    }
+
+    messageErrored = function(error) {
+      $('.chat-message[data-read-id=' + error["message_id"] + '] > .message-body').append('<div class="text-error-message">Error: ' + error["message"] + '</div>')
+      scrollBottomOfMessages();
+      refreshTimeago();
+    }
+
+    receivedMessage = function(message_html) {
+      var message = $(message_html);
+
+      $('.messages-container').append(message);
+      var current_user_id = $('.messages-container').attr('data-current-user-id') || 'none';
+      $('.chat-message[data-sent-by-id=' + current_user_id + ']').removeClass('received').addClass('sent');
+      scrollBottomOfMessages();
+      refreshTimeago();
+      last_message_timestamp = $('time.timeago').map(function() { return $(this).attr("datetime"); }).sort(function(a, b) { return a-b; }).last()[0];
+
+      currently_typing[message.attr("data-sent-by-id")] = {};
+      refreshTypingContainer();
+
+      if (message.hasClass("received")) {
+        received_sound.play();
+        unread_count += 1;
+        updatePageTitleWithUnreads()
+      }
+
+      if ($('.messages-form .new-message-field').is(':focus')) {
+        markMessagesAsRead()
+      }
+    }
+
+    updatePageTitleWithUnreads = function() {
+      if (unread_count == 0) {
+        document.title = "ParkourUtah"
+      } else if (unread_count == 1) {
+        document.title = "PKUT (1 unread message)"
+      } else {
+        document.title = "PKUT (" + unread_count + " unread messages)"
+      }
+    }
 
     $('.messages-form').submit(function(e) {
       e.preventDefault()
@@ -150,6 +196,7 @@ $(document).ready(function() {
         var new_messages_received = new_height > previous_height;
         if (new_messages_received) {
           scrollBottomOfMessages();
+          markMessagesAsRead();
         }
         refreshTimeago();
         last_message_timestamp = $('time.timeago').map(function() { return $(this).attr("datetime"); }).sort(function(a, b) { return a-b; }).last()[0];

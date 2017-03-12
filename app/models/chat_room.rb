@@ -59,7 +59,7 @@ class ChatRoom < ApplicationRecord
     where(id: (permitted_ids + member_of_ids).uniq)
   }
 
-  def display_name
+  def display_name(user=nil)
     if text?
       if support_user.present?
         support_user.display_name
@@ -67,7 +67,15 @@ class ChatRoom < ApplicationRecord
         format_phone_number(name)
       end
     else
-      name
+      if name.present?
+        name
+      else
+        if users.many?
+          (users - [user].flatten).map(&:display_name).join(" & ")
+        else
+          users.map(&:display_name).join(" & ")
+        end
+      end
     end
   end
 
@@ -75,6 +83,10 @@ class ChatRoom < ApplicationRecord
     return nil unless text?
     return nil unless name.gsub(/[^0-9]/, "").length == 10
     return User.by_phone_number(name).first
+  end
+
+  def unread_messages_for_user?(user)
+    user.chat_room_users.where(chat_room_id: self.id, has_unread_messages: true).any?
   end
 
   def viewable_by_user?(user)

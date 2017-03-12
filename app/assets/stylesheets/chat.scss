@@ -5,6 +5,7 @@ $alert-color: $pkut-grey-dark;
 $sent-color: $pkut-red-dark;
 $received-color: #FAFAFA;
 $question-color: #9C27B0;
+$unread-color: #1785E2;
 
 .chat-rooms-container {
   margin-top: 20px;
@@ -38,6 +39,14 @@ $question-color: #9C27B0;
       color: black;
       font-weight: bold;
       font-size: 20px;
+      position: relative;
+      .blip {
+        position: absolute;
+        top: 6px; left: 5px;
+        height: 0; width: 0;
+        background: $unread-color;
+        border-radius: 100%;
+      }
     }
     .room-last-message {
       padding-left: 20px;
@@ -47,6 +56,15 @@ $question-color: #9C27B0;
 
       .last-sender {
         color: $pkut-red;
+      }
+    }
+    &.unread {
+      .room-name {
+        padding-left: 20px;
+        .blip {
+          width: 10px;
+          height: 10px;
+        }
       }
     }
     &.question {

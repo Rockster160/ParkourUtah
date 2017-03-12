@@ -4,7 +4,9 @@ class ChatRoomsController < ApplicationController
   before_action :verify_user_has_permission_to_view_room, only: [ :show ]
 
   def index
-    @chat_rooms = current_user.chat_rooms.by_most_recent(:last_message_received_at).page(params[:page])
+    @chat_rooms = current_user.chat_rooms.by_most_recent(:last_message_received_at)
+    @chat_rooms = @chat_rooms.chat unless current_user.admin?
+    @chat_rooms = @chat_rooms.page(params[:page])
   end
 
   def by_phone_number
