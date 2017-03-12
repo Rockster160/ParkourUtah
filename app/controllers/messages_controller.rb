@@ -1,5 +1,4 @@
 class MessagesController < ApplicationController
-  before_action :validate_instructor
   before_action :set_chat_room
 
   def mark_messages_as_read
