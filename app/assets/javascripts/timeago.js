@@ -73,7 +73,6 @@ refreshTimeago = function() {
   $('time.timeago').each(function() {
     timeago(this);
   })
-  $('.important-alert-message').appendTo('.messages-container');
 }
 
 $(document).ready(function() {

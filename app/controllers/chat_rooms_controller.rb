@@ -22,7 +22,9 @@ class ChatRoomsController < ApplicationController
   end
 
   def verify_user_has_permission_to_view_room
-    # if user.chat_room_users.any? {|ru|ru.chat_room_id == params[:id]} || user.has_permission_to_view_chat_room?(room)
+    unless chat_room.viewable_by_user?(current_user)
+      redirect_to chat_rooms_path
+    end
   end
 
 end

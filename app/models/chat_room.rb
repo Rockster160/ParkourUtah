@@ -77,6 +77,10 @@ class ChatRoom < ApplicationRecord
     return User.by_phone_number(name).first
   end
 
+  def viewable_by_user?(user)
+    chat_room_users.pluck(:user_id).include?(user.id) || user.admin?
+  end
+
   def blacklisted?
     text? && (support_user.present? && !support_user.can_receive_sms?)
   end
