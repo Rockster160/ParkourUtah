@@ -6,7 +6,7 @@ class NotifyOfUnreadMessageWorker
 
     return unless message.present? && message.persisted? && message.unread?
 
-    if message.text? && !message.sent_from.try(:instructor?) && sent_from_id != 0
+    if message.text? && !message.sent_from.try(:instructor?) && message.sent_from_id != 0
       message.notify_slack
     elsif message.chat?
       chat_room_link = Rails.application.routes.url_helpers.chat_room_url(message.chat_room)
