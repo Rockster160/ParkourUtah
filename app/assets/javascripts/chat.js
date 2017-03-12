@@ -107,7 +107,7 @@ $(document).ready(function() {
         updatePageTitleWithUnreads()
       }
 
-      if ($('.messages-form .new-message-field').is(':focus')) {
+      if ($(window).is(':focus')) {
         markMessagesAsRead()
       }
     }

@@ -26,7 +26,7 @@ class Message < ApplicationRecord
   validates_presence_of :body
 
   after_create_commit :broadcast_creation
-  after_create_commit :try_to_notify_slack_of_unread_message
+  after_create_commit :try_to_notify_of_unread_message
   after_create_commit { chat_room.new_message! }
 
   scope :read, -> { where.not(read_at: nil) }
@@ -107,11 +107,8 @@ class Message < ApplicationRecord
 
   private
 
-  def try_to_notify_slack_of_unread_message
-    if !sent_from.try(:instructor?) && sent_from_id != 0 && self.text? && self.unread? && !self.do_not_deliver
-      puts "\e[31mNotify Slack!\e[0m"
-      NotifySlackOfUnreadMessageWorker.perform_in(20.seconds, self.id)
-    end
+  def try_to_notify_of_unread_message
+    NotifyOfUnreadMessageWorker.perform_in(1.minute, self.id) unless do_not_deliver
   end
 
   def set_message_type_to_chat_room
