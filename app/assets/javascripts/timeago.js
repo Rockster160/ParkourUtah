@@ -78,6 +78,8 @@ refreshTimeago = function() {
 $(document).ready(function() {
   if ($('time.timeago').length > 0) {
     refreshTimeago();
-    setInterval(refreshTimeago, 10000);
+    setInterval(function() {
+      refreshTimeago();
+    }, 10000);
   }
 })
