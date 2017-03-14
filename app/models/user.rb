@@ -273,6 +273,10 @@ class User < ApplicationRecord
     super.presence || "#{first_name} #{last_name}".presence
   end
 
+  def has_unread_messages?
+    chat_room_users.where(has_unread_messages: true).any?
+  end
+
   protected
 
   def send_alert_for_low_credits

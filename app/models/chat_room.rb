@@ -107,7 +107,9 @@ class ChatRoom < ApplicationRecord
 
   def new_message!
     update(last_message_received_at: messages.by_most_recent(:created_at).first.created_at) if messages.any?
-    chat_room_users.each { |chu| chu.update(has_unread_messages: true) }
+    unless text? && sent_from.try(:instructor?)
+      (chat_room_users - [sent_from]).flatten.each { |chu| chu.update(has_unread_messages: true) }
+    end
   end
 
   private
