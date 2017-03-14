@@ -17,15 +17,15 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: 'staging.parkourutah.com', protocol: 'http://', port: nil }
   config.action_mailer.asset_host = 'http://staging.parkourutah.com'
   ActionMailer::Base.delivery_method = :smtp
-  ActionMailer::Base.smtp_settings = {
-    :address              => 'email-smtp.us-west-2.amazonaws.com',
-    :port                 => 587,
-    :user_name            => ENV['PKUT_AWS_EMAILNAME'],
-    :password             => ENV['PKUT_AWS_EMAIL_PASS'],
-    :authentication       => :plain,
-    :enable_starttls_auto => true,
-    :openssl_verify_mode  => 'none'
-  }
+  # ActionMailer::Base.smtp_settings = {
+  #   :address              => 'email-smtp.us-west-2.amazonaws.com',
+  #   :port                 => 587,
+  #   :user_name            => ENV['PKUT_AWS_EMAILNAME'],
+  #   :password             => ENV['PKUT_AWS_EMAIL_PASS'],
+  #   :authentication       => :plain,
+  #   :enable_starttls_auto => true,
+  #   :openssl_verify_mode  => 'none'
+  # }
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_deliveries = true
 
