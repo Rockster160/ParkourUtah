@@ -144,6 +144,16 @@ body {
   background: rgba(220, 220, 220, 0.7);
 }
 
+.faq-page {
+  .faq-question {
+    font-weight: bold;
+    margin: 30px 0;
+  }
+  .faq-answer {
+    
+  }
+}
+
 footer {
   padding: 50px 0;
   background: $mat-grey-dark;

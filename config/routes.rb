@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   match '422', to: 'index#page_not_found', via: :all
   match '500', to: 'index#page_broken', via: :all
 
+  get :faq, to: "index#faq"
+
   get :flash_message, controller: "application"
 
   get 'talk' => 'index#get_request'
@@ -78,6 +80,7 @@ Rails.application.routes.draw do
   end
 
   get :dashboard, controller: :admins
+
   resource :admin, only: [] do
     get :purchase_history
     get :summary
@@ -89,13 +92,13 @@ Rails.application.routes.draw do
     get :batch_email
     post :send_batch_emailer
   end
+
   resources :admin_users, path: "admin/users", only: [ :show, :index, :destroy ] do
     member do
       get :attendance
       post :update_trials
       post :update_credits
       post :update_notifications
-
     end
   end
 
@@ -148,8 +151,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      post :valid_credentials
-      get :valid_credentials
+      resources :users
     end
   end
 
