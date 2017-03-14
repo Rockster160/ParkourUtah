@@ -269,6 +269,10 @@ class User < ApplicationRecord
     self.address.show_address(str)
   end
 
+  def full_name
+    super.presence || "#{first_name} #{last_name}".presence
+  end
+
   protected
 
   def send_alert_for_low_credits
