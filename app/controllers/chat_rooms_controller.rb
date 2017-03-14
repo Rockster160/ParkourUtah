@@ -3,6 +3,11 @@ class ChatRoomsController < ApplicationController
   before_action :validate_user_signed_in
   before_action :verify_user_has_permission_to_view_room, only: [ :show ]
 
+  def mark_messages_as_read
+    current_user.chat_room_users.update_all(has_unread_messages: false)
+    redirect_to chat_rooms_path, notice: "Marked all messages as read."
+  end
+
   def index
     @chat_rooms = current_user.chat_rooms.by_most_recent(:last_message_received_at)
     @chat_rooms = @chat_rooms.chat unless current_user.admin?

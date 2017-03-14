@@ -3,24 +3,26 @@
 
 <div class="central-container">
   <%= link_to "Chat Rooms", chat_rooms_path, class: "pkut-btn" %>
-  <%= link_to "Back to Dashboard", dashboard_path, class: "pkut-btn" %>
-  <% if @chat_room.text? && support_user.present? %>
-    <%= link_to "User Page", admin_user_path(support_user), class: "pkut-btn" %>
-  <% end %>
 
   <% if current_user.instructor? %>
+    <%= link_to "Back to Dashboard", dashboard_path, class: "pkut-btn" %>
+
+    <% if @chat_room.text? && support_user.present? %>
+      <%= link_to "User Page", admin_user_path(support_user), class: "pkut-btn" %>
+    <% end %>
+
     <div class="chat-room-users-container">
       <% @chat_room.users.each do |user| %>
         <%= link_to "#{user.id} - #{user.email}", admin_user_path(user) %> <br>
       <% end %>
     </div>
-  <% end %>
 
-  <% if @chat_room.text? %>
-    <% if @chat_room.blacklisted? %>
-      <h4 class="pkut-header">This user has opted to not receive text messages from ParkourUtah, so messages attempted to deliver will fail.</h4>
-    <% else %>
-      <h4>This chat room is linked via text, so messages sent from here will be delivered to the phone number: <div class="text-center"><%= format_phone_number(@chat_room.name) %></div></h4>
+    <% if @chat_room.text? %>
+      <% if @chat_room.blacklisted? %>
+        <h4 class="pkut-header">This user has opted to not receive text messages from ParkourUtah, so messages attempted to deliver will fail.</h4>
+      <% else %>
+        <h4>This chat room is linked via text, so messages sent from here will be delivered to the phone number: <div class="text-center"><%= format_phone_number(@chat_room.name) %></div></h4>
+      <% end %>
     <% end %>
   <% end %>
 

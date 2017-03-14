@@ -1,5 +1,8 @@
 <div class="central-container">
-  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
+  <% if current_user.instructor? %>
+    <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
+  <% end %>
+  <%= link_to "Mark all messages as Read", mark_messages_as_read_chat_rooms_path, class: 'pkut-btn', method: :post %>
 
   <div class="text-center">
     <%= paginate @chat_rooms %>

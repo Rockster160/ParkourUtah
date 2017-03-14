@@ -71,6 +71,7 @@ Rails.application.routes.draw do
   resources :contact_requests, only: [ :index, :show ]
   resources :chat_rooms, path: "chat", only: [ :index, :show ] do
     get "phone_number/:phone_number", on: :collection, action: :by_phone_number, as: :phone_number
+    post 'all/mark_messages_as_read', on: :collection, action: :mark_messages_as_read, as: :mark_messages_as_read
     resources :messages, only: [ :index ] do
       post :mark_messages_as_read, on: :collection
     end
