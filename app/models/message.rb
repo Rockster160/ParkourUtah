@@ -27,7 +27,7 @@ class Message < ApplicationRecord
 
   after_create_commit :broadcast_creation
   after_create_commit :try_to_notify_of_unread_message
-  after_create_commit { chat_room.new_message! }
+  after_create_commit { chat_room.new_message!(self) }
 
   scope :read, -> { where.not(read_at: nil) }
   scope :unread, -> { where(read_at: nil) }
@@ -36,6 +36,12 @@ class Message < ApplicationRecord
     text: 0,
     chat: 1
   }
+
+  def from_pkut?; sent_from_id == 0; end
+  def from_admin?; !!sent_from.try(:admin?); end
+  def from_mod?; !!sent_from.try(:mod?); end
+  def from_instructor?; !!sent_from.try(:instructor?); end
+  def from_unknown_user?; sent_from_id.nil?; end
 
   def read!(time=Time.zone.now)
     update(read_at: time)
