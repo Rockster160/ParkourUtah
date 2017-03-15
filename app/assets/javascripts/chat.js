@@ -47,7 +47,7 @@ $(document).ready(function() {
       markMessagesAsRead()
     })
 
-    $('.messages-form .new-message-field').keypress(function(evt) {
+    $('.messages-form .new-message-field').on('keydown keyup', function(evt) {
       var $form = $('.messages-form');
       if (evt.keyCode == KEY_EVENT_ENTER && !evt.shiftKey) {
         $form.submit();
