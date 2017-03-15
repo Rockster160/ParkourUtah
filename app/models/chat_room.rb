@@ -36,7 +36,7 @@ class ChatRoom < ApplicationRecord
     chat: 1
   }
 
-  validates_uniqueness_of :name
+  validates_uniqueness_of :name, allow_nil: true
 
   scope :permitted_for_user, ->(user) {
     return none unless user.present?
