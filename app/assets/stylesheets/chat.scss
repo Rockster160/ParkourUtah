@@ -1,9 +1,9 @@
 @import "config/variables";
 @import 'config/font-imports';
 
-$alert-color: $pkut-grey-dark;
-$sent-color: $pkut-red-dark;
-$received-color: #FAFAFA;
+$alert-color: $pkut-grey-5;
+$sent-color: $pkut-red-muted;
+$received-color: $pkut-light;
 
 .chat-rooms-container {
   margin-top: 20px;
@@ -16,22 +16,22 @@ $received-color: #FAFAFA;
     overflow: hidden;
 
     font-weight: 100;
-    color: $pkut-grey-dark;
-    background-color:  rgba(255,255,255,0.75);
-    border: 1px solid $pkut-grey-light;
+    color: $pkut-grey-5;
+    background-color: $pkut-grey-1;
+    border: 1px solid $pkut-grey-2;
     .support-icon {
       position: absolute;
       top: 5px; right: 5px;
       font-size: 20px;
     }
     .timestamp {
-      .fa { color: black; }
+      .fa { color: $pkut-grey-5; }
       margin-top: -5px;
       margin-bottom: 5px;
       font-size: 12px;
     }
     .room-name {
-      color: black;
+      color: $pkut-grey-5;
       font-weight: bold;
       font-size: 20px;
     }
@@ -48,9 +48,9 @@ $received-color: #FAFAFA;
     &:hover {
       cursor: pointer;
       z-index: 1;
-      box-shadow: 0px 2px 30px -5px $pkut-grey-dark;
+      box-shadow: 0px 2px 30px -5px $pkut-grey-5;
       color: black;
-      background: white;
+      background: $pkut-light;
     }
   }
 }
@@ -59,26 +59,27 @@ $received-color: #FAFAFA;
   margin-top: 50px;
   margin-bottom: 150px;
   border-radius: 15px;
-  background-color: #CFD8DC;
-  box-shadow: 0px 25px 51px -20px #000;
+  background-color: $pkut-blue-light;
+  box-shadow: 0px 25px 51px -20px $pkut-dark;
   position: relative;
   height: 500px;
 
   .message-form-wrapper {
-    box-shadow: 0px -8px 10px -8px rgba(0,0,0, 0.7);
+    position: relative;
+    box-shadow: 0px -8px 10px -8px $pkut-grey-4;
     border-radius: 15px;
-
+    
     .new-message-field {
       width: calc(100% - 50px);
       min-height: 64px;
       max-height: 64px;
       font-size: 18px;
-      color: black;
+      color: $pkut-grey-5;
       padding: 5px;
       padding-right: 55px;
       border-radius: 15px 0 0 15px;
       border: 0;
-      border-top: 2px solid #757575;
+      border-top: 1px solid $pkut-grey-4;
       resize: none;
       margin-bottom: -7px;
 
@@ -93,7 +94,7 @@ $received-color: #FAFAFA;
       text-decoration: none;
       border-radius: 0 13px 13px 0;
       border: 0;
-      border-top: 2px solid #757575;
+      border-top: 2px solid $pkut-grey-4;
       position: absolute;
       height: 64px;
       line-height: 64px;
@@ -140,15 +141,15 @@ $received-color: #FAFAFA;
         margin: 0 0 10px;
         font-size: 13px;
         line-height: 1.42857143;
-        color: #333;
-        background-color: #F5F5F5;
-        border: 1px solid #CCC;
+        color: $pkut-dark;
+        background-color: $pkut-light;
+        border: 1px solid $pkut-grey-2;
         border-radius: 4px;
         word-break: break-word;
         font-family: "Menlo", "Monaco", "Consolas", "Courier New", "monospace";
         overflow: visible;
         box-sizing: border-box;
-        box-shadow: 0px 8px 10px -8px #000;
+        box-shadow: 0px 8px 10px -8px $pkut-dark;
         .text-error-message {
           padding-top: 20px;
           text-align: center;
@@ -174,12 +175,12 @@ $received-color: #FAFAFA;
 
       &.sent {
         .timestamp {
-          color: white;
+          color: $pkut-light;
           top: 1px; right: 5px;
         }
         .message-body {
           border-radius: 20px 0px 20px 20px;
-          color: white;
+          color: $pkut-light;
           background-color: $sent-color;
           border-color: darken($sent-color, 5%);
           margin-left: 25%;
@@ -189,14 +190,14 @@ $received-color: #FAFAFA;
           padding-left: 25%;
           left: 15px;
           top: 4px;
-          color: white;
+          color: $pkut-light;
         }
       }
 
       &.important-alert-message {
         .message-body {
           border-radius: 20px;
-          color: white;
+          color: $pkut-light;
           padding: 10px 15px 10px;
           background-color: $alert-color;
           border-color: darken($alert-color, 5%);
