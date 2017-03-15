@@ -1,0 +1,50 @@
+<div class="modal fade" id="modal_contact" tabindex="-1" aria-hidden="true">
+  <div class="central-container modal-dialog">
+    <button type="button" class="close-btn contact-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
+    <%= render partial: 'index/contact_us' %>
+  </div>
+</div>
+
+<%= render_modal("incomplete_error_modal") do %>
+  <h1 class="pkut-header">Error</h1>
+  <p class="error-message">Looks like we still need some information. Please fill in the remaining <span id="number_of_errors_container">fields.</span></p>
+<% end %>
+
+<div class="navigation">
+  <div class="container">
+    <div class="navigation-items">
+      <div class="navigation-brand">
+        <% if Rails.env.production? %>
+          <a href="/" class="navigation-item">PARKOUR UTAH</a>
+        <% else %>
+          <a href="/" class="navigation-item"><%= Rails.env.upcase %></a>
+        <% end %>
+      </div>
+
+      <%= link_to "", class: "navigation-item navigation-icon js-dropdown", data: { dropdown_target: ".collapsible-xs" } do %>
+        <%= icon('bars', '') %>
+      <% end %>
+      <div class="collapsible collapsible-xs">
+        <%= link_to "FAQ", faq_path, class: "navigation-item" %>
+        <%= link_to "Contact Us", "", class: "navigation-item", data: { toggle: "modal", target: "#modal_contact" } %>
+        <%= link_to "Store", store_path, class: "navigation-item" %>
+        <%= link_to "Calendar", calendar_show_path, class: "navigation-item" %>
+        <% if user_signed_in? %>
+          <%= link_to edit_user_path, class: "navigation-item js-dropdown", data: { dropdown_target: ".collapsible-default" } do %>
+            Account <i class="fa fa-chevron-down"></i>
+          <% end %>
+          <div class="collapsible collapsible-default">
+            <%= link_to "Home", edit_user_path, class: "navigation-item" %>
+            <% if current_user.instructor? %>
+              <%= link_to "Dashboard", dashboard_path, class: "navigation-item" %>
+            <% end %>
+            <%= link_to "Log Out", destroy_user_session_path, class: "navigation-item", method: :delete %>
+          </div>
+        <% else %>
+          <%= link_to "Sign In", new_user_session_path, class: "navigation-item"  %>
+        <% end %>
+      </div>
+
+    </div>
+  </div>
+</div>
