@@ -10,7 +10,7 @@
   <p class="error-message">Looks like we still need some information. Please fill in the remaining <span id="number_of_errors_container">fields.</span></p>
 <% end %>
 
-<div class="navigation">
+<div class="navigation <%= 'hidden' if @hide_nav %>">
   <div class="container">
     <div class="navigation-items">
       <div class="navigation-brand">

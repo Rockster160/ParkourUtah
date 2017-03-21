@@ -1,7 +1,7 @@
 class ClassHandlersController < ApplicationController
   before_action :validate_instructor
   before_action :set_event_schedule
-  before_action :set_high_flashes
+  before_action :set_class_variables
 
   def fast_pass_id
     if @event_schedule.present?
@@ -62,8 +62,9 @@ class ClassHandlersController < ApplicationController
     @event_schedule = EventSchedule.find(params[:event_schedule_id]) if params[:event_schedule_id].present?
   end
 
-  def set_high_flashes
+  def set_class_variables
     @high_flash = true
+    @hide_nav = true
   end
 
 end

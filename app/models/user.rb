@@ -180,7 +180,7 @@ class User < ApplicationRecord
   def display_name
     return nickname if nickname.present?
     return full_name if full_name.present?
-    "User:#{id} - #{email}"
+    "User:#{id} - #{email&.split("@").try(:first)}"
   end
 
   def signed_in?
