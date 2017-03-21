@@ -38,7 +38,7 @@
     return mobile_user_agent_regexp.test(user_agent) || mobile_vendor_regexp.test(user_agent.substr(0,4));
   };
 
-  $(window).on("scroll resize", function() {
+  $(window).on("scroll resize touchmove", function() {
     repositionSearchableMenu();
   })
 

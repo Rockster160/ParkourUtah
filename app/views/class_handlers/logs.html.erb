@@ -12,7 +12,7 @@
   <br/>
   <br/>
   <br/>
-  <div><%= text_field_tag(:by_fuzzy_text, 'Search', id: 'user_index_search_field', class: 'form-control', autocomplete: "off", autofocus: true, "data-index-url": admin_users_path) %></div>
+  <div><%= text_field_tag(:by_fuzzy_text, '', placeholder: "Search", id: 'user_index_search_field', class: 'form-control', autocomplete: "off", autofocus: true, "data-index-url": admin_users_path) %></div>
   <br/>
   <% @attendances.each do |attendance| %>
     <% athlete = attendance.athlete %>
