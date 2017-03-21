@@ -55,7 +55,7 @@ class ScheduleWorker
           ApplicationMailer.expiring_waiver_mail(athlete.id).deliver
         end
         if user.notifications.text_waiver_expiring && user.can_receive_sms
-          msg = "The waiver belonging to #{athlete.full_name} is no longer active as of #{athlete.waiver.expiry_date.strftime('%B %-d')}. Head up to ParkourUtah.com to get it renewed!"
+          msg = "The waiver belonging to #{athlete.full_name} is no longer active as of #{athlete.waiver.expiry_date.strftime('%B %-d')}. Head up to ParkourUtah.com/waivers to get it renewed!"
           Message.text.create(body: msg, chat_room_name: user.phone_number, sent_from_id: 0).deliver
         end
       end
