@@ -34,6 +34,28 @@ $nav-bar-height: 51px; // Don't change me
           border-bottom-color: black;
           border-radius: 6px 6px 0 0;
           color: $pkut-grey;
+          .blip {
+            position: absolute;
+            top: -10px; right: -5px;
+            padding: 3px;
+            height: 21px;
+            min-width: 21px;
+            background: $pkut-red;
+            border-radius: 10px;
+
+            text-align: center;
+            line-height: 15px;
+            border: 2px solid $pkut-grey-dark;
+            color: $pkut-grey-dark;
+          }
+          @media(max-width: 900px) {
+            width: 50px;
+            text-align: center;
+            padding: 0;
+            .tab-name {
+              display: none;
+            }
+          }
         }
         .tab-content {
           position: absolute;
@@ -60,6 +82,11 @@ $nav-bar-height: 51px; // Don't change me
             color: black;
             border-color: black;
             border-bottom: 0;
+            .blip {
+              background: red;
+              border: 2px solid black;
+              color: black;
+            }
           }
           .tab-content {
             visibility: visible;

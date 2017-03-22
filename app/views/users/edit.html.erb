@@ -11,9 +11,19 @@
 <div class="user-dashboard-page">
   <div class="tabs-container">
 
-    <% ["account", "athletes", "notifications", "subscriptions", "contacts"].each do |tab_type| %>
+    <%
+    tabs = {
+      account: { icon: "user" },
+      athletes: { icon: "universal-access" },
+      notifications: { icon: "bell" },
+      subscriptions: { icon: "envelope" },
+      contacts: { icon: "plus-square" }
+    }
+    %>
+
+    <% tabs.each_with_index do |(tab_type, tab_options), idx| %>
       <div class="tab-container">
-        <input type="radio" id="<%= tab_type %>-tab" name="user-dashboard-tabs-group" <%= 'checked' if tab_type == 'account' %>>
+        <input type="radio" id="<%= tab_type %>-tab" name="user-dashboard-tabs-group" <%= 'checked' if idx == 1 %>>
         <label for="<%= tab_type %>-tab" class="tab-label <%= tab_type %>-tab">
           <div class="tab-content">
             <div class="central-container">
@@ -21,7 +31,13 @@
               <%= render partial: "#{tab_type}_content" %>
             </div>
           </div>
-          <div class="tab"><%= tab_type.capitalize %></div>
+          <div class="tab">
+            <% if @notifications[tab_type] > 0 %>
+              <div class="blip"><%= @notifications[tab_type.to_sym] %></div>
+            <% end %>
+            <span class="tab-icon"><i class="fa fa-<%= tab_options[:icon] %>"></i></span>
+            <span class="tab-name"><%= tab_type.capitalize %></span>
+          </div>
         </label>
       </div>
     <% end %>
