@@ -4,7 +4,7 @@
   <br/>
   <br/>
   <% current_user.athletes.each do |athlete| %>
-    <div class="row"><%= link_to icon('star', '', class: 'fa-lg'), assign_subscription_athletes_path(athlete.id), method: :post, style: 'color: gold;' %> <%= athlete.full_name %></div>
+    <div class="row"><%= link_to icon('star', '', class: 'fa-lg'), assign_subscription_athletes_path(athlete_id: athlete.id), method: :post, style: 'color: gold;' %> <%= athlete.full_name %></div>
     <br/>
   <% end %>
 <% end %>

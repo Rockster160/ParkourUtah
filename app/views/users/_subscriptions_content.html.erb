@@ -1,17 +1,10 @@
 <% if @user.recurring_subscriptions.unassigned.count > 0 %>
-  <div class="pkut-btn big-btn forceOpen" data-toggle="modal" data-target="#assign_subscriptions">
-    Assign subscriptions to students!
-  </div> <br>
+  <div class="text-center">
+    <div class="pkut-btn big-btn forceOpen" data-toggle="modal" data-target="#assign_subscriptions">
+      Assign subscriptions to students!
+    </div>
+  </div>
   <%= render partial: 'athletes/assign_subscriptions' %>
 <% end %>
 
-<%
-  has_subscriptions = @user.subscribed_athletes.any? ||
-  @user.athletes_with_unlimited_access.count > 0 ||
-  @user.subscribed_events.any?
-%>
-<% if has_subscriptions %>
-  <br/>
-  <a class="pkut-btn text-center forceOpen" data-toggle="modal" data-target="#subscription_modal">Manage Subscriptions</a><br/>
-  <%= render partial: 'devise/registrations/subscriptions' %>
-<% end %>
+<%= render partial: "users/subscriptions" %>
