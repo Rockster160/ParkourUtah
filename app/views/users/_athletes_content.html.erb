@@ -1,0 +1,59 @@
+<% if @user.athletes.unverified.count > 0 %>
+  <div class="pkut-btn big-btn orange-btn-glowing forceOpen" data-toggle="modal" data-target="#verify_athletes">
+    Click here to receive 2 trial classes!
+  </div> <br>
+  <%= render partial: 'athletes/verify_athletes' %>
+<% end %>
+
+<div class="edit-athletes-container">
+  <% @user.athletes_by_waiver_expiration.each_with_index do |athlete, pos| %>
+    <div class="row edit-athlete-container">
+      <h4><%= athlete.full_name %> - ID:<%= athlete.fast_pass_id.to_s.rjust(4, "0") %></h4>
+      <% if athlete.unused_trials.count > 0 %>
+        <span style="color:yellow;">Trial Classes remaining: <%= athlete.unused_trials.count %></span> <br>
+      <% end %>
+      <% if athlete.has_unlimited_access? %>
+        <p>Has unlimited classes until: <%= athlete.has_access_until.strftime('%B %e, %Y') %></p>
+      <% end %>
+      <a alt="..." class="pkut-text forceOpen" data-toggle="modal" data-target="#edit<%= athlete.id %>">Delete Athlete</a><br/>
+
+      <% if athlete.signed_waiver? && athlete.waiver.is_active? %>
+        <% if athlete.waiver.expires_soon? %>
+          <%= link_to waivers_path do  %>
+            <span class="pkut-text title">Waiver active until <%= athlete.waiver.expiry_date.strftime('%B %-d, %Y') %></span>
+            Update Waiver
+          <% end %>
+        <% else %>
+            Waiver active until <%= athlete.waiver.expiry_date.strftime('%B %-d, %Y') %>
+        <% end %>
+      <% else %>
+        <%= link_to "Must have waiver signed before attending class.", waivers_path, class: 'fancy-link' %>
+      <% end %>
+      </br>
+      <a class="forceOpen" alt="..." data-toggle="modal" data-target="#athlete-<%= athlete.id %>">Forgot PIN? Click here to reset.</a><br/>
+    </div>
+
+    <%= render_modal("edit#{athlete.id}", "skinny-modal") do %>
+      <h3 class="pkut-text"><%= athlete.full_name %></h3>
+      <p>This will permanently delete this athlete. Are you sure? This action cannot be undone.<p>
+      <%= link_to "Delete", athlete_path(athlete.id), class: 'pkut-btn', method: :delete %>
+    <% end %>
+
+    <%= render_modal("athlete-#{athlete.id}", "skinny-modal") do %>
+      <h2 class="pkut-text">Reset PIN</h2>
+      <p>Enter the new desired pin for</p>
+      <strong><%= athlete.full_name %></strong>
+      <%= form_tag reset_pin_athlete_path(athlete) do %>
+        <%= telephone_field_tag "fast_pass_pin", '', placeholder: 'New Pin', class: 'pkut-textbox sm-textbox formatPin ', autocomplete: 'off', style: 'padding-top: 0;' %>
+        <%= telephone_field_tag "pin_confirmation", '', placeholder: 'Confirm', class: 'pkut-textbox sm-textbox formatPin ', autocomplete: 'off', style: 'padding-top: 0;' %>
+        <p>Please enter your current password below to verify:</p>
+        <%= password_field_tag :password, '', autocomplete: 'off', class: 'pkut-textbox' %>
+        <%= submit_tag 'Submit', class: 'pkut-btn' %>
+      <% end %>
+    <% end %>
+  <% end %>
+  <br/>
+  <div class="text-center">
+    <%= link_to "Add Athletes", waivers_path, class: 'pkut-btn' %>
+  </div>
+</div>

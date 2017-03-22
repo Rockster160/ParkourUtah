@@ -29,17 +29,17 @@
     <%= render partial: 'athletes/reiterate_waiver' %>
     <%= render partial: 'athletes/waivers' %>
   <% end %>
-  <h4><span class="add-athlete-btn hover-btn pkut-header"><%= icon('plus-square-o', '', class: 'fa-lg') %> Add Additional Athlete</span></h4>
+  <h4><span class="add-athlete-btn hover-btn pkut-text"><%= icon('plus-square-o', '', class: 'fa-lg') %> Add Additional Athlete</span></h4>
   <a alt="..." class="pkut-btn pull-right populate-waiver-btn" data-toggle="modal" data-target="#waiver_modal">Sign Waiver</a><br/>
 </div>
 
 <%= render_modal("what_is", "skinny-modal") do %>
-  <h1 class="pkut-header">Pin Code</h1>
+  <h1 class="pkut-text">Pin Code</h1>
   <p class="error-message">A PIN code (similar to a debit card PIN) is a 4 digit number that the athlete will need in order to attend class. This code will be entered along with the Athlete ID Number, which is assigned to you at the end of your registration. Please select a 4 digit number that is EASY to remember for each athlete.</p>
 <% end %>
 
 <%= render_modal("error_modal", "skinny-modal text-left") do %>
-  <h1 class="pkut-header">Error</h1>
+  <h1 class="pkut-text">Error</h1>
   <p class="error-message">
     <p>Sorry! It looks like we still need some information.</p>
     <p>Before continuing, please make sure you have downloaded, read, and understand the waiver.</p>

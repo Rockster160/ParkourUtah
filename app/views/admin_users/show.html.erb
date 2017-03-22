@@ -14,7 +14,7 @@
         <%= link_to("Send Text Message", phone_number_chat_rooms_path(@user.phone_number)) %>
       <% end %>
     <% else %>
-      <s class="pkut-header"><%= format_phone_number(@user.phone_number) %></s>
+      <s class="pkut-text"><%= format_phone_number(@user.phone_number) %></s>
     <% end %>
   </p>
   <% if current_user.is_admin? %>
@@ -50,7 +50,7 @@
     <% end %>
 
     <%= render_modal("edit#{athlete.id}", "skinny-modal") do %>
-      <h3 class="pkut-header"><%= athlete.full_name %></h3>
+      <h3 class="pkut-text"><%= athlete.full_name %></h3>
       <p>This will permanently delete this athlete. Are you sure? This action cannot be undone.<p>
       <%= link_to "Delete", athlete_path(athlete.id), class: 'pkut-btn', method: :delete %>
     <% end %>
@@ -58,7 +58,7 @@
     --Birthday: <%= athlete.date_of_birth %><br/>
     --Waiver expires: <%= athlete.waiver ? athlete.waiver.expiry_date.strftime('%B %e, %Y') : "No waiver signed" %><br/>
     <% if current_user.is_admin? %>
-      --<a alt="..." class="pkut-header forceOpen" data-toggle="modal" data-target="#edit<%= athlete.id %>">Delete Athlete</a><br/><br/>
+      --<a alt="..." class="pkut-text forceOpen" data-toggle="modal" data-target="#edit<%= athlete.id %>">Delete Athlete</a><br/><br/>
     <% end %>
     <% if false %>
       --<%= link_to 'Curriculum', '' %><br>
@@ -75,7 +75,7 @@
 <hr>
 
 <%= render_modal("adjust-#{@user.id}", "skinny-modal") do %>
-  <h1 class="pkut-header">Adjust</h1>
+  <h1 class="pkut-text">Adjust</h1>
   <p class="error-message">Enter a number to add credits to user's account. Enter a (-) before the number to subtract credits.</p>
   <p class="error-message">(12 or -12)</p>
   <%= form_tag update_credits_admin_user_path(@user) do %>
@@ -85,7 +85,7 @@
 <% end %>
 
 <%= render_modal("delete-#{@user.id}", "skinny-modal") do %>
-  <h1 class="pkut-header">Destroy?</h1>
+  <h1 class="pkut-text">Destroy?</h1>
   <p class="error-message">Are you positive you want to destroy <strong><%= @user.full_name %></strong>?</p>
   <p class="error-message">This is permanent and cannot be undone.</p>
   <p class="error-message">If you are sure, enter `DELETE`(all caps, no quotes) below and then click delete user.</p>

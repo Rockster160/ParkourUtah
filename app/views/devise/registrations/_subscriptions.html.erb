@@ -1,6 +1,6 @@
 <%= render_modal("subscription_modal") do %>
-  <h1 class="pkut-header hidden-xs">Subscriptions</h1>
-  <h4 class="pkut-header visible-xs">Subscriptions</h4>
+  <h1 class="pkut-text hidden-xs">Subscriptions</h1>
+  <h4 class="pkut-text visible-xs">Subscriptions</h4>
 
   <% if current_user.can_receive_sms %>
     <% if current_user.subscribed_events.any? %>
