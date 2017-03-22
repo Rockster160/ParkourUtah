@@ -1,0 +1,72 @@
+@import "config/variables";
+@import 'config/font-imports';
+
+$tab-height: 30px;
+$nav-bar-height: 51px; // Don't change me
+
+.user-dashboard-page {
+  position: absolute;
+  top: $nav-bar-height; left: 0; right: 0; bottom: 0;
+
+  .tabs-container {
+    margin: 100px 50px 0;
+    position: relative;
+    padding-left: 10px;
+    .tab-container {
+      display: inline-block;
+
+      & > label {
+        .tab-content { background: $pkut-grey-light; }
+        // &.account-tab {}
+        // &.athletes-tab {}
+        // &.notifications-tab {}
+        // &.subscriptions-tab {}
+        // &.contacts-tab {}
+
+        .tab {
+          position: relative;
+          cursor: pointer;
+          padding-left: 15px;
+          height: $tab-height;
+          line-height: $tab-height;
+          width: 150px;
+          border: 2px solid $pkut-grey;
+          border-bottom-color: black;
+          border-radius: 6px 6px 0 0;
+          color: $pkut-grey;
+        }
+        .tab-content {
+          position: absolute;
+          top: calc(#{$tab-height} - 2px); left: 0; right: 0;
+          width: 100%;
+          border: 2px solid black;
+          border-radius: 10px;
+
+          padding: 30px;
+        }
+      }
+
+      input[type=radio] {
+        visibility: hidden;
+        position: absolute;
+        & + label {
+          .tab-content {
+            visibility: hidden;
+          }
+        }
+        &:checked + label {
+          .tab {
+            background: $pkut-grey-light;
+            color: black;
+            border-color: black;
+            border-bottom: 0;
+          }
+          .tab-content {
+            visibility: visible;
+          }
+        }
+      }
+
+    }
+  }
+}

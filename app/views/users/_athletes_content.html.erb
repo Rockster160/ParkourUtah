@@ -7,7 +7,7 @@
 
 <div class="edit-athletes-container">
   <% @user.athletes_by_waiver_expiration.each_with_index do |athlete, pos| %>
-    <div class="row edit-athlete-container">
+    <div class="edit-athlete-container">
       <h4><%= athlete.full_name %> - ID:<%= athlete.fast_pass_id.to_s.rjust(4, "0") %></h4>
       <% if athlete.unused_trials.count > 0 %>
         <span style="color:yellow;">Trial Classes remaining: <%= athlete.unused_trials.count %></span> <br>
@@ -15,7 +15,6 @@
       <% if athlete.has_unlimited_access? %>
         <p>Has unlimited classes until: <%= athlete.has_access_until.strftime('%B %e, %Y') %></p>
       <% end %>
-      <a alt="..." class="pkut-text forceOpen" data-toggle="modal" data-target="#edit<%= athlete.id %>">Delete Athlete</a><br/>
 
       <% if athlete.signed_waiver? && athlete.waiver.is_active? %>
         <% if athlete.waiver.expires_soon? %>
@@ -32,12 +31,6 @@
       </br>
       <a class="forceOpen" alt="..." data-toggle="modal" data-target="#athlete-<%= athlete.id %>">Forgot PIN? Click here to reset.</a><br/>
     </div>
-
-    <%= render_modal("edit#{athlete.id}", "skinny-modal") do %>
-      <h3 class="pkut-text"><%= athlete.full_name %></h3>
-      <p>This will permanently delete this athlete. Are you sure? This action cannot be undone.<p>
-      <%= link_to "Delete", athlete_path(athlete.id), class: 'pkut-btn', method: :delete %>
-    <% end %>
 
     <%= render_modal("athlete-#{athlete.id}", "skinny-modal") do %>
       <h2 class="pkut-text">Reset PIN</h2>

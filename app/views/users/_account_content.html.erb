@@ -1,5 +1,7 @@
 <%= form_for(@user, url: user_path, html: { method: :put, id: "modal-submit" }) do |f| %>
 
+  <%= render partial: 'layouts/error_container', locals: { resource: @user } %>
+
   <div class="row">
     <div class="col-sm-3">
       <br>
