@@ -8,6 +8,7 @@ class IndexController < ApplicationController
     num = current_user.phone_number
     msg = "Thank you! You will once again be able to receive text message notifications from ParkourUtah."
     Message.text.create(body: msg, chat_room_name: num, sent_from_id: 0).deliver
+    redirect_back fallback_location: edit_user_path
   end
 
   def page_not_found
