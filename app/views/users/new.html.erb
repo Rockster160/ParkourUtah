@@ -1,5 +1,6 @@
 <div class="central-container form-offset text-center">
   <%= render partial: 'registrations/progress_bar', locals: {step: 1} %>
+  <%= render partial: 'layouts/error_container', locals: {resource: @user} %>
   <h5 class="warning-text">This process must be completed by a parent or legal guardian.</h5>
   <h1 class="header-text">Get Started</h1>
 

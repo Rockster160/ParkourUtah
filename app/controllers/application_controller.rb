@@ -5,14 +5,11 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :merge_carts
   before_action :logit
+  before_action :store_current_location, unless: :devise_controller?
 
   def flash_message
     flash.now[params[:flash_type].to_sym] = params[:message]
     render partial: 'layouts/flashes'
-  end
-
-  def after_sign_in_path_for(resource)
-    edit_user_path
   end
 
   def after_sign_up_path_for(resource)
@@ -45,7 +42,7 @@ class ApplicationController < ActionController::Base
 
   def validate_user_signed_in
     unless user_signed_in?
-      redirect_to root_path, alert: "You must be logged in to view this page."
+      redirect_to new_user_session_path, alert: "You must be logged in to view this page."
     end
   end
 
@@ -79,6 +76,10 @@ class ApplicationController < ActionController::Base
         request.env['exception_notifier.exception_data'] = { current_user: "#{current_user.id} - #{current_user.email}" }
       end
     end
+  end
+
+  def store_current_location
+    store_location_for(:user, request.url)
   end
 
 end

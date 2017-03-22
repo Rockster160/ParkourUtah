@@ -1,7 +1,7 @@
-<h2 class="secret-title"><div class="title-container">Athlete ID</div></h2>
+<h2 class="secret-title"><div class="title-container">Fast Pass ID</div></h2>
 <div class="secret-field">
-  <%= form_tag({controller: "class_handlers", action: "athlete_pin", id: @event.id}, method: "get") do |f| %>
-    <%= text_field_tag :athlete_id, nil, class: 'secret-input-field', readonly: true %><br/>
+  <%= form_tag({controller: "class_handlers", action: "fast_pass_pin", id: @event.id}, method: "get") do |f| %>
+    <%= text_field_tag :fast_pass_id, nil, class: 'secret-input-field', readonly: true %><br/>
     <div class="secret-btn-container col-xs-4"><a href="#" class="secret-input-btn no-zoom secret-field-btn">1</a></div>
     <div class="secret-btn-container col-xs-4"><a href="#" class="secret-input-btn no-zoom secret-field-btn">2</a></div>
     <div class="secret-btn-container col-xs-4"><a href="#" class="secret-input-btn no-zoom secret-field-btn">3</a></div>

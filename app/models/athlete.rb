@@ -1,13 +1,13 @@
 # == Schema Information
 #
-# Table name: dependents
+# Table name: athletes
 #
 #  id                         :integer          not null, primary key
 #  user_id                    :integer
 #  full_name                  :string
 #  emergency_contact          :string
-#  athlete_id                 :integer
-#  athlete_pin                :integer
+#  fast_pass_id               :integer
+#  fast_pass_pin              :integer
 #  athlete_photo_file_name    :string
 #  athlete_photo_content_type :string
 #  athlete_photo_file_size    :integer
@@ -21,14 +21,21 @@
 #  verified                   :boolean          default(FALSE)
 #
 
-# TODO Rename to 'Athlete'
-class Dependent < ApplicationRecord
+##
+# Unused?
+#
+# athlete_photo
+# first_name
+# middle_name
+# last_name
+class Athlete < ApplicationRecord
 
   belongs_to :user
-  has_many :waivers, dependent: :destroy
-  has_many :trial_classes, dependent: :destroy
-  has_many :athlete_subscriptions, dependent: :destroy
-  has_many :attendances, dependent: :destroy
+
+  has_many :waivers,                 dependent: :destroy
+  has_many :trial_classes,           dependent: :destroy
+  has_many :recurring_subscriptions, dependent: :destroy
+  has_many :attendances,             dependent: :destroy
 
   has_attached_file :athlete_photo,
                :styles => { :medium => "300", :thumb => "100x100#" },
@@ -40,14 +47,33 @@ class Dependent < ApplicationRecord
 
   before_save :fix_attributes
 
+  scope :verified, -> { where(verified: true) }
+  scope :unverified, -> { where(verified: false) }
+  scope :by_fuzzy_text, ->(text) {
+    text = "%#{text}%"
+    joins(:user).where("users.email ILIKE :text OR athletes.full_name ILIKE :text OR CAST(athletes.fast_pass_id AS TEXT) ILIKE :text", text: text).uniq
+  }
+
+  def self.pins_left
+    bads = []
+    10.times do |t|
+      bads << "666#{t}".to_i
+      bads << "#{t}666".to_i
+    end
+    bads << 0
+    bads << ENV["PKUT_PIN"].to_i
+    bads << Athlete.all.map { |user| user.fast_pass_id }
+    ((0...9999).to_a - bads.flatten)
+  end
+
   def self.find_or_create_by_name_and_dob(param, user)
     name = param["name"]
     dob = param["dob"]
-    athlete = Dependent.where(full_name: name.squish.split(' ').map(&:capitalize).join(' '), user_id: user.id).first
+    athlete = Athlete.where(full_name: name.squish.split(' ').map(&:capitalize).join(' '), user_id: user.id).first
     if athlete.nil?
       dob = format_dob(dob)
       athlete = if dob
-        athlete = user.dependents.new(full_name: name, date_of_birth: dob)
+        athlete = user.athletes.new(full_name: name, date_of_birth: dob)
         athlete.save ? athlete : nil
       else
         nil
@@ -56,9 +82,9 @@ class Dependent < ApplicationRecord
     athlete
   end
 
-  def valid_athlete_pin?(check_athlete_pin)
-    return false unless check_athlete_pin.present?
-    self.athlete_pin.to_s.rjust(4, "0") == check_athlete_pin.to_s.rjust(4, "0")
+  def valid_fast_pass_pin?(check_fast_pass_pin)
+    return false unless check_fast_pass_pin.present?
+    self.fast_pass_pin.to_s.rjust(4, "0") == check_fast_pass_pin.to_s.rjust(4, "0")
   end
 
   def attend_class(event, instructor)
@@ -73,7 +99,7 @@ class Dependent < ApplicationRecord
   def charge_class(event)
     event_cost = event.cost_in_dollars.to_i
     if event.accepts_unlimited_classes? && has_unlimited_access?
-      current_subscription.use! ? 'Unlimited Subscription' : false
+      use_subscription! ? 'Unlimited Subscription' : false
     elsif event.accepts_trial_classes? && has_trial?
       use_trial! ? 'Trial Class' : false
     elsif user.credits >= event_cost
@@ -83,18 +109,15 @@ class Dependent < ApplicationRecord
     end
   end
 
-  def trials
+  def unused_trials
     trial_classes.where(used: false)
   end
-
   def has_trial?
-    trials.any?
+    unused_trials.any?
   end
-
   def trial
-    trials.first
+    unused_trials.first
   end
-
   def use_trial!
     trial.try(:use!) || false
   end
@@ -102,19 +125,17 @@ class Dependent < ApplicationRecord
   def has_unlimited_access?
     current_subscription.try(:active?) || false
   end
-
   def has_access_until
-    athlete_subscriptions.active.order(:expires_at).last.expires_at
+    current_subscription.try(:expires_at)
   end
-
   def subscribed?
-    return false unless current_subscription
-
-    current_subscription.auto_renew
+    current_subscription.try(:auto_renew?) || false
   end
-
   def current_subscription
-    athlete_subscriptions.active.order(:expires_at).last
+    recurring_subscriptions.active.by_most_recent(:expires_at).first
+  end
+  def use_subscription!
+    current_subscription.try(:use!) || false
   end
 
   def signed_waiver?
@@ -128,17 +149,8 @@ class Dependent < ApplicationRecord
     self.waiver.sign!
   end
 
-  def zero_padded(num, digits)
-    str = ""
-    (digits.to_i - num.to_s.length).times {str << "0"}
-    str << num.to_s
-    str
-  end
-
   def waiver
-    waivers = self.waivers.group_by { |waiver| waiver.is_active? }[true]
-    waivers ||= self.waivers
-    waivers.sort_by(&:created_at).last
+    waivers.by_most_recent(:created_at).first
   end
 
   def emergency_phone
@@ -158,20 +170,8 @@ class Dependent < ApplicationRecord
   end
 
   def generate_pin
-    self.athlete_id = Dependent.pins_left.sample.to_i
+    self.fast_pass_id = Athlete.pins_left.sample.to_i
     self.save
-  end
-
-  def self.pins_left
-    bads = []
-    10.times do |t|
-      bads << "666#{t}".to_i
-      bads << "#{t}666".to_i
-    end
-    bads << 0
-    bads << ENV["PKUT_PIN"].to_i
-    bads << Dependent.all.map { |user| user.athlete_id }
-    ((0...9999).to_a - bads.flatten)
   end
 
   def sign_up_verified
@@ -182,11 +182,11 @@ class Dependent < ApplicationRecord
 
   def fix_attributes
     format_name
-    self.date_of_birth = Dependent.format_dob(self.date_of_birth)
+    self.date_of_birth = Athlete.format_dob(self.date_of_birth)
   end
 
   def format_name
-    self.full_name = self.full_name.squish.split(' ').map(&:capitalize).join(' ')
+    self.full_name = self.full_name.squish.titleize
   end
 
   def self.format_dob(dob)

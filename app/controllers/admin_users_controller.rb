@@ -13,7 +13,7 @@ class AdminUsersController < ApplicationController
     @users = @users.page(params[:page])
 
     respond_to do |format|
-      format.json { render json: @users.to_json(include: :dependents) }
+      format.json { render json: @users.to_json(include: :athletes) }
       format.html
     end
   end
@@ -43,7 +43,7 @@ class AdminUsersController < ApplicationController
 
   def update_trials
     user = User.find(params[:id])
-    athlete = user.athletes.find(params[:athlete_id])
+    athlete = user.athletes.find(params[:fast_pass_id])
     if params[:num].to_i < 0
       params[:num].to_i.abs.times do
         athlete.trial.use!

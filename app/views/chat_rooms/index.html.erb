@@ -1,26 +1,15 @@
 <div class="central-container">
-  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
+  <% if current_user.instructor? %>
+    <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
+  <% end %>
+  <%= link_to "Mark all messages as Read", mark_messages_as_read_chat_rooms_path, class: 'pkut-btn', method: :post %>
 
   <div class="text-center">
     <%= paginate @chat_rooms %>
   </div>
 
   <div class="chat-rooms-container">
-    <% @chat_rooms.each do |room| %>
-      <a href="<%= chat_room_path(room) %>" class="chat-room-box">
-        <% if room.text? %>
-          <div class="support-icon"><i class="fa fa-mobile"></i></div>
-        <% end %>
-        <div class="timestamp"> <i class="fa fa-clock-o"></i> <%= timeago(room.last_message.try(:created_at) || room.updated_at) %></div>
-        <div class="room-name"><%= room.display_name %></div>
-        <div class="room-last-message">
-          <% if (last_sender_name = room.last_message.try(:sender_name)).present? %>
-            <span class="last-sender"><%= last_sender_name %>:</span>
-          <% end %>
-          <%= room.last_message_text %>
-        </div>
-      </a>
-    <% end %>
+    <%= render partial: 'index', locals: {chat_rooms: @chat_rooms} %>
   </div>
 
   <div class="text-center">

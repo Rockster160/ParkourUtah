@@ -44,13 +44,13 @@ class EventsController < ApplicationController
       event.cancel!
       flash[:notice] = "Event has successfully been cancelled."
     end
-    redirect_back fallback_location: root_path
+    redirect_to calendar_show_path(date: event.date.strftime("%m-%d-%Y"))
   end
 
   private
 
   def event_params
-    params.require(:event).permit(:str_date, :current_time_of_day)
+    params.require(:event).permit(:str_date, :time_of_day)
   end
 
   def set_event_schedule

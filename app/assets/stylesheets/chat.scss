@@ -1,9 +1,11 @@
 @import "config/variables";
 @import 'config/font-imports';
 
-$alert-color: $pkut-grey-5;
-$sent-color: $pkut-red-muted;
-$received-color: $pkut-light;
+$alert-color: $pkut-grey-dark;
+$sent-color: $pkut-red-dark;
+$received-color: #FAFAFA;
+$question-color: #9C27B0;
+$unread-color: #1785E2;
 
 .chat-rooms-container {
   margin-top: 20px;
@@ -23,6 +25,9 @@ $received-color: $pkut-light;
       position: absolute;
       top: 5px; right: 5px;
       font-size: 20px;
+      .fa-question {
+        color: $question-color;
+      }
     }
     .timestamp {
       .fa { color: $pkut-grey-5; }
@@ -34,6 +39,14 @@ $received-color: $pkut-light;
       color: $pkut-grey-5;
       font-weight: bold;
       font-size: 20px;
+      position: relative;
+      .blip {
+        position: absolute;
+        top: 6px; left: 5px;
+        height: 0; width: 0;
+        background: $unread-color;
+        border-radius: 100%;
+      }
     }
     .room-last-message {
       padding-left: 20px;
@@ -44,6 +57,19 @@ $received-color: $pkut-light;
       .last-sender {
         color: $pkut-red;
       }
+    }
+    &.unread {
+      .room-name {
+        padding-left: 20px;
+        .blip {
+          width: 10px;
+          height: 10px;
+        }
+      }
+    }
+    &.question {
+      border-color: $question-color;
+      border-width: 2px;
     }
     &:hover {
       cursor: pointer;
@@ -117,6 +143,13 @@ $received-color: $pkut-light;
     height: 436px;
     overflow-y: scroll;
     overflow-x: hidden;
+
+    .typing-container {
+      padding-left: 20px;
+      padding-bottom: 5px;
+      font-size: 12px;
+      color: grey;
+    }
 
     .chat-message {
       position: relative;

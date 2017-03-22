@@ -8,7 +8,7 @@
 <div class="secret-field pass-field">
   <%= form_tag({controller: "class_handlers", action: "join_class", id: @event.id}, method: "post") do |f| %>
     <%= text_field_tag :pin, nil, class: 'secret-input-field', readonly: true %><br/>
-    <%= hidden_field_tag :athlete_id, @athlete.athlete_id %>
+    <%= hidden_field_tag :fast_pass_id, @athlete.fast_pass_id %>
     <div class="secret-btn-container col-xs-4"><a href="#" class="secret-input-btn no-zoom secret-field-btn">1</a></div>
     <div class="secret-btn-container col-xs-4"><a href="#" class="secret-input-btn no-zoom secret-field-btn">2</a></div>
     <div class="secret-btn-container col-xs-4"><a href="#" class="secret-input-btn no-zoom secret-field-btn">3</a></div>

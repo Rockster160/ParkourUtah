@@ -1,16 +1,16 @@
 <div class="central-container form-offset">
   <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br/><br/>
-  <div><%= text_field_tag(:by_fuzzy_text, 'Search', id: 'user_index_search_field', class: 'form-control', autocomplete: "off", autofocus: true) %></div>
+  <%= text_field_tag :q, '', { id: "user_index_search_field", "data-index-url": admin_users_path, placeholder: "Search", class: "pkut-textbox" } %>
   <div>Users: <%= @users.total_count %></div>
   <div><%= paginate @users %></div>
   <% @users.each do |user| %>
-    <% if user.stripe_subscription? %>
-      <h3 style="color: green;"><%= user.id %>: <%= '!' unless user.notifications.email_newsletter? %><%= user.email %>*</h3>
-    <% else %>
-      <h3><%= user.id %>: <%= '!' unless user.notifications.email_newsletter? %><%= user.email %></h3>
-    <% end %>
+    <h3><%= user.id %>: <%= '!' unless user.notifications.email_newsletter? %><%= user.email %></h3>
     <%= link_to 'View User Management Page', admin_user_path(user) %>
-    <p><strong><%= '!' unless user.notifications.sms_receivable? %><%= user.show_phone_number %></strong></p>
+    <% if user.can_receive_sms? %>
+      <p><strong><%= format_phone_number(user.phone_number) %></strong></p>
+    <% else %>
+      <p class="pkut-header"><s><%= format_phone_number(user.phone_number) %></s></p>
+    <% end %>
     <p>Credits: <%= user.credits %>
     <p><a href="<%= attendance_admin_user_path(user) %>">Attendance History</a></p>
     <p>Last seen:
@@ -30,9 +30,9 @@
       <% if athlete.has_unlimited_access? %>
         <span style="color: green;">--Has unlimited access until: <%= athlete.has_access_until.strftime('%B %e, %Y') %></span><br/>
       <% end %>
-        --<%= athlete.id %>: <strong><%= athlete.full_name %></strong> - ID: <%= athlete.zero_padded(athlete.athlete_id, 4) %><%= athlete.current_subscription.try(:auto_renew) ? '*' : '' %><br/>
+        --<%= athlete.id %>: <strong><%= athlete.full_name %></strong> - ID: <%= athlete.fast_pass_id.to_s.rjust(4, "0") %><%= athlete.current_subscription.try(:auto_renew) ? '*' : '' %><br/>
       --Birthday: <%= athlete.date_of_birth %><br/>
-      --Waiver expires: <%= athlete.waiver ? athlete.waiver.exp_date.strftime('%B %e, %Y') : "No waiver signed" %><br/><br/>
+      --Waiver expires: <%= athlete.waiver ? athlete.waiver.expiry_date.strftime('%B %e, %Y') : "No waiver signed" %><br/><br/>
     <% end %>
     <hr>
   <% end %>

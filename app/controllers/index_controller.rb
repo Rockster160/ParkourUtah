@@ -3,8 +3,8 @@ class IndexController < ApplicationController
   before_action :still_signed_in
   skip_before_action :verify_authenticity_token
 
-  def sms_receivable
-    current_user.notifications.update(sms_receivable: true)
+  def can_receive_sms
+    current_user.update(can_receive_sms: true)
     num = current_user.phone_number
     msg = "Thank you! You will once again be able to receive text message notifications from ParkourUtah."
     Message.text.create(body: msg, chat_room_name: num, sent_from_id: 0).deliver
@@ -105,7 +105,7 @@ class IndexController < ApplicationController
     current_user.address ||= Address.new
     if params[:address]
       current_user.address.update(params[:address].permit(:line1, :line2, :city, :state, :zip))
-      if current_user.address.is_valid?
+      if current_user.address.valid?
         flash[:notice] = "Your address has been successfully updated!"
       else
         flash[:alert] = "There was an error saving your address."

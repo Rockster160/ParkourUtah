@@ -3,51 +3,57 @@
 <% if has_subscriptions %>
   <h1 class="pkut-header hidden-xs">Subscriptions</h1>
   <h4 class="pkut-header visible-xs">Subscriptions</h4>
+
+  <% if current_user.can_receive_sms %>
+    <% if current_user.subscribed_events.any? %>
+      <hr>
+      <div class="row">
+        <p>Classes subscribed to:</p>
+        <% current_user.subscribed_events.each do |event_schedule| %>
+          <div class="row">
+            <div class="col-xs-6">
+              <%= event_schedule.time_of_day %> <%= event_schedule.city %> <%= event_schedule.title.capitalize %>
+            </div>
+            <div class="col-xs-6">
+              <%= link_to 'Unsubscribe', unsubscribe_event_schedule_path(event_schedule), class: 'pkut-btn', method: :delete %>
+            </div>
+          </div>
+          <br/>
+        <% end %>
+      </div>
+    <% else %>
+      <h3>You aren't subscribed to any classes.</h3>
+    <% end %>
+  <% else %>
+    <div class="row" style="color: orange">
+      <h4>You have blacklisted text notifications from ParkourUtah! You will not receive any text alerts.</h4>
+      <h5>To un-blacklist us, simply text the word 'start' to +1 (740) 571-4304 and then click the button below.</h5>
+      <h5>You should receive a text message saying you will now be able to receive text notifications from ParkourUtah.</h5>
+    </div>
+    <div class="row">
+      <%= link_to 'Text Me!', make_can_receive_sms_path, class: 'pkut-btn', remote: true, method: :post %>
+    </div>
+  <% end %>
+
   <% if current_user.subscribed_athletes.any? %>
     <hr>
     <div class="row">
-        <p>You are currently set up to auto-pay for monthly subscriptions.</p>
-        <% current_user.subscribed_athletes.sort_by {|a|a.current_subscription.try(:expires_at)}.each do |athlete| %>
-          <% subscription = athlete.current_subscription %>
-          <% next unless subscription.present? %>
-          <div class="row">
-            <div class="col-xs-6">
-              <p>The next payment of <%= number_to_currency(subscription.cost) %> for <%= athlete.full_name %> will process on <%= (subscription.expires_at + 1.day).strftime('%B %e, %Y') %>.</p>
-            </div>
-            <div class="col-xs-6">
-              <%= link_to 'Unsubscribe', unsubscribe_monthly_subscription_path(athlete.id), class: 'pkut-btn', method: :delete %>
-            </div>
-          </div>
-        <% end %>
-        <p>
-    </div>
-  <% end %>
-  <% if current_user.athletes_with_unlimited_access.count > 0 %>
-    <hr>
-    <% current_user.athletes_with_unlimited_access.each do |athlete| %>
-      <div class="row">
-        <p><%= athlete.full_name %> has unlimited classes until: <%= athlete.has_access_until.strftime('%B %-d, %Y') %></p>
-      </div>
-    <% end %>
-  <% end %>
-  <% if current_user.subscribed_events.any? %>
-    <hr>
-    <div class="row">
-      <p>Classes subscribed to:</p>
-      <% current_user.subscribed_events.each do |event_schedule| %>
+      <p>You are currently set up to auto-pay for monthly subscriptions.</p>
+      <% current_user.subscribed_athletes.sort_by {|a|a.current_subscription.try(:expires_at)}.each do |athlete| %>
+        <% subscription = athlete.current_subscription %>
+        <% next unless subscription.present? %>
         <div class="row">
           <div class="col-xs-6">
-            <%= event_schedule.time_of_day %> <%= event_schedule.city %> <%= event_schedule.title.capitalize %>
+            <p>The next payment of <%= number_to_currency(subscription.cost) %> for <%= athlete.full_name %> will process on <%= (subscription.expires_at + 1.day).strftime('%B %e, %Y') %>.</p>
           </div>
           <div class="col-xs-6">
-            <%= link_to 'Unsubscribe', unsubscribe_event_schedule_path(event_schedule), class: 'pkut-btn', method: :delete %>
+            <%= link_to 'Unsubscribe', unsubscribe_monthly_subscription_path(athlete.id), class: 'pkut-btn', method: :delete %>
           </div>
         </div>
-        <br/>
       <% end %>
+      <p>
     </div>
-  <% else %>
-    <h3>You aren't subscribed to any classes.</h3>
   <% end %>
+
 
 <% end %>

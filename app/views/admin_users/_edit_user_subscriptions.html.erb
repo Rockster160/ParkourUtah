@@ -5,7 +5,7 @@
     <hr>
     <div class="row">
       <p>This user is currently set up to auto-pay for monthly subscriptions.</p>
-      <% @user.subscribed_athletes.sort_by {|a|a.current_subscription.expires_at}.each do |athlete| %>
+      <% @user.subscribed_athletes.sort_by {|athlete|athlete.current_subscription.expires_at}.each do |athlete| %>
         <% subscription = athlete.current_subscription %>
         <div class="row">
           <div class="col-xs-6">
@@ -43,7 +43,7 @@
       <% end %>
     </div>
   <% end %>
-  <% if @user.phone_number_is_valid? %>
+  <% if @user.phone_number.present? %>
     <h3>Subscribe to class:</h3>
     <%= select_tag "event_token", options_for_select(EventSchedule.all.map { |es| [es.title, es.id] }), class: "pkut-dropdown subscribe-to-event-dropdown" %>
     <%= link_to 'Subscribe!', '', class: 'pkut-btn subscribe-to-selected-btn', method: :post, data: { new_href: subscribe_event_schedule_path(id: "--schedule_id--", user_id: @user.id) } %>

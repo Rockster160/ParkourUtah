@@ -30,16 +30,16 @@ class EventSchedule < ApplicationRecord
 
   belongs_to :instructor, class_name: "User"
   belongs_to :spot, optional: true
-  has_many :events
+  has_many :events, dependent: :destroy
   has_many :attendances, through: :events
-  has_many :subscriptions, dependent: :destroy
-  has_many :subscribed_users, through: :subscriptions, source: :user
+  has_many :event_subscriptions, dependent: :destroy
+  has_many :subscribed_users, through: :event_subscriptions, source: :user
 
   before_save :add_hash_to_colors
 
-  default_on_create :color, "##{6.times.map { rand(16).to_s(16) }.join('')}"
-  default_on_create :payment_per_student, 4
-  default_on_create :min_payment_per_session, 15
+  default_on_create color: "##{6.times.map { rand(16).to_s(16) }.join('')}"
+  default_on_create payment_per_student: 4
+  default_on_create min_payment_per_session: 15
 
   validates :start_date, :hour_of_day, :minute_of_day, :day_of_week, :cost_in_pennies, :title, :city, :color, presence: true
   validate :has_either_address_or_spot
@@ -68,7 +68,7 @@ class EventSchedule < ApplicationRecord
     time_zone = Time.zone
     first_date = time_zone.local(first_day.year, first_day.month, first_day.day, first_day.hour, first_day.minute).beginning_of_day
     last_date = time_zone.local(last_day.year, last_day.month, last_day.day, last_day.hour, last_day.minute).end_of_day
-    scheduled = where("start_date < :first_date AND (end_date IS NULL OR end_date > :last_date)", first_date: first_date, last_date: last_date)
+    scheduled = where("start_date <= :first_date AND (end_date IS NULL OR end_date > :last_date)", first_date: first_date, last_date: last_date)
     scheduled.map do |schedule|
       scheduled_events = schedule.events.where(original_date: first_date..last_date)
       scheduled_events.empty? ? schedule.new_events_for_time_range(first_date, last_date) : scheduled_events.where(date: first_date..last_date)
@@ -111,7 +111,11 @@ class EventSchedule < ApplicationRecord
   def event_by_id(new_or_id, options={})
     if new_or_id == "new"
       options[:additional_params] ||= {}
-      options[:additional_params][:date] = Time.zone.parse(options[:with_date]) if options[:with_date]
+      if options[:with_date]
+        date_stamp = Time.zone.parse(options[:with_date])
+        new_datetime = Time.zone.local(date_stamp.year, date_stamp.month, date_stamp.day, hour_of_day, minute_of_day)
+      end
+      options[:additional_params][:date] = new_datetime
       events.new(options[:additional_params])
     else
       events.find(new_or_id)
