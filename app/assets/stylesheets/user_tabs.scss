@@ -95,5 +95,8 @@ $nav-bar-height: 51px; // Don't change me
       }
 
     }
+    @media(max-width: 767px) {
+      margin: 100px 5px 0;
+    }
   }
 }

@@ -5,10 +5,10 @@
       <p>Classes subscribed to:</p>
       <% current_user.subscribed_events.each do |event_schedule| %>
         <div class="row">
-          <div class="col-xs-6">
+          <div class="col-sm-6">
             <%= event_schedule.time_of_day %> <%= event_schedule.city %> <%= event_schedule.title.capitalize %>
           </div>
-          <div class="col-xs-6">
+          <div class="col-sm-6 text-center">
             <%= link_to 'Unsubscribe', unsubscribe_event_schedule_path(event_schedule), class: 'pkut-btn', method: :delete %>
           </div>
         </div>
@@ -31,10 +31,10 @@
       <% subscription = athlete.current_subscription %>
       <% next unless subscription.present? %>
       <div class="row">
-        <div class="col-xs-6">
+        <div class="col-sm-6">
           <p>The next payment of <%= number_to_currency(subscription.cost) %> for <%= athlete.full_name %> will process on <%= (subscription.expires_at + 1.day).strftime('%B %e, %Y') %>.</p>
         </div>
-        <div class="col-xs-6">
+        <div class="col-sm-6 text-center">
           <%= link_to 'Unsubscribe', unsubscribe_monthly_subscription_path(athlete.id), class: 'pkut-btn', method: :delete %>
         </div>
       </div>
