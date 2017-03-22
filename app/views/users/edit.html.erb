@@ -23,7 +23,7 @@
 
     <% tabs.each_with_index do |(tab_type, tab_options), idx| %>
       <div class="tab-container">
-        <input type="radio" id="<%= tab_type %>-tab" name="user-dashboard-tabs-group" <%= 'checked' if idx == 1 %>>
+        <input type="radio" id="<%= tab_type %>-tab" name="user-dashboard-tabs-group" <%= 'checked' if idx == 0 %>>
         <label for="<%= tab_type %>-tab" class="tab-label <%= tab_type %>-tab">
           <div class="tab-content">
             <div class="central-container">
