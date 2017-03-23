@@ -1,27 +1,30 @@
 <div class="central-container">
   <p>This is the Emergency Contact we will use in the case we are unable to get a hold of you.</p>
   <%= form_for(@user, url: user_path, html: { method: :put, id: "modal-submit" }) do |f| %>
-    <%= f.fields_for :emergency_contacts, @user.emergency_contacts.last do |ff| %>
-      <h5>Emergency Contact</h5>
-      <div class="row">
-        <div class="col-sm-3">
-          <br/><%= ff.label :name, 'Name:' %>
-        </div>
-        <div class="col-sm-9">
-          <%= ff.text_field :name, class: 'pkut-textbox customRequired' %>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-3">
-          <br/><%= ff.label :number, 'Phone Number:' %>
-        </div>
-        <div class="col-sm-9">
-          <%= ff.telephone_field :number, class: 'pkut-textbox formatPhoneNumber customRequired' %>
-        </div>
-      </div>
+    <h5>Emergency Contacts</h5>
+    <%= f.fields_for :emergency_contacts, @user.emergency_contacts.order(:id) do |ff| %>
+      <%= render partial: 'emergency_contact_fields', locals: {ff: ff} %>
     <% end %>
     <div class="text-center">
       <%= f.submit "Update", class: "pkut-btn" %>
     </div>
   <% end %>
+  <div class="new-emergency-contact-container">
+    <%= link_to "#", data: { target: "#new-emergency-contact", toggle: "modal" }, class: "pkut-btn" do %>
+      <i class="fa fa-plus"></i> Add Emergency Contact
+    <% end %>
+  </div>
+
+  <%= render_modal("new-emergency-contact", "skinny-modal") do %>
+    <%= form_for(@user, url: user_path, html: { method: :put, id: "modal-submit" }) do |f| %>
+      <h5>New Emergency Contact</h5>
+      <%= f.fields_for :emergency_contacts, @user.emergency_contacts.new do |ff| %>
+        <%= render partial: 'emergency_contact_fields', locals: {ff: ff} %>
+      <% end %>
+      <div class="text-center">
+        <%= f.submit "Save", class: "pkut-btn" %>
+      </div>
+    <% end %>
+  <% end %>
+
 </div>
