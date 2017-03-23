@@ -24,24 +24,46 @@ class UsersController < ApplicationController
   end
 
   def edit
+    redirect_to step_2_path unless current_user.registration_complete?
     @user = current_user
-    unless current_user.registration_complete?
-      redirect_to step_2_path
-    end
+    set_notifications
   end
 
   def update
     @user = current_user
-    if current_user.update_with_password(user_params)
+    successful_update = false
+
+    if params[:user].keys == ["emergency_contacts_attributes"]
+      successful_update = current_user.update(user_params)
+    else
+      successful_update = current_user.update_with_password(user_params)
+    end
+
+    if successful_update
       bypass_sign_in @user
       redirect_to edit_user_path, notice: "Updated successfully!"
     else
       flash.now[:alert] = "Failed to update"
+      set_notifications
       render :edit
     end
   end
 
   private
+
+  def set_notifications
+    @notifications = {
+      account: 0,
+      athletes: 0,
+      notifications: 0,
+      subscriptions: 0,
+      contacts: 0
+    }
+    @notifications[:notifications] += 1 unless @user.can_receive_sms?
+    @notifications[:athletes] += @user.athletes_where_expired_past_or_soon.count
+    @notifications[:athletes] += @user.athletes.unverified.count
+    @notifications[:subscriptions] += @user.recurring_subscriptions.unassigned.count
+  end
 
   def user_params
     params.require(:user).permit(

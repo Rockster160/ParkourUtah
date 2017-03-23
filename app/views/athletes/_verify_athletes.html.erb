@@ -1,5 +1,5 @@
 <%= render_modal("verify_athletes", "skinny-modal") do %>
-  <h1 class="pkut-header">Verify</h1>
+  <h1 class="pkut-text">Verify</h1>
   <p>We have sent you an email containing vital information about your attendance to classes. Please check your email and enter these details below to receive your 2 trial classes.</p>
   <%= form_tag verify_athletes_path do %>
     <% current_user.athletes.unverified.each do |athlete| %>

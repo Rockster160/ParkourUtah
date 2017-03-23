@@ -1,0 +1,102 @@
+<%= form_tag "/user/notifications/update" do %>
+  <p>Receive Notifications for:</p>
+  <div class="row">
+    <div class="col-xs-4">
+    </div>
+    <div class="col-xs-4">
+      Email
+    </div>
+    <div class="col-xs-4">
+      Text
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-4">
+      Waiver Expiring
+    </div>
+    <div class="col-xs-4">
+      <div class="pkut-checkbox">
+        <%= check_box_tag "notify[email_waiver_expiring]", '', current_user.notifications.email_waiver_expiring? %>
+        <%= label_tag "notify[email_waiver_expiring]", '' %>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="pkut-checkbox">
+        <%= check_box_tag "notify[text_waiver_expiring]", '', current_user.notifications.text_waiver_expiring? %>
+        <%= label_tag "notify[text_waiver_expiring]", '' %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-4">
+      Class Reminders
+    </div>
+    <div class="col-xs-4">
+      <div class="pkut-checkbox">
+        <%= check_box_tag "notify[email_class_reminder]", '', current_user.notifications.email_class_reminder? %>
+        <%= label_tag "notify[email_class_reminder]", '' %>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="pkut-checkbox">
+        <%= check_box_tag "notify[text_class_reminder]", '', current_user.notifications.text_class_reminder? %>
+        <%= label_tag "notify[text_class_reminder]", '' %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-4">
+      Class Cancelled Message
+    </div>
+    <div class="col-xs-4">
+      <div class="pkut-checkbox">
+        <%= check_box_tag "notify[email_class_cancelled]", '', current_user.notifications.email_class_cancelled? %>
+        <%= label_tag "notify[email_class_cancelled]", '' %>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="pkut-checkbox">
+        <%= check_box_tag "notify[text_class_cancelled]", '', current_user.notifications.text_class_cancelled? %>
+        <%= label_tag "notify[text_class_cancelled]", '' %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-4">
+      Low on credits
+    </div>
+    <div class="col-xs-4">
+      <div class="pkut-checkbox">
+        <%= check_box_tag "notify[email_low_credits]", '', current_user.notifications.email_low_credits? %>
+        <%= label_tag "notify[email_low_credits]", '' %>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="pkut-checkbox">
+        <%= check_box_tag "notify[text_low_credits]", '', current_user.notifications.text_low_credits? %>
+        <%= label_tag "notify[text_low_credits]", '' %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-4">
+      Newsletter
+    </div>
+    <div class="col-xs-4">
+      <div class="pkut-checkbox">
+        <%= check_box_tag "notify[email_newsletter]", '', current_user.notifications.email_newsletter? %>
+        <%= label_tag "notify[email_newsletter]", '' %>
+      </div>
+    </div>
+    <div class="col-xs-4"></div>
+  </div>
+
+  <div class="text-center">
+    <%= submit_tag "Update", class: 'pkut-btn' %>
+  </div>
+<% end %>
