@@ -16,7 +16,10 @@ $nav-bar-height: 51px; // Don't change me
       display: inline-block;
 
       & > label {
-        .tab-content { background: $pkut-grey-light; }
+        .tab-content {
+          z-index: 2;
+          background: $pkut-grey-light;
+        }
         // &.account-tab {}
         // &.athletes-tab {}
         // &.notifications-tab {}
@@ -24,6 +27,7 @@ $nav-bar-height: 51px; // Don't change me
         // &.contacts-tab {}
 
         .tab {
+          z-index: 1;
           position: relative;
           cursor: pointer;
           text-align: center;
@@ -81,6 +85,7 @@ $nav-bar-height: 51px; // Don't change me
             color: black;
             border-color: black;
             border-bottom: 0;
+            z-index: 3;
             .blip {
               background: red;
               border: 2px solid black;
