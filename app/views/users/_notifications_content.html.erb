@@ -1,16 +1,18 @@
-<% unless @user.can_receive_sms? %>
-  <div class="row pkut-text">
-    <h4>Uh oh! Looks like you blacklisted ParkourUtah's number. You will not receive any text alerts from us.</h4>
-    <h5>It's okay- it happens when you respond with just the word "STOP" to one of our messages- but it stops us from notifying you regarding the things you want to be notified on!</h5>
-    <h5>These can be helpful- like letting you know that one of your waivers are about to expire.</h5>
-    <h5>We let you customize when you hear from us. Just click on the "Notifications" button in order to choose which situations you want us to notify you with.</h5>
-    <br>
-    <h5>To un-blacklist us, simply text the word 'start' to +1 (740) 571-4304 and then click the button below.</h5>
-    <h5>You should receive a text message saying you will now be able to receive text notifications from ParkourUtah.</h5>
-    <div class="text-center">
-      <%= link_to 'Text Me!', make_can_receive_sms_path, class: 'pkut-btn', method: :post %>
+<div class="central-container">
+  <% unless @user.can_receive_sms? %>
+    <div class="row pkut-text">
+      <h4>Uh oh! Looks like you blacklisted ParkourUtah's number. You will not receive any text alerts from us.</h4>
+      <h5>It's okay- it happens when you respond with just the word "STOP" to one of our messages- but it stops us from notifying you regarding the things you want to be notified on!</h5>
+      <h5>These can be helpful- like letting you know that one of your waivers are about to expire.</h5>
+      <h5>We let you customize when you hear from us. Just click on the "Notifications" button in order to choose which situations you want us to notify you with.</h5>
+      <br>
+      <h5>To un-blacklist us, simply text the word 'start' to +1 (740) 571-4304 and then click the button below.</h5>
+      <h5>You should receive a text message saying you will now be able to receive text notifications from ParkourUtah.</h5>
+      <div class="text-center">
+        <%= link_to 'Text Me!', make_can_receive_sms_path, class: 'pkut-btn', method: :post %>
+      </div>
     </div>
-  </div>
-<% end %>
+  <% end %>
 
-<%= render partial: "users/notifications" %>
+  <%= render partial: "users/notifications" %>
+</div>

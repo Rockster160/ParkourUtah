@@ -26,7 +26,7 @@ $nav-bar-height: 51px; // Don't change me
         .tab {
           position: relative;
           cursor: pointer;
-          padding-left: 15px;
+          text-align: center;
           height: $tab-height;
           line-height: $tab-height;
           width: 150px;
@@ -50,7 +50,6 @@ $nav-bar-height: 51px; // Don't change me
           }
           @media(max-width: 900px) {
             width: 50px;
-            text-align: center;
             padding: 0;
             .tab-name {
               display: none;

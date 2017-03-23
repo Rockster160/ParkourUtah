@@ -10,28 +10,44 @@
 <div class="edit-athletes-container">
   <% @user.athletes_by_waiver_expiration.each_with_index do |athlete, pos| %>
     <div class="edit-athlete-container">
-      <h4><%= athlete.full_name %> - ID:<%= athlete.fast_pass_id.to_s.rjust(4, "0") %></h4>
-      <% if athlete.unused_trials.count > 0 %>
-        <span style="color:yellow;">Trial Classes remaining: <%= athlete.unused_trials.count %></span> <br>
-      <% end %>
+      <div class="athlete-name"><%= athlete.full_name %></div>
+      <div class="athlete-id">ID: <%= athlete.fast_pass_id.to_s.rjust(4, "0") %></div>
+
+      <hr>
+
       <% if athlete.has_unlimited_access? %>
-        <p>Has unlimited classes until: <%= athlete.has_access_until.strftime('%B %e, %Y') %></p>
+      <div class="unlimited-access-details">
+        Has unlimited classes until:
+        <div class="unlimited-access-date"><%= athlete.has_access_until.strftime('%B %e, %Y') %></div>
+      </div>
+      <% end %>
+      <% if athlete.unused_trials.count > 0 %>
+        <div class="unused-trial-details">
+          Trial Classes remaining:
+          <div class="unused-trials-count"><%= athlete.unused_trials.count %></div>
+        </div>
       <% end %>
 
-      <% if athlete.signed_waiver? && athlete.waiver.is_active? %>
-        <% if athlete.waiver.expires_soon? %>
-          <%= link_to waivers_path do  %>
-            <span class="pkut-text title">Waiver active until <%= athlete.waiver.expiry_date.strftime('%B %-d, %Y') %></span>
-            Update Waiver
+      <% if athlete.waiver.expires_soon? %>
+        <div class="update-waiver">
+          <%= link_to waivers_path do %>
+            Click here to update Waiver
           <% end %>
-        <% else %>
-            Waiver active until <%= athlete.waiver.expiry_date.strftime('%B %-d, %Y') %>
-        <% end %>
-      <% else %>
-        <%= link_to "Must have waiver signed before attending class.", waivers_path, class: 'fancy-link' %>
+        </div>
       <% end %>
-      </br>
-      <a class="forceOpen" alt="..." data-toggle="modal" data-target="#athlete-<%= athlete.id %>">Forgot PIN? Click here to reset.</a><br/>
+
+      <div class="athlete-waiver-details">
+        <% if athlete.signed_waiver? && athlete.waiver.is_active? %>
+          <div class="waiver-text">Waiver expires:</div>
+          <div class="waiver-date <%= 'expires-soon' if athlete.waiver.expires_soon? %>"><%= athlete.waiver.expiry_date.strftime('%B %-d, %Y') %></div>
+        <% else %>
+          <%= link_to "Must have waiver signed before attending class.", waivers_path %>
+        <% end %>
+      </div>
+
+      <div class="forgot-pin-container">
+        <a data-toggle="modal" data-target="#athlete-<%= athlete.id %>">Forgot PIN?</a>
+      </div>
     </div>
 
     <%= render_modal("athlete-#{athlete.id}", "skinny-modal") do %>

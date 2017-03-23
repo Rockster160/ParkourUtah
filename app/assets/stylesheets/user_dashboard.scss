@@ -5,12 +5,75 @@
 
   .edit-athletes-container {
     text-align: center;
+    max-width: 1000px;
+    margin: 0 auto;
     .edit-athlete-container {
-      padding-bottom: 20px;
-      margin-bottom: 20px;
-      border-bottom: 1px solid black;
-      &:last-of-type {
-        background: red;
+      position: relative;
+      display: inline-block;
+      vertical-align: top;
+      width: 260px;
+      height: 260px;
+      background: #FAFAFA;
+      border: 2px outset $pkut-grey-dark;
+      border-radius: 10px;
+      margin: 10px;
+      padding: 10px;
+      text-align: left;
+
+      .athlete-name {
+        font-size: 16px;
+      }
+      .athlete-id {
+        font-weight: 100;
+        font-size: 12px;
+        // text-align: right;
+      }
+
+      hr {
+        margin: 10px auto;
+        border-color: black;
+      }
+
+      .unlimited-access-details, .unused-trial-details {
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-size: 12px;
+        .unlimited-access-date, .unused-trials-count {
+          font-size: 16px;
+          text-align: right;
+        }
+      }
+
+      .update-waiver {
+        position: absolute;
+        left: 0; right: 0;
+        bottom: 55px;
+        text-align: center;
+      }
+      .athlete-waiver-details {
+        position: absolute;
+        bottom: 10px; left: 10px;
+        .waiver-text {
+          text-align: center;
+          font-size: 14px;
+        }
+        .waiver-date {
+          text-align: center;
+          line-height: 1.5;
+          background: white;
+          border: 2px ridge $pkut-grey-dark;
+          width: 150px;
+          margin: 0 auto;
+          &.expires-soon {
+            background-color: pink;
+          }
+        }
+      }
+
+      .forgot-pin-container {
+        font-size: 12px;
+        position: absolute;
+        bottom: 6px; right: 10px;
       }
     }
   }

@@ -23,13 +23,11 @@
 
     <% tabs.each_with_index do |(tab_type, tab_options), idx| %>
       <div class="tab-container">
-        <input type="radio" id="<%= tab_type %>-tab" name="user-dashboard-tabs-group" <%= 'checked' if idx == 0 %>>
+        <input type="radio" id="<%= tab_type %>-tab" name="user-dashboard-tabs-group" <%= 'checked' if idx == 1 %>>
         <label for="<%= tab_type %>-tab" class="tab-label <%= tab_type %>-tab">
-          <div class="tab-content">
-            <div class="central-container">
-              <h1 class="text-center"><%= tab_type.capitalize %></h1>
-              <%= render partial: "#{tab_type}_content" %>
-            </div>
+          <div class="tab-content text-center">
+            <h1 class="text-center"><%= tab_type.capitalize %></h1>
+            <%= render partial: "#{tab_type}_content" %>
           </div>
           <div class="tab">
             <% if @notifications[tab_type] > 0 %>
