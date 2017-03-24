@@ -1,7 +1,10 @@
 <div class="central-container form-offset">
   <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %> <br>
-  <%= link_to "View Instructor Attendances", instructor_path(@instructor), class: 'pkut-btn' %>
-  <%= form_for @instructor, url: instructor_path(@instructor) do |f| %>
+  <% if @instructor.persisted? %>
+    <%= link_to "View Instructor Attendances", instructor_path(@instructor), class: 'pkut-btn' %>
+  <% end %>
+  <% path = @instructor.persisted? ? instructor_path(@instructor) : instructors_path %>
+  <%= form_for @instructor, url: path do |f| %>
     <div class="form-container">
       <% if @instructor.persisted? %>
         <div class="form-field">

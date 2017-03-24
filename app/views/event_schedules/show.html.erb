@@ -12,7 +12,8 @@
         <li style="margin-top: 10px;">
           <strong>Instructor:</strong> <%= link_to attendance.instructor.full_name, instructor_path(attendance.instructor) %><br>
           <strong>Student:</strong> <%= link_to attendance.athlete.full_name, admin_user_path(attendance.athlete.user) %><br>
-          <strong>Guardian:</strong> <%= link_to attendance.athlete.user.email, admin_user_path(attendance.athlete.user) %>
+          <strong>Guardian:</strong> <%= link_to attendance.athlete.user.email, admin_user_path(attendance.athlete.user) %> <br>
+          <%= link_to "Click Here", attendance_path(attendance), data: { confirm: "Are you sure you want to delete this attendance? This cannot be undone." }, class: "danger", method: :delete %> to delete this attendance.
         </li>
       <% end %>
     </ul>

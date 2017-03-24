@@ -26,8 +26,8 @@ class Message < ApplicationRecord
   validates_presence_of :body
 
   after_create_commit :broadcast_creation
-  after_create_commit :try_to_notify_slack_of_unread_message
-  after_create_commit { chat_room.touch if chat_room.persisted? }
+  after_create_commit :try_to_notify_of_unread_message
+  after_create_commit { chat_room.new_message!(self) }
 
   scope :read, -> { where.not(read_at: nil) }
   scope :unread, -> { where(read_at: nil) }
@@ -36,6 +36,12 @@ class Message < ApplicationRecord
     text: 0,
     chat: 1
   }
+
+  def from_pkut?; sent_from_id == 0; end
+  def from_admin?; !!sent_from.try(:admin?); end
+  def from_mod?; !!sent_from.try(:mod?); end
+  def from_instructor?; !!sent_from.try(:instructor?); end
+  def from_unknown_user?; sent_from_id.nil?; end
 
   def read!(time=Time.zone.now)
     update(read_at: time)
@@ -50,7 +56,11 @@ class Message < ApplicationRecord
   end
 
   def from_instructor?
-    return !!sent_from.try(:instructor?)
+    return sent_from_id == 0 || !!sent_from.try(:instructor?)
+  end
+
+  def question?
+    body.include?("?")
   end
 
   def sender_name
@@ -74,9 +84,10 @@ class Message < ApplicationRecord
   end
 
   def deliver
-    # Messages receivable? Show before allowing an instructor to send a message
-    if chat_room.present? && chat_room.text?
+    if chat_room.try(:text?) && !chat_room.blacklisted?
       SmsMailerWorker.perform_async(chat_room.name, body)
+    else
+      error!("This user has Blacklisted ParkourUtah and cannot receive text messages from us.")
     end
   end
 
@@ -87,7 +98,7 @@ class Message < ApplicationRecord
     slack_message = ""
 
     if opt_out
-      sent_from.notifications.update(sms_receivable: false) if sent_from.present? && sent_from.notifications.present?
+      sent_from.update(can_receive_sms: false) if sent_from.present? && sent_from.notifications.present?
       slack_message += "#{format_phone_number(phone_number)} has opted out of text messages from PKUT.\nThey will no longer receive text messages from us (Including messages sent from the admin text messaging page).\nIn order to re-enable messages, they must send a text message saying \"START\" to us, and then log in to their account, Home, then click Notifications, then the button that says 'Text Me!'\nIf the message sends successfully, they will be able to receive text messages from us again.\n"
     else
       escaped_body = body.split("\n").map { |line| "\n>#{line}" }.join("")
@@ -102,11 +113,8 @@ class Message < ApplicationRecord
 
   private
 
-  def try_to_notify_slack_of_unread_message
-    if !sent_from.try(:instructor?) && sent_from_id != 0 && self.text? && self.unread? && !self.do_not_deliver
-      puts "\e[31mNotify Slack!\e[0m"
-      NotifySlackOfUnreadMessageWorker.perform_in(20.seconds, self.id)
-    end
+  def try_to_notify_of_unread_message
+    NotifyOfUnreadMessageWorker.perform_in(1.minute, self.id) unless do_not_deliver
   end
 
   def set_message_type_to_chat_room

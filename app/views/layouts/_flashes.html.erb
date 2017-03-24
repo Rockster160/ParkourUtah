@@ -1,6 +1,6 @@
 <% ['alert', 'notice'].each do |type| %>
   <% if message = flash.send(type) %>
-    <div class="flash-banner flash-<%= type %>">
+    <div class="flash-banner flash-<%= type %> <%= 'high-flash' if @high_flash %>">
       <div class="flash-container">
         <% if type == 'alert' %>
           <i class="fa fa-ban"></i>

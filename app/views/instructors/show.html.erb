@@ -1,6 +1,9 @@
 <div class="central-container">
   <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
   <h1><%= @instructor.full_name %></h1>
+  <%= link_to new_attendance_path(instructor_id: @instructor.id), class: "pkut-btn" do %>
+    <i class="fa fa-plus"></i> Add Attendance
+  <% end %>
   <% @instructor.attendances_taught.order(created_at: :desc).group_by {|a| a.created_at.to_date}.each do |date, attendances| %>
     <h3><%= date.strftime("%B %-d, %Y") %></h3>
     <ul>

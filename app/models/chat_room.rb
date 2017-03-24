@@ -2,22 +2,26 @@
 #
 # Table name: chat_rooms
 #
-#  id               :integer          not null, primary key
-#  name             :string
-#  visibility_level :integer
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  message_type     :integer
+#  id                       :integer          not null, primary key
+#  name                     :string
+#  visibility_level         :integer
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  message_type             :integer
+#  last_message_received_at :datetime
 #
 
 class ChatRoom < ApplicationRecord
   include Defaults
   include ApplicationHelper
-  has_many :chat_room_users
-  has_many :users, through: :chat_room_users
-  has_many :messages
 
-  default_on_create :visibility_level, 0 # admin
+  has_many :users, through: :chat_room_users
+  has_many :chat_room_users, dependent: :destroy
+  has_many :messages,        dependent: :destroy
+
+  after_create :add_chat_room_users
+
+  default_on_create visibility_level: 0 # admin
   enum visibility_level: {
     admin:      0,
     mod:        1,
@@ -26,13 +30,13 @@ class ChatRoom < ApplicationRecord
     personal:   4
   }
 
-  default_on_create :message_type, 1 # chat
+  default_on_create message_type: 1 # chat
   enum message_type: {
     text: 0,
     chat: 1
   }
 
-  validates_uniqueness_of :name
+  validates_uniqueness_of :name, allow_nil: true
 
   scope :permitted_for_user, ->(user) {
     return none unless user.present?
@@ -55,7 +59,7 @@ class ChatRoom < ApplicationRecord
     where(id: (permitted_ids + member_of_ids).uniq)
   }
 
-  def display_name
+  def display_name(user=nil)
     if text?
       if support_user.present?
         support_user.display_name
@@ -63,7 +67,15 @@ class ChatRoom < ApplicationRecord
         format_phone_number(name)
       end
     else
-      name
+      if name.present?
+        name
+      else
+        if users.many?
+          (users - [user].flatten).map(&:display_name).join(" & ")
+        else
+          users.map(&:display_name).join(" & ")
+        end
+      end
     end
   end
 
@@ -73,12 +85,41 @@ class ChatRoom < ApplicationRecord
     return User.by_phone_number(name).first
   end
 
+  def unread_messages_for_user?(user)
+    user.chat_room_users.where(chat_room_id: self.id, has_unread_messages: true).any?
+  end
+
+  def viewable_by_user?(user)
+    chat_room_users.pluck(:user_id).include?(user.id) || user.admin?
+  end
+
+  def blacklisted?
+    text? && (support_user.present? && !support_user.can_receive_sms?)
+  end
+
   def last_message
     messages.order(created_at: :desc).first
   end
 
   def last_message_text
     last_message.try(:body) || "No Text"
+  end
+
+  def new_message!(message)
+    update(last_message_received_at: message.created_at)
+    return if text? && (message.from_instructor? || message.from_pkut?)
+    (chat_room_users - [message.sent_from]).flatten.each { |chu| chu.update(has_unread_messages: true) }
+  end
+
+  private
+
+  def add_chat_room_users
+    if text?
+      chat_room_users.find_or_create_by(user_id: support_user.id) if support_user.present?
+      User.admins.each do |admin|
+        chat_room_users.find_or_create_by(user_id: admin.id)
+      end
+    end
   end
 
 end

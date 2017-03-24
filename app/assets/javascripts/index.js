@@ -22,12 +22,15 @@ var ready = function() {
         || (uBound >= top && uBound <= bottom);
   };
 
-  //removed in favor of <button>
-  // $('a.submit-button').click(function(e) {
-  //   e.preventDefault();
-  //   $(this).parents('form').submit();
-  //   return false;
-  // })
+  $(document).click(function(e) {
+    $('.collapsible').removeClass("open");
+  })
+  $('.js-dropdown').click(function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    $($(this).attr("data-dropdown-target")).toggleClass("open");
+    return false;
+  })
 
   if (window.location.pathname == "/") {
     /* smooth scrolling */

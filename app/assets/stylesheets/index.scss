@@ -8,7 +8,7 @@ body {
   z-index: -5;
   width: 100%;
   font-family: 'Young', Arial, sans-serif;
-  background-color: #BDBDBD;
+  background-color: $pkut-grey-2;
 }
 
 // Custom scrollbar
@@ -67,7 +67,7 @@ body {
 
 .header h1 {
   font-size: 80px;
-  color: #FFF;
+  color: white;
   margin-left: -5px;
   margin-bottom: 5px;
   text-transform: uppercase;
@@ -79,7 +79,7 @@ body {
 
 .blurb {
   padding: 24px 0;
-  background-color: #FEFEFE;
+  background-color: $pkut-grey-1;
 }
 
 .blurb .panel {
@@ -87,36 +87,11 @@ body {
 }
 
 .bright {
-  background: #dbdbdb url('http://www.bootply.com/assets/example/pt_topo.png') repeat center center;
-  color:#777;
+  background: $pkut-grey-2 url('http://www.bootply.com/assets/example/pt_topo.png') repeat center center;
+  color:$pkut-grey-4;
   z-index: 1;
 }
 
-.featurette {
-  background: #222334;
-  padding: 50px 0;
-  color: #FFFFFF;
-}
-
-.featurette-item {
-  margin-bottom: 15px;
-}
-
-.featurette-item > i {
-  border: 3px solid #FFFFFF;
-  border-radius: 50%;
-  display: inline-block;
-  font-size: 56px;
-  width: 140px;
-  height: 140px;
-  line-height: 136px;
-  vertical-align: middle;
-  text-align: center;
-}
-
-.featurette-item > i:hover {
-  font-size: 68px;
-}
 .callout-background {
   min-height: 100%;
   min-width: 100%;
@@ -139,14 +114,26 @@ body {
   position: relative;
 }
 
+.call-nav {
+  padding-bottom: 30px;
+}
+
 .gallery {
   padding: 50px 0;
-  background: rgba(220, 220, 220, 0.7);
+  background: rgba($pkut-grey-2, 0.7);
+}
+
+.faq-page {
+  .faq-question {
+    font-weight: bold;
+    margin: 30px 0;
+  }
+  .faq-answer {}
 }
 
 footer {
   padding: 50px 0;
-  background: $mat-grey-dark;
+  background: $pkut-grey-5;
   color: white;
 }
 

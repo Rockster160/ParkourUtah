@@ -1,3 +1,16 @@
+flashRemoverTimer = null;
+
+function resetFlashTimer() {
+  clearTimeout(flashRemoverTimer);
+  flashRemoverTimer = setTimeout(function() {
+    dismissFlash()
+  }, 6000)
+}
+
+$(document).ready(function() {
+  if ($('.flash-banner').length > 0) { resetFlashTimer(); }
+})
+
 dismissFlash = function() {
   $('body .flash-banner').animate({'top': '-500px'}, 500, function() {
     $(this).remove()
@@ -16,12 +29,13 @@ addFlash = function(message, type) {
     flashMessageDiv.removeClass('hidden');
     flashMessageDiv.animate({'top': '70px'}, 400);
   })
+  resetFlashTimer();
 }
 
 addFlashNotice = function(message) {
-  addFlash(message, 'notice')
+  addFlash(message, 'notice');
 }
 
 addFlashAlert = function(message) {
-  addFlash(message, 'alert')
+  addFlash(message, 'alert');
 }

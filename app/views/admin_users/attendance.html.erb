@@ -4,7 +4,7 @@
   <h1>History</h1>
   <% @athletes.each do |athlete| %>
     <div class="athlete-history-container">
-      <h4><%= athlete.full_name %> - ID: <%= athlete.athlete_id %></h4>
+      <h4><%= athlete.full_name %> - ID: <%= athlete.fast_pass_id %></h4>
       <ul>
         <% athlete.attendances.each do |attendance| %>
         <li>

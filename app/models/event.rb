@@ -57,7 +57,7 @@ class Event < ApplicationRecord
   def update_date(new_date_params)
     new_date = Time.zone.parse(new_date_params[:str_date]) rescue nil
     return if new_date.nil?
-    new_time_str = new_date_params[:current_time_of_day]
+    new_time_str = new_date_params[:time_of_day]
     return if new_time_str.split(":")[0].to_i <= 12 && (new_time_str =~ /(a|p)m/i).nil?
     time = Time.zone.parse(new_time_str) rescue nil
     new_datetime = Time.zone.local(new_date.year, new_date.month, new_date.day, time.try(:hour), time.try(:min)) rescue nil
@@ -67,7 +67,8 @@ class Event < ApplicationRecord
   end
 
   def str_date; date.strftime('%b %d, %Y'); end
-  def current_time_of_day; date.strftime("%-l:%M %p"); end
+  def original_time_of_day; event_schedule.time_of_day; end
+  def time_of_day; date.strftime("%-l:%M %p"); end
 
   def css_style
     "background-color: #{color.presence || '#FFF'} !important; color: #{color_contrast} !important; background-image: none !important;"

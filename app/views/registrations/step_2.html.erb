@@ -1,60 +1,66 @@
 <div class="central-container form-offset text-center">
-  <%= render partial: 'registrations/progress_bar', locals: {step: 2} %>
+  <%= render partial: "registrations/progress_bar", locals: {step: 2} %>
   <h4 class="warning-text text-center">This process must be completed by a parent or legal guardian.</h4>
   <h2 class="header-text">Okay let's get some personal info</h2>
   <p>We just sent you off a welcome email letting you know your account has been created and giving you a copy of your password. Please fill out the personal info below and click next.</p>
 
-  <%= form_tag url: {controller: 'registrations'} do %>
-  <div class="row">
-    <div class="col-sm-6">
-      <div class="field">
-        <%= telephone_field_tag 'user[phone]', '', placeholder: 'Phone Number', class: "pkut-textbox formatPhoneNumber customRequired" %>
-      </div>
+  <%= form_for @user, url: { controller: "registrations", action: "post_step_2" }, method: :post do |f| %>
+    <%= render partial: 'layouts/error_container', locals: { resource: @user } %>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="field">
+          <%= f.telephone_field :phone_number, placeholder: "Phone Number", class: "pkut-textbox formatPhoneNumber customRequired" %>
+        </div>
 
-      <div class="text-field-height pkut-checkbox">
-        <%= check_box_tag 'smsalert', '', checked: 'checked' %>
-        <%= label_tag 'smsalert' do %>
+        <div class="text-field-height pkut-checkbox">
+          <%= f.check_box :sms_alert, checked: "checked" %>
+          <%= f.label :sms_alert do %>
+          <% end %>
+          <p>Receive SMS updates <a data-toggle="modal" data-target="#what_is" class="hover-btn forceOpen"><sup>(What is this?)</sup></a></p>
+        </div>
+        <br class="visible-xs"/>
+
+        <%= f.fields_for :emergency_contacts, @user.emergency_contacts.last || @user.emergency_contacts.new do |ff| %>
+          <div class="field">
+            <%= ff.text_field :name, placeholder: "Emergency Contact Name", class: "pkut-textbox customRequired" %>
+          </div>
+
+          <div class="field">
+            <%= ff.telephone_field :number, placeholder: "Emergency Contact Phone #", class: "pkut-textbox formatPhoneNumber customRequired" %>
+          </div>
         <% end %>
-        <p>Receive SMS updates <a data-toggle="modal" data-target="#what_is" class="hover-btn forceOpen"><sup>(What is this?)</sup></a></p>
-      </div>
-      <br class="visible-xs"/>
-
-      <div class="field">
-        <%= text_field_tag 'ec_contact[name]', '', placeholder: 'Emergency Contact Name', class: "pkut-textbox customRequired" %>
       </div>
 
-      <div class="field">
-        <%= telephone_field_tag 'ec_contact[number]', '', placeholder: 'Emergency Contact Phone #', class: "pkut-textbox formatPhoneNumber customRequired" %>
+      <div class="col-sm-6">
+        <%= f.fields_for :address, @user.address || Address.new(user_id: @user.id) do |ff| %>
+          <div class="field">
+            <%= ff.text_field :line1, placeholder: "Address 1", class: "pkut-textbox customRequired" %>
+          </div>
+
+          <div class="field">
+            <%= ff.text_field :line2, placeholder: "Address 2", class: "pkut-textbox" %>
+          </div>
+
+          <div class="field">
+            <%= ff.text_field :city, placeholder: "City", class: "pkut-textbox customRequired" %>
+          </div>
+
+          <div class="field">
+            <%= ff.text_field :state, placeholder: "State", class: "pkut-textbox sm-textbox customRequired" %>
+            <%= ff.text_field :zip, placeholder: "Zip Code", class: "restrictNumeric pkut-textbox sm-textbox customRequired" %>
+          </div>
+        <% end %>
       </div>
     </div>
-    <div class="col-sm-6">
-      <div class="field">
-        <%= text_field_tag 'address[line1]', '', placeholder: 'Address 1', class: "pkut-textbox customRequired" %>
-      </div>
 
-      <div class="field">
-        <%= text_field_tag 'address[line2]', '', placeholder: 'Address 2', class: "pkut-textbox" %>
-      </div>
-
-      <div class="field">
-        <%= text_field_tag 'address[city]', '', placeholder: 'City', class: "pkut-textbox customRequired" %>
-      </div>
-
-      <div class="field">
-        <%= text_field_tag 'address[state]', '', placeholder: 'State', class: "pkut-textbox sm-textbox customRequired" %>
-        <%= text_field_tag 'address[zip]', '', placeholder: 'Zip Code', class: "restrictNumeric pkut-textbox sm-textbox customRequired" %>
-      </div>
+    <div class="row text-center">
+      <h4>How did you hear about us? If you were referred by a person, please tell us their name.</h4>
+      <%= f.select :referrer, options_for_select(["", "Billboard", "Facebook", "Google Search", "Flyer", "Word of Mouth"], @user.referrer), {}, class: "pkut-dropdown show-referral-text-box" %>
+      <%= text_field_tag "user[referrer_text]", @user.referrer, placeholder: "John Smith", class: "pkut-textbox referral-text-field hidden" %>
     </div>
-  </div>
-  <div class="row text-center">
-    <h4>How did you hear about us? If you were referred by a person, please tell us their name.</h4>
-    <%= select_tag "user[referrer_dropdown]", options_for_select(["", "Billboard", "Facebook", "Google Search", "Flyer", "Word of Mouth"]), class: 'pkut-dropdown show-referral-text-box' %>
-    <%= text_field_tag 'user[referrer_text]', '', placeholder: 'John Smith', class: "pkut-textbox referral-text-field hidden" %>
-  </div>
-
 
     <div class="actions">
-      <%= submit_tag "Next", class: 'pkut-btn pull-right' %><br />
+      <%= f.submit "Next", class: "pkut-btn pull-right" %><br />
     </div>
   <% end %>
 </div>

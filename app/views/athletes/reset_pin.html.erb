@@ -1,0 +1,14 @@
+<div class="central-container form-offset">
+  <%= form_tag "/athletes/update/#{@athlete.id}" do %>
+    <h2>Reset PIN for <%= @athlete.full_name %></h2>
+    <br/>
+    <h4>Enter new pin</h4>
+    <%= telephone_field_tag :fast_pass_pin, '', class: 'pkut-textbox formatPin sm-textbox', autocomplete: 'off' %>
+    <br/>
+    <br/>
+    <h4>Confirm new pin</h4>
+    <%= telephone_field_tag :confirm_fast_pass_pin, '', class: 'pkut-textbox formatPin sm-textbox', autocomplete: 'off' %>
+    <br/>
+    <%= submit_tag "Submit", class: 'pkut-btn athleteVerify' %>
+  <% end %>
+</div>

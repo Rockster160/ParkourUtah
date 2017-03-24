@@ -26,8 +26,7 @@ class ApplicationMailerPreview < ActionMailer::Preview
   end
 
   def expiring_waiver_mail
-    athlete_id = User[4].athletes.first.id
-    ApplicationMailer.expiring_waiver_mail(athlete_id)
+    ApplicationMailer.expiring_waiver_mail(4)
   end
 
   def notify_subscription_updating
@@ -59,18 +58,18 @@ class ApplicationMailerPreview < ActionMailer::Preview
   end
 
   def new_athlete_info_mail
-    athlete_ids = User[4].athletes.map(&:id)
-    ApplicationMailer.new_athlete_info_mail(athlete_ids)
+    fast_pass_ids = User[4].athletes.map(&:id)
+    ApplicationMailer.new_athlete_info_mail(fast_pass_ids)
   end
 
   def new_athlete_notification_mail
-    athlete_ids = User[4].athletes.map(&:id)
-    ApplicationMailer.new_athlete_notification_mail(athlete_ids)
+    fast_pass_ids = User[4].athletes.map(&:id)
+    ApplicationMailer.new_athlete_notification_mail(fast_pass_ids)
   end
 
   def pin_reset_mail
-    athlete_id = User[4].athletes.first.id
-    ApplicationMailer.pin_reset_mail(athlete_id)
+    fast_pass_id = User[4].athletes.first.id
+    ApplicationMailer.pin_reset_mail(fast_pass_id)
   end
 
   def summary_mail
