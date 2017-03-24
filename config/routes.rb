@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   match '422', to: 'index#page_not_found', via: :all
   match '500', to: 'index#page_broken', via: :all
 
+  get :faq, to: "index#faq"
+
   get :flash_message, controller: "application"
 
   get 'talk' => 'index#get_request'
@@ -59,24 +61,26 @@ Rails.application.routes.draw do
 
   resources :class_handlers, path: 'class', only: [] do
     member do
-      get :athlete_id
-      get :athlete_pin
+      get :fast_pass_id
+      get :fast_pass_pin
       get :logs
       post :join_class
     end
   end
 
-  resources :attendances, only: [ :index ]
+  resources :attendances, only: [ :index, :new, :create, :destroy  ]
   resources :aws_loggers, only: [ :index, :show ]
   resources :contact_requests, only: [ :index, :show ]
   resources :chat_rooms, path: "chat", only: [ :index, :show ] do
     get "phone_number/:phone_number", on: :collection, action: :by_phone_number, as: :phone_number
+    post 'all/mark_messages_as_read', on: :collection, action: :mark_messages_as_read, as: :mark_messages_as_read
     resources :messages, only: [ :index ] do
       post :mark_messages_as_read, on: :collection
     end
   end
 
   get :dashboard, controller: :admins
+
   resource :admin, only: [] do
     get :purchase_history
     get :summary
@@ -88,13 +92,13 @@ Rails.application.routes.draw do
     get :batch_email
     post :send_batch_emailer
   end
+
   resources :admin_users, path: "admin/users", only: [ :show, :index, :destroy ] do
     member do
       get :attendance
       post :update_trials
       post :update_credits
       post :update_notifications
-
     end
   end
 
@@ -103,23 +107,24 @@ Rails.application.routes.draw do
   get 'contact' => 'index#contact_page', as: 'contact_page'
   post 'update' => 'index#update'
   get 'unsubscribe' => 'index#unsubscribe', as: 'unsubscribe_email'
-  post 'sms_receivable' => 'index#sms_receivable', as: 'make_sms_receivable'
+  post 'can_receive_sms' => 'index#can_receive_sms', as: 'make_can_receive_sms'
 
   delete 'unsubscribe_monthly/:id' => 'store#unsubscribe', as: 'unsubscribe_monthly_subscription'
 
-  get 'athletes/new' => 'dependents#new', as: 'new_athlete'
-  post 'athletes/new' => 'dependents#create'
-  # post 'athletes/create' => 'dependents#create'
-  post 'athletes/update/:athlete_id' => 'dependents#update'
-  post 'athletes/reset/:athlete_id' => 'dependents#reset_pin', as: 'reset_pin'
-  delete 'athlete/:id/delete' => 'dependents#destroy', as: 'destroy_athlete'
-  post 'athletes/verify' => 'dependents#verify', as: 'verify_athletes'
-  post 'athletes/assign_subscription/:athlete_id' => 'dependents#assign_subscription', as: 'assign_subscription'
-  patch 'athletes/update_photo/:id' => 'dependents#update_photo'
+  resources :athletes do
+    member do
+      post :reset_pin
+    end
+    collection do
+      post :verify
+      post :assign_subscription
+      patch :update_photo
+    end
+  end
 
-  get 'waivers' => 'dependents#sign_waiver', as: 'waivers'
-  post 'waivers' => 'dependents#update_waiver'
-  post 'delete_athlete/:athlete_id' => 'dependents#delete_athlete'
+  get 'waivers' => 'athletes#sign_waiver', as: 'waivers'
+  post 'waivers' => 'athletes#update_waiver'
+  post 'delete_athlete/:fast_pass_id' => 'athletes#delete_athlete'
 
   get "users/sign_up", action: "new", controller: "users"
   get "users/edit", action: "edit", controller: "users"
@@ -146,8 +151,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      post :valid_credentials
-      get :valid_credentials
+      resources :users
     end
   end
 

@@ -3,8 +3,15 @@ class ChatRoomsController < ApplicationController
   before_action :validate_user_signed_in
   before_action :verify_user_has_permission_to_view_room, only: [ :show ]
 
+  def mark_messages_as_read
+    current_user.chat_room_users.update_all(has_unread_messages: false)
+    redirect_to chat_rooms_path, notice: "Marked all messages as read."
+  end
+
   def index
-    @chat_rooms = ChatRoom.joins(:messages).distinct.viewable_by_user(current_user).order(updated_at: :desc).page(params[:page])
+    @chat_rooms = current_user.chat_rooms.by_most_recent(:last_message_received_at)
+    @chat_rooms = @chat_rooms.chat unless current_user.admin?
+    @chat_rooms = @chat_rooms.page(params[:page])
   end
 
   def by_phone_number
@@ -12,7 +19,7 @@ class ChatRoomsController < ApplicationController
   end
 
   def show
-    @messages = chat_room.messages.order(created_at: :desc)
+    @messages = chat_room.messages.by_most_recent(:created_at)
   end
 
   private
@@ -22,7 +29,9 @@ class ChatRoomsController < ApplicationController
   end
 
   def verify_user_has_permission_to_view_room
-    # if user.chat_room_users.any? {|ru|ru.chat_room_id == params[:id]} || user.has_permission_to_view_chat_room?(room)
+    unless chat_room.viewable_by_user?(current_user)
+      redirect_to chat_rooms_path
+    end
   end
 
 end

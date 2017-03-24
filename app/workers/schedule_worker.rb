@@ -1,5 +1,6 @@
 class ScheduleWorker
   include Sidekiq::Worker
+  include ActionView::Helpers::NumberHelper
   sidekiq_options retry: false
 
   def perform(task_values)
@@ -12,7 +13,7 @@ class ScheduleWorker
 
   # slack_message = "New User: <#{admin_user_path(current_user)}|#{current_user.id} #{current_user.email}>\n"
   # current_user.athletes.each do |athlete|
-  #   slack_message << "#{athlete.id} #{athlete.full_name} - Athlete ID: #{athlete.zero_padded(athlete.athlete_id, 4)} Pin: #{athlete.zero_padded(athlete.athlete_pin, 4)}\n"
+  #   slack_message << "#{athlete.id} #{athlete.full_name} - Athlete ID: #{athlete.fast_pass_id.to_s.rjust(4, "0")} Pin: #{athlete.fast_pass_pin.to_s.rjust(4, "0")}\n"
   # end
   # slack_message << "Referred By: #{current_user.referrer}"
   # channel = Rails.env.production? ? "#new-users" : "#slack-testing"
@@ -26,34 +27,35 @@ class ScheduleWorker
 
   def send_class_text(params)
     date_range = minutes_from_now(110)..minutes_from_now(130)
-    Subscription.find_each do |subscriber|
-      user = subscriber.user
-      user.subscribed_events.joins(:events).where(events: {date: date_range}).each do |schedule|
-        event = schedule.events.where(date: date_range).first
-        next if event.cancelled?
-        if user.notifications.text_class_reminder && user.notifications.sms_receivable
+    EventSchedule.joins(:event_subscriptions).distinct.events_today.each do |subscribed_event|
+      next if subscribed_event.cancelled?
+      next unless date_range.cover?(subscribed_event.date)
+      subscribed_users = subscribed_event.event_schedule.subscribed_users
+      subscribed_users.each do |user|
+        if user.notifications.text_class_reminder && user.can_receive_sms
           num = user.phone_number
           if num.length == 10
-            msg = "Hope to see you at our #{event.title} class today at #{event.date.strftime('%-l:%M')}!"
+            msg = "Hope to see you at our #{subscribed_event.title} class today at #{subscribed_event.date.strftime('%-l:%M')}!"
             Message.text.create(body: msg, chat_room_name: num, sent_from_id: 0).deliver
           end
         end
         if user.notifications.email_class_reminder?
-          ::ClassReminderMailerWorker.perform_async(user.id, "Hope to see you at our #{event.title} class today at #{event.date.strftime('%-l:%M')}!")
+          ApplicationMailer.class_reminder_mail(user.id, "Hope to see you at our #{subscribed_event.title} class today at #{subscribed_event.date.strftime('%-l:%M')}!").deliver_later
         end
       end
     end
   end
 
   def waiver_checks(params)
-    Dependent.all.each do |athlete|
+    Athlete.find_each do |athlete|
       user = athlete.user
-      if athlete.waiver.exp_date.to_date == weeks_from_now(1).to_date
+      next unless athlete.waiver.present?
+      if athlete.waiver.expiry_date.to_date == weeks_from_now(1).to_date
         if user.notifications.email_waiver_expiring
-          ::ExpiringWaiverMailerWorker.perform_async(athlete.id)
+          ApplicationMailer.expiring_waiver_mail(athlete.id).deliver
         end
-        if user.notifications.text_waiver_expiring && user.notifications.sms_receivable
-          msg = "The waiver belonging to #{athlete.full_name} is no longer active as of #{athlete.waiver.exp_date.strftime('%B %e')}. Head up to ParkourUtah.com to get it renewed!"
+        if user.notifications.text_waiver_expiring && user.can_receive_sms
+          msg = "The waiver belonging to #{athlete.full_name} is no longer active as of #{athlete.waiver.expiry_date.strftime('%B %-d')}. Head up to ParkourUtah.com to get it renewed!"
           Message.text.create(body: msg, chat_room_name: user.phone_number, sent_from_id: 0).deliver
         end
       end
@@ -61,13 +63,13 @@ class ScheduleWorker
   end
 
   def remind_recurring_payments(params)
-    athletes_expiring_soon = Dependent.joins(:athlete_subscriptions)
-      .where('athlete_subscriptions.expires_at > ? AND athlete_subscriptions.expires_at < ?', days_from_now(10).beginning_of_day, days_from_now(10).end_of_day)
-      .where('athlete_subscriptions.auto_renew = true')
+    athletes_expiring_soon = Athlete.joins(:recurring_subscriptions)
+      .where(recurring_subscriptions: { expires_at: (days_from_now(10).beginning_of_day)..(days_from_now(10).end_of_day) })
+      .where(recurring_subscriptions: { auto_renew: true })
     by_users = athletes_expiring_soon.group_by(&:user_id)
 
     by_users.each do |user_id, athletes|
-      ExpiringWaiverMailer.notify_subscription_updating(user_id).deliver_now
+      ApplicationMailer.notify_subscription_updating(user_id).deliver
 
       slack_message = "Unlimited Subscriptions to update in 10 days: #{athletes.map(&:full_name).join(", ")}"
       channel = Rails.env.production? ? "#purchases" : "#slack-testing"
@@ -76,43 +78,39 @@ class ScheduleWorker
   end
 
   def monthly_subscription_charges(params)
-    count = 0
-    User.every do |user|
-      recurring_athletes = []
-      total_cost = user.athletes.inject(0) do |sum, athlete|
-        valid_payment = (athlete.subscription && athlete.subscription.inactive? && athlete.subscription.auto_renew) || false
-        recurring_athletes << athlete if valid_payment
-        sum + (valid_payment ? athlete.subscription.cost_in_pennies : 0)
-      end
-      if recurring_athletes.count > 0 && user.stripe_id
-        count += 1
-        Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
-        charge = if total_cost > 0
-          Stripe::Charge.create(
-            :amount   => total_cost,
-            :currency => "usd",
-            :customer => user.stripe_id
-          )
-        else
-          true
+    Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
+    RecurringSubscription.assigned.auto_renew.inactive.group_by(&:user).each do |user, recurring_subscriptions|
+      recurring_subscriptions.group_by(&:stripe_id).each do |stripe_id, stripe_subscriptions|
+        next unless stripe_id.present?
+        total_cost = stripe_subscriptions.map(&:cost_in_pennies).sum
+        begin
+          stripe_charge = Stripe::Charge.create({
+            amount:   total_cost,
+            currency: "usd",
+            customer: stripe_subscriptions.first.stripe_id
+          })
+        rescue Stripe::CardError => e
+          stripe_charge = {failure_message: "Stripe Error: Failed to Charge: #{e}"}
+        rescue => e
+          stripe_charge = {failure_message: "Failed to Charge: #{e}"}
         end
-        if charge || charge.status == "succeeded"
-          slack_message = "Charged Unlimited Subscriptions for #{user.email} at $#{(total_cost/100).round(2)}."
+        if stripe_charge.try(:status) == "succeeded"
+          slack_message = "Charged Unlimited Subscriptions for #{user.email} at #{number_to_currency(total_cost/100.to_f)}."
           channel = Rails.env.production? ? "#purchases" : "#slack-testing"
           SlackNotifier.notify(slack_message, channel)
 
-          recurring_athletes.each do |athlete|
-            old_sub = athlete.subscription
-            old_sub.auto_renew = false
-            old_sub.save
-            athlete.athlete_subscriptions.create(cost_in_pennies: old_sub.cost_in_pennies)
+          stripe_subscriptions.each do |recurring_subscription|
+            recurring_subscription.update(auto_renew: false)
+            new_sub = user.recurring_subscriptions.create(athlete_id: recurring_subscription.athlete_id, auto_renew: true, cost_in_pennies: recurring_subscription.cost_in_pennies)
+            unless new_sub.persisted?
+              SlackNotifier.notify("Failed to create new sub: ```#{new_sub.try(:attributes)}```", "#server-errors")
+            end
           end
         else
-          SmsMailerWorker.perform_async('3852599640', "There was an issue updating the subscription for #{user.email}.")
+          SlackNotifier.notify("There was an issue updating the subscription for #{user.email}\n```#{stripe_charge}```", "#server-errors")
         end
       end
     end
-    count
   end
 
   def send_summary(params)
@@ -124,7 +122,7 @@ class ScheduleWorker
     when "month" then [last_week.beginning_of_month, last_week.end_of_month]
     end
     summary = ClassSummaryCalculator.new(start_date: start_date, end_date: end_date).generate
-    ApplicationMailer.summary_mail(summary, nil, params["scope"] == "month").deliver_now
+    ApplicationMailer.summary_mail(summary, nil, params["scope"] == "month").deliver
   end
 
   def pull_logs_from_s3(params)

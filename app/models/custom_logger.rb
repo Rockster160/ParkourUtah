@@ -11,7 +11,11 @@ class CustomLogger
     end
 
     def log(message, user=nil, cart_id=nil, request=nil)
-      ip_address = "#{mobile_device?(request) ? 'M:' : 'D:'} IP: #{request.try(:remote_ip)}\n"
+      if request.nil?
+        ip_address = "No IP"
+      else
+        ip_address = "#{mobile_device?(request) ? 'M:' : 'D:'} IP: #{request.try(:remote_ip)}\n"
+      end
       display_name = user.present? ? "#{user.try(:id)}: #{user.try(:email)}\n" : ''
       display_cart = cart_id.present? ? "Cart: #{cart_id}\n" : ''
       formatted_time = Time.zone.now.in_time_zone('America/Denver').strftime('%b %d, %Y %H:%M:%S.%L')

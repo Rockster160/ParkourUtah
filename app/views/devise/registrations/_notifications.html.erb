@@ -99,14 +99,14 @@
       <div class="col-xs-4"></div>
     </div>
 
-    <% unless current_user.notifications.sms_receivable %>
+    <% unless current_user.can_receive_sms %>
       <div class="row" style="color: orange">
         <h4>You have blacklisted text notifications from ParkourUtah! You will not receive any text alerts.</h4>
         <h5>To un-blacklist us, simply text the word 'start' to +1 (740) 571-4304 and then click the button below.</h5>
         <h5>You should receive a text message saying you will now be able to receive text notifications from ParkourUtah.</h5>
       </div>
       <div class="row">
-        <%= link_to 'Text Me!', make_sms_receivable_path, class: 'pkut-btn', remote: true, method: :post %>
+        <%= link_to 'Text Me!', make_can_receive_sms_path, class: 'pkut-btn', remote: true, method: :post %>
       </div>
     <% end %>
 

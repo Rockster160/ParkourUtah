@@ -11,7 +11,7 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
     height: 150px;
     width: 100%;
     line-height: 150px;
-    background: $pkut-grey-light;
+    background: $pkut-grey-2;
     text-align: center;
   }
   .week-container {
@@ -20,9 +20,9 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
       padding: 10px 5px;
       margin: 0;
       margin-top: 10px;
-      border-top: 1px solid gray;
-      border-bottom: 1px solid gray;
-      background: #E7ECF9;
+      border-top: 1px solid $pkut-grey-4;
+      border-bottom: 1px solid $pkut-grey-4;
+      background: $pkut-grey-2;
     }
     .mobile-events-container {
       width: 100%;
@@ -34,7 +34,7 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
           line-height: 50px;
           text-align: center;
           width: 70px;
-          background: red;
+          background: $pkut-red;
           vertical-align: middle;
         }
         .mobile-event-name {
@@ -43,7 +43,7 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
           padding-left: 10px;
         }
         &:hover {
-          background: #DDD;
+          background: $pkut-grey-2;
           cursor: pointer;
         }
       }
@@ -61,7 +61,7 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
 .date-controller { margin-top: 10px; margin-bottom: 10px; }
 
 .day-container {
-  &.not_month { background: #DDD; }
+  &.not_month { background: $pkut-grey-2; }
 }
 
 .center-spinner-container {
@@ -102,13 +102,13 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
 }
 
 .calendar-container {
-  background: white;
+  background: $pkut-grey-1;
   border-radius: 0 0 20px 20px;
 }
 
 .calendar-controls {
   min-height: 100px;
-  background: #EEE;
+  background: $pkut-grey-1;
   padding-top: 34px;
   border-radius: 20px 20px 0 0;
   .select2-container {
@@ -117,7 +117,7 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
       float: left;
     }
     &:last-of-type {
-      float: right;;
+      float: right;
     }
   }
 }
@@ -158,12 +158,12 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
 }
 
 .calendar-date-link {
-  color: black;
+  color: $pkut-grey-5;
   margin-bottom: 5px;
-  border: solid 2px black;
+  border: solid 2px $pkut-grey-5;
   width: 24px;
   height: 24px;
-  background: white;
+  background: $pkut-grey-1;
 }
 
 .cities-container {
@@ -174,67 +174,13 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
   max-width: 100%;
 }
 
-.calendar-legend {
-  padding: 5px 0;
-  margin-bottom: 10px;
-  position: relative;
-  &:hover {
-    cursor: pointer;
-    background: rgba(255, 0, 0, 0.2);
-  }
-}
-
-.calendar-legend-blip {
-  border-radius: 50%;
-  margin-right: 20px;
-  float: left;
-  height: 20px;
-  width: 20px;
-}
-
-.calendar-legend-text {
-  color: white;
-}
-.calendar-legend-text-black {
-  color: black;
-}
-
-.close-tooltip {
-  position: absolute;
-  right: 15px;
-  text-shadow: 0 0 2px blue;
-  &:hover { cursor: pointer; }
-}
-
-.show-tooltip {
-  z-index: 10;
-  color: black;
-  display: none;
-  text-align: center;
-  position: absolute;
-  top: 0;
-  left: 50%;
-  margin: -20px 0 0 -150px;
-  background: rgb(236, 247, 255);
-  border: 2px solid rgb(22, 78, 177);
-  padding: 10px;
-  border-radius: 10px;
-  width: 300px;
-  height: auto;
-  &:hover { cursor: default; }
-}
-
-.tooltip-text {
-
-}
-
 .calendar-event {
-  border: 1px solid black;
+  border: 1px solid $pkut-grey-5;
   overflow: hidden;
   list-style-type: none;
   text-decoration: none;
-  color: black;
-  & a { color: blue; }
+  color: $pkut-grey-5;
+  & a { color: $pkut-blue; }
   &:hover { cursor: pointer; }
   .mobile-name {
     text-overflow: ellipsis;
@@ -247,27 +193,27 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
 }
 
 .today {
-  border: 2px inset gray;
+  border: 2px inset $pkut-grey-2;
   .date {
-    background: black;
-    color: white;
+    background: $pkut-grey-5;
+    color: $pkut-grey-1;
   }
 }
 
 .not-month {
-  background: #EEE;
+  background: $pkut-grey-1;
 }
 
 @media (max-width: 767px) {
   .calendar-controls {
     min-height: 120px;
-    background: #EEE;
+    background: $pkut-grey-1;
     padding-top: 10px;
     border-radius: 20px 20px 0 0;
   }
 
   .calendar-date-link {
-    color: black;
+    color: $pkut-grey-5;
     border: none;
     border-bottom: solid 2px grey;
     width: auto;
@@ -277,8 +223,8 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
   }
 
   .today .date {
-    background: white;
+    background: $pkut-grey-1;
     font-weight: bold;
-    color: red;
+    color: $pkut-red;
   }
 }

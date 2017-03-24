@@ -1,0 +1,10 @@
+<%= render_modal("assign_subscriptions", "skinny-modal") do %>
+  <h1 class="pkut-header">Assign Subscription</h1>
+  Click on the star next to the athlete that you would like to apply the unlimited subscription to.
+  <br/>
+  <br/>
+  <% current_user.athletes.each do |athlete| %>
+    <div class="row"><%= link_to icon('star', '', class: 'fa-lg'), assign_subscription_athletes_path(athlete.id), method: :post, style: 'color: gold;' %> <%= athlete.full_name %></div>
+    <br/>
+  <% end %>
+<% end %>

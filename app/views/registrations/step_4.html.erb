@@ -19,7 +19,7 @@
         <span>Phone Number:</span>
       </div>
       <div class="col-sm-8">
-        <span class="pkut-link title open-review-modal"><%= current_user.show_phone_number %></span>
+        <span class="pkut-link title open-review-modal"><%= format_phone_number(current_user.phone_number) %></span>
       </div>
     </div>
     <br/>
@@ -37,7 +37,7 @@
         <span>Emergency Contact Number:</span>
       </div>
       <div class="col-sm-8">
-        <span class="pkut-link title open-review-modal"><%= current_user.emergency_contacts.last.show_phone_number %></span>
+        <span class="pkut-link title open-review-modal"><%= format_phone_number(current_user.emergency_contacts.last.number) %></span>
       </div>
     </div>
     <br/>
@@ -67,7 +67,7 @@
               <div class="col-xs-4 visible-xs">
               <div class="pkut-link title open-review-modal"><%= athlete.full_name %></div>
               <div class="pkut-link title open-review-modal"><%= athlete.date_of_birth %></div>
-              <div class="pkut-link title open-review-modal"><%= athlete.zero_padded(athlete.athlete_pin, 4) %></div>
+              <div class="pkut-link title open-review-modal"><%= athlete.fast_pass_pin.to_s.rjust(4, "0") %></div>
             </div>
             <div class="col-sm-3 hidden-xs">
               <span class="pkut-link title open-review-modal"><%= athlete.full_name %></span>
@@ -76,7 +76,7 @@
               <span class="pkut-link title open-review-modal"><%= athlete.date_of_birth %></span>
             </div>
             <div class="col-sm-2 hidden-xs">
-              <span class="pkut-link title open-review-modal"><%= athlete.zero_padded(athlete.athlete_pin, 4) %></span>
+              <span class="pkut-link title open-review-modal"><%= athlete.fast_pass_pin.to_s.rjust(4, "0") %></span>
             </div>
             <div class="col-sm-4 col-xs-8">
               <div class="pkut-checkbox arrow-required">

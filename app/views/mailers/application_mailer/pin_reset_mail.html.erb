@@ -1,7 +1,7 @@
 <p>Someone has requested a change in access for the ID or PIN for <%= @athlete.full_name %>.</p>
 <br/>
 <p><%= @athlete.full_name %></p>
-<p>Athlete ID: <%= @athlete.athlete_id %></p>
+<p>Athlete ID: <%= @athlete.fast_pass_id %></p>
 <p><%= link_to 'Change Athlete Pin', reset_pin_url(@athlete.id) %></p>
 </br>
 <p>If you didn't request this, please ignore this email.</p>

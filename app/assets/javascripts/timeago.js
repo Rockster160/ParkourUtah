@@ -73,12 +73,11 @@ refreshTimeago = function() {
   $('time.timeago').each(function() {
     timeago(this);
   })
-  $('.important-alert-message').appendTo('.messages-container');
 }
 
 $(document).ready(function() {
-  if ($('time.timeago').length > 0) {
+  refreshTimeago();
+  setInterval(function() {
     refreshTimeago();
-    setInterval(refreshTimeago, 10000);
-  }
+  }, 10000);
 })

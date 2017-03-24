@@ -82,6 +82,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.10.0)
+    colorize (0.8.1)
     commonjs (0.2.7)
     concurrent-ruby (1.0.4)
     connection_pool (2.2.1)
@@ -321,6 +322,7 @@ DEPENDENCIES
   byebug
   chroma
   coffee-script
+  colorize
   devise
   dotimeout-rails
   exception_notification

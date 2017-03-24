@@ -1,6 +1,6 @@
 <%= render_modal("review-step-4-modal") do %>
-  <%= form_tag fix_review_page_path do %>
-    <h2 class="">Whoops, let's get that fixed.</h2>
+  <%= form_for @user, url: fix_review_page_path, method: :post do |f| %>
+    <h2>Whoops, let's get that fixed.</h2>
     <p>Looks like some information is incorrect. You may fix the information below and then click submit to save your changes.</p>
 
     <div class="row">
@@ -8,7 +8,7 @@
         Email Address:
       </div>
       <div class="col-sm-8">
-        <%= text_field_tag 'user[email]', "#{current_user.email}", placeholder: 'Emergency Contact Name', class: "pkut-textbox customRequired" %>
+        <%= f.text_field :email, placeholder: 'Emergency Contact Name', class: "pkut-textbox customRequired" %>
       </div>
     </div>
 
@@ -17,7 +17,7 @@
         Phone Number:
       </div>
       <div class="col-sm-8">
-        <%= telephone_field_tag 'user[phone]', "#{current_user.show_phone_number}", placeholder: 'Phone Number', class: "pkut-textbox formatPhoneNumber customRequired" %>
+        <%= f.telephone_field :phone_number, placeholder: 'Phone Number', class: "pkut-textbox formatPhoneNumber customRequired" %>
       </div>
     </div>
     <br/>
@@ -28,45 +28,50 @@
       </div>
       <div class="col-sm-8">
         <div class="text-field-height pkut-checkbox text-left">
-          <%= check_box_tag 'smsalert', '', current_user.notifications.text_class_reminder %>
-          <%= label_tag 'smsalert', '' %>
+          <%= f.check_box :sms_alert %>
+          <%= f.label :sms_alert %>
         </div>
       </div>
     </div>
     <br/>
 
-    <div class="row">
-      <div class="col-sm-4">
-        Emergency Contact Name:
+    <%= f.fields_for :emergency_contacts, @user.emergency_contacts.last || @user.emergency_contacts.new do |ff| %>
+      <div class="row">
+        <div class="col-sm-4">
+          Emergency Contact Name:
+        </div>
+        <div class="col-sm-8">
+          <%= ff.text_field :name, placeholder: 'Emergency Contact Name', class: "pkut-textbox customRequired" %>
+        </div>
       </div>
-      <div class="col-sm-8">
-        <%= text_field_tag 'ec_contact[name]', "#{current_user.emergency_contacts.last.name}", placeholder: 'Emergency Contact Name', class: "pkut-textbox customRequired" %>
-      </div>
-    </div>
 
-    <div class="row">
-      <div class="col-sm-4">
-        Emergency Contact Number:
+      <div class="row">
+        <div class="col-sm-4">
+          Emergency Contact Number:
+        </div>
+        <div class="col-sm-8">
+          <%= ff.telephone_field :number, value: format_phone_number(@user.emergency_contacts.last.number), placeholder: 'Emergency Contact Phone #', class: "pkut-textbox formatPhoneNumber customRequired" %>
+        </div>
       </div>
-      <div class="col-sm-8">
-        <%= telephone_field_tag 'ec_contact[number]', "#{current_user.emergency_contacts.last.show_phone_number}", placeholder: 'Emergency Contact Phone #', class: "pkut-textbox formatPhoneNumber customRequired" %>
-      </div>
-    </div>
-    <br/>
+      <br/>
+    <% end %>
 
-    <div class="row">
-      <div class="col-sm-4">
-        Address:
+    <%= f.fields_for :address, @user.address || Address.new(user_id: @user.id) do |ff| %>
+      <div class="row">
+        <div class="col-sm-4">
+          Address:
+        </div>
+        <div class="col-sm-8">
+          <%= ff.text_field :line1, placeholder: 'Address 1', class: "pkut-textbox customRequired" %>
+          <%= ff.text_field :line2, placeholder: 'Address 2', class: "pkut-textbox" %>
+          <br>
+          <%= ff.text_field :city, placeholder: 'City', class: "pkut-textbox textbox-2col-5max customRequired" %>
+          <%= ff.text_field :state, placeholder: 'State', class: "pkut-textbox textbox-1col-5max customRequired" %>
+          <%= ff.text_field :zip, placeholder: 'Zip Code', class: "restrictNumeric pkut-textbox textbox-2col-5max customRequired" %>
+        </div>
       </div>
-      <div class="col-sm-8">
-          <%= text_field_tag 'address[line1]', "#{current_user.address.line1}", placeholder: 'Address 1', class: "pkut-textbox customRequired" %>
-          <%= text_field_tag 'address[line2]', "#{current_user.address.line2}", placeholder: 'Address 2', class: "pkut-textbox" %>
-          <%= text_field_tag 'address[city]', "#{current_user.address.city}", placeholder: 'City', class: "pkut-textbox textbox-2col-5max customRequired" %>
-          <%= text_field_tag 'address[state]', "#{current_user.address.state}", placeholder: 'State', class: "pkut-textbox textbox-1col-5max customRequired" %>
-          <%= text_field_tag 'address[zip]', "#{current_user.address.zip}", placeholder: 'Zip Code', class: "restrictNumeric pkut-textbox textbox-2col-5max customRequired" %>
-      </div>
-    </div>
-    <br/>
+      <br/>
+    <% end %>
 
     <div class="row">
       <div class="col-sm-4">
@@ -76,17 +81,14 @@
         <% @athletes.each do |athlete| %>
           <%= text_field_tag "athlete[#{athlete.id}][name]", athlete.full_name, placeholder: 'Full Name', class: "pkut-textbox formatName textbox-2col-5max" %>
           <%= text_field_tag "athlete[#{athlete.id}][dob]", athlete.date_of_birth, placeholder: 'MM/DD/YYYY', class: "pkut-textbox formatDOB textbox-2col-5max" %>
-          <span class="show-required"><%= text_field_tag "athlete[#{athlete.id}][code]", athlete.zero_padded(athlete.athlete_pin, 4), placeholder: 'ex:1234', class: "pkut-textbox formatPin textbox-1col-5max" %></span>
-          <!-- <span class="pkut-checkbox text-right"> -->
-            <%#= check_box_tag "athlete[#{athlete.id}][keep]", '', true %>
-            <%#= label_tag "athlete[#{athlete.id}][keep]", '' %>
-          <!-- </span> -->
+          <span class="show-required"><%= text_field_tag "athlete[#{athlete.id}][code]", athlete.fast_pass_pin.to_s.rjust(4, "0"), placeholder: 'ex:1234', class: "pkut-textbox formatPin textbox-1col-5max" %></span>
+          <br>
         <% end %>
       </div>
     </div>
 
     <div class="text-center">
-      <%= submit_tag "Submit", class: 'pkut-btn' %>
+      <%= f.submit "Submit", class: 'pkut-btn' %>
     </div>
 
   <% end %>

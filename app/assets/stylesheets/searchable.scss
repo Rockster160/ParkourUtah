@@ -1,0 +1,54 @@
+.js-searchable-menu {
+  z-index: 10000;
+  position: fixed;
+  height: auto;
+  box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.5);
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: white;
+
+  padding: 10px 0;
+
+  .searchable-loading-container {
+    color: black;
+  }
+
+  .js-searchable-option-wrapper {
+    width: 100%;
+    overflow: hidden;
+    cursor: pointer;
+
+    font-size: 14px;
+    padding: 5px 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &.searchable-toSelect { background: #ccc; }
+  }
+}
+
+.dropdown-option {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  .dropdown-id {
+    float: right;
+    text-align: right;
+  }
+  .dropdown-email {
+    font-weight: bold;
+    white-space: nowrap;
+  }
+  .dropdown-athlete {
+    padding-left: 10px;
+  }
+}
+
+.js-searchable-container {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid black;
+  .js-searchable {
+    margin: 0 auto;
+    display: block;
+  }
+}
