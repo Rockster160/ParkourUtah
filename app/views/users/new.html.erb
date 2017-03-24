@@ -1,0 +1,29 @@
+<div class="central-container form-offset text-center">
+  <%= render partial: 'registrations/progress_bar', locals: {step: 1} %>
+  <%= render partial: 'layouts/error_container', locals: {resource: @user} %>
+  <h5 class="warning-text">This process must be completed by a parent or legal guardian.</h5>
+  <h1 class="header-text">Get Started</h1>
+
+  <%= form_for(@user, url: user_path) do |f| %>
+    <div class="field">
+      <%= f.email_field :email, placeholder: 'Email Address', class: "mat-pkut-textbox customRequired" %>
+    </div>
+
+    <div class="field">
+      <%= f.password_field :password, autocomplete: "off", placeholder: 'Password', class: "mat-pkut-textbox customRequired" %>
+    </div>
+
+    <div class="field"x>
+      <%= f.password_field :password_confirmation, autocomplete: "off", placeholder: 'Confirm Password', class: "mat-pkut-textbox customRequired" %>
+    </div>
+
+    <div class="text-center">
+      <div class="recaptcha-container"><%= recaptcha_tags theme: 'dark' %></div>
+    </div>
+
+    <div class="actions">
+      <%= f.submit "Next", class: 'pkut-btn' %><br />
+      <%= link_to "Aready have an account?", new_session_path(User), class: '' %>
+    </div>
+  <% end %>
+</div>

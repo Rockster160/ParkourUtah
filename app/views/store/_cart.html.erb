@@ -18,7 +18,7 @@
         <%= text_field_tag :redemption_key, '', placeholder: 'Coupon Code', class: 'redemption-key-container pkut-textbox', autocomplete: "off" %>
         <%= submit_tag "Submit", class: 'button-to-link' %>
       <% end %>
-      <%= link_to "Checkout", charge_path, class: 'fake-stripe-btn', method: :post %>
+      <%= link_to "Checkout", '', class: 'fake-stripe-btn' %>
     </div>
   </div>
 </div>
@@ -27,7 +27,7 @@
           data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
           data-image="http://parkourutah.com/favicon.ico"
           data-name="Parkour Utah"
-          data-billingAddress="true"
+          data-billing-address="true"
           data-description="All Sales are Final"
           data-amount=0></script>
 <% end %>
@@ -43,7 +43,7 @@
       <div class="shopping-cart-container">
         <div class="shopping-cart">
         <button type="button" class="close-btn shop-close" data-dismiss="modal" aria-hidden="true"><%= icon("times-circle-o", '', class: 'fa-2x') %></button>
-        <%= link_to "Checkout", charge_path, class: 'fake-stripe-btn', method: :post %>
+        <%= link_to "Checkout", '', class: 'fake-stripe-btn' %>
           <br>
           <div class="orders-placeholder">
             <% @cart.cart_items.where("amount > ?", 0).each do |order| %>

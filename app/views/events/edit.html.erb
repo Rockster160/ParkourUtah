@@ -2,13 +2,13 @@
   <%= form_for @event do |f| %>
     <div class="form-container">
       <div class="form-field">
-        <p>Original Date: <%= @event.original_date.strftime("%b %-d") %> <%= @event.time_of_day %></p>
+        <p>Original Date: <%= @event.original_date.strftime("%b %-d") %> <%= @event.original_time_of_day %></p>
         <%= f.label :str_date, "Class Date" %> <br>
         <%= f.text_field :str_date, class: 'pkut-textbox customRequired datepicker-field' %>
       </div>
       <div class="form-field">
-        <%= f.label :current_time_of_day, "Date/Time" %> <br>
-        <%= f.text_field :current_time_of_day, class: 'pkut-textbox customRequired' %>
+        <%= f.label :time_of_day, "Date/Time" %> <br>
+        <%= f.text_field :time_of_day, class: 'pkut-textbox customRequired' %>
       </div>
       <%= f.submit "Save Event", class: 'pkut-btn' %>
     </div>

@@ -10,5 +10,5 @@
 #
 
 # TODO Remove me in a later migration
-class SpotEvent < ActiveRecord::Base
+class SpotEvent < ApplicationRecord
 end

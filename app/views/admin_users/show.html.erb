@@ -1,0 +1,99 @@
+<div class="col-sm-offset-4">
+  <br/>
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br/>
+  <% if current_user.is_admin? %>
+    <%= link_to "Back to Users Page", admin_users_path, class: 'pkut-btn' %><br/>
+  <% end %>
+  <%= link_to 'Back', :back, class: 'pkut-btn' %><br/>
+  <h3><%= @user.id %>: <%= '!' unless @user.notifications.email_newsletter? %><%= @user.email %></h3>
+  <%= link_to "Send Email", batch_email_admin_path(recipients: @user.email) if current_user.is_admin? %>
+  <p>
+    <% if @user.can_receive_sms? %>
+      <strong><%= format_phone_number(@user.phone_number) %></strong>
+      <% if current_user.is_admin? && @user.phone_number.present? %>
+        <%= link_to("Send Text Message", phone_number_chat_rooms_path(@user.phone_number)) %>
+      <% end %>
+    <% else %>
+      <s class="pkut-header"><%= format_phone_number(@user.phone_number) %></s>
+    <% end %>
+  </p>
+  <% if current_user.is_admin? %>
+    <p>Credits: <%= @user.credits %> -- <a data-toggle="modal" data-target="#adjust-<%= @user.id %>" class="forceOpen">Adjust</a></p>
+    <p><a data-toggle="modal" data-target="#edit_user_notifications" class="forceOpen">Edit Notifications</a></p>
+    <p><a data-toggle="modal" data-target="#edit_user_subscriptions" class="forceOpen">Edit Subscriptions</a></p>
+    <p><a href="<%= attendance_admin_user_path(@user) %>">Attendance History</a></p>
+    <p>Last seen:
+      <% if @user.signed_in? %>
+        <span style="color:green;">Online Now!</span>
+      <% else %>
+        <% if @user.last_sign_in_at? %>
+          <span style="color:yellow;"><%= (@user.last_sign_in_at - 6.hours).strftime('%B %e, %Y at %I:%M %p') %></span>
+        <% else %>
+          <span style="color:red;">Never</span>
+        <% end %>
+      <% end %>
+    </p>
+    <p>Signed up: <strong><%= (@user.created_at - 6.hours).strftime('%B %e, %Y at %I:%M %p') %></strong></p>
+  <% end %>
+  <h4>Athletes:</h4>
+  <% @user.athletes_by_waiver_expiration.each do |athlete| %>
+    <% if athlete.has_unlimited_access? %>
+      <span style="color: green;">--Has unlimited access until: <%= athlete.has_access_until.strftime('%B %e, %Y') %></span><br/>
+    <% end %>
+    --<%= athlete.id %>: <strong><%= athlete.full_name %></strong> - ID: <%= athlete.fast_pass_id.to_s.rjust(4, "0") %><%= athlete.current_subscription.try(:auto_renew) ? '*' : '' %><br/>
+    <% if athlete.unused_trials.count > 0 %>
+      --Has <%= athlete.unused_trials.count %> trial class(es) remaining. <%= link_to 'Remove 1 Trial', update_trials_admin_user_path(@user, fast_pass_id: athlete.id, num: '-1'), method: :post if current_user.is_admin? %>
+      <br/>
+    <% end %>
+    <% if current_user.is_admin? %>
+      --<%= link_to 'Add Trial Class', update_trials_admin_user_path(@user, fast_pass_id: athlete.id, num: '1'), method: :post %><br/>
+    <% end %>
+
+    <%= render_modal("edit#{athlete.id}", "skinny-modal") do %>
+      <h3 class="pkut-header"><%= athlete.full_name %></h3>
+      <p>This will permanently delete this athlete. Are you sure? This action cannot be undone.<p>
+      <%= link_to "Delete", athlete_path(athlete.id), class: 'pkut-btn', method: :delete %>
+    <% end %>
+
+    --Birthday: <%= athlete.date_of_birth %><br/>
+    --Waiver expires: <%= athlete.waiver ? athlete.waiver.expiry_date.strftime('%B %e, %Y') : "No waiver signed" %><br/>
+    <% if current_user.is_admin? %>
+      --<a alt="..." class="pkut-header forceOpen" data-toggle="modal" data-target="#edit<%= athlete.id %>">Delete Athlete</a><br/><br/>
+    <% end %>
+    <% if false %>
+      --<%= link_to 'Curriculum', '' %><br>
+    <% end %>
+    <br>
+  <% end %>
+  <br/>
+  <br/>
+  <br/>
+  <% if current_user.is_admin? %>
+    <a data-toggle="modal" data-target="#delete-<%= @user.id %>" class="pkut-btn forceOpen">Delete User</a>
+  <% end %>
+</div>
+<hr>
+
+<%= render_modal("adjust-#{@user.id}", "skinny-modal") do %>
+  <h1 class="pkut-header">Adjust</h1>
+  <p class="error-message">Enter a number to add credits to user's account. Enter a (-) before the number to subtract credits.</p>
+  <p class="error-message">(12 or -12)</p>
+  <%= form_tag update_credits_admin_user_path(@user) do %>
+    <%= text_field_tag :adjust, '' %>
+    <%= submit_tag "Adjust Credits", class: 'pkut-btn' %>
+  <% end %>
+<% end %>
+
+<%= render_modal("delete-#{@user.id}", "skinny-modal") do %>
+  <h1 class="pkut-header">Destroy?</h1>
+  <p class="error-message">Are you positive you want to destroy <strong><%= @user.full_name %></strong>?</p>
+  <p class="error-message">This is permanent and cannot be undone.</p>
+  <p class="error-message">If you are sure, enter `DELETE`(all caps, no quotes) below and then click delete user.</p>
+  <%= form_for [:admin, @user], method: :delete do %>
+    <%= text_field_tag :confirmation, '', class: 'delete-user-field'  %>
+    <%= submit_tag "Delete User", class: 'delete-user-btn' %>
+  <% end %>
+<% end %>
+
+<%= render partial: 'edit_user_notifications', locals: {user: @user} %>
+<%= render partial: 'edit_user_subscriptions', locals: {user: @user} %>

@@ -3,9 +3,11 @@ class IndexController < ApplicationController
   before_action :still_signed_in
   skip_before_action :verify_authenticity_token
 
-  def sms_receivable
-    current_user.notifications.update(sms_receivable: true)
-    SmsMailerWorker.perform_async(current_user.phone_number, 'Thank you! You will once again be able to receive text message notifications from ParkourUtah.')
+  def can_receive_sms
+    current_user.update(can_receive_sms: true)
+    num = current_user.phone_number
+    msg = "Thank you! You will once again be able to receive text message notifications from ParkourUtah."
+    Message.text.create(body: msg, chat_room_name: num, sent_from_id: 0).deliver
   end
 
   def page_not_found
@@ -17,7 +19,7 @@ class IndexController < ApplicationController
   end
 
   def index
-    @instructors = User.instructors
+    @instructors = User.instructors.where(should_display_on_front_page: true)
 
     future_events = EventSchedule.in_the_future
     @cities = future_events.pluck(:city).uniq.sort
@@ -28,40 +30,24 @@ class IndexController < ApplicationController
     params[:notify].each do |attribute, value|
       current_user.notifications.update(attribute => true)
     end
-    redirect_to edit_user_registration_path
+    redirect_to edit_user_path
   end
 
   def receive_sms
     raw_number = params["From"].gsub(/[^0-9]/, "").last(10)
-    user = User.where("phone_number ILIKE ?", "%#{raw_number}%").first
-    user_link = Rails.application.routes.url_helpers.admin_user_url(user)
-    if %w(STOP STOPALL UNSUBSCRIBE CANCEL END QUIT).include?(params["Body"].squish.upcase)
-      user.notifications.update(sms_receivable: false) if user.present? && user.notifications.present?
-      default_message = "#{params["From"]} has opted out of text messages from PKUT.\nThey will no longer receive text messages from us (Including messages sent from the admin text messaging page).\nIn order to re-enable messages, they must send a text message saying \"START\" to us, and then log in to their account, Home, then click Notifications, then the button that says 'Text Me!'\nIf the message sends successfully, they will be able to receive text messages from us again."
-      user_message = user.present? ? "\nPhone Number seems to match: <#{user_link}|#{user.id} - #{user.email}>" : ""
-      slack_message = default_message + user_message
-    else
-      escaped_body = params["Body"].split("\n").map { |line| "\n>#{line}" }.join("")
-      default_message = "*Received text message from: #{params["From"]}*\n>#{escaped_body}"
-      respond_link = Rails.application.routes.url_helpers.batch_text_message_admin_url(recipients: raw_number)
-      user_message = user.present? ? "\nPhone Number seems to match: <#{user_link}|#{user.id} - #{user.email}>" : ""
-      respond_message = "\n<#{respond_link}|Click here to respond!>"
-      slack_message = default_message + user_message + respond_message
-    end
-    SlackNotifier.notify(slack_message, "#support")
+    Message.text.create(body: params["Body"], chat_room_name: raw_number)
     head :ok
   end
 
   def update
     update_address
     update_phone
-    redirect_to edit_user_registration_path
+    redirect_to edit_user_path
   end
 
   def contact
     success = false
-    blacklisted = blacklisted_body?
-    if /\(\d{3}\) \d{3}-\d{4}/ =~ params[:phone] && blacklisted
+    if /\(\d{3}\) \d{3}-\d{4}/ =~ params[:phone] && blacklisted_body?
       flash[:notice] = "Thanks! We'll have somebody get in contact with you shortly."
       success = true
     end
@@ -74,7 +60,8 @@ class IndexController < ApplicationController
       success: success
     )
     phone_digits = params[:phone].split('').map {|x| x[/\d+/]}.join
-    if !blacklisted && ((phone_digits.length >= 7 && phone_digits.length <= 10) || success)
+    if !blacklisted_body? && ((phone_digits.length >= 7 && phone_digits.length <= 10) || success)
+      contact_request.log_message
       contact_request.notify_slack
     end
     redirect_to root_path
@@ -84,7 +71,16 @@ class IndexController < ApplicationController
   end
 
   def unsubscribe
-    if User.find(params[:id]).notifications.update(params[:type] => false)
+    if params[:type].present? &&  params[:id].present?
+      unsubscribe_type = params[:type]
+      user_id = params[:id]
+    else
+      unsubscribe_params = Rack::Utils.parse_nested_query(Base64.urlsafe_decode64(params[:unsubscribe_code] || ''))
+      unsubscribe_type = unsubscribe_params['unsubscribe'].try(:to_sym) || :all
+      user_id = unsubscribe_params['user_id'].try(:to_i)
+    end
+
+    if User.find(user_id).unsubscribe_from(unsubscribe_type)
       flash[:notice] = "You have been successully unsubscribed."
     else
       flash[:alert] = "Failed to unsubscribe."
@@ -109,7 +105,7 @@ class IndexController < ApplicationController
     current_user.address ||= Address.new
     if params[:address]
       current_user.address.update(params[:address].permit(:line1, :line2, :city, :state, :zip))
-      if current_user.address.is_valid?
+      if current_user.address.valid?
         flash[:notice] = "Your address has been successfully updated!"
       else
         flash[:alert] = "There was an error saving your address."
@@ -118,7 +114,9 @@ class IndexController < ApplicationController
   end
 
   def blacklisted_body?
-    body_blacklist.any? { |blacklist_string| params[:comment].include?(blacklist_string) }
+    @blacklisted ||= begin
+      body_blacklist.any? { |blacklist_string| params[:comment].include?(blacklist_string) }
+    end
   end
 
   def body_blacklist
@@ -137,7 +135,8 @@ class IndexController < ApplicationController
       "I love reading phorums posted here",
       "You have a product, service and have no customers?",
       "buy a cheap",
-      "href="
+      "href=",
+      "GetBusinessFunded"
     ]
   end
 

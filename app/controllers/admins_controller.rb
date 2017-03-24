@@ -21,6 +21,22 @@ class AdminsController < ApplicationController
     end
   end
 
+  def summary
+    if params[:start_date]
+      start_date = Time.zone.parse(params[:start_date]) rescue nil
+    end
+    if params[:end_date]
+      end_date = Time.zone.parse(params[:end_date]) rescue nil
+    end
+    start_date ||= Time.zone.now
+
+    if start_date.present? && end_date.present?
+      @summary = ClassSummaryCalculator.new(start_date: start_date, end_date: end_date).generate
+    else
+      @summary = nil
+    end
+  end
+
   def batch_text_message
     @users = User.where(id: params[:user_ids])
     case params[:template]
@@ -33,15 +49,20 @@ class AdminsController < ApplicationController
     phone_numbers = params[:recipients].gsub(/[^\d|,]/, '').split(",").map(&:squish)
     @success = []
     @failed = []
+    @messages_sent = []
     phone_numbers.each do |phone_number|
       if phone_number.length == 10
-        SmsMailerWorker.perform_async(phone_number, params[:message])
+        @messages_sent << current_user.sent_messages.text.create(body: params[:message], chat_room_name: phone_number)
         @success << phone_number
       else
         @failed << phone_number
       end
     end
-    render :batch_text_message
+    if @success.length == 1 && @failed.length == 0
+      redirect_to chat_room_path(@messages_sent.first.chat_room), notice: "Successfully sent!"
+    else
+      render :batch_text_message
+    end
   end
 
   def batch_email

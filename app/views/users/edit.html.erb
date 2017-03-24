@@ -1,0 +1,272 @@
+<!--<div class="red-bg"></div>-->
+<div class="container">
+  <div class="tab">
+    <input type="radio" id="tab-1" name="tab-group-1" checked>
+    <label flr="tab-1">Tab One</label>
+    
+    <div class="content">
+      stuff
+    </div>
+  </div>
+  <div class="tab">
+    <input type="radio" id="tab-2" name="tab-group-2" checked>
+    <label flr="tab-2">Tab two</label>
+    
+    <div class="content">
+      stuff
+    </div>
+  </div>
+  <div class="tab">
+    <input type="radio" id="tab-3" name="tab-group-3" checked>
+    <label flr="tab-3">Tab three</label>
+    
+    <div class="content">
+      stuff
+    </div>
+  </div>
+  <div class="tab">
+    <input type="radio" id="tab-4" name="tab-group-4" checked>
+    <label flr="tab-4">Tab four</label>
+    
+    <div class="content">
+      stuff
+    </div>
+  </div>
+</div>
+
+<%
+=begin  -- Move this and the line above to comment
+
+
+
+<div class="row">
+  <div class="col-sm-6">
+    <h2 class="hidden-xs"><%= @user.email %></h2>
+    <h4 class="visible-xs"><%= @user.email %></h4>
+  </div>
+  <div class="col-sm-6 text-right">
+    <h2>Credits: <span class="pkut-header"><%= @user.credits %><span></h2>
+  </div>
+</div>
+<div class="central-container form-offset">
+
+  <div class="row text-center">
+    <% if @user.athletes.unverified.count > 0 %>
+      <div class="pkut-btn big-btn orange-btn-glowing forceOpen" data-toggle="modal" data-target="#verify_athletes">
+        Click here to receive 2 trial classes!
+      </div> <br>
+      <%= render partial: 'athletes/verify_athletes' %>
+    <% end %>
+    <% if @user.recurring_subscriptions.unassigned.count > 0 %>
+      <div class="pkut-btn big-btn forceOpen" data-toggle="modal" data-target="#assign_subscriptions">
+        Assign subscriptions to students!
+      </div> <br>
+    <% end %>
+    <%= render partial: 'athletes/assign_subscriptions' %>
+    <a class="pkut-btn text-center forceOpen" data-toggle="modal" data-target="#notification_modal">Edit Notifications</a><br/>
+    <%= render partial: 'devise/registrations/notifications' %>
+    <% unless @user.can_receive_sms? %>
+      <div class="row pkut-header">
+        <h5>Uh oh! Looks like you blacklisted ParkourUtah's number.</h5>
+        <h5>It's okay- it happens when you respond with just the word "STOP" to one of our messages- but it stops us from notifying you regarding the things you want to be notified on!</h5>
+        <h5>These can be helpful- like letting you know that one of your waivers are about to expire.</h5>
+        <h5>We let you customize when you hear from us. Just click on the "Notifications" button in order to choose which situations you want us to notify you with.</h5>
+      </div>
+    <% end %>
+    <%
+      has_subscriptions = @user.subscribed_athletes.any? ||
+      @user.athletes_with_unlimited_access.count > 0 ||
+      @user.subscribed_events.any?
+    %>
+    <% if has_subscriptions %>
+      <br/>
+      <a class="pkut-btn text-center forceOpen" data-toggle="modal" data-target="#subscription_modal">Manage Subscriptions</a><br/>
+      <%= render partial: 'devise/registrations/subscriptions' %>
+    <% end %>
+  </div>
+  <br/>
+
+  <%= render partial: 'layouts/error_container', locals: { resource: @user } %>
+
+  <%= form_for(@user, url: user_path, html: { method: :put, id: "modal-submit" }) do |f| %>
+
+    <div class="row">
+      <div class="col-sm-3">
+        <br/><%= f.label :email, 'Email Address:' %>
+      </div>
+      <div class="col-sm-9">
+        <%= f.email_field :email, class: 'pkut-textbox customRequired' %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-3">
+        <br/><%= f.label :phone_number, 'Phone Number:' %>
+      </div>
+      <div class="col-sm-9">
+        <%= f.telephone_field :phone_number, autocomplete: "off", class: 'pkut-textbox formatPhoneNumber customRequired' %>
+      </div>
+    </div>
+    <br/>
+
+    <%= f.fields_for :emergency_contacts, @user.emergency_contacts.last do |ff| %>
+      <h5>Emergency Contact</h5>
+      <div class="row">
+        <div class="col-sm-3">
+          <br/><%= ff.label :name, 'Name:' %>
+        </div>
+        <div class="col-sm-9">
+          <%= ff.text_field :name, class: 'pkut-textbox customRequired' %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3">
+          <br/><%= ff.label :number, 'Phone Number:' %>
+        </div>
+        <div class="col-sm-9">
+          <%= ff.telephone_field :number, class: 'pkut-textbox formatPhoneNumber customRequired' %>
+        </div>
+      </div>
+    <% end %>
+    <br/>
+
+    <%= f.fields_for :address, @user.address do |ff| %>
+      <h5>Address:</h5>
+      <div class="row">
+        <div class="col-sm-3">
+          <br/><%= ff.label :line1, 'Line 1:' %>
+        </div>
+        <div class="col-sm-9">
+          <%= ff.text_field :line1, class: 'pkut-textbox customRequired' %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3">
+          <br/><%= ff.label :line2, 'Line 2:' %>
+        </div>
+        <div class="col-sm-9">
+          <%= ff.text_field :line2, class: 'pkut-textbox' %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3">
+          <br/><%= ff.label :city, 'City:' %>
+        </div>
+        <div class="col-sm-9">
+          <%= ff.text_field :city, class: 'pkut-textbox customRequired' %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3">
+          <br/><%= ff.label :state, 'State:' %>
+        </div>
+        <div class="col-sm-9">
+          <%= ff.text_field :state, class: 'pkut-textbox customRequired' %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3">
+          <br/><%= ff.label :zip, 'Zip:' %>
+        </div>
+        <div class="col-sm-9">
+          <%= ff.text_field :zip, class: 'pkut-textbox customRequired' %>
+        </div>
+      </div>
+    <% end %>
+    <br/>
+
+    <h5>Change Password:</h5>
+    <div class="row">
+      <div class="col-sm-3">
+        <p>(8 character minimum)</p>
+        <br/><%= f.label :password, "New Password:" %>
+      </div>
+      <div class="col-sm-9">
+        <%= f.password_field :password, autocomplete: "off", class: 'pkut-textbox' %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-3">
+        <br/><%= f.label :password_confirmation, "Confirm Password:" %><br />
+      </div>
+      <div class="col-sm-9">
+        <%= f.password_field :password_confirmation, autocomplete: "off", class: 'pkut-textbox' %>
+      </div>
+    </div>
+
+    <div class="actions text-center">
+      <a alt="..." class="pkut-btn forceOpen" data-toggle="modal" data-target="#confirm_modal">Update</a><br/>
+    </div>
+
+    <%= render_modal("confirm_modal", "skinny-modal") do %>
+      <h1 class="pkut-header">Confirm</h1>
+      <p>We need your current password to update your changes.</p>
+      <%= f.password_field :current_password, autocomplete: "off", class: 'pkut-textbox modal-form-field' %>
+      <%= link_to "Update", "", class: 'pkut-btn submit-modal-form' %>
+    <% end %>
+  <% end %>
+  <hr>
+  <div class="row">
+    <div class="col-sm-3">
+      <h5>Athletes:</h5>
+    </div>
+    <div class="col-sm-9">
+      <% @user.athletes_by_waiver_expiration.each_with_index do |athlete, pos| %>
+        <div class="row">
+          <h4><%= athlete.full_name %> - ID:<%= athlete.fast_pass_id.to_s.rjust(4, "0") %></h4>
+          <% if athlete.unused_trials.count > 0 %>
+            <h4 style="color:yellow;">Trial Classes remaining: <%= athlete.unused_trials.count %></h4>
+          <% end %>
+          <% if athlete.has_unlimited_access? %>
+            <p>Has unlimited classes until: <%= athlete.has_access_until.strftime('%B %e, %Y') %></p>
+          <% end %>
+          <a alt="..." class="pkut-header forceOpen" data-toggle="modal" data-target="#edit<%= athlete.id %>">Delete Athlete</a><br/>
+
+          <%= render_modal("edit#{athlete.id}", "skinny-modal") do %>
+            <h3 class="pkut-header"><%= athlete.full_name %></h3>
+            <p>This will permanently delete this athlete. Are you sure? This action cannot be undone.<p>
+            <%= link_to "Delete", athlete_path(athlete.id), class: 'pkut-btn', method: :delete %>
+          <% end %>
+
+          <% if athlete.signed_waiver? && athlete.waiver.is_active? %>
+            <% if athlete.waiver.expires_soon? %>
+              <%= link_to waivers_path do  %>
+                <span class="pkut-header title">Waiver active until <%= athlete.waiver.expiry_date.strftime('%B %-d, %Y') %></span>
+                Update Waiver
+              <% end %>
+            <% else %>
+                Waiver active until <%= athlete.waiver.expiry_date.strftime('%B %-d, %Y') %>
+            <% end %>
+          <% else %>
+            <%= link_to "Must have waiver signed before attending class.", waivers_path, class: 'fancy-link' %>
+          <% end %>
+          </br>
+          <a class="forceOpen" alt="..." data-toggle="modal" data-target="#athlete-<%= athlete.id %>">Forgot PIN? Click here to reset.</a><br/>
+        </div>
+      <% end %>
+      <br/>
+        <%= link_to "Add Athletes", waivers_path, class: 'pkut-btn' %>
+    </div>
+  </div>
+</div>
+
+<% @user.athletes.each do |athlete| %>
+  <%= render_modal("athlete-#{athlete.id}", "skinny-modal") do %>
+    <h2 class="pkut-header">Reset PIN</h2>
+    <p>Enter the new desired pin for</p>
+    <strong><%= athlete.full_name %></strong>
+    <%= form_tag reset_pin_athlete_path(athlete) do %>
+      <%= telephone_field_tag "fast_pass_pin", '', placeholder: 'New Pin', class: 'pkut-textbox sm-textbox formatPin ', autocomplete: 'off', style: 'padding-top: 0;' %>
+      <%= telephone_field_tag "pin_confirmation", '', placeholder: 'Confirm', class: 'pkut-textbox sm-textbox formatPin ', autocomplete: 'off', style: 'padding-top: 0;' %>
+      <p>Please enter your current password below to verify:</p>
+      <%= password_field_tag :password, '', autocomplete: 'off', class: 'pkut-textbox' %>
+      <%= submit_tag 'Submit', class: 'pkut-btn' %>
+    <% end %>
+  <% end %>
+<% end %>
+
+
+
+
+
+-- Delete this and the line below to remove the comments. 
+=end %>

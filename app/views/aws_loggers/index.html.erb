@@ -1,0 +1,35 @@
+<div class="central-container">
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
+  <div class="text-center"><%= paginate @loggers, params: @current_filter %></div>
+
+  <div class="filter-group-section">
+    Group: <%= groupable("Date", "date", additional_params: @current_filter) %>
+    <%= groupable("Remote IP", "remote_ip", additional_params: @current_filter) %>
+    <br>
+    Sort: <%= sortable("Time", "time", additional_params: @current_filter) %>
+    <%= sortable("Bytes", "bytes_sent", additional_params: @current_filter) %>
+  </div>
+
+  <div class="ttable wide striped bordered">
+    <div class="trow title-row">
+      <% [:time, :remote_ip, :request_uri, :bytes_sent].each do |col_name| %>
+        <div class="tcell"><%= col_name.to_s.split(/_/).map(&:capitalize).join(" ") %></div>
+      <% end %>
+    </div>
+    <% @grouped_loggers.each do |groupable, loggers| %>
+      <div class="trow highlight-row">
+        <div class="tcell"></div>
+        <div class="tcell"><h4><%= groupable %></h4></div>
+        <div class="tcell"></div>
+        <div class="tcell"></div>
+      </div>
+      <% loggers.each do |logger| %>
+        <%= link_to aws_logger_path(logger), class: 'trow' do %>
+          <% logger.displayable_attributes.slice(:time, :remote_ip, :request_uri, :bytes_sent).each do |log_attr, log_val| %>
+            <div class="tcell" style="white-space: pre-wrap;"><%= log_val %></div>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

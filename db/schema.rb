@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161221051506) do
+ActiveRecord::Schema.define(version: 20170301015017) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,24 +24,31 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.string   "zip"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_addresses_on_user_id", using: :btree
   end
 
-  add_index "addresses", ["user_id"], name: "index_addresses_on_user_id", using: :btree
-
-  create_table "athlete_subscriptions", force: :cascade do |t|
-    t.integer  "dependent_id"
-    t.integer  "usages",          default: 0
-    t.datetime "expires_at"
-    t.integer  "cost_in_pennies", default: 0
-    t.boolean  "auto_renew",      default: true
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+  create_table "athletes", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "full_name"
+    t.string   "emergency_contact"
+    t.integer  "fast_pass_id"
+    t.integer  "fast_pass_pin"
+    t.string   "athlete_photo_file_name"
+    t.string   "athlete_photo_content_type"
+    t.integer  "athlete_photo_file_size"
+    t.datetime "athlete_photo_updated_at"
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
+    t.string   "first_name"
+    t.string   "middle_name"
+    t.string   "last_name"
+    t.string   "date_of_birth"
+    t.boolean  "verified",                   default: false
+    t.index ["user_id"], name: "index_athletes_on_user_id", using: :btree
   end
-
-  add_index "athlete_subscriptions", ["dependent_id"], name: "index_athlete_subscriptions_on_dependent_id", using: :btree
 
   create_table "attendances", force: :cascade do |t|
-    t.integer  "dependent_id"
+    t.integer  "athlete_id"
     t.integer  "instructor_id"
     t.integer  "event_id"
     t.string   "location"
@@ -50,16 +56,32 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.datetime "updated_at",                     null: false
     t.string   "type_of_charge"
     t.boolean  "sent",           default: false
+    t.index ["athlete_id"], name: "index_attendances_on_athlete_id", using: :btree
+    t.index ["event_id"], name: "index_attendances_on_event_id", using: :btree
+    t.index ["instructor_id"], name: "index_attendances_on_instructor_id", using: :btree
   end
 
-  add_index "attendances", ["dependent_id"], name: "index_attendances_on_dependent_id", using: :btree
-  add_index "attendances", ["event_id"], name: "index_attendances_on_event_id", using: :btree
-  add_index "attendances", ["instructor_id"], name: "index_attendances_on_instructor_id", using: :btree
-
-  create_table "automators", force: :cascade do |t|
-    t.boolean  "open",       default: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+  create_table "aws_loggers", force: :cascade do |t|
+    t.text     "orginal_string"
+    t.string   "bucket_owner"
+    t.string   "bucket"
+    t.datetime "time"
+    t.string   "remote_ip"
+    t.string   "requester"
+    t.string   "request_id"
+    t.string   "operation"
+    t.string   "key"
+    t.string   "request_uri"
+    t.string   "http_status"
+    t.string   "error_code"
+    t.bigint   "bytes_sent"
+    t.bigint   "object_size"
+    t.bigint   "total_time"
+    t.bigint   "turn_around_time"
+    t.string   "referrer"
+    t.string   "user_agent"
+    t.string   "version_id"
+    t.boolean  "set_all_without_errors"
   end
 
   create_table "cart_items", force: :cascade do |t|
@@ -70,9 +92,8 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.datetime "updated_at",                  null: false
     t.string   "redeemed_token", default: ""
     t.string   "order_name"
+    t.index ["cart_id"], name: "index_cart_items_on_cart_id", using: :btree
   end
-
-  add_index "cart_items", ["cart_id"], name: "index_cart_items_on_cart_id", using: :btree
 
   create_table "carts", force: :cascade do |t|
     t.integer  "user_id"
@@ -80,9 +101,31 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.datetime "updated_at",   null: false
     t.string   "email"
     t.datetime "purchased_at"
+    t.index ["user_id"], name: "index_carts_on_user_id", using: :btree
   end
 
-  add_index "carts", ["user_id"], name: "index_carts_on_user_id", using: :btree
+  create_table "chat_room_users", force: :cascade do |t|
+    t.integer  "chat_room_id"
+    t.integer  "user_id"
+    t.boolean  "has_unread_messages", default: true
+    t.boolean  "notify_via_email",    default: true
+    t.boolean  "notify_via_css",      default: false
+    t.boolean  "muted",               default: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.boolean  "banned",              default: false
+    t.index ["chat_room_id"], name: "index_chat_room_users_on_chat_room_id", using: :btree
+    t.index ["user_id"], name: "index_chat_room_users_on_user_id", using: :btree
+  end
+
+  create_table "chat_rooms", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "visibility_level"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.integer  "message_type"
+    t.datetime "last_message_received_at"
+  end
 
   create_table "contact_requests", force: :cascade do |t|
     t.string   "user_agent"
@@ -95,34 +138,12 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "dependents", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "full_name"
-    t.string   "emergency_contact"
-    t.integer  "athlete_id"
-    t.integer  "athlete_pin"
-    t.string   "athlete_photo_file_name"
-    t.string   "athlete_photo_content_type"
-    t.integer  "athlete_photo_file_size"
-    t.datetime "athlete_photo_updated_at"
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
-    t.string   "first_name"
-    t.string   "middle_name"
-    t.string   "last_name"
-    t.string   "date_of_birth"
-    t.boolean  "verified",                   default: false
-  end
-
-  add_index "dependents", ["user_id"], name: "index_dependents_on_user_id", using: :btree
-
   create_table "emergency_contacts", force: :cascade do |t|
     t.integer "user_id"
     t.string  "number"
     t.string  "name"
+    t.index ["user_id"], name: "index_emergency_contacts_on_user_id", using: :btree
   end
-
-  add_index "emergency_contacts", ["user_id"], name: "index_emergency_contacts_on_user_id", using: :btree
 
   create_table "event_schedules", force: :cascade do |t|
     t.integer  "instructor_id"
@@ -140,10 +161,20 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.string   "color"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "payment_per_student"
+    t.integer  "min_payment_per_session"
+    t.integer  "max_payment_per_session"
+    t.boolean  "accepts_unlimited_classes", default: true
+    t.boolean  "accepts_trial_classes",     default: true
+    t.index ["instructor_id"], name: "index_event_schedules_on_instructor_id", using: :btree
+    t.index ["spot_id"], name: "index_event_schedules_on_spot_id", using: :btree
   end
 
-  add_index "event_schedules", ["instructor_id"], name: "index_event_schedules_on_instructor_id", using: :btree
-  add_index "event_schedules", ["spot_id"], name: "index_event_schedules_on_spot_id", using: :btree
+  create_table "event_subscriptions", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "event_schedule_id"
+    t.index ["user_id"], name: "index_event_subscriptions_on_user_id", using: :btree
+  end
 
   create_table "events", force: :cascade do |t|
     t.datetime "date"
@@ -158,9 +189,8 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.integer  "spot_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["spot_id"], name: "index_images_on_spot_id", using: :btree
   end
-
-  add_index "images", ["spot_id"], name: "index_images_on_spot_id", using: :btree
 
   create_table "line_items", force: :cascade do |t|
     t.string   "display_file_name"
@@ -184,6 +214,19 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.integer  "redemption_item_id"
   end
 
+  create_table "messages", force: :cascade do |t|
+    t.integer  "sent_from_id"
+    t.text     "body"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.datetime "read_at"
+    t.integer  "message_type"
+    t.boolean  "error",         default: false
+    t.string   "error_message"
+    t.integer  "chat_room_id"
+    t.index ["sent_from_id"], name: "index_messages_on_sent_from_id", using: :btree
+  end
+
   create_table "notifications", force: :cascade do |t|
     t.integer "user_id"
     t.boolean "email_class_reminder",  default: false
@@ -196,18 +239,29 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.boolean "text_class_cancelled",  default: false
     t.boolean "email_class_cancelled", default: false
     t.boolean "email_newsletter",      default: true
+    t.index ["user_id"], name: "index_notifications_on_user_id", using: :btree
   end
-
-  add_index "notifications", ["user_id"], name: "index_notifications_on_user_id", using: :btree
 
   create_table "ratings", force: :cascade do |t|
     t.integer  "rated"
     t.integer  "spot_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["spot_id"], name: "index_ratings_on_spot_id", using: :btree
   end
 
-  add_index "ratings", ["spot_id"], name: "index_ratings_on_spot_id", using: :btree
+  create_table "recurring_subscriptions", force: :cascade do |t|
+    t.integer  "athlete_id"
+    t.integer  "usages",          default: 0
+    t.datetime "expires_at"
+    t.integer  "cost_in_pennies", default: 0
+    t.boolean  "auto_renew",      default: true
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.string   "stripe_id"
+    t.integer  "user_id"
+    t.index ["athlete_id"], name: "index_recurring_subscriptions_on_athlete_id", using: :btree
+  end
 
   create_table "redemption_keys", force: :cascade do |t|
     t.string   "key"
@@ -216,9 +270,8 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.datetime "updated_at",                   null: false
     t.boolean  "redeemed",     default: false
     t.integer  "line_item_id"
+    t.index ["line_item_id"], name: "index_redemption_keys_on_line_item_id", using: :btree
   end
-
-  add_index "redemption_keys", ["line_item_id"], name: "index_redemption_keys_on_line_item_id", using: :btree
 
   create_table "spots", force: :cascade do |t|
     t.string   "title"
@@ -230,26 +283,17 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
     t.string   "location"
+    t.index ["event_id"], name: "index_spots_on_event_id", using: :btree
   end
-
-  add_index "spots", ["event_id"], name: "index_spots_on_event_id", using: :btree
-
-  create_table "subscriptions", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "event_schedule_id"
-  end
-
-  add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
 
   create_table "trial_classes", force: :cascade do |t|
-    t.integer  "dependent_id"
-    t.boolean  "used",         default: false
+    t.integer  "athlete_id"
+    t.boolean  "used",       default: false
     t.datetime "used_at"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.index ["athlete_id"], name: "index_trial_classes_on_athlete_id", using: :btree
   end
-
-  add_index "trial_classes", ["dependent_id"], name: "index_trial_classes_on_dependent_id", using: :btree
 
   create_table "unlimited_subscriptions", force: :cascade do |t|
     t.integer  "usages",     default: 0
@@ -257,9 +301,8 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.integer  "user_id"
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+    t.index ["user_id"], name: "index_unlimited_subscriptions_on_user_id", using: :btree
   end
-
-  add_index "unlimited_subscriptions", ["user_id"], name: "index_unlimited_subscriptions_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                          default: "",    null: false
@@ -292,11 +335,10 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.integer  "instructor_position"
-    t.integer  "payment_multiplier",             default: 3
     t.string   "stats"
     t.string   "title"
     t.string   "nickname"
-    t.boolean  "email_subscription",             default: true
+    t.boolean  "can_receive_emails",             default: true
     t.string   "stripe_id"
     t.datetime "date_of_birth"
     t.string   "drivers_license_number"
@@ -307,40 +349,35 @@ ActiveRecord::Schema.define(version: 20161221051506) do
     t.string   "referrer",                       default: ""
     t.integer  "subscription_cost",              default: 5000
     t.integer  "unassigned_subscriptions_count", default: 0
-  end
-
-  add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-
-  create_table "venmos", force: :cascade do |t|
-    t.string   "access_token"
-    t.string   "refresh_token"
-    t.datetime "expires_at"
-    t.string   "username"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.boolean  "should_display_on_front_page",   default: true
+    t.boolean  "can_receive_sms",                default: true
+    t.string   "full_name"
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
   create_table "waivers", force: :cascade do |t|
-    t.integer  "dependent_id"
+    t.integer  "athlete_id"
     t.boolean  "signed"
     t.string   "signed_for"
     t.string   "signed_by"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.datetime "expiry_date"
+    t.index ["athlete_id"], name: "index_waivers_on_athlete_id", using: :btree
   end
 
-  add_index "waivers", ["dependent_id"], name: "index_waivers_on_dependent_id", using: :btree
-
-  add_foreign_key "athlete_subscriptions", "dependents"
   add_foreign_key "cart_items", "carts"
   add_foreign_key "carts", "users"
+  add_foreign_key "chat_room_users", "chat_rooms"
+  add_foreign_key "chat_room_users", "users"
   add_foreign_key "emergency_contacts", "users"
   add_foreign_key "images", "spots"
   add_foreign_key "notifications", "users"
   add_foreign_key "ratings", "spots"
+  add_foreign_key "recurring_subscriptions", "athletes"
   add_foreign_key "spots", "events"
-  add_foreign_key "trial_classes", "dependents"
+  add_foreign_key "trial_classes", "athletes"
   add_foreign_key "unlimited_subscriptions", "users"
 end

@@ -3,60 +3,37 @@ class RegistrationsController < ApplicationController
   before_action :redirect_user_to_correct_step
 
   def step_4
-    @athletes = current_user.dependents.select {|athlete| athlete.signed_waiver? == false }
+    @athletes = @user.athletes.select {|athlete| athlete.signed_waiver? == false }
   end
 
   def step_5
-    if current_user.registration_step == 5
-      current_user.update(registration_complete: true)
+    if @user.registration_step == 5
+      @user.update(registration_complete: true)
     end
+  end
+
+  def step_2
+    @user = @user
   end
 
   def post_step_2
-    update_self = current_user.update(user_params)
-    notification = update_notifications
-    address = current_user.address.update(address_params)
-    ec_contact = current_user.emergency_contacts.new(ec_contact_params)
-    contact = ec_contact.save!
-    if update_self && notification && address && contact
-      current_user.update(registration_step: 3)
+    if @user.update(user_params.merge(registration_step: 3))
       redirect_to step_3_path, notice: "Success!"
     else
-      redirect_to :back, alert: "Something went wrong."
+      flash.now[:alert] = "Looks like we're missing some information."
+      render :step_2
     end
   end
 
-  def user_params
-    params[:user][:phone_number] = params[:user][:phone]
-    params[:user][:referrer] = params[:user][:referrer_dropdown] == "Word of Mouth" ? params[:user][:referrer_text] : params[:user][:referrer_dropdown]
-    params.require(:user).permit(:phone_number, :email, :referrer)
-  end
-
-  def update_notifications
-    new_value = params[:smsalert] ? true : false
-    current_user.notifications.update_attributes(
-      text_class_reminder: new_value,
-      text_low_credits: new_value,
-      text_waiver_expiring: new_value
-    )
-  end
-
-  def address_params
-    params.require(:address).permit(:line1, :line2, :city, :state, :zip)
-  end
-
-  def ec_contact_params
-    params.require(:ec_contact).permit(:name, :number)
-  end
-
   def post_step_3
+    return redirect_to step_3_path, alert: "Failed to submit waiver." unless params[:athlete].present?
     valid = []
-    params[:athlete].each do |athlete|
-      if validate_athlete_attributes(athlete[1])
-        new_athlete = current_user.dependents.create(
-          full_name: athlete[1][:name],
-          date_of_birth: athlete[1][:dob],
-          athlete_pin: athlete[1][:code]
+    params[:athlete].each do |token, athlete|
+      if validate_athlete_attributes(athlete)
+        new_athlete = @user.athletes.create(
+          full_name: athlete[:name],
+          date_of_birth: athlete[:dob],
+          fast_pass_pin: athlete[:code]
         )
         new_athlete.waivers.create(
           signed_for: new_athlete.full_name,
@@ -65,14 +42,11 @@ class RegistrationsController < ApplicationController
         valid << new_athlete
       end
     end
-    if valid.count == 1
-      current_user.update(registration_step: 4)
-      redirect_to step_4_path, notice: "Success! #{valid.count} waiver created."
-    elsif valid.count > 1
-      current_user.update(registration_step: 4)
-      redirect_to step_4_path, notice: "Success! #{valid.count} waivers created."
+    if valid.count >= 1
+      @user.update(registration_step: 4)
+      redirect_to step_4_path, notice: "Success! #{valid.count} #{'waiver'.pluralize(valid.count)} created."
     else
-      redirect_to :back, alert: "An error occurred."
+      redirect_back fallback_location: root_path, alert: "An error occurred."
     end
   end
 
@@ -85,27 +59,21 @@ class RegistrationsController < ApplicationController
   end
 
   def fix_step_4
-    update_self = current_user.update(user_params)
-    notification = update_notifications
-    address = current_user.address.update(address_params)
-    ec_contact = current_user.emergency_contacts.new(ec_contact_params)
-    contact = ec_contact.save!
-    athletes = update_athletes
-    if update_self && notification && address && contact && update_athletes
+    if update_athletes && @user.update(user_params)
       redirect_to step_4_path, notice: "We've updated the requested changes."
     else
-      redirect_to :back, alert: "Something went wrong."
+      redirect_back fallback_location: root_path, alert: "Something went wrong."
     end
   end
 
   def update_athletes
     valid = true
-    params[:athlete].each do |athlete_id, values|
-      athlete = Dependent.find(athlete_id)
+    params[:athlete].each do |fast_pass_id, values|
+      athlete = Athlete.find(fast_pass_id)
       temp_valid = athlete.update(
         full_name: values[:name],
         date_of_birth: values[:dob],
-        athlete_pin: values[:code]
+        fast_pass_pin: values[:code]
       )
       athlete.waiver.update(
         signed_for: values[:name]
@@ -118,44 +86,89 @@ class RegistrationsController < ApplicationController
   def post_step_4
     approved = []
     params[:agreed].each do |id, vals|
-      athlete = Dependent.find(id)
+      athlete = Athlete.find(id)
       if athlete.sign_waiver!
         approved << athlete.id
         athlete.generate_pin
       end
     end
-    ::NewAthleteInfoMailerWorker.perform_async(approved.compact)
-    ::NewAthleteNotificationMailerWorker.perform_async(approved.compact)
-    current_user.update(registration_step: 5)
+
+    slack_message = "New User: <#{admin_user_url(@user)}|#{@user.id} #{@user.email}>\n"
+    @user.athletes.each do |athlete|
+      slack_message << " - *#{athlete.id} #{athlete.full_name}* - Athlete ID: #{athlete.fast_pass_id.to_s.rjust(4, "0")} Pin: #{athlete.fast_pass_pin.to_s.rjust(4, "0")}\n"
+    end
+    slack_message << "Referred By: #{@user.referrer}"
+    channel = Rails.env.production? ? "#new-users" : "#slack-testing"
+    SlackNotifier.notify(slack_message, channel)
+
+    ApplicationMailer.new_athlete_info_mail(approved.compact).deliver_later
+    @user.update(registration_step: 5)
     redirect_to step_5_path
   end
 
   private
 
-    def verify_user_signed_in
-      unless current_user
-        redirect_to root_path, alert: "Must be signed in to do that."
-      else
-        if current_user.registration_complete?
-          redirect_to edit_user_registration_path
-        end
+  def user_params
+    params[:user][:referrer] = params[:user][:referrer] == "Word of Mouth" ? params[:user][:referrer_text] : params[:user][:referrer]
+    params.require(:user).permit([
+      :phone_number,
+      :email,
+      :referrer,
+      :sms_alert,
+      notifications_attributes: [
+        :id,
+        :email_class_reminder,
+        :text_class_reminder,
+        :email_low_credits,
+        :text_low_credits,
+        :email_waiver_expiring,
+        :text_waiver_expiring,
+        :can_receive_sms,
+        :text_class_cancelled,
+        :email_class_cancelled,
+        :email_newsletter
+      ],
+      emergency_contacts_attributes: [
+        :id,
+        :number,
+        :name
+      ],
+      address_attributes: [
+        :id,
+        :line1,
+        :line2,
+        :city,
+        :state,
+        :zip
+      ]
+    ])
+  end
+
+  def verify_user_signed_in
+    @user = current_user
+    if user_signed_in?
+      if @user.registration_complete?
+        redirect_to edit_user_path
+      end
+    else
+      redirect_to root_path, alert: "Must be signed in to do that."
+    end
+  end
+
+  def current_step
+    params[:action].gsub(/[^0-9]/, '').to_i
+  end
+
+  def redirect_user_to_correct_step
+    unless current_step == @user.registration_step
+      redirect_to case @user.registration_step
+      when 2 then step_2_path
+      when 3 then step_3_path
+      when 4 then step_4_path
+      when 5 then step_5_path
+      else page_not_found_path
       end
     end
-
-    def current_step
-      params[:action].gsub(/[^0-9]/, '').to_i
-    end
-
-    def redirect_user_to_correct_step
-      unless current_step == current_user.registration_step
-        redirect_to case current_user.registration_step
-        when 2 then step_2_path
-        when 3 then step_3_path
-        when 4 then step_4_path
-        when 5 then step_5_path
-        else page_not_found_path
-        end
-      end
-    end
+  end
 
 end

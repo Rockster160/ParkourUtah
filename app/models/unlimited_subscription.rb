@@ -10,7 +10,7 @@
 #  updated_at :datetime         not null
 #
 
-class UnlimitedSubscription < ActiveRecord::Base
+class UnlimitedSubscription < ApplicationRecord
 
   belongs_to :user
   after_create :set_default_expiration_date

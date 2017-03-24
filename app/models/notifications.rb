@@ -16,21 +16,10 @@
 #  email_newsletter      :boolean          default(TRUE)
 #
 
-class Notifications < ActiveRecord::Base
+class Notifications < ApplicationRecord
   include Defaults
 
   belongs_to :user
-
-  default :email_newsletter, true
-  default :email_class_reminder, true
-  default :email_low_credits, true
-  default :email_waiver_expiring, true
-  default :text_class_reminder, false
-  default :text_low_credits, false
-  default :text_waiver_expiring, false
-  default :sms_receivable, true
-  default :text_class_cancelled, true
-  default :email_class_cancelled, true
 
   def blow!(str="all")
     case str

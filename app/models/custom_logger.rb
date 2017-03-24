@@ -1,20 +1,27 @@
 class CustomLogger
   class << self
 
-    def log_request(request, user=nil, cart_id)
+    def log_request(request, user=nil, cart_id=nil)
       filtered_params = filter_hash(request.env["action_dispatch.request.parameters"])
-      log("#{request.env["REQUEST_METHOD"]} - #{request.env['REQUEST_PATH']} #{filtered_params}", user, cart_id)
+      log("#{request.env["REQUEST_METHOD"]} - #{request.env['REQUEST_PATH']} #{filtered_params}", user, cart_id, request)
     end
 
-    def log_blip!
-      File.open("log/custom_logger.txt", "a+") { |f| f << "." }
+    def log_blip!(with_color="\e[0m")
+      File.open("log/custom_logger.txt", "a+") { |f| f << "#{with_color}.\e[0m" }
     end
 
-    def log(message, user=nil, cart_id)
+    def log(message, user=nil, cart_id=nil, request=nil)
+      if request.nil?
+        ip_address = "No IP"
+      else
+        ip_address = "#{mobile_device?(request) ? 'M:' : 'D:'} IP: #{request.try(:remote_ip)}\n"
+      end
       display_name = user.present? ? "#{user.try(:id)}: #{user.try(:email)}\n" : ''
       display_cart = cart_id.present? ? "Cart: #{cart_id}\n" : ''
       formatted_time = Time.zone.now.in_time_zone('America/Denver').strftime('%b %d, %Y %H:%M:%S.%L')
-      File.open("log/custom_logger.txt", "a+"){|f| f << "\n#{formatted_time} - #{message}\n#{display_name}#{display_cart}" }
+      message_to_log = "\n#{formatted_time} - #{message}\n#{ip_address}#{display_name}#{display_cart}\n"
+      Rails.logger.info "\nCustomLogger: #{message_to_log}\n\n"
+      File.open("log/custom_logger.txt", "a+"){|f| f << message_to_log }
     end
 
     def filter_hash(hash)
@@ -27,6 +34,16 @@ class CustomLogger
         end
       end
       new_hash
+    end
+
+    def mobile_device?(request)
+      browser = Browser.new(request.user_agent)
+      if browser.known?
+        if browser.device.mobile? || !!(request.user_agent =~ /Mobile|webOS/)
+          return true
+        end
+      end
+      false
     end
 
   end

@@ -3,7 +3,7 @@
 # Table name: attendances
 #
 #  id             :integer          not null, primary key
-#  dependent_id   :integer
+#  athlete_id     :integer
 #  instructor_id  :integer
 #  event_id       :integer
 #  location       :string
@@ -13,18 +13,33 @@
 #  sent           :boolean          default(FALSE)
 #
 
-# TODO Rename associations to be better
-class Attendance < ActiveRecord::Base
+##
+# Unused
+#
+# location
+class Attendance < ApplicationRecord
 
-  attr_accessor :skip_validations
+  attr_accessor :skip_validations, :event_date
 
-  belongs_to :dependent
+  belongs_to :athlete
   belongs_to :instructor, class_name: "User"
   belongs_to :event
 
   validate :one_per_athlete
 
-  def athlete; dependent; end
+  # enum type_of_charge: {
+  #   credits: 0,
+  #   unlimited: 1,
+  #   trial: 2
+  # }
+
+  def self.type_of_charges
+    [
+      "Credits",
+      "Unlimited Subscription",
+      "Trial Class"
+    ]
+  end
 
   def sent!
     self.update(sent: true)
@@ -34,7 +49,7 @@ class Attendance < ActiveRecord::Base
 
   def one_per_athlete
     unless skip_validations
-      matching_attendances = self.class.where(dependent_id: self.dependent_id, event_id: self.event_id)
+      matching_attendances = self.class.where(athlete_id: self.athlete_id, event_id: self.event_id)
       if matching_attendances.any? { |a| a.id != self.id }
         errors.add(:base, "Athlete already attended this event.")
       end

@@ -1,0 +1,26 @@
+<div class="central-container" style="margin-bottom: 100px;">
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
+
+  <div style="margin-top: 20px;">
+    <h4>Passed Bot Inspections?</h4>
+    <%= @contact.success ? 'Yes' : 'No' %>
+  </div>
+
+  <div style="margin-top: 20px;">
+    <h4>Details</h4>
+    <%= @contact.phone %> <br>
+    <%= @contact.name %> <br>
+    <%= @contact.email %>
+  </div>
+
+  <div style="margin-top: 20px;">
+    <h4>Message</h4>
+    <%= @contact.body %>
+  </div>
+
+  <div style="margin-top: 20px;">
+    <h4>User Agent</h4>
+    <%= @contact.user_agent %>
+  </div>
+
+</div>

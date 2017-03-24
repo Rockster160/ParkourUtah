@@ -10,10 +10,10 @@
 #  purchased_at :datetime
 #
 
-class Cart < ActiveRecord::Base
+class Cart < ApplicationRecord
   include ActionView::Helpers::NumberHelper
 
-  belongs_to :user
+  belongs_to :user, optional: true
   has_many :cart_items, dependent: :destroy
 
   def notify_slack_of_purchase
@@ -21,7 +21,7 @@ class Cart < ActiveRecord::Base
       user_url = Rails.application.routes.url_helpers.admin_user_url(user)
       user_url_text = user.present? ? "<#{user_url}|Click here to view their profile.>" : ""
     end
-    slack_message = "#{email || user.try(:email)} has just made a purchase. #{user_url_text}\n"
+    slack_message = "#{user.try(:email) || email} has just made a purchase. #{user_url_text}\n"
 
     if is_physical?
       address = user.address

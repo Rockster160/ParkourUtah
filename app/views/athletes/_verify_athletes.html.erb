@@ -1,0 +1,14 @@
+<%= render_modal("verify_athletes", "skinny-modal") do %>
+  <h1 class="pkut-header">Verify</h1>
+  <p>We have sent you an email containing vital information about your attendance to classes. Please check your email and enter these details below to receive your 2 trial classes.</p>
+  <%= form_tag verify_athletes_path do %>
+    <% current_user.athletes.unverified.each do |athlete| %>
+      <div class="row"><%= athlete.full_name %></div>
+      <div class="row athlete-input-info">
+        <div class="col-xs-6"><%= telephone_field_tag "athlete[#{athlete.id}][fast_pass_id]", '', placeholder: 'ID', class: 'pkut-textbox sm-textbox formatPin ', autocomplete: 'off', style: 'padding-top: 0;' %></div>
+        <div class="col-xs-6"><%= telephone_field_tag "athlete[#{athlete.id}][fast_pass_pin]", '', placeholder: 'PIN', class: 'pkut-textbox formatPin sm-textbox', autocomplete: 'off', style: 'padding-top: 0;' %></div>
+      </div>
+    <% end %>
+    <%= submit_tag 'Submit', class: 'pkut-btn' %>
+  <% end %>
+<% end %>

@@ -10,6 +10,9 @@ Rails.application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
+  config.action_cable.url = "ws://parkourutah.com/cable"
+  config.action_cable.allowed_request_origins = ["http://parkourutah.com"]
+
   routes.default_url_options = { host: 'parkourutah.com', protocol: 'http://', port: nil }
   config.action_mailer.default_url_options = { host: 'parkourutah.com', protocol: 'http://', port: nil }
   config.action_mailer.asset_host = 'http://parkourutah.com'
@@ -27,7 +30,7 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
 
   Paperclip.options.merge!(:command_path => "/usr/bin")
-  # config.serve_static_files = ENV['RAILS_SERVE_STATIC_FILES'].present?
+  # config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
   config.paperclip_defaults = {
     :storage => :s3,
     :s3_credentials => {
@@ -42,7 +45,7 @@ Rails.application.configure do
   # config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
-  config.serve_static_files = false
+  config.public_file_server.enabled = false
   config.assets.compile = false
   config.assets.digest = true
 
@@ -90,6 +93,7 @@ Rails.application.configure do
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
 
+  config.active_record.belongs_to_required_by_default = true
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 

@@ -22,50 +22,14 @@
 //= require gmaps/google
 //= require maskedinput
 //= require_tree .
+//= require_tree ./channels
 
-ready = function() {
 
-  if ($('.flash').length == 0) {
-    killFlashes();
-  }
-
-  killFlashAfterDelay = function() {
-    setTimeout(function() {
-      killFlashes();
-    }, 6000);
-  }
-
-  killFlashAfterDelay();
-
-  $('body').delegate('.close-flash', 'click', function() {
-    killFlashes();
-  });
-
-  window.onscroll = killFlashes;
-};
-
-reFlash = function(type, msg) {
-  killFlashes();
-  showFlash(type, msg);
-  killFlashAfterDelay();
-}
-
-killFlashes = function() {
-  slideOut($('.flash-container'));
-  slideOut($('.flash'));
-}
-
-slideOut = function(obj) {
-  obj.slideUp(600);
-}
-
-showFlash = function(type, msg) {
-  killFlashes();
-  $('.flash-holder').append('<div class="flash-container"><div class="flash ' +
-  type + '"><span class="flash-text">' +
-  msg + '</span></div></div>');
-  killFlashAfterDelay();
-}
-
-$(document).ready(ready);
-$(document).on('page:load', ready);
+const KEY_EVENT_ENTER = 13,
+      KEY_EVENT_TAB = 9,
+      KEY_EVENT_UP = 38,
+      KEY_EVENT_DOWN = 40,
+      KEY_EVENT_LEFT = 37,
+      KEY_EVENT_RIGHT = 39,
+      KEY_EVENT_BACKSPACE = 8,
+      KEY_EVENT_DELETE = 46;

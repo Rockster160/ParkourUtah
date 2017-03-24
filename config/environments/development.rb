@@ -11,15 +11,19 @@ Rails.application.configure do
   config.action_controller.perform_caching = false
 
   config.action_mailer.default_url_options   = { :host => 'localhost:7545' }
-  # ActionMailer::Base.delivery_method = :smtp
-  # ActionMailer::Base.smtp_settings = {
-  #   :address              => 'email-smtp.us-west-2.amazonaws.com',
-  #   :port                 => 587,
-  #   :user_name            => ENV['PKUT_AWS_EMAILNAME'],
-  #   :password             => ENV['PKUT_AWS_EMAIL_PASS'],
-  #   :authentication       => :plain,
-  #   :enable_starttls_auto => true
-  # }
+
+  config.action_cable.url = "ws://localhost:7545/cable"
+  config.action_cable.allowed_request_origins = ["http://localhost:7545"]
+
+  ActionMailer::Base.delivery_method = :smtp
+  ActionMailer::Base.smtp_settings = {
+    :address              => 'email-smtp.us-west-2.amazonaws.com',
+    :port                 => 587,
+    :user_name            => ENV['PKUT_AWS_EMAILNAME'],
+    :password             => ENV['PKUT_AWS_EMAIL_PASS'],
+    :authentication       => :plain,
+    :enable_starttls_auto => true
+  }
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.perform_deliveries = false
 
@@ -53,9 +57,7 @@ Rails.application.configure do
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
 
+  config.active_record.belongs_to_required_by_default = true
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 end
-
-require "#{Rails.root}/lib/custom_notifier"
-Rails.application.config.middleware.use ExceptionNotification::Rack, custom: {}

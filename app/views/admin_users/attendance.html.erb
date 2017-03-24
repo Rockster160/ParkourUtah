@@ -1,0 +1,18 @@
+<div class="central-container form-offset">
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br><br>
+  <%= link_to "Back to User Page", admin_user_path(params[:id]), class: 'pkut-btn' %>
+  <h1>History</h1>
+  <% @athletes.each do |athlete| %>
+    <div class="athlete-history-container">
+      <h4><%= athlete.full_name %> - ID: <%= athlete.fast_pass_id %></h4>
+      <ul>
+        <% athlete.attendances.each do |attendance| %>
+        <li>
+          <%= attendance.created_at.strftime('%B %-d, %Y') %> - <%= attendance.event ? attendance.event.title : 'This event was deleted' %><br>
+          Host: <%= attendance.instructor.full_name %>
+        </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+</div>

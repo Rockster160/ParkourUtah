@@ -21,11 +21,11 @@ class StoreController < ApplicationController
   end
 
   def unsubscribe
-    athlete = Dependent.find(params[:id])
-    if athlete.subscription.update(auto_renew: false)
-      redirect_to edit_user_registration_path, notice: 'Successfully Unsubscribed'
+    athlete = Athlete.find(params[:id])
+    if athlete.current_subscription.update(auto_renew: false)
+      redirect_to edit_user_path, notice: 'Successfully Unsubscribed'
     else
-      redirect_to edit_user_registration_path, notice: 'There was an error unsubscribing.'
+      redirect_to edit_user_path, notice: 'There was an error unsubscribing.'
     end
   end
 
@@ -45,6 +45,7 @@ class StoreController < ApplicationController
 
       orders = @cart.cart_items
       order = orders.where(order_name: name).first
+
       if params[:new_amount]
         params[:new_amount] ||= "0"
         if params[:new_amount].to_i <= 0
@@ -99,10 +100,7 @@ class StoreController < ApplicationController
     else
       if user_signed_in?
         @cart_is_subscription = @cart.items.any?(&:is_subscription)
-        if @cart_is_subscription
-          customer = create_customer
-          current_user.update(stripe_id: customer.id) if customer
-        end
+        create_customer if @cart_is_subscription
         purchase_cart
       else
         categories = @cart.items.map(&:category).uniq
@@ -120,11 +118,10 @@ class StoreController < ApplicationController
   def create_customer
     Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
     token = params[:stripeToken]
-    customer = Stripe::Customer.create(
-      :source => token,
-      :description => params[:stripeEmail]
+    @customer = Stripe::Customer.create(
+      source: token,
+      description: params[:stripeEmail]
     )
-    customer
   end
 
   def create_charge
@@ -134,21 +131,29 @@ class StoreController < ApplicationController
         stripe_charge = Stripe::Charge.create({
           amount: @cart.total,
           currency: "usd"
-        }.merge(@cart_is_subscription ? {customer: current_user.stripe_id} : {source: params[:stripeToken]}))
-      rescue
-        stripe_charge = {failure_message: "Failed to Charge"}
+        }.merge(@customer.present? ? {customer: @customer.id} : {source: params[:stripeToken]}))
+      rescue Stripe::CardError => e
+        stripe_charge = {failure_message: "Failed to Charge: #{e}"}
+      rescue => e
+        CustomLogger.log("\e[31mOther error: \n#{e}\e[0m")
+        stripe_charge = {failure_message: "Failed to Charge, try logging out and back in or trying a different browser."}
       end
     end
     order_success = stripe_charge.nil? || stripe_charge.try(:status) == "succeeded"
     if order_success
+      @cart.update(purchased_at: DateTime.current)
       @cart.cart_items.each do |order|
         line_item = LineItem.find(order.line_item_id)
         if RedemptionKey.redeem(order.redeemed_token)
           current_user.update(credits: (current_user.credits + (order.amount * line_item.credits))) if user_signed_in?
         end
         if line_item.is_subscription? && user_signed_in?
-          current_user.update(stripe_subscription: true, subscription_cost: line_item.cost_in_pennies)
-          current_user.update(unassigned_subscriptions_count: current_user.unassigned_subscriptions_count + order.amount)
+          order.amount.times do
+            new_sub = current_user.recurring_subscriptions.create(cost_in_pennies: line_item.cost_in_pennies, stripe_id: @customer.try(:id))
+            unless new_sub.persisted?
+              CustomLogger.log("Subscription Error! User: #{current_user.try(:id)} Item: #{line_item.try(:id)} Cost: #{line_item.try(:cost_in_pennies)} CustID: #{@customer.try(:id)}")
+            end
+          end
         end
       end
     else
@@ -162,9 +167,9 @@ class StoreController < ApplicationController
     Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
 
     if user_signed_in?
-      if current_user.address && current_user.address.is_valid?
+      if current_user.address && current_user.address.valid?
         if create_charge
-          ItemsPurchasedMailerWorker.perform_async(current_user.cart.id, @cart.email) unless Rails.env.development?
+          ApplicationMailer.customer_purchase_mail(current_user.cart.id, @cart.email).deliver_later unless Rails.env.development?
           @cart.notify_slack_of_purchase
           current_user.carts.create
           flash[:notice] = "Cart was successfully purchased."
@@ -176,7 +181,7 @@ class StoreController < ApplicationController
       end
     else
       if create_charge
-        ItemsPurchasedMailerWorker.perform_async(@cart.id, @cart.email) unless Rails.env.development?
+        ApplicationMailer.customer_purchase_mail(@cart.id, @cart.email).deliver_later unless Rails.env.development?
         session["cart_id"] = Cart.create.id
         flash[:notice] = "Cart was successfully purchased."
       else
@@ -192,7 +197,7 @@ class StoreController < ApplicationController
     end
 
     if user_signed_in?
-      redirect_to edit_user_registration_path
+      redirect_to edit_user_path
     else
       redirect_to root_path
     end

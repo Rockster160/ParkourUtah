@@ -1,0 +1,59 @@
+@import "config/variables";
+@import 'config/font-imports';
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'MicroExtendFLF-Bold', Arial, sans-serif;
+}
+
+a, .title {
+  text-decoration: underline;
+  &:hover { cursor: pointer; }
+}
+
+.small-text {
+  font-size: 12px;
+}
+.large-text {
+  font-size: 20px;
+}
+
+p {
+  font-size: 14px;
+  font-family: 'Young', Arial, sans-serif;
+  color: $pkut-grey-dark;
+}
+
+.lead, .navbar {
+  font-family: 'MicroExtendFLF-BoldItalic', Arial, sans-serif;
+}
+
+.locations-text, .standout, .contact-text, .standout {
+  color: $mat-grey-dark;
+}
+
+.header-text {
+  color: $pkut-grey-dark;
+}
+
+.pkut-header {
+  color: $pkut-red;
+}
+
+.warning-text {
+  color: $pkut-red;
+  text-transform: uppercase;
+}
+
+.attention-text {
+  text-transform: uppercase;
+}
+
+.pkut-link {
+  color: $pkut-red;
+  &:hover { cursor: pointer; }
+  &:hover, &:active, &:focus { color: $pkut-red-dark; }
+}
+
+.kill-athlete, .delete-athlete {
+  color: $pkut-red;
+}

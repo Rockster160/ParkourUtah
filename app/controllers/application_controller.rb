@@ -2,12 +2,14 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  before_filter :configure_permitted_parameters, if: :devise_controller?
+  before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :merge_carts
   before_action :logit
+  before_action :store_current_location, unless: :devise_controller?
 
-  def after_sign_in_path_for(resource)
-    edit_user_registration_path
+  def flash_message
+    flash.now[params[:flash_type].to_sym] = params[:message]
+    render partial: 'layouts/flashes'
   end
 
   def after_sign_up_path_for(resource)
@@ -30,32 +32,41 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:account_update) << :avatar
-    devise_parameter_sanitizer.for(:account_update) << :avatar_2
-    devise_parameter_sanitizer.for(:account_update) << :bio
-    devise_parameter_sanitizer.for(:account_update) << :phone_number
-    devise_parameter_sanitizer.for(:sign_up) << :first_name
+    devise_parameter_sanitizer.sanitize(:account_update) { |u| u.permit(:avatar, :avatar_2, :bio, :phone_number) }
+    devise_parameter_sanitizer.sanitize(:sign_up) { |u| u.permit(:first_name) }
   end
 
   def still_signed_in
     current_user.still_signed_in! if current_user
   end
 
+  def validate_user_signed_in
+    unless user_signed_in?
+      redirect_to new_user_session_path, alert: "You must be logged in to view this page."
+    end
+  end
+
   def validate_instructor
     unless current_user && current_user.is_instructor?
-      redirect_to edit_user_registration_path, alert: "You are not authorized to view this page."
+      redirect_to edit_user_path, alert: "You are not authorized to view this page."
     end
   end
 
   def validate_mod
     unless current_user && current_user.is_mod?
-      redirect_to edit_user_registration_path, alert: "You are not authorized to view this page."
+      redirect_to edit_user_path, alert: "You are not authorized to view this page."
     end
   end
 
   def validate_admin
     unless current_user && current_user.is_admin?
-      redirect_to edit_user_registration_path, alert: "You are not authorized to view this page."
+      redirect_to edit_user_path, alert: "You are not authorized to view this page."
+    end
+  end
+
+  def verify_user_is_not_signed_in
+    if user_signed_in?
+      redirect_to edit_user_path, alert: "You're already signed in!"
     end
   end
 
@@ -66,4 +77,9 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+
+  def store_current_location
+    store_location_for(:user, request.url)
+  end
+
 end

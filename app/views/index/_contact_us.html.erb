@@ -1,12 +1,20 @@
-<div class="central-container pkut-box clearfix">
-  <h3>Contact Us</h3>
-  Let us know if you have any questions about classes, private lessons, what it is we do, etc...
+<div class="central-container pkut-box clearfix contact-us">
+  <h2 class="header-text">Contact Us</h2>
+  <div class="text-center">Let us know if you have any questions about classes, private lessons, what we do, etc...</div>
   <%= form_tag "/contact" do %>
     <%= hidden_field_tag :enabled, false, class: 'enabled-field' %>
-    <%= text_field_tag :name, '', class: 'pkut-textbox', placeholder: 'Your Name' %><br/>
-    <%= text_field_tag :email, '', class: 'pkut-textbox', placeholder: 'Email' %><br/>
-    <%= telephone_field_tag :phone, '', class: 'pkut-textbox formatPhoneNumber customRequired', placeholder: 'Phone' %> (Required)<br/>
-    <%= text_area_tag :comment, '', class: 'pkut-textarea', maxlength: 600, placeholder: "Comments, questions, inquiries, interrogations, conversations, queries, chatter, information annex, whatever you need to know type it here and we'll get back to you A.S.A.P.P. (As Soon As Parkour Possible)" %>
-    <%= submit_tag "Send", class: "pkut-btn pull-right" %>
+    <div class="row">
+      <div class="col-xs-12 col-sm-4">
+        <%= text_field_tag :name, '', class: 'mat-pkut-textbox', placeholder: 'Your Name' %>
+      </div>
+      <div class="col-xs-12 col-sm-4">
+        <%= text_field_tag :email, '', class: 'mat-pkut-textbox', placeholder: 'Email' %>
+      </div>
+      <div class="col-xs-12 col-sm-4">
+        <%= telephone_field_tag :phone, '', class: 'mat-pkut-textbox formatPhoneNumber customRequired', placeholder: 'Phone (required)' %><br/>
+      </div>
+    </div>
+    <%= text_area_tag :comment, '', class: 'mat-pkut-textarea', maxlength: 600, placeholder: "Comments, questions, inquiries, interrogations, conversations, queries, chatter, information annex, whatever you need to know type it here and we'll get back to you A.S.A.P.P. (As Soon As Parkour Possible)" %>
+    <%= button_tag "Send", class: "mat-pkut-btn pull-right darkShade" %>
   <% end %>
 </div>

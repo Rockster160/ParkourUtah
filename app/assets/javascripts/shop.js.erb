@@ -1,19 +1,16 @@
 var ready = function() {
 
   $('.cart-container').on('click', '.fake-stripe-btn', function(e) {
+    e.preventDefault();
     if ($('.required-sign-in').length > 0) {
-      if ($('#registration_required').length > 0) {
-        $('#registration_required').modal('show');
-        e.preventDefault();
-        return false
-      }
-    }
-    if ($('.shopping-cart-total-holder').html() != "$0.00") {
+      $('#registration_required').modal('show');
+    } else if ($('.shopping-cart-total-holder').html() == "$0.00") {
+      $('.stripe-button-el').parents('form').submit();
+    } else {
       $('.modal').modal('hide');
-      $('.stripe-button-el').click()
-      e.preventDefault();
-      return false
+      $('.stripe-button-el').click();
     }
+    return false;
   });
 
   $('.cart-container').on('focusin', '.shopping-cart-line-item-quantity-input', function() {

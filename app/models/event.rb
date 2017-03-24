@@ -11,7 +11,7 @@
 #  is_cancelled      :boolean          default(FALSE)
 #
 
-class Event < ActiveRecord::Base
+class Event < ApplicationRecord
   include Defaults
 
   belongs_to :event_schedule
@@ -31,26 +31,33 @@ class Event < ActiveRecord::Base
     where(date: first_date..last_date)
   }
 
-  delegate :instructor,       to: :event_schedule, allow_nil: true
-  delegate :spot,             to: :event_schedule, allow_nil: true
-  delegate :hour_of_day,      to: :event_schedule, allow_nil: true
-  delegate :minute_of_day,    to: :event_schedule, allow_nil: true
-  delegate :day_of_week,      to: :event_schedule, allow_nil: true
-  delegate :cost_in_pennies,  to: :event_schedule, allow_nil: true
-  delegate :title,            to: :event_schedule, allow_nil: true
-  delegate :description,      to: :event_schedule, allow_nil: true
-  delegate :full_address,     to: :event_schedule, allow_nil: true
-  delegate :city,             to: :event_schedule, allow_nil: true
-  delegate :color,            to: :event_schedule, allow_nil: true
-  delegate :time_of_day,      to: :event_schedule, allow_nil: true
-  delegate :host_name,        to: :event_schedule, allow_nil: true
-  delegate :subscribed_users, to: :event_schedule, allow_nil: true
-  delegate :cost_in_dollars,  to: :event_schedule, allow_nil: true
+  delegate :instructor,                 to: :event_schedule, allow_nil: true
+  delegate :spot,                       to: :event_schedule, allow_nil: true
+  delegate :hour_of_day,                to: :event_schedule, allow_nil: true
+  delegate :minute_of_day,              to: :event_schedule, allow_nil: true
+  delegate :day_of_week,                to: :event_schedule, allow_nil: true
+  delegate :cost_in_pennies,            to: :event_schedule, allow_nil: true
+  delegate :title,                      to: :event_schedule, allow_nil: true
+  delegate :description,                to: :event_schedule, allow_nil: true
+  delegate :full_address,               to: :event_schedule, allow_nil: true
+  delegate :city,                       to: :event_schedule, allow_nil: true
+  delegate :color,                      to: :event_schedule, allow_nil: true
+  delegate :time_of_day,                to: :event_schedule, allow_nil: true
+  delegate :host_name,                  to: :event_schedule, allow_nil: true
+  delegate :subscribed_users,           to: :event_schedule, allow_nil: true
+  delegate :cost_in_dollars,            to: :event_schedule, allow_nil: true
+  delegate :payment_per_student,        to: :event_schedule, allow_nil: true
+  delegate :min_payment_per_session,    to: :event_schedule, allow_nil: true
+  delegate :max_payment_per_session,    to: :event_schedule, allow_nil: true
+  delegate :accepts_unlimited_classes,  to: :event_schedule
+  delegate :accepts_unlimited_classes?, to: :event_schedule
+  delegate :accepts_trial_classes,      to: :event_schedule
+  delegate :accepts_trial_classes?,     to: :event_schedule
 
   def update_date(new_date_params)
     new_date = Time.zone.parse(new_date_params[:str_date]) rescue nil
     return if new_date.nil?
-    new_time_str = new_date_params[:current_time_of_day]
+    new_time_str = new_date_params[:time_of_day]
     return if new_time_str.split(":")[0].to_i <= 12 && (new_time_str =~ /(a|p)m/i).nil?
     time = Time.zone.parse(new_time_str) rescue nil
     new_datetime = Time.zone.local(new_date.year, new_date.month, new_date.day, time.try(:hour), time.try(:min)) rescue nil
@@ -60,7 +67,8 @@ class Event < ActiveRecord::Base
   end
 
   def str_date; date.strftime('%b %d, %Y'); end
-  def current_time_of_day; date.strftime("%-l:%M %p"); end
+  def original_time_of_day; event_schedule.time_of_day; end
+  def time_of_day; date.strftime("%-l:%M %p"); end
 
   def css_style
     "background-color: #{color.presence || '#FFF'} !important; color: #{color_contrast} !important; background-image: none !important;"

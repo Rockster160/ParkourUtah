@@ -1,5 +1,6 @@
 class EventSchedulesController < ApplicationController
-  before_action :validate_user, only: [ :create, :new ]
+  before_action :validate_admin, except: [ :show, :subscribe, :unsubscribe ]
+  before_action :validate_instructor, only: [ :show ]
 
   def index
     @event_schedules = EventSchedule.in_the_future
@@ -40,39 +41,32 @@ class EventSchedulesController < ApplicationController
 
   def subscribe
     user = params[:user_id].present? ? User.find(params[:user_id]) : current_user
-    user.subscriptions.create(event_schedule_id: params[:id])
+    user.event_subscriptions.find_or_create_by(event_schedule_id: params[:id])
     flash[:notice] = "You have successfully subscribed to this event."
-    redirect_to :back
+    redirect_back fallback_location: root_path
   end
 
   def unsubscribe
     user = params[:user_id].present? ? User.find(params[:user_id]) : current_user
-    user.subscriptions.where(event_schedule_id: params[:id]).destroy_all
+    user.event_subscriptions.where(event_schedule_id: params[:id]).destroy_all
     flash[:notice] = "You have successfully unsubscribed from this event."
-    redirect_to :back
+    redirect_back fallback_location: root_path
   end
 
   def send_message_to_subscribers
     event_schedule = EventSchedule.find(params[:id])
     event_schedule.subscribed_users.each do |user|
-      if user.notifications.text_class_cancelled? && user.notifications.sms_receivable?
-        ::SmsMailerWorker.perform_async(user.phone_number, params[:message])
+      if user.notifications.text_class_cancelled? && user.can_receive_sms?
+        Message.text.create(body: params[:message], chat_room_name: user.phone_number, sent_from_id: 0).deliver
       end
       if user.notifications.email_class_cancelled?
         ApplicationMailer.email(user.email, "Message regarding the #{event_schedule.title} class today", params[:message]).deliver_now
       end
     end
-    redirect_to :back, notice: 'Your message has been sent.'
+    redirect_back fallback_location: root_path, notice: 'Your message has been sent.'
   end
 
   private
-
-  def validate_user
-    unless user_signed_in? && current_user.is_admin?
-      flash[:alert] = "You are not permitted to create Events."
-      redirect_to root_path
-    end
-  end
 
   def event_schedule_params
     params.require(:event_schedule).permit(
@@ -87,7 +81,12 @@ class EventSchedulesController < ApplicationController
       :description,
       :full_address,
       :city,
-      :color
+      :color,
+      :payment_per_student,
+      :min_payment_per_session,
+      :max_payment_per_session,
+      :accepts_unlimited_classes,
+      :accepts_trial_classes
     )
   end
 

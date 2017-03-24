@@ -37,7 +37,7 @@
 #  stats                          :string
 #  title                          :string
 #  nickname                       :string
-#  email_subscription             :boolean          default(TRUE)
+#  can_receive_emails             :boolean          default(TRUE)
 #  stripe_id                      :string
 #  date_of_birth                  :datetime
 #  drivers_license_number         :string
@@ -48,53 +48,77 @@
 #  referrer                       :string           default("")
 #  subscription_cost              :integer          default(5000)
 #  unassigned_subscriptions_count :integer          default(0)
+#  should_display_on_front_page   :boolean          default(TRUE)
+#  can_receive_sms                :boolean          default(TRUE)
+#  full_name                      :string
 #
 
 # Ununsed?
 # first_name
 # last_name
-# email_subscription
 # date_of_birth
 # drivers_license_number
 # drivers_license_state
+# reset_password_token
+# confirmation_token
+# stripe_id
+# stripe_subscription
+# subscription_cost
+# unassigned_subscriptions_count
 
-class User < ActiveRecord::Base
-
-  has_one :address, dependent: :destroy
-  has_one :notifications, dependent: :destroy
-  has_many :unlimited_subscriptions, dependent: :destroy
-  has_many :carts, dependent: :destroy
-  has_many :dependents, dependent: :destroy
-  has_many :cart_items, through: :cart
-  has_many :subscriptions, dependent: :destroy
-  has_many :subscribed_events, through: :subscriptions, source: "event_schedule"
-  has_many :classes_to_teach, class_name: "EventSchedule", foreign_key: "instructor_id"
-  has_many :attendances_taught, class_name: "Attendance", foreign_key: "instructor_id"
-  has_many :emergency_contacts, dependent: :destroy
-
-  after_create :assign_cart
-  after_create :create_blank_address
-  after_create :create_default_notifications
-  after_create :send_welcome_email
-  before_save :format_phone_number
-  before_destroy :clear_associations
+class User < ApplicationRecord
+  extend ApplicationHelper
+  include ApplicationHelper
 
   devise :database_authenticatable, :registerable, :confirmable,
          :recoverable, :rememberable, :trackable, :validatable
 
+  LOW_CREDIT_ALERT = 30
+
+  has_one  :address,                 dependent: :destroy
+  has_one  :notifications,           dependent: :destroy
+
+  has_many :recurring_subscriptions, dependent: :destroy
+  has_many :carts,                   dependent: :destroy
+  has_many :athletes,                dependent: :destroy
+  has_many :event_subscriptions,     dependent: :destroy
+  has_many :chat_room_users,         dependent: :destroy
+  has_many :emergency_contacts,      dependent: :destroy
+  has_many :cart_items,              through: :cart
+  has_many :chat_rooms,              through: :chat_room_users
+
+  has_many :classes_to_teach,   class_name: "EventSchedule", foreign_key: "instructor_id"
+  has_many :attendances_taught, class_name: "Attendance",    foreign_key: "instructor_id"
+  has_many :sent_messages,      class_name: "Message",       foreign_key: "sent_from_id"
+
+  has_many :subscribed_events, through: :event_subscriptions, source: "event_schedule"
+
+  accepts_nested_attributes_for :emergency_contacts
+  accepts_nested_attributes_for :address
+  accepts_nested_attributes_for :notifications
+
+  before_validation { self.phone_number = strip_phone_number(self.phone_number) }
+  after_create :assign_cart
+  after_create :create_default_notifications
+  after_create :send_welcome_email
+  after_update :allow_user_to_receive_sms_again
+
+
   has_attached_file :avatar,
                     :styles => { :medium => "300x400>", :thumb => "120x160" },
                     storage: :s3,
+                    s3_permissions: :private,
                     bucket: ENV['PKUT_S3_BUCKET_NAME'],
-                    :default_url => "/images/missing.png",
+                    :default_url => "http://parkourutah.com/images/missing.png",
                     :convert_options => { :all => '-background white -flatten +matte' }
   validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
 
   has_attached_file :avatar_2,
                     :styles => { :medium => "300x400>", :thumb => "120x160" },
                     storage: :s3,
+                    s3_permissions: :private,
                     bucket: ENV['PKUT_S3_BUCKET_NAME'],
-                    :default_url => "/images/missing.png",
+                    :default_url => "http://parkourutah.com/images/missing.png",
                     :convert_options => { :all => '-background white -flatten +matte' }
   validates_attachment_content_type :avatar_2, :content_type => /\Aimage\/.*\Z/
 
@@ -102,12 +126,13 @@ class User < ActiveRecord::Base
   validate :positive_credits
 
   scope :online, -> { where('last_sign_in_at > ?', 10.minutes.ago) }
-  scope :by_signed_in, -> { order(last_sign_in_at: :desc) }
+  scope :by_signed_in, -> { by_most_recent(:last_sign_in_at) }
   scope :by_fuzzy_text, lambda { |text|
     text = "%#{text}%"
-    joins('LEFT OUTER JOIN dependents ON users.id = dependents.user_id')
-      .where("email ILIKE ? OR concat(users.first_name, ' ', users.last_name) ILIKE ? OR CAST(users.id AS TEXT) ILIKE ? OR dependents.full_name ILIKE ? OR CAST(dependents.athlete_id AS TEXT) ILIKE ?", text, text, text, text, text).uniq
+    joins('LEFT OUTER JOIN athletes ON users.id = athletes.user_id')
+      .where("email ILIKE ? OR concat(users.first_name, ' ', users.last_name) ILIKE ? OR CAST(users.id AS TEXT) ILIKE ? OR athletes.full_name ILIKE ? OR CAST(athletes.fast_pass_id AS TEXT) ILIKE ?", text, text, text, text, text).uniq
   }
+  scope :by_phone_number, ->(number) { where("REGEXP_REPLACE(phone_number, '[^0-9]', '', 'g') ILIKE ?", "%#{strip_phone_number(number)}") }
   scope :instructors, -> { where("role > 0").order(:instructor_position) }
   scope :mods, -> { where("role > 1") }
   scope :admins, -> { where("role > 2") }
@@ -115,20 +140,18 @@ class User < ActiveRecord::Base
   def is_instructor?; role >= 1; end
   def is_mod?; role >= 2; end
   def is_admin?; role >= 3; end
+  def instructor?; is_instructor?; end
+  def mod?; is_mod?; end
+  def admin?; is_admin?; end
   def self.[](id); find(id); end; #User[4]
 
   def self.last_signed_in
     by_signed_in.first
   end
 
-  def self.every(&block)
-    return self.all.to_enum unless block_given?
-    self.all.each {|user| block.call(user)}
-  end
-
   def self.remove_number_from_texting(num)
     if user = find_by_phone_number(num)
-      user.notifications.update(sms_receivable: false)
+      user.update(can_receive_sms: false)
       "Success!"
     else
       "Fail."
@@ -141,26 +164,24 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.by_trial_expired_days_ago(days)
-    users = []
-    every do |user|
-      has_expired_athlete = false
-      user.athletes.each do |athlete|
-        if athlete.created_at.to_date == (Time.now - days.days).to_date && !athlete.verified
-          users << user
-        end
-      end
+  def unsubscribe_from(notification_type)
+    if notification_type.to_sym == :all
+      notifications.change_all_email_to(false)
+      notifications.save
+    else
+      notifications.update(notification_type.to_sym => false)
     end
-    users
   end
 
   def still_signed_in!
     self.last_sign_in_at = Time.zone.now
-    self.save!
+    self.save!(validate: false)
   end
 
-  def full_name
-    "#{self.first_name.capitalize} #{self.last_name.capitalize}"
+  def display_name
+    return nickname if nickname.present?
+    return full_name if full_name.present?
+    "User:#{id} - #{email}"
   end
 
   def signed_in?
@@ -168,64 +189,38 @@ class User < ActiveRecord::Base
   end
 
   def athletes_with_unlimited_access
-    athletes.joins(:athlete_subscriptions).where("athlete_subscriptions.expires_at > ?", Time.zone.now)
+    athletes.joins(:recurring_subscriptions).where("recurring_subscriptions.expires_at > ?", Time.zone.now).distinct
   end
 
   def subscribed_athletes
-    athletes.joins(:athlete_subscriptions).where(athlete_subscriptions: { auto_renew: true })
-  end
-
-  def athlete_subscriptions
-    athletes_with_unlimited_access.map(&:subscription).compact
+    athletes_with_unlimited_access.where(recurring_subscriptions: { auto_renew: true })
   end
 
   def subscriptions_cost
-    return 0 unless athlete_subscriptions
+    return 0 unless recurring_subscriptions
 
-    athlete_subscriptions.inject(0) { |sum, subscription| sum + subscription.cost_in_pennies }
+    recurring_subscriptions.map(&:cost_in_pennies).sum
   end
 
   def emergency_numbers
-    self.emergency_contacts.map { |num| format_phone_number_to_display(num) }
-  end
-
-  def athletes
-    dependents
-  end
-
-  def non_verified_athletes
-    dependents.select { |d| !(d.verified) }
+    self.emergency_contacts.map { |num| format_phone_number(num) }
   end
 
   def athletes_by_waiver_expiration
-    dependents.sort_by { |d| d.waiver ? d.waiver.created_at : created_at }
+    athletes.sort_by { |athlete| athlete.waiver ? athlete.waiver.created_at : created_at }
   end
 
   def athletes_where_expired_past_or_soon
-    dependents.select { |d| !(d.waiver) || d.waiver.expires_soon? || !(d.waiver.is_active?) }
+    athletes.select { |athlete| !(athlete.waiver) || athlete.waiver.expires_soon? || !(athlete.waiver.is_active?) }
   end
 
   def is_subscribed_to?(event_schedule_id)
-    Subscription.where(user_id: self.id, event_schedule_id: event_schedule_id || 0).any?
-  end
-
-  def charge(price, athlete)
-    if athlete.has_unlimited_access?
-      athlete.subscription.use!
-      'Unlimited Subscription'
-    elsif athlete.has_trial?
-      athlete.trial.use!
-      'Trial Class'
-    elsif self.credits >= price
-      charge_credits(price)
-    else
-      return false
-    end
+    event_subscriptions.where(event_schedule_id: event_schedule_id).any?
   end
 
   def charge_credits(price)
     self.credits -= price
-    send_alert_for_low_credits if self.credits < 30
+    send_alert_for_low_credits if self.credits < LOW_CREDIT_ALERT
     self.save!
   end
 
@@ -233,70 +228,75 @@ class User < ActiveRecord::Base
     self.carts.create
   end
 
-  def create_blank_address
-    self.address = Address.new
+  def update_notifications
+    new_value = params[:sms_alert] ? true : false
+  end
+
+  def sms_alert; notifications.text_waiver_expiring?; end
+  def sms_alert=(bool)
+    notifications.assign_attributes(
+      text_class_reminder: bool,
+      text_class_cancelled: bool,
+      text_low_credits: bool,
+      text_waiver_expiring: bool
+    )
   end
 
   def create_default_notifications
-    self.notifications ||= Notifications.new
+    self.notifications ||= Notifications.new({
+      email_newsletter:      true,
+
+      email_class_reminder:  true,
+      email_low_credits:     true,
+      email_waiver_expiring: true,
+      email_class_cancelled: true,
+
+      text_class_reminder:   false,
+      text_low_credits:      false,
+      text_waiver_expiring:  false,
+      text_class_cancelled:  false
+    })
   end
 
   def send_welcome_email
-    SendWelcomeEmailWorker.perform_async(self.email)
-  end
-
-  def phone_number_is_valid?
-    return false unless self.phone_number
-    phone = self.phone_number.gsub(/[^\d]/, '')
-    (phone.length == 10)
+    ApplicationMailer.welcome_mail(self.email).deliver_later
   end
 
   def cart
     self.carts.order(created_at: :desc).first
   end
 
-  def show_phone_number
-    format_phone_number_to_display(self.phone_number)
-  end
-
   def show_address(str)
     self.address.show_address(str)
+  end
+
+  def full_name
+    super.presence || "#{first_name} #{last_name}".presence
+  end
+
+  def has_unread_messages?
+    chat_room_users.where(has_unread_messages: true).any?
   end
 
   protected
 
   def send_alert_for_low_credits
     if self.notifications.email_low_credits
-      ::LowCreditsMailerWorker.perform_async(self.id)
+      ApplicationMailer.low_credits_mail(self.id).deliver_later
     end
-    if self.notifications.text_low_credits && self.notifications.sms_receivable
-      ::SmsMailerWorker.perform_async(self.phone_number, "You are low on Credits! Head up to ParkourUtah.com/store to get some more so you have some for next time.")
+    if self.notifications.text_low_credits
+      num = self.phone_number
+      msg = "You are low on Credits! Head up to ParkourUtah.com/store to get some more so you have some for next time."
+      Message.text.create(body: msg, chat_room_name: num, sent_from_id: 0).deliver
     end
-  end
-
-  def clear_associations
-    self.carts.destroy_all
-    self.address.destroy
   end
 
   def valid_phone_number
-    return false unless self.phone_number
-    phone = self.phone_number.gsub(/[^\d]/, '')
+    return false unless self.registration_step > 2
+    phone = self.phone_number.to_s.gsub(/[^\d]/, '')
     unless phone.length == 10
-      errors.add(:phone_number, "must have 10 digits.")
+      errors.add(:phone_number, "must be a valid, 10 digit number.")
     end
-    unless self.phone_number_is_valid?
-      errors.add(:phone_number, "must be a valid phone number.")
-    end
-  end
-
-  def format_phone_number
-    self.phone_number = phone_number.gsub(/[^0-9]/, "") if attribute_present?("phone_number")
-  end
-
-  def format_phone_number_to_display(number)
-    return "" unless number && number.length == 10
-    "(#{number[0..2]}) #{number[3..5]}-#{number[6..9]}"
   end
 
   def split_name
@@ -307,14 +307,19 @@ class User < ActiveRecord::Base
     end
   end
 
-  def confirmation_required?
-    false # Leave this- it bypasses Devise's confirmable method
-  end
-
   def positive_credits
     if self.credits < 0
       errors.add(:credits, "cannot be negative.")
     end
   end
+
+  def allow_user_to_receive_sms_again
+    if !can_receive_sms && phone_number_changed?
+      update(can_receive_sms: true)
+    end
+  end
+
+  # Leave this- it bypasses Devise's confirmable method
+  def confirmation_required?; false; end
 
 end

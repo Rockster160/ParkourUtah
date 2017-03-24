@@ -71,12 +71,12 @@ class InstructorsController < ApplicationController
       :last_name,
       :nickname,
       :stats,
-      :payment_multiplier,
       :title,
       :bio,
       :avatar,
       :avatar_2,
-      :role
+      :role,
+      :should_display_on_front_page
     )
   end
 

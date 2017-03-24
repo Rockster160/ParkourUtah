@@ -1,0 +1,60 @@
+@import "config/variables";
+@import 'config/font-imports';
+
+$tab-height: 30px;
+$nav-bar-height: 51px; // Don't change me
+.user-dashboard-page {
+  position: absolute;
+  top: $nav-bar-height; left: 0; right: 0; bottom: 0;
+
+  .tabs-container {
+    margin: 100px 50px 0;
+    position: relative;
+    text-align: center;
+    .tab-container {
+      display: inline-block;
+      text-align: left;
+      label {
+        
+        .tab {
+          background: $pkut-grey-white;
+          cursor: pointer;
+          padding-left: 15px;
+          border: 2px solid black;
+          border-radius: 6px 6px 0 0;
+          height: $tab-height;
+          line-height: $tab-height;
+          width: 150px;
+        }
+        .tab-content {
+          position: absolute;
+          top: $tab-height; left: 0; right: 0;
+          width: 100%;
+          padding: 25px;
+          margin-bottom: 50px;
+        }
+      }
+
+      input[type=radio] {
+        visibility: hidden;
+        position: absolute;
+        & + label {
+          .tab-content {
+            visibility: hidden;
+          }
+        }
+        &:checked + label {
+          .tab {
+            border-bottom: none;
+            background: $mat-grey-light;
+          }
+          .tab-content {
+            visibility: visible;
+          }
+        }
+      }
+
+
+    }
+  }
+}

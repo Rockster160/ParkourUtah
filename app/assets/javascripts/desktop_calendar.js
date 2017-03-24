@@ -66,11 +66,16 @@ var desktop_calendar = function () {
     $(window.location.href.split(/[\&, \?]+/)).each(function() {
       if (this.indexOf('city=') > -1) { city = this.split('city=')[1].replace(/(%20)/g, ' ') }
     });
+    $('.select-dropbox').select2().on('change', function(e) {
+      tryLoad();
+      setTimeout(function() {
+        $('.city-name-search').next(".select2-container").find('.select2-search__field').css({width: '100%'}).attr("placeholder", $('.city-name-search').attr("placeholder"))
+        $('.class-name-search').next(".select2-container").find('.select2-search__field').css({width: '100%'}).attr("placeholder", $('.class-name-search').attr("placeholder"))
+      }, 1)
+    });
     $('.select-dropbox').select2()
-      .select2("val", city.parameterize())
-      .on('change', function(e) {
-        tryLoad();
-      });
+    $('.city-name-search').val([city.parameterize]).trigger("change")
+    $('.select-dropbox').trigger("change")
 
     loadDesktopWeek('now');
   }

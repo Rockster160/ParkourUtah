@@ -1,19 +1,23 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.2.0'
+gem 'rails', '5.0.1'
+gem 'sprockets', '3.6.3'
+gem 'coffee-script'
 gem 'pg'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'redis'
+gem 'redis-namespace'
 
 gem 'faker'
-gem 'randomuser-local-rails', require: 'randomuser_local'
 gem 'jquery-rails'
 gem "therubyracer"
-gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
+gem "less-rails"
 gem "twitter-bootstrap-rails"
+gem 'twitter-typeahead-rails'
 gem "font-awesome-sass"
 gem "select2-rails"
 gem 'autoprefixer-rails'
@@ -24,18 +28,16 @@ gem "paperclip", "~> 4.2"
 gem 'aws-sdk', '< 2.0'
 gem 'httparty'
 gem 'sidekiq'
-gem 'whenever', require: false
-gem 'sinatra', '~> 1.3', require: nil
+gem 'sidekiq-cron', "~> 0.4.0"
+gem 'sinatra', require: nil
 gem 'twilio-ruby'
 gem 'puma'
 gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
-gem 'twitter-typeahead-rails'
 gem 'jquery-tablesorter'
 gem 'maskedinput-rails'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem "dotimeout-rails"
 gem 'kaminari'
-gem 'twitter-typeahead-rails'
 gem 'gmaps4rails'
 gem 'underscore-rails'
 gem 'geocoder'
@@ -43,6 +45,12 @@ gem 'browser'
 gem 'chroma'
 gem 'exception_notification'
 gem 'slack-notifier'
+gem 'colorize'
+# Export class Summaries
+gem 'rubyzip', '~> 1.1.0'
+gem 'axlsx', '2.1.0.pre'
+gem 'axlsx_rails'
+# ---- ^^ ------
 
 group :development, :test do
   gem 'annotate'
@@ -50,6 +58,10 @@ group :development, :test do
   gem 'pry-nav'
   gem 'pry-rails'
   gem 'better_errors'
-  gem 'web-console', '~> 2.0'
+  gem 'binding_of_caller'
   gem 'spring'
+end
+
+group :development do
+  gem 'web-console', '~> 3.0'
 end
