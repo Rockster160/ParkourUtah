@@ -48,7 +48,7 @@ class AthletesController < ApplicationController
     if pin == confirm
       if Athlete.find(params[:fast_pass_id]).update(fast_pass_pin: pin)
         flash[:notice] = "Pin successfully updated."
-        redirect_to edit_user_path
+        redirect_to account_path
       else
         flash[:alert] = "There was an error saving your pin."
         redirect_back fallback_location: root_path
@@ -68,7 +68,7 @@ class AthletesController < ApplicationController
         end
       end
     end
-    redirect_to edit_user_path
+    redirect_to account_path
   end
 
   def assign_subscription
@@ -78,12 +78,12 @@ class AthletesController < ApplicationController
     if user.recurring_subscriptions.unassigned.count > 0
       subscription = user.recurring_subscriptions.unassigned.last
       if subscription.assign_to_athlete(athlete)
-        redirect_to edit_user_path, notice: "Successfully assigned! This subscription will auto-charge each month from now on."
+        redirect_to account_path, notice: "Successfully assigned! This subscription will auto-charge each month from now on."
       else
-        redirect_to edit_user_path, alert: "Failed to add the Subscription. The start and expiration dates will not be set until successfully assigned."
+        redirect_to account_path, alert: "Failed to add the Subscription. The start and expiration dates will not be set until successfully assigned."
       end
     else
-      redirect_to edit_user_path, alert: "No subscriptions to assign"
+      redirect_to account_path, alert: "No subscriptions to assign"
     end
   end
 
@@ -167,12 +167,12 @@ class AthletesController < ApplicationController
     if current_user.valid_password?(params[:password])
       @athlete = Athlete.find(params[:id])
       if params[:fast_pass_pin] == params[:pin_confirmation] && @athlete.update(fast_pass_pin: params[:fast_pass_pin].to_i)
-        redirect_to edit_user_path, notice: "Successfully updated pin for #{@athlete.full_name}."
+        redirect_to account_path, notice: "Successfully updated pin for #{@athlete.full_name}."
       else
-        redirect_to edit_user_path, alert: 'The pins you entered did not match.'
+        redirect_to account_path, alert: 'The pins you entered did not match.'
       end
     else
-      redirect_to edit_user_path, alert: 'Sorry. Your password was not correct.'
+      redirect_to account_path, alert: 'Sorry. Your password was not correct.'
     end
   end
 

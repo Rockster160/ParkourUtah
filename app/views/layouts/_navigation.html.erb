@@ -30,11 +30,11 @@
         <%= link_to "Store", store_path, class: "navigation-item" %>
         <%= link_to "Calendar", calendar_show_path, class: "navigation-item" %>
         <% if user_signed_in? %>
-          <%= link_to edit_user_path, class: "navigation-item js-dropdown", data: { dropdown_target: ".collapsible-default" } do %>
+          <%= link_to account_path, class: "navigation-item js-dropdown", data: { dropdown_target: ".collapsible-default" } do %>
             Account <i class="fa fa-chevron-down"></i>
           <% end %>
           <div class="collapsible collapsible-default">
-            <%= link_to "Home", edit_user_path, class: "navigation-item" %>
+            <%= link_to "Home", account_path, class: "navigation-item" %>
             <% if current_user.instructor? %>
               <%= link_to "Dashboard", dashboard_path, class: "navigation-item" %>
             <% end %>

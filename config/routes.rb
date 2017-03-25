@@ -132,7 +132,7 @@ Rails.application.routes.draw do
   resource :user, except: [ :show ]
   devise_for :users
   devise_scope :user do
-    get "/account" => "users/registrations#edit"
+    get "/account" => "users#edit"
   end
   post 'user/notifications/update' => 'index#update_notifications'
 

@@ -148,7 +148,7 @@ class RegistrationsController < ApplicationController
     @user = current_user
     if user_signed_in?
       if @user.registration_complete?
-        redirect_to edit_user_path
+        redirect_to account_path
       end
     else
       redirect_to root_path, alert: "Must be signed in to do that."

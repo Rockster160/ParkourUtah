@@ -23,9 +23,9 @@ class StoreController < ApplicationController
   def unsubscribe
     athlete = Athlete.find(params[:id])
     if athlete.current_subscription.update(auto_renew: false)
-      redirect_to edit_user_path, notice: 'Successfully Unsubscribed'
+      redirect_to account_path, notice: 'Successfully Unsubscribed'
     else
-      redirect_to edit_user_path, notice: 'There was an error unsubscribing.'
+      redirect_to account_path, notice: 'There was an error unsubscribing.'
     end
   end
 
@@ -197,7 +197,7 @@ class StoreController < ApplicationController
     end
 
     if user_signed_in?
-      redirect_to edit_user_path
+      redirect_to account_path
     else
       redirect_to root_path
     end

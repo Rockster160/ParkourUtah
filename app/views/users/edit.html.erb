@@ -27,11 +27,18 @@
         <label id="<%= tab_type %>" for="<%= tab_type %>-tab" class="tab-label <%= tab_type %>-tab">
           <div class="tab-content text-center">
             <h1 class="text-center"><%= tab_type.capitalize %></h1>
+            <% if @notifications[tab_type].any? %>
+              <ul class="notification-container">
+                <% @notifications[tab_type].each do |notification| %>
+                  <li class="notification"><%= notification %></li>
+                <% end %>
+              </ul>
+            <% end %>
             <%= render partial: "#{tab_type}_content" %>
           </div>
           <div class="tab">
-            <% if @notifications[tab_type] > 0 %>
-              <div class="blip"><%= @notifications[tab_type.to_sym] %></div>
+            <% if @notifications[tab_type].any? %>
+              <div class="blip"><%= @notifications[tab_type].count %></div>
             <% end %>
             <span class="tab-icon"><i class="fa fa-<%= tab_options[:icon] %>"></i></span>
             <span class="tab-name"><%= tab_type.capitalize %></span>

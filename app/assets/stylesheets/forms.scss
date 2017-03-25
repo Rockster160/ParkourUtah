@@ -34,6 +34,20 @@
   margin-bottom: 30px;
 }
 
+.notification-container {
+  background: $notification-color;
+  border-radius: 8px;
+  color: #F5F5F5;
+  box-shadow: 1px 2px 4px black;
+  padding: 10px;
+  padding-left: 30px;
+  text-align: left;
+  margin-bottom: 30px;
+  max-width: 600px;
+  margin: 0 auto;
+  .notification {}
+}
+
 .recaptcha-container {
   margin: 0 auto;
   width: 300px;

@@ -8,7 +8,7 @@ class IndexController < ApplicationController
     num = current_user.phone_number
     msg = "Thank you! You will once again be able to receive text message notifications from ParkourUtah."
     Message.text.create(body: msg, chat_room_name: num, sent_from_id: 0).deliver
-    redirect_back fallback_location: edit_user_path
+    redirect_back fallback_location: account_path
   end
 
   def page_not_found
@@ -31,7 +31,7 @@ class IndexController < ApplicationController
     params[:notify].each do |attribute, value|
       current_user.notifications.update(attribute => true)
     end
-    redirect_to edit_user_path
+    redirect_to account_path
   end
 
   def receive_sms
@@ -43,7 +43,7 @@ class IndexController < ApplicationController
   def update
     update_address
     update_phone
-    redirect_to edit_user_path
+    redirect_to account_path
   end
 
   def contact

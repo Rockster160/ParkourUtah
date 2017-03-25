@@ -6,10 +6,6 @@ var ready = function() {
     return check;
   };
 
-  if (window.location.hash == '#notifications') {
-    $('#notification_modal').modal('show');
-  }
-
   function inViewport($ele) {
     var lBound = $(window).scrollTop(),
         uBound = lBound + $(window).height(),
@@ -48,8 +44,6 @@ var ready = function() {
 $('.delayed-load').ready(function() {
   $('.delayed-load').css('display', 'block');
 });
-
-
 
 $(document).ready(ready);
 $(document).on('page:load', ready);

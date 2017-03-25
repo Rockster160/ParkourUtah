@@ -48,25 +48,25 @@ class ApplicationController < ActionController::Base
 
   def validate_instructor
     unless current_user && current_user.is_instructor?
-      redirect_to edit_user_path, alert: "You are not authorized to view this page."
+      redirect_to account_path, alert: "You are not authorized to view this page."
     end
   end
 
   def validate_mod
     unless current_user && current_user.is_mod?
-      redirect_to edit_user_path, alert: "You are not authorized to view this page."
+      redirect_to account_path, alert: "You are not authorized to view this page."
     end
   end
 
   def validate_admin
     unless current_user && current_user.is_admin?
-      redirect_to edit_user_path, alert: "You are not authorized to view this page."
+      redirect_to account_path, alert: "You are not authorized to view this page."
     end
   end
 
   def verify_user_is_not_signed_in
     if user_signed_in?
-      redirect_to edit_user_path, alert: "You're already signed in!"
+      redirect_to account_path, alert: "You're already signed in!"
     end
   end
 

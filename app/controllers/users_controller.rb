@@ -41,7 +41,7 @@ class UsersController < ApplicationController
 
     if successful_update
       bypass_sign_in @user
-      redirect_to edit_user_path, notice: "Updated successfully!"
+      redirect_to account_path, notice: "Updated successfully!"
     else
       flash.now[:alert] = "Failed to update"
       set_notifications
@@ -53,16 +53,22 @@ class UsersController < ApplicationController
 
   def set_notifications
     @notifications = {
-      account: 0,
-      athletes: 0,
-      notifications: 0,
-      subscriptions: 0,
-      contacts: 0
+      account: [],
+      athletes: [],
+      notifications: [],
+      subscriptions: [],
+      contacts: []
     }
-    @notifications[:notifications] += 1 unless @user.can_receive_sms?
-    @notifications[:athletes] += @user.athletes_where_expired_past_or_soon.count
-    @notifications[:athletes] += @user.athletes.unverified.count
-    @notifications[:subscriptions] += @user.recurring_subscriptions.unassigned.count
+    @notifications[:notifications] << "You have blacklisted ParkourUtah!" unless @user.can_receive_sms?
+    @user.athletes_where_expired_past_or_soon.each do |athlete|
+      @notifications[:athletes] << "The waiver belonging to #{athlete.full_name} is about to expire!"
+    end
+    @user.athletes.unverified.each do |athlete|
+      @notifications[:athletes] << "#{athlete.full_name} can receive 2 free trial classes by verifying their Fast Pass ID and Fast Pass Pin."
+    end
+    @user.recurring_subscriptions.unassigned.each do
+      @notifications[:subscriptions] << "You have unassigned subscriptions!"
+    end
   end
 
   def user_params
