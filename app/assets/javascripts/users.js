@@ -14,7 +14,7 @@ $(document).ready(function() {
     })
 
     $(".user-dashboard-page .tab").click(function() {
-      window.location.hash = $(this).parents("label").attr("id");
+      window.location.hash = $(this).parents("label").attr("id").substring(6);
     })
   }
 
