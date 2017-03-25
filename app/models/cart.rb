@@ -46,8 +46,12 @@ class Cart < ApplicationRecord
     slack_message << "#{'-- Total:'.ljust(max_name)} #{''.rjust(max_quantity)}  #{number_to_currency(total_in_dollars).rjust(max_cost)}\n"
     slack_message << "```"
 
-    channel = Rails.env.production? ? "#purchases" : "#slack-testing"
-    SlackNotifier.notify(slack_message, channel)
+    if Rails.env.production?
+      SlackNotifier.notify(slack_message, "#special-purchases") if cart_items.any? { |cart_item| [2, 15].include?(cart_item.id) }
+      SlackNotifier.notify(slack_message, "#purchases") if cart_items.any? { |cart_item| [2, 15].exclude?(cart_item.id) }
+    else
+      SlackNotifier.notify(slack_message, "#slack-testing")
+    end
   end
 
   def is_gift_card?
