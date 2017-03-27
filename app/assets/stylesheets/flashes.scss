@@ -40,6 +40,7 @@
     .dismiss-flash i.fa-times-circle-o { color: $mat-grey-light; }
   }
   &.flash-announcement > .flash-container {
+    width: 300px;
     background-color: orange;
     color: $mat-grey-dark;
     .dismiss-flash i.fa-times-circle-o { color: $mat-grey-dark; }

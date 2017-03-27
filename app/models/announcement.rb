@@ -40,7 +40,7 @@ class Announcement < ApplicationRecord
     display_html = display_html.gsub(/\*(.|\n)*?\*/) { |bold_txt| "<b>#{bold_txt[1..-2]}</b>" }
     display_html = display_html.gsub(/\~(.|\n)*?\~/) { |red_txt| "<span class=\"announcement-red\">#{red_txt[1..-2]}</span>" }
     display_html = display_html.gsub(/\+(.|\n)*?\+/) { |large_txt| "<span class=\"announcement-large\">#{large_txt[1..-2]}</span>" }
-    display_html = display_html.gsub(/\((.|\n)*?\)\[(.|\n)*?\]/) { |link_txt| msg, url = link_txt[1..-2].split(")["); "<a href=\"#{url}\" class=\"announcement-link\">#{msg}</a>" }
+    display_html = display_html.gsub(/\((.|\n)*?\)\[(.|\n)*?\]/) { |link_txt| msg, url = link_txt[1..-2].split(")["); "<a href=\"#{url}\" class=\"announcement-link\" target=\"_blank\">#{msg}</a>" }
     display_html.html_safe
   end
 
@@ -55,7 +55,7 @@ class Announcement < ApplicationRecord
   end
   def expires_at_date
     current_date = (self.expires_at || Time.zone.now).to_datetime
-    current_date.strftime("%b %d, %y")
+    current_date.strftime("%b %d, %Y")
   end
 
   def expires_at_time=(new_time)

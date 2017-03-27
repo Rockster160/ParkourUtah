@@ -69,7 +69,7 @@ Rails.application.routes.draw do
   end
 
   resources :announcements, except: [ :show ] do
-    post :view, on: :member
+    post :view, on: :collection
     post :deliver, on: :member
   end
 

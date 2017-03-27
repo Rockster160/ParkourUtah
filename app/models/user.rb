@@ -185,8 +185,12 @@ class User < ApplicationRecord
     "User:#{id} - #{email&.split("@").try(:first)}"
   end
 
+  def announcement_to_see
+    announcements_to_be_shown.by_most_recent(:created_at).last
+  end
+
   def announcements_to_be_shown
-    Announcement.not_expired.where.not(id: announcement_views.pluck(:announcement_id).flatten.compact)
+    Announcement.delivered.not_expired.where.not(id: announcement_views.pluck(:announcement_id).flatten.compact)
   end
 
   def signed_in?

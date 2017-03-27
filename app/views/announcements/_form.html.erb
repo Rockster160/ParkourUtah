@@ -1,10 +1,11 @@
 <div class="central-container form-offset">
   <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %> <br>
+  <%= link_to "Back to Announcements", announcements_path, class: 'pkut-btn' %> <br>
   <% if @announcement.persisted? %>
+    <div class="announcement-preview">
+      <%= render partial: 'layouts/flash', locals: { type: "announcement", message: @announcement.display, inline: true } %>
+    </div>
     <% unless @announcement.delivered? %>
-      <div class="announcement-preview">
-        <%= render partial: 'layouts/flash', locals: { type: "announcement", message: @announcement.display, inline: true } %>
-      </div>
       <div class="text-center">
         <%= link_to "Click here to Deliver the Announcement!", deliver_announcement_path(@announcement), class: "pkut-btn", method: :post %>
       </div>

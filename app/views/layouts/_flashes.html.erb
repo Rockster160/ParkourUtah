@@ -3,3 +3,7 @@
     <%= render partial: 'layouts/flash', locals: { type: type, message: message } %>
   <% end %>
 <% end %>
+<% if user_signed_in? && current_user.announcement_to_see.present? %>
+  <% announcement = current_user.announcement_to_see %>
+  <%= render partial: 'layouts/flash', locals: { type: 'announcement', message: announcement.display } %>
+<% end %>
