@@ -4,7 +4,7 @@ function resetFlashTimer() {
   clearTimeout(flashRemoverTimer);
   flashRemoverTimer = setTimeout(function() {
     dismissFlash()
-  }, 6000)
+  }, 8000)
 }
 
 $(document).ready(function() {

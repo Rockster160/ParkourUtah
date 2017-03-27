@@ -1,0 +1,23 @@
+<div class="central-container">
+  <div class="text-center">
+    <%= link_to "New Announcement", new_announcement_path, class: "pkut-btn" %>
+  </div>
+
+  <div class="announcements-container">
+    <% @announcements.each do |announcement| %>
+      <a href="<%= edit_announcement_path(announcement) %>" class="announcement-container">
+        <div class="expires-at">
+          Expires: <%= announcement.try(:expires_at)&.strftime("%b %-d, %Y %-l:%M %p") %>
+        </div>
+        <div class="view-count">
+          <% if announcement.delivered? %>
+            Views: <%= announcement.view_count %>
+          <% else %>
+            Not yet delivered!
+          <% end %>
+        </div>
+        <div class="body"><%= announcement.body %></div>
+      </a>
+    <% end %>
+  </div>
+</div>

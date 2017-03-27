@@ -77,6 +77,7 @@ class User < ApplicationRecord
   has_one  :address,                 dependent: :destroy
   has_one  :notifications,           dependent: :destroy
 
+  has_many :announcement_views,      dependent: :destroy
   has_many :recurring_subscriptions, dependent: :destroy
   has_many :carts,                   dependent: :destroy
   has_many :athletes,                dependent: :destroy
@@ -86,6 +87,7 @@ class User < ApplicationRecord
   has_many :cart_items,              through: :cart
   has_many :chat_rooms,              through: :chat_room_users
 
+  has_many :announcements,      class_name: "Announcement",  foreign_key: "admin_id"
   has_many :classes_to_teach,   class_name: "EventSchedule", foreign_key: "instructor_id"
   has_many :attendances_taught, class_name: "Attendance",    foreign_key: "instructor_id"
   has_many :sent_messages,      class_name: "Message",       foreign_key: "sent_from_id"
@@ -181,6 +183,10 @@ class User < ApplicationRecord
     return nickname if nickname.present?
     return full_name if full_name.present?
     "User:#{id} - #{email&.split("@").try(:first)}"
+  end
+
+  def announcements_to_be_shown
+    Announcement.not_expired.where.not(id: announcement_views.pluck(:announcement_id).flatten.compact)
   end
 
   def signed_in?

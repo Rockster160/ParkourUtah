@@ -1,0 +1,39 @@
+@import "config/variables";
+@import 'config/font-imports';
+
+.announcements-container {
+  .announcement-container {
+    display: block;
+    position: relative;
+    background: $pkut-grey-light;
+    border: 1px solid $mat-grey-dark;
+    padding: 15px;
+
+    font-weight: 100;
+    color: $pkut-grey-dark;
+    background-color:  rgba(255,255,255,0.75);
+    border: 1px solid $pkut-grey-light;
+    text-decoration: none;
+
+    .expires-at {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      font-size: 12px;
+    }
+    .view-count {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      font-size: 12px;
+    }
+    .body {
+      margin-top: 20px;
+    }
+
+    &:hover {
+      color: black;
+      background: white;
+    }
+  }
+}

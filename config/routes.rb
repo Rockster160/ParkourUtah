@@ -68,7 +68,12 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :attendances, only: [ :index, :new, :create, :destroy  ]
+  resources :announcements, except: [ :show ] do
+    post :view, on: :member
+    post :deliver, on: :member
+  end
+
+  resources :attendances, only: [ :index, :new, :create, :destroy ]
   resources :aws_loggers, only: [ :index, :show ]
   resources :contact_requests, only: [ :index, :show ]
   resources :chat_rooms, path: "chat", only: [ :index, :show ] do
