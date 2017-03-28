@@ -41,4 +41,6 @@ $notification-color: #E44147;
 // Heights
 $navbar-height: 51px;
 
-// Colors
+// z-index
+// z-index is set to 1030 in Bootstrap for Navbars
+$navbar-z-index: 1030;

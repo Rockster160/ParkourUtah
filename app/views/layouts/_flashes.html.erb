@@ -1,19 +1,8 @@
 <% ['alert', 'notice'].each do |type| %>
   <% if message = flash.send(type) %>
-    <div class="flash-banner flash-<%= type %> <%= 'high-flash' if @high_flash %>">
-      <div class="flash-container">
-        <% if type == 'alert' %>
-          <i class="fa fa-ban"></i>
-        <% else %>
-          <i class="fa fa-check-circle-o"></i>
-        <% end %>
-        <%= message %>
-        <div class="dismiss-flash">
-          <a id="dismissFlash">
-            <i class="fa fa-times-circle-o"></i>
-          </a>
-        </div>
-      </div>
-    </div>
+    <%= render partial: 'layouts/flash', locals: { type: type, message: message } %>
   <% end %>
+<% end %>
+<% if params[:controller] == "index" && params[:action] == "index" && Announcement.current.present? %>
+  <%= render partial: 'layouts/flash', locals: { type: 'announcement', message: Announcement.current.display } %>
 <% end %>

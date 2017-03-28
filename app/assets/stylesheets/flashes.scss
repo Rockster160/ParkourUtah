@@ -1,9 +1,9 @@
 @import "config/variables";
 @import 'config/font-imports';
 
-.flash-banner {
-  position: absolute;
-  z-index: 2000;
+.flash-banner, .inline-flash {
+  position: fixed;
+  z-index: $navbar-z-index - 10;
   top: 70px;
   right: 20px;
   max-width: 100%;
@@ -39,7 +39,32 @@
     color: $mat-grey-light;
     .dismiss-flash i.fa-times-circle-o { color: $mat-grey-light; }
   }
+  &.flash-announcement > .flash-container {
+    width: 300px;
+    background-color: #009DB2;
+    color: $mat-grey-light;
+    .dismiss-flash i.fa-times-circle-o { color: $mat-grey-dark; }
+  }
   &.high-flash {
     top: 10px; right: 10px;
   }
+  a.announcement-link {
+    color: $mat-grey-light;
+    &:hover, &:active, &:focus, &:visited {
+      color: $mat-grey-light;
+    }
+  }
+  .announcement-red, .announcement-red * {
+    color: $pkut-red !important;
+  }
+  .announcement-large {
+    font-size: 22px;
+  }
+}
+.inline-flash {
+  position: relative;
+  top: 0; right: 0;
+  margin: 0 auto;
+  padding: 30px 0;
+  text-align: center;
 }

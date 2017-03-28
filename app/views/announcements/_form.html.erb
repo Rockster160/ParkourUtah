@@ -1,0 +1,51 @@
+<div class="central-container form-offset">
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %> <br>
+  <%= link_to "Back to Announcements", announcements_path, class: 'pkut-btn' %> <br>
+  <% if @announcement.persisted? %>
+    <div class="announcement-preview">
+      <%= render partial: 'layouts/flash', locals: { type: "announcement", message: @announcement.display, inline: true } %>
+    </div>
+    <% unless @announcement.delivered? %>
+      <div class="text-center">
+        <%= link_to "Click here to Deliver the Announcement!", deliver_announcement_path(@announcement), class: "pkut-btn", method: :post %>
+      </div>
+    <% end %>
+  <% end %>
+  <%= form_for @announcement do |f| %>
+    <div class="form-container">
+      <%= render partial: 'layouts/error_container', locals: { resource: @announcement } %>
+
+      <div class="form-field">
+        <p>The date in which to STOP showing the Announcement</p>
+        <%= f.label :expires_at_date, "Expiry Date" %> <br>
+        <%= f.text_field :expires_at_date, class: 'pkut-textbox customRequired datepicker-field' %>
+      </div>
+
+      <div class="form-field">
+        <%= f.label :expires_at_time, "Expiry Time" %> <br>
+        <%= f.text_field :expires_at_time, class: 'pkut-textbox customRequired' %>
+      </div>
+
+      <div class="announcement-legend">
+        <ul>
+          <li>+This will be large text+</li>
+          <li>~This will be red text~</li>
+          <li>*This will be bold text*</li>
+          <li>(This is the link text)[This is the link URL]</li>
+        </ul>
+      </div>
+
+      <div class="form-field">
+        <%= f.label :body %> <br>
+        <%= f.text_area :body, class: 'pkut-textarea' %>
+      </div>
+
+      <%= f.submit "Submit", class: 'btn btn-success' %>
+    </div>
+  <% end %>
+  <% if @announcement.persisted? %>
+    <div class="text-center">
+      <%= link_to "Destroy Announcement", @announcement, class: "pkut-btn", method: :delete %>
+    </div>
+  <% end %>
+</div>

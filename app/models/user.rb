@@ -86,6 +86,7 @@ class User < ApplicationRecord
   has_many :cart_items,              through: :cart
   has_many :chat_rooms,              through: :chat_room_users
 
+  has_many :announcements,      class_name: "Announcement",  foreign_key: "admin_id"
   has_many :classes_to_teach,   class_name: "EventSchedule", foreign_key: "instructor_id"
   has_many :attendances_taught, class_name: "Attendance",    foreign_key: "instructor_id"
   has_many :sent_messages,      class_name: "Message",       foreign_key: "sent_from_id"

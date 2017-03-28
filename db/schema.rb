@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170301015017) do
+ActiveRecord::Schema.define(version: 20170325011004) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,25 @@ ActiveRecord::Schema.define(version: 20170301015017) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_addresses_on_user_id", using: :btree
+  end
+
+  create_table "announcement_views", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "announcement_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["announcement_id"], name: "index_announcement_views_on_announcement_id", using: :btree
+    t.index ["user_id"], name: "index_announcement_views_on_user_id", using: :btree
+  end
+
+  create_table "announcements", force: :cascade do |t|
+    t.integer  "admin_id"
+    t.datetime "expires_at"
+    t.text     "body"
+    t.datetime "delivered_at"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["admin_id"], name: "index_announcements_on_admin_id", using: :btree
   end
 
   create_table "athletes", force: :cascade do |t|

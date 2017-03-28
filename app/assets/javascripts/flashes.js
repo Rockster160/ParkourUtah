@@ -4,20 +4,29 @@ function resetFlashTimer() {
   clearTimeout(flashRemoverTimer);
   flashRemoverTimer = setTimeout(function() {
     dismissFlash()
-  }, 6000)
+  }, 8000)
 }
 
-$(document).ready(function() {
-  if ($('.flash-banner').length > 0) { resetFlashTimer(); }
+dismissFlash = function(exclude_announcement) {
+  exclude_announcement = exclude_announcement || false
+  if (exclude_announcement) {
+    $('body .flash-banner:not(.flash-announcement)').animate({'right': '-350px'}, 500, function() {
+      $(this).remove()
+    })
+  } else {
+    $('body .flash-banner').animate({'right': '-350px'}, 500, function() {
+      $(this).remove()
+    })
+  }
+}
+$(document).on('click touchstart', '.dismiss-flash', function() {
+  if ($(this).parents('.flash-banner').hasClass("flash-announcement")) {
+    dismissFlash()
+  } else {
+    dismissFlash(true)
+  }
 })
-
-dismissFlash = function() {
-  $('body .flash-banner').animate({'top': '-500px'}, 500, function() {
-    $(this).remove()
-  })
-}
-$(document).on('click touchstart', '.dismiss-flash', dismissFlash)
-$(window).scroll(dismissFlash)
+$(window).scroll(function() { dismissFlash(true) })
 
 addFlash = function(message, type) {
   $.get('/flash_message', {message: message, flash_type: type}, function(data) {
@@ -25,9 +34,9 @@ addFlash = function(message, type) {
     var flashMessageDiv = $(data);
     flashMessageDiv.addClass('hidden');
     $('body').append(flashMessageDiv);
-    flashMessageDiv.css({'top': '-500px'});
+    flashMessageDiv.css({'right': '-350px'});
     flashMessageDiv.removeClass('hidden');
-    flashMessageDiv.animate({'top': '70px'}, 400);
+    flashMessageDiv.animate({'right': '20px'}, 400);
   })
   resetFlashTimer();
 }
@@ -39,3 +48,18 @@ addFlashNotice = function(message) {
 addFlashAlert = function(message) {
   addFlash(message, 'alert');
 }
+
+$(document).ready(function() {
+  if ($('.flash-banner:not(.flash-announcement)').length > 0) { resetFlashTimer(); }
+
+  if ($('.flash-banner.flash-announcement').length > 0 && $('.inline-flash.flash-announcement').length == 0) {
+    clearTimeout(flashRemoverTimer);
+    $('.flash-announcement').css({right: '-350px'});
+
+    setTimeout(function() {
+      dismissFlash(true);
+      $('body .flash-announcement').animate({'right': '20px'}, 500);
+    }, 2000)
+
+  }
+})
