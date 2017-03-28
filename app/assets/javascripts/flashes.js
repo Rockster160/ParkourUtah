@@ -10,16 +10,22 @@ function resetFlashTimer() {
 dismissFlash = function(exclude_announcement) {
   exclude_announcement = exclude_announcement || false
   if (exclude_announcement) {
-    $('body .flash-banner:not(.flash-announcement)').animate({'top': '-500px'}, 500, function() {
+    $('body .flash-banner:not(.flash-announcement)').animate({'right': '-350px'}, 500, function() {
       $(this).remove()
     })
   } else {
-    $('body .flash-banner').animate({'top': '-500px'}, 500, function() {
+    $('body .flash-banner').animate({'right': '-350px'}, 500, function() {
       $(this).remove()
     })
   }
 }
-$(document).on('click touchstart', '.dismiss-flash', dismissFlash)
+$(document).on('click touchstart', '.dismiss-flash', function() {
+  if ($(this).parents('.flash-banner').hasClass("flash-announcement")) {
+    dismissFlash()
+  } else {
+    dismissFlash(true)
+  }
+})
 $(window).scroll(function() { dismissFlash(true) })
 
 addFlash = function(message, type) {
@@ -28,9 +34,9 @@ addFlash = function(message, type) {
     var flashMessageDiv = $(data);
     flashMessageDiv.addClass('hidden');
     $('body').append(flashMessageDiv);
-    flashMessageDiv.css({'top': '-500px'});
+    flashMessageDiv.css({'right': '-350px'});
     flashMessageDiv.removeClass('hidden');
-    flashMessageDiv.animate({'top': '70px'}, 400);
+    flashMessageDiv.animate({'right': '20px'}, 400);
   })
   resetFlashTimer();
 }
@@ -48,17 +54,11 @@ $(document).ready(function() {
 
   if ($('.flash-banner.flash-announcement').length > 0 && $('.inline-flash.flash-announcement').length == 0) {
     clearTimeout(flashRemoverTimer);
-    $('.flash-announcement').css({top: '-' + ($('.flash-announcement').outerHeight() + 50) + 'px'})
+    $('.flash-announcement').css({right: '-350px'});
 
     setTimeout(function() {
       dismissFlash(true);
-
-      $('body .flash-announcement').animate({'top': '70px'}, 500, function() {
-        setTimeout(function() {
-          $.post("/announcements/view");
-        }, 2000)
-      })
-
+      $('body .flash-announcement').animate({'right': '20px'}, 500);
     }, 2000)
 
   }

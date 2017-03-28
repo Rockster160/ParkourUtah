@@ -1,11 +1,6 @@
 class AnnouncementsController < ApplicationController
   before_action :validate_admin, except: [ :view ]
 
-  def view
-    current_user.announcement_views.create(announcement_id: current_user.announcement_to_see.id)
-    head :ok
-  end
-
   def deliver
     @announcement = Announcement.find(params[:id])
 

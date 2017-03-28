@@ -13,7 +13,6 @@
 
 class Announcement < ApplicationRecord
   belongs_to :admin, class_name: "User"
-  has_many :announcement_views
 
   validates_presence_of :body
 
@@ -21,8 +20,8 @@ class Announcement < ApplicationRecord
   scope :delivered, -> { where.not(delivered_at: nil) }
   scope :not_delivered, -> { where(delivered_at: nil) }
 
-  def view_count
-    announcement_views.count
+  def self.current
+    delivered.not_expired.order(:created_at).first
   end
 
   def deliver

@@ -77,7 +77,6 @@ class User < ApplicationRecord
   has_one  :address,                 dependent: :destroy
   has_one  :notifications,           dependent: :destroy
 
-  has_many :announcement_views,      dependent: :destroy
   has_many :recurring_subscriptions, dependent: :destroy
   has_many :carts,                   dependent: :destroy
   has_many :athletes,                dependent: :destroy
@@ -183,14 +182,6 @@ class User < ApplicationRecord
     return nickname if nickname.present?
     return full_name if full_name.present?
     "User:#{id} - #{email&.split("@").try(:first)}"
-  end
-
-  def announcement_to_see
-    announcements_to_be_shown.by_most_recent(:created_at).last
-  end
-
-  def announcements_to_be_shown
-    Announcement.delivered.not_expired.where.not(id: announcement_views.pluck(:announcement_id).flatten.compact)
   end
 
   def signed_in?

@@ -10,9 +10,7 @@
           Expires: <%= announcement.try(:expires_at)&.strftime("%b %-d, %Y %-l:%M %p") %>
         </div>
         <div class="view-count">
-          <% if announcement.delivered? %>
-            Views: <%= announcement.view_count %>
-          <% else %>
+          <% unless announcement.delivered? %>
             Not yet delivered!
           <% end %>
         </div>

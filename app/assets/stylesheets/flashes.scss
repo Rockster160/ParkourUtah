@@ -2,8 +2,8 @@
 @import 'config/font-imports';
 
 .flash-banner, .inline-flash {
-  position: absolute;
-  z-index: 2000;
+  position: fixed;
+  z-index: $navbar-z-index - 10;
   top: 70px;
   right: 20px;
   max-width: 100%;
@@ -41,17 +41,17 @@
   }
   &.flash-announcement > .flash-container {
     width: 300px;
-    background-color: orange;
-    color: $mat-grey-dark;
+    background-color: #009DB2;
+    color: $mat-grey-light;
     .dismiss-flash i.fa-times-circle-o { color: $mat-grey-dark; }
   }
   &.high-flash {
     top: 10px; right: 10px;
   }
   a.announcement-link {
-    color: $mat-grey-dark;
+    color: $mat-grey-light;
     &:hover, &:active, &:focus, &:visited {
-      color: $mat-grey-dark;
+      color: $mat-grey-light;
     }
   }
   .announcement-red, .announcement-red * {

@@ -20,6 +20,7 @@ class IndexController < ApplicationController
   end
 
   def index
+    flash.now[:notice] = "Hello, World!"
     @instructors = User.instructors.where(should_display_on_front_page: true)
 
     future_events = EventSchedule.in_the_future

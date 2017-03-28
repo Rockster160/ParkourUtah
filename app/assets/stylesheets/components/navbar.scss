@@ -1,11 +1,11 @@
 @import "config/variables";
 @import 'config/font-imports';
 
+$dropdown-z-index: $navbar-z-index - 1;
 .navbar-offset { height: $navbar-height; }
 
 .navigation {
-  // z-index is set to 1030 in Bootstrap
-  z-index: 1030;
+  z-index: $navbar-z-index;
   position: fixed;
   top: 0; left: 0; right: 0;
   min-height: $navbar-height;
@@ -72,7 +72,7 @@
 
       padding: 5px 0;
       text-align: left;
-      z-index: 1000;
+      z-index: $dropdown-z-index;
       min-width: 160px;
       &.open {
         display: block;
@@ -106,7 +106,7 @@
 
       padding: 5px 0;
       text-align: left;
-      z-index: 1000;
+      z-index: $dropdown-z-index;
       min-width: 160px;
       &.open {
         display: block;

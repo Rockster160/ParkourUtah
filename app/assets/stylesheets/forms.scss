@@ -284,7 +284,7 @@
     box-shadow: 0px 5px 20px -5px $mat-grey;
     transition: opacity 0.1s ease-in-out;
   }
-  &.darkShade:after{
+  &.dark-shade:after{
     content: '';
     top: 0;
     left: 0;
@@ -295,7 +295,6 @@
     opacity: 0;
     box-shadow: 0px 5px 20px -5px $mat-grey-dark;
     transition: opacity 0.1s ease-in-out;
-
   }
 
   &:hover {

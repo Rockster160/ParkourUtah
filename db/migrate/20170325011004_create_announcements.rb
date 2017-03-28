@@ -8,11 +8,5 @@ class CreateAnnouncements < ActiveRecord::Migration[5.0]
 
       t.timestamps
     end
-    create_table :announcement_views do |t|
-      t.belongs_to :user
-      t.belongs_to :announcement
-
-      t.timestamps
-    end
   end
 end
