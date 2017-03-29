@@ -2,6 +2,7 @@ class ChatRoomsController < ApplicationController
   include ApplicationHelper
   before_action :validate_user_signed_in
   before_action :verify_user_has_permission_to_view_room, only: [ :show ]
+  skip_before_action :verify_authenticity_token
 
   def mark_messages_as_read
     current_user.chat_room_users.update_all(has_unread_messages: false)
