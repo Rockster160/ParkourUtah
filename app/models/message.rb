@@ -69,7 +69,7 @@ class Message < ApplicationRecord
 
   def sender_name
     return "ParkourUtah" if sent_from_id == 0
-    display_name = sent_from.display_name
+    display_name = sent_from.try(:display_name)
     return display_name if display_name.present?
     if sent_from.present?
       "User #{sent_from_id}"

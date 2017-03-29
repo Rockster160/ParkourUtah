@@ -33,3 +33,14 @@ const KEY_EVENT_ENTER = 13,
       KEY_EVENT_RIGHT = 39,
       KEY_EVENT_BACKSPACE = 8,
       KEY_EVENT_DELETE = 46;
+
+parseParams = function(paramString) {
+  paramString = paramString || window.location.href;
+  if (paramString.indexOf('?') == -1) { return {} };
+  var params = {}, items = paramString.split('?')[1].split("&");
+  $(items).each(function() {
+    var item = this.split('=');
+    params[item[0]] = item[1];
+  })
+  return params
+}

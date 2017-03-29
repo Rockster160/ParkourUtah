@@ -1,8 +1,8 @@
 <% chat_rooms.each do |room| %>
-  <% unresponded_question = room.last_message.try(:question?) && !room.last_message.try(:from_instructor?) && current_user.is_instructor? %>
-  <% unread_room = room.unread_messages_for_user?(current_user) %>
+  <% unresponded_question = room.last_message.try(:question?) && !room.last_message.try(:from_instructor?) && session_user.is_instructor? %>
+  <% unread_room = room.unread_messages_for_user?(session_user) %>
 
-  <a href="<%= chat_room_path(room) %>" class="chat-room-box <%= 'question' if unresponded_question %> <%= 'unread' if unread_room %>">
+  <a href="<%= chat_room_path(room) %>" class="chat-room-box <%= 'question' if unresponded_question %> <%= 'unread' if unread_room %>" data-chat-room-id="<%= room.id %>">
     <div class="support-icons">
       <% if room.chat? %>
         <i class="fa fa-comment"></i>
@@ -13,10 +13,10 @@
         <i class="fa fa-question"></i>
       <% end %>
     </div>
-    <div class="timestamp"> <i class="fa fa-clock-o"></i> <%= timeago(room.last_message.try(:created_at) || room.updated_at) %></div>
+    <div class="timestamp"> <i class="fa fa-clock-o"></i> <%= timeago(room.last_message_received_at) %></div>
     <div class="room-name">
       <div class="blip"></div>
-      <%= room.display_name(current_user) %>
+      <%= room.display_name(session_user) %>
     </div>
     <div class="room-last-message">
       <% if (last_sender_name = room.last_message.try(:sender_name)).present? %>

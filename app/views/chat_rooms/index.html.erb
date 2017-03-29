@@ -8,8 +8,8 @@
     <%= paginate @chat_rooms %>
   </div>
 
-  <div class="chat-rooms-container">
-    <%= render partial: 'index', locals: {chat_rooms: @chat_rooms} %>
+  <div class="chat-rooms-container" data-current-user-id="<%= current_user.id %>">
+    <%= render partial: 'index', locals: {chat_rooms: @chat_rooms, session_user: current_user} %>
   </div>
 
   <div class="text-center">

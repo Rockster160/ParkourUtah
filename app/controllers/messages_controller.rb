@@ -3,7 +3,9 @@ class MessagesController < ApplicationController
 
   def mark_messages_as_read
     Message.where(id: params[:ids]).each(&:read!)
-    current_user.chat_room_users.where(has_unread_messages: true, chat_room_id: params[:chat_room_id]).update_all(has_unread_messages: false)
+    current_user.chat_room_users.where(has_unread_messages: true, chat_room_id: params[:chat_room_id]).each do |cru|
+      cru.update(has_unread_messages: false)
+    end
     head :ok
   end
 

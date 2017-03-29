@@ -2,13 +2,13 @@
 <%
 warden_session = session["warden.user.user.key"]
 if warden_session && warden_session[0] && warden_session[0][0]
-  current_user = User.find(warden_session[0][0])
+  session_user = User.find(warden_session[0][0])
 else
-  current_user = nil
+  session_user = nil
 end
 %>
 <% messages.each do |message| %>
-  <% sent_by_current_user = message.sent_from.present? && message.sent_from == current_user %>
+  <% sent_by_current_user = message.sent_from.present? && message.sent_from == session_user %>
   <% sent_class = sent_by_current_user ? 'sent' : 'received' %>
   <div class="chat-message <%= sent_class %>" data-read-id="<%= message.id %>" data-is-read="<%= message.read? %>" data-sent-by-id="<%= message.sent_from_id %>">
 

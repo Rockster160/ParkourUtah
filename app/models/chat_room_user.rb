@@ -27,7 +27,7 @@ class ChatRoomUser < ApplicationRecord
   private
 
   def broadcast_update
-    # rendered_message = ChatRoomsController.render(partial: 'chat_rooms/index', locals: { chat_rooms: [chat_room] })
-    # ActionCable.server.broadcast "rooms_for_user_#{user_id}_channel", message: rendered_message, current_user: nil
+    rendered_chat_box = ChatRoomsController.render(partial: 'chat_rooms/index', locals: { chat_rooms: [chat_room], session_user: user })
+    ActionCable.server.broadcast "chat_rooms_for_user_#{user_id}_channel", chat_boxes: rendered_chat_box
   end
 end

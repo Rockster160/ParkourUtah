@@ -21,6 +21,8 @@ class ChatRoom < ApplicationRecord
 
   after_create :add_chat_room_users
 
+  default_on_create last_message_received_at: Time.zone.now
+
   default_on_create visibility_level: 0 # admin
   enum visibility_level: {
     admin:      0,
