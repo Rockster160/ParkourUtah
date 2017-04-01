@@ -76,8 +76,8 @@ class ApplicationMailer < ActionMailer::Base
     mail(to: @user.email, subject: "You are almost out of class credits!")
   end
 
-  def new_athlete_info_mail(fast_pass_ids)
-    @athletes = fast_pass_ids.map { |fast_pass_id| Athlete.find(fast_pass_id) }
+  def new_athlete_info_mail(athlete_ids)
+    @athletes = athlete_ids.map { |athlete_id| Athlete.find(athlete_id) }
 
     mail(to: @athletes.first.user.email, subject: "New Athlete Information")
   end

@@ -1,6 +1,7 @@
 class EventSchedulesController < ApplicationController
   before_action :validate_admin, except: [ :show, :subscribe, :unsubscribe ]
   before_action :validate_instructor, only: [ :show ]
+  skip_before_action :verify_authenticity_token, only: [ :unsubscribe, :subscribe ]
 
   def index
     @event_schedules = EventSchedule.in_the_future
