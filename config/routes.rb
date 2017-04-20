@@ -112,6 +112,7 @@ Rails.application.routes.draw do
   get 'contact' => 'index#contact_page', as: 'contact_page'
   post 'update' => 'index#update'
   get 'unsubscribe' => 'index#unsubscribe', as: 'unsubscribe_email'
+  post 'unsubscribe' => 'index#unsubscribe_email', as: :unsubscribe
   post 'can_receive_sms' => 'index#can_receive_sms', as: 'make_can_receive_sms'
 
   delete 'unsubscribe_monthly/:id' => 'store#unsubscribe', as: 'unsubscribe_monthly_subscription'

@@ -5,10 +5,8 @@
     <% if @email_type.present? && @user.present? %>
       <div style="font-size: 14px; text-align: center; line-height: 1; margin-top: 30px;">
         You are receiving this email because you have subscribed to ParkourUtah.<br>
-        <% unsubscribe_this = Base64.urlsafe_encode64({user_id: @user.id, unsubscribe: @email_type}.to_query) %>
-        <% unsubscribe_all = Base64.urlsafe_encode64({user_id: @user.id, unsubscribe: 'all'}.to_query) %>
-        If you would no longer like to receive this type of email, <a href="<%= unsubscribe_email_url(unsubscribe_code: unsubscribe_this) %>">click here</a> <br>
-        If you would like to unsubscribe from all future non-account related emails, <a href="<%= unsubscribe_email_url(unsubscribe_code: unsubscribe_all) %>">click here</a>
+        If you would no longer like to receive this type of email, <a href="<%= unsubscribe_email_url(id: @user.id, unsubscribe: @email_type) %>">click here</a> <br>
+        If you would like to unsubscribe from all future non-account related emails, <a href="<%= unsubscribe_email_url(id: @user.id, unsubscribe: 'all') %>">click here</a>
       </div>
     <% end %>
   </body>

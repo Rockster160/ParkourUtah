@@ -73,20 +73,28 @@ class IndexController < ApplicationController
 
   def unsubscribe
     if params[:type].present? &&  params[:id].present?
-      unsubscribe_type = params[:type]
+      @unsubscribe_type = params[:type]
       user_id = params[:id]
-    else
-      unsubscribe_params = Rack::Utils.parse_nested_query(Base64.urlsafe_decode64(params[:unsubscribe_code] || ''))
-      unsubscribe_type = unsubscribe_params['unsubscribe'].try(:to_sym) || :all
-      user_id = unsubscribe_params['user_id'].try(:to_i)
+    elsif params[:unsubscribe_code].present?
+      begin
+        unsubscribe_params = Rack::Utils.parse_nested_query(Base64.urlsafe_decode64(params[:unsubscribe_code] || ''))
+        @unsubscribe_type = unsubscribe_params['unsubscribe'].try(:to_sym) || :all
+        user_id = unsubscribe_params['user_id'].try(:to_i)
+      rescue
+      end
     end
+    @user = User.find(user_id) if user_id.present?
+  end
 
-    if User.find(user_id).unsubscribe_from(unsubscribe_type)
-      flash[:notice] = "You have been successully unsubscribed."
+  def unsubscribe_email
+    email = params[:email]
+    user = User.find_by_email(email)
+
+    if user.nil? || user.unsubscribe_from(params[:unsubscribe_type].try(:to_sym) || :all)
+      redirect_to root_path, notice: "We will no longer send emails to that address."
     else
-      flash[:alert] = "Failed to unsubscribe."
+      redirect_to unsubscribe_email_path, alert: "Failed to unsubscribe."
     end
-    redirect_to root_path
   end
 
   private
