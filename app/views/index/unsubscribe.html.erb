@@ -11,31 +11,31 @@
           <%= label_tag :unsubscribe_type_all, "Unsubscribe from All PKUT related emails" %>
         </div>
       <% end %>
-      <% if @unsubscribe_type == "email_newsletter" %>
+      <% if @unsubscribe_type == :email_newsletter %>
         <div class="unsubscribe-btn-container">
           <%= radio_button_tag :unsubscribe_type, :email_newsletter, checked: false %>
           <%= label_tag :unsubscribe_type_email_newsletter, "Unsubscribe from Newsletters" %>
         </div>
       <% end %>
-      <% if @unsubscribe_type == "email_class_reminder" %>
+      <% if @unsubscribe_type == :email_class_reminder %>
         <div class="unsubscribe-btn-container">
           <%= radio_button_tag :unsubscribe_type, :email_class_reminder, checked: false %>
           <%= label_tag :unsubscribe_type_email_class_reminder, "Unsubscribe from Class Reminders" %>
         </div>
       <% end %>
-      <% if @unsubscribe_type == "email_low_credits" %>
+      <% if @unsubscribe_type == :email_low_credits %>
         <div class="unsubscribe-btn-container">
           <%= radio_button_tag :unsubscribe_type, :email_low_credits, checked: false %>
           <%= label_tag :unsubscribe_type_email_low_credits, "Unsubscribe from Low Credits Notifications" %>
         </div>
       <% end %>
-      <% if @unsubscribe_type == "email_waiver_expiring" %>
+      <% if @unsubscribe_type == :email_waiver_expiring %>
         <div class="unsubscribe-btn-container">
           <%= radio_button_tag :unsubscribe_type, :email_waiver_expiring, checked: false %>
           <%= label_tag :unsubscribe_type_email_waiver_expiring, "Unsubscribe from Waiver Expiring Notifications" %>
         </div>
       <% end %>
-      <% if @unsubscribe_type == "email_class_cancelled" %>
+      <% if @unsubscribe_type == :email_class_cancelled %>
         <div class="unsubscribe-btn-container">
           <%= radio_button_tag :unsubscribe_type, :email_class_cancelled, checked: false %>
           <%= label_tag :unsubscribe_type_email_class_cancelled, "Unsubscribe from Class Cancelled Notifications" %>

@@ -73,7 +73,7 @@ class IndexController < ApplicationController
 
   def unsubscribe
     if params[:type].present? &&  params[:id].present?
-      @unsubscribe_type = params[:type]
+      @unsubscribe_type = params[:type].try(:to_sym)
       user_id = params[:id]
     elsif params[:unsubscribe_code].present?
       begin
