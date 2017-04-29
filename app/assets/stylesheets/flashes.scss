@@ -31,7 +31,7 @@
 
   &.flash-notice > .flash-container {
     background-color: $flash-notice-bg;
-    color: $mat-grey-dark;
+    color: $mat-grey-light;
     .dismiss-flash i.fa-times-circle-o { color: $mat-grey-dark; }
   }
   &.flash-alert > .flash-container {

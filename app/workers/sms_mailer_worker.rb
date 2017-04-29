@@ -32,6 +32,6 @@ class SmsMailerWorker
     else
       puts "\e[31m DEV: Text Message to #{num}:\n#{msg} \e[0m"
     end
-
   end
+  
 end
