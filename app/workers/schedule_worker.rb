@@ -101,9 +101,9 @@ class ScheduleWorker
 
           stripe_subscriptions.each do |recurring_subscription|
             recurring_subscription.update(auto_renew: false)
-            new_sub = user.recurring_subscriptions.create(athlete_id: recurring_subscription.athlete_id, auto_renew: true, cost_in_pennies: recurring_subscription.cost_in_pennies)
+            new_sub = user.recurring_subscriptions.create(athlete_id: recurring_subscription.athlete_id, auto_renew: true, cost_in_pennies: recurring_subscription.cost_in_pennies, stripe_id: recurring_subscription.stripe_id)
             unless new_sub.persisted?
-              SlackNotifier.notify("Failed to create new sub: ```#{new_sub.try(:attributes)}```", "#server-errors")
+              SlackNotifier.notify("Failed to create new sub: ```#{new_sub.try(:attributes)}\n#{new_sub.try(:errors).try(:full_messages)}```", "#server-errors")
             end
           end
         else
