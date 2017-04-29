@@ -27,7 +27,7 @@ class RecurringSubscription < ApplicationRecord
 
   validates_presence_of :expires_at, if: ->{ athlete_id.present? }
 
-  after_update :set_default_expiration_date
+  before_save :set_default_expiration_date
 
   def active?; self.expires_at.to_date > Time.zone.now.to_date; end
   def inactive?; self.expires_at.to_date <= Time.zone.now.to_date; end
