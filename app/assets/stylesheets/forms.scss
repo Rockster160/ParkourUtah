@@ -87,7 +87,11 @@
 
   border: 2px solid $pkut-grey-dark;
   border-radius: 7px;
-  &:focus { outline: none; }
+  &:focus {
+    outline: none;
+    border: 1px solid #DF0D15;
+    box-shadow: inset 0px 0px 0px 1px #DF0D15;
+  }
   &.sm-textbox {
     width: 155px;
     &:not(:last-child) {
@@ -111,28 +115,6 @@
     &:not(:last-child) {
       margin-right: 5px;
     }
-  }
-}
-
-
-.mat-pkut-textbox {
-  @extend .pkut-textbox;
-
-  border: 1px solid $mat-grey;
-  border-radius: 3px;
-
-  padding: 0px;
-  padding-left: 5px;
-  margin-bottom: 5px;
-  margin-top: 0px;
-  width: 100%;
-
-  &:focus {
-    border: 1px solid $mat-pkut-red;
-    box-shadow: inset 0px 0px 0px 1px $mat-pkut-red;
-  }
-  &.set-size{
-    width: 350px;
   }
 }
 
@@ -224,13 +206,14 @@
 
 .pkut-btn {
   display: inline-block;
+  position: relative;
   outline: none;
 
   line-height: 1;
   text-decoration: none;
 
   z-index: 100;
-  transition: background 0.3s, color 0.3s;
+  transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
   margin: 8px 20px;
   max-width: 300px;
 
@@ -239,8 +222,8 @@
   font-size: 18px;
 
   border: none;
-  border-radius: 5px / 10px;
-  box-shadow: 3px 3px 5px black;
+  border-radius: 3px;
+  box-shadow: none;
 
   color: $pkut-grey-white;
   background-color: $pkut-red;
@@ -259,53 +242,6 @@
     text-decoration: none;
   }
   &.low-btn { z-index: 99; }
-}
-
-.mat-pkut-btn {
-  @extend .pkut-btn;
-
-  border-radius: 3px;
-  background-color: $mat-pkut-red;
-  color: white;
-  transition: all 0.1s ease-in-out;
-  position: relative;
-  box-shadow: none;
-  z-index: 1;
-
-  &:after {
-    content: '';
-    top: 0;
-    left: 0;
-    position: absolute;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    box-shadow: 0px 5px 20px -5px $mat-grey;
-    transition: opacity 0.1s ease-in-out;
-  }
-  &.dark-shade:after{
-    content: '';
-    top: 0;
-    left: 0;
-    position: absolute;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    box-shadow: 0px 5px 20px -5px $mat-grey-dark;
-    transition: opacity 0.1s ease-in-out;
-  }
-
-  &:hover {
-    background-color: $mat-pkut-red;
-    color: white;
-    transform: scale(1.05, 1.05);
-  }
-
-  &:hover:after {
-    opacity: 1;
-  }
 }
 
 .big-btn {

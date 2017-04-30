@@ -3,7 +3,7 @@
   <h6>NOTE: We will no longer send emails to the email you entered, even if you've subscribed to class reminders or other notifications in the past.</h6>
   <%= form_tag unsubscribe_path do %>
     <div class="text-center">
-      <%= email_field_tag :email, @user.try(:email), placeholder: 'Email Address', class: "mat-pkut-textbox set-size" %>
+      <%= email_field_tag :email, @user.try(:email), placeholder: 'Email Address', class: "pkut-textbox" %>
 
       <% if @unsubscribe_type.present? %>
         <div class="unsubscribe-btn-container">

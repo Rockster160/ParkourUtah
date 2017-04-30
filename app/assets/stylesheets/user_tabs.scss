@@ -7,6 +7,11 @@ $nav-bar-height: 51px; // Don't change me
 .user-dashboard-page {
   position: absolute;
   top: $nav-bar-height; left: 0; right: 0; bottom: 0;
+  padding-bottom: 30px;
+
+  .row label {
+    padding-top: 10px;
+  }
 
   .tabs-container {
     margin: 100px 50px 0;
@@ -38,6 +43,7 @@ $nav-bar-height: 51px; // Don't change me
           border-bottom-color: black;
           border-radius: 6px 6px 0 0;
           color: $pkut-grey;
+          margin-bottom: 10px;
           .blip {
             position: absolute;
             top: -10px; right: -5px;
@@ -72,11 +78,11 @@ $nav-bar-height: 51px; // Don't change me
       }
 
       input[type=radio] {
-        visibility: hidden;
+        display: none;
         position: absolute;
         & + label {
           .tab-content {
-            visibility: hidden;
+            display: none;
           }
         }
         &:checked + label {
@@ -93,7 +99,8 @@ $nav-bar-height: 51px; // Don't change me
             }
           }
           .tab-content {
-            visibility: visible;
+            display: block;
+            margin-bottom: 30px;
           }
         }
       }

@@ -6,15 +6,15 @@
 
   <%= form_for(@user, url: user_path) do |f| %>
     <div class="field">
-      <%= f.email_field :email, placeholder: 'Email Address', class: "mat-pkut-textbox customRequired" %>
+      <%= f.email_field :email, placeholder: 'Email Address', class: "pkut-textbox customRequired" %>
     </div>
 
     <div class="field">
-      <%= f.password_field :password, autocomplete: "off", placeholder: 'Password', class: "mat-pkut-textbox customRequired" %>
+      <%= f.password_field :password, autocomplete: "off", placeholder: 'Password', class: "pkut-textbox customRequired" %>
     </div>
 
     <div class="field"x>
-      <%= f.password_field :password_confirmation, autocomplete: "off", placeholder: 'Confirm Password', class: "mat-pkut-textbox customRequired" %>
+      <%= f.password_field :password_confirmation, autocomplete: "off", placeholder: 'Confirm Password', class: "pkut-textbox customRequired" %>
     </div>
 
     <div class="text-center">
