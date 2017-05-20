@@ -60,7 +60,7 @@ class IndexController < ApplicationController
       body: params[:comment],
       success: success
     )
-    phone_digits = params[:phone].split('').map {|x| x[/\d+/]}.join
+    phone_digits = params[:phone]&.split('')&.map {|x| x[/\d+/]}.try(:join) || 0
     if !blacklisted_body? && ((phone_digits.length >= 7 && phone_digits.length <= 10) || success)
       contact_request.log_message
       contact_request.notify_slack
@@ -124,6 +124,7 @@ class IndexController < ApplicationController
 
   def blacklisted_body?
     @blacklisted ||= begin
+      return true if params[:comment].nil?
       body_blacklist.any? { |blacklist_string| params[:comment].include?(blacklist_string) }
     end
   end
