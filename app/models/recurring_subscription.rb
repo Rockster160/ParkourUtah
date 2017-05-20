@@ -25,9 +25,9 @@ class RecurringSubscription < ApplicationRecord
   scope :active, -> { assigned.where("expires_at > ?", Time.zone.now) }
   scope :inactive, -> { assigned.where("expires_at <= ?", Time.zone.now) }
 
-  validates_presence_of :expires_at, if: ->{ athlete_id.present? }
+  validates_presence_of :expires_at, if: -> { athlete_id.present? }
 
-  before_save :set_default_expiration_date
+  before_validation :set_default_expiration_date
 
   def active?; self.expires_at.to_date > Time.zone.now.to_date; end
   def inactive?; self.expires_at.to_date <= Time.zone.now.to_date; end
