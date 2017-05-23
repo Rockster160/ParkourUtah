@@ -197,9 +197,9 @@ class StoreController < ApplicationController
     end
 
     if user_signed_in?
-      redirect_to account_path(trigger_fb_purchase: {value: @cart.total, item_ids: @cart.item_ids})
+      redirect_to account_path(trigger_fb_purchase: {value: @cart.total, item_ids: @cart.items.map(&:id)})
     else
-      redirect_to root_path(trigger_fb_purchase: {value: @cart.total, item_ids: @cart.item_ids})
+      redirect_to root_path(trigger_fb_purchase: {value: @cart.total, item_ids: @cart.items.map(&:id)})
     end
   end
 
