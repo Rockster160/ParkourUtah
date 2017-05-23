@@ -55,6 +55,7 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
   .ui-datepicker {
     margin: 0 auto;
     margin-top: 10px;
+    z-index: 101;
   }
 }
 

@@ -30,5 +30,14 @@
   <% if content_for?(:modals) %>
     <%= yield(:modals) %>
   <% end %>
+  <% if params[:trigger_fb_purchase].present? %>
+    <style>
+      fbq('track', 'Purchase', {
+        item_ids:  <%= params[:trigger_fb_purchase][:item_ids] %>,
+        value: <%= params[:trigger_fb_purchase][:value].to_f %>,
+        currency: 'USD'
+      });
+    </style>
+  <% end %>
 </body>
 </html>
