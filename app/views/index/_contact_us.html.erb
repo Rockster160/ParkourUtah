@@ -14,6 +14,7 @@
         <%= telephone_field_tag :phone, '', class: 'pkut-textbox formatPhoneNumber customRequired', placeholder: 'Phone (required)' %><br/>
       </div>
     </div>
+    <p class="text-center">Questions about classes? Be sure to check our <a href="<%= faq_path %>">FAQ</a>!</p>
     <%= text_area_tag :comment, '', class: 'pkut-textarea', maxlength: 600, placeholder: "Comments, questions, inquiries, interrogations, conversations, queries, chatter, information annex, whatever you need to know type it here and we'll get back to you A.S.A.P.P. (As Soon As Parkour Possible)" %>
     <%= button_tag "Send", class: "pkut-btn pull-right" %>
   <% end %>
