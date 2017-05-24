@@ -32,10 +32,18 @@
             <div class="item-flipper">
               <div class="item-front">
                 <div class="front-container">
-                  <br/>
-                  <strong><%= item.title %></strong><br/>
-                  <%= number_to_currency(item.cost_in_dollars) %><%= item.is_subscription? ? "/month" : "" %><br/>
-                  <%= image_tag(item.display, class: "item-img #{item.is_full_image ? 'full-item-img' : ''}") if item.display_file_size %>
+                  <% unless item.is_full_image? %>
+                    <br/>
+                    <strong><%= item.title %></strong><br/>
+                    <%= number_to_currency(item.cost_in_dollars) %><%= item.is_subscription? ? "/month" : "" %><br/>
+                  <% end %>
+                  <% if item.show_text_as_image? %>
+                    <div class="red-backed-item-title">
+                      <%= item.title.titleize %><br><%= number_to_currency(item.cost_in_dollars) %>
+                    </div>
+                  <% else %>
+                    <%= image_tag(item.display, class: "item-img #{item.is_full_image ? 'full-item-img' : ''}") if item.display_file_size %>
+                  <% end %>
                 </div>
               </div>
               <div class="item-back">

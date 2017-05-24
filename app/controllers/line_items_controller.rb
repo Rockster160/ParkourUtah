@@ -25,11 +25,15 @@ class LineItemsController < ApplicationController
   end
 
   def update
-    if LineItem.find(params[:id]).update(item_params)
+    puts "#{item_params}".colorize(:red)
+    item = LineItem.find(params[:id])
+    if item.update(item_params)
       flash[:notice] = "Item successfully updated."
     else
       flash[:alert] = "There was an error updating the item."
     end
+    puts "#{item.attributes}".colorize(:red)
+    puts "#{item.reload.attributes}".colorize(:red)
     redirect_to dashboard_path
   end
 
@@ -77,6 +81,7 @@ class LineItemsController < ApplicationController
       :is_subscription,
       :taxable,
       :is_full_image,
+      :show_text_as_image,
       :redemption_item_id
     )
   end

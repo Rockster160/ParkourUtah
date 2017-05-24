@@ -44,6 +44,10 @@
         <%= f.label :is_full_image, 'Image takes up entire box?' %>
       </div>
       <div class="form-field">
+        <%= f.check_box :show_text_as_image %>
+        <%= f.label :show_text_as_image, 'When checked, instead of displaying an image, will display the title (and cost) over a red box with a long text shadow.' %>
+      </div>
+      <div class="form-field">
         <%= f.label :credits %>
         <%= f.text_field :credits, class: 'pkut-textbox restrictNumeric' %>
       </div>

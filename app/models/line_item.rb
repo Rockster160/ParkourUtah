@@ -22,6 +22,7 @@
 #  color                :string
 #  is_full_image        :boolean          default(FALSE)
 #  redemption_item_id   :integer
+#  show_text_as_image   :boolean          default(TRUE)
 #
 
 class LineItem < ApplicationRecord

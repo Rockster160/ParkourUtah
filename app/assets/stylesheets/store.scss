@@ -153,12 +153,93 @@ $height: 200px;
 }
 
 .full-item-img {
-  top: -60px; left: 0; right: 0; bottom: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
   border-radius: 5px;
 
   max-height: 100%;
   height: 100%;
   width: 100%;
+}
+
+.red-backed-item-title {
+  position: absolute;
+  background: $pkut-red;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 5px;
+
+  color: white;
+  font-size: 40px;
+  line-height: 40px;
+  font-weight: bold;
+  letter-spacing: -3px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'roadgeek';
+  $shadow-color: darken($pkut-red, 20%);
+  // x=0;y=0;60.times {puts "#{x+=2}px #{y+=1}px 2px $shadow-color"}
+  text-shadow:
+    2px 1px 2px $shadow-color,
+    4px 2px 2px $shadow-color,
+    6px 3px 2px $shadow-color,
+    8px 4px 2px $shadow-color,
+    10px 5px 2px $shadow-color,
+    12px 6px 2px $shadow-color,
+    14px 7px 2px $shadow-color,
+    16px 8px 2px $shadow-color,
+    18px 9px 2px $shadow-color,
+    20px 10px 2px $shadow-color,
+    22px 11px 2px $shadow-color,
+    24px 12px 2px $shadow-color,
+    26px 13px 2px $shadow-color,
+    28px 14px 2px $shadow-color,
+    30px 15px 2px $shadow-color,
+    32px 16px 2px $shadow-color,
+    34px 17px 2px $shadow-color,
+    36px 18px 2px $shadow-color,
+    38px 19px 2px $shadow-color,
+    40px 20px 2px $shadow-color,
+    42px 21px 2px $shadow-color,
+    44px 22px 2px $shadow-color,
+    46px 23px 2px $shadow-color,
+    48px 24px 2px $shadow-color,
+    50px 25px 2px $shadow-color,
+    52px 26px 2px $shadow-color,
+    54px 27px 2px $shadow-color,
+    56px 28px 2px $shadow-color,
+    58px 29px 2px $shadow-color,
+    60px 30px 2px $shadow-color,
+    62px 31px 2px $shadow-color,
+    64px 32px 2px $shadow-color,
+    66px 33px 2px $shadow-color,
+    68px 34px 2px $shadow-color,
+    70px 35px 2px $shadow-color,
+    72px 36px 2px $shadow-color,
+    74px 37px 2px $shadow-color,
+    76px 38px 2px $shadow-color,
+    78px 39px 2px $shadow-color,
+    80px 40px 2px $shadow-color,
+    82px 41px 2px $shadow-color,
+    84px 42px 2px $shadow-color,
+    86px 43px 2px $shadow-color,
+    88px 44px 2px $shadow-color,
+    90px 45px 2px $shadow-color,
+    92px 46px 2px $shadow-color,
+    94px 47px 2px $shadow-color,
+    96px 48px 2px $shadow-color,
+    98px 49px 2px $shadow-color,
+    100px 50px 2px $shadow-color,
+    102px 51px 2px $shadow-color,
+    104px 52px 2px $shadow-color,
+    106px 53px 2px $shadow-color,
+    108px 54px 2px $shadow-color,
+    110px 55px 2px $shadow-color,
+    112px 56px 2px $shadow-color,
+    114px 57px 2px $shadow-color,
+    116px 58px 2px $shadow-color,
+    118px 59px 2px $shadow-color,
+    120px 60px 2px $shadow-color;
 }
 
 .items-container > .item-flip-container {
