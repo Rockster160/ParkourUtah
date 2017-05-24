@@ -75,6 +75,7 @@ Rails.application.routes.draw do
 
   resources :attendances, only: [ :index, :new, :create, :destroy ]
   resources :aws_loggers, only: [ :index, :show ]
+  resources :log_trackers, only: [ :index, :show ]
   resources :contact_requests, only: [ :index, :show ]
   resources :chat_rooms, path: "chat", only: [ :index, :show ] do
     get "phone_number/:phone_number", on: :collection, action: :by_phone_number, as: :phone_number

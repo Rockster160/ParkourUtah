@@ -18,8 +18,20 @@ class CustomLogger
       end
       display_name = user.present? ? "#{user.try(:id)}: #{user.try(:email)}\n" : ''
       display_cart = cart_id.present? ? "Cart: #{cart_id}\n" : ''
-      formatted_time = Time.zone.now.in_time_zone('America/Denver').strftime('%b %d, %Y %H:%M:%S.%L')
-      message_to_log = "\n#{formatted_time} - #{message}\n#{ip_address}#{display_name}#{display_cart}\n"
+      formatted_time = Time.zone.now.in_time_zone('America/Denver')
+      message_to_log = "\n#{formatted_time.strftime('%b %d, %Y %H:%M:%S.%L')} - #{message}\n#{ip_address}#{display_name}#{display_cart}\n"
+      if request
+        filtered_params = filter_hash(request.env["action_dispatch.request.parameters"])
+        LogTracker.create({
+          user_agent: request.user_agent,
+          ip_address: request.try(:remote_ip),
+          http_method: request.env["REQUEST_METHOD"],
+          url: request.env["REQUEST_PATH"],
+          params: filtered_params,
+          user_id: user.try(:id),
+          created_at: formatted_time
+        })
+      end
       Rails.logger.info "\nCustomLogger: #{message_to_log}\n\n"
       File.open("log/custom_logger.txt", "a+"){|f| f << message_to_log }
     end

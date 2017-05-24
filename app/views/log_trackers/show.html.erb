@@ -1,0 +1,34 @@
+<div class="central-container" style="margin-bottom: 100px;">
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
+  <%= link_to "Back to Log Trackers", log_trackers_path, class: 'pkut-btn' %>
+
+  <div style="margin-top: 20px;">
+    <h4>Time</h4>
+    <p><%= @logger.created_at.to_formatted_s(:simple_with_time) %></p>
+  </div>
+  <div style="margin-top: 20px;">
+    <h4>User</h4>
+    <p><a href="<%= admin_user_path(@logger.user) %>"><%= @logger.user.id %> <%= @logger.user.email %></a></p>
+  </div>
+  <div style="margin-top: 20px;">
+    <h4>IP</h4>
+    <p><%= @logger.ip_address %></p>
+  </div>
+  <div style="margin-top: 20px;">
+    <h4>User Agent</h4>
+    <p><%= @logger.user_agent %></p>
+  </div>
+  <div style="margin-top: 20px;">
+    <h4>HTTP Method</h4>
+    <p><%= @logger.http_method %></p>
+  </div>
+  <div style="margin-top: 20px;">
+    <h4>URL</h4>
+    <p><%= @logger.url %></p>
+  </div>
+  <div style="margin-top: 20px;">
+    <h4>Params</h4>
+    <pre><%= JSON.pretty_generate @logger.params_json %></pre>
+  </div>
+
+</div>

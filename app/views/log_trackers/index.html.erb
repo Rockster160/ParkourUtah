@@ -1,0 +1,20 @@
+<div class="central-container">
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
+
+  <div class="ttable wide striped bordered">
+    <div class="trow title-row">
+      <div class="tcell">Time</div>
+      <div class="tcell">User</div>
+      <div class="tcell">IP</div>
+      <div class="tcell">URL</div>
+    </div>
+    <% @loggers.each do |logger| %>
+      <a href="<%= log_tracker_path(logger) %>" class="trow">
+        <div class="tcell"><%= logger.created_at.to_formatted_s(:short_with_time) %></div>
+        <div class="tcell"><%= logger.user.try(:email) %></div>
+        <div class="tcell"><%= logger.ip_address %></div>
+        <div class="tcell"><%= logger.url %></div>
+      </a>
+    <% end %>
+  </div>
+</div>

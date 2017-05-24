@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170325011004) do
+ActiveRecord::Schema.define(version: 20170524024737) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -231,6 +231,18 @@ ActiveRecord::Schema.define(version: 20170325011004) do
     t.string   "color"
     t.boolean  "is_full_image",        default: false
     t.integer  "redemption_item_id"
+  end
+
+  create_table "log_trackers", force: :cascade do |t|
+    t.string   "user_agent"
+    t.string   "ip_address"
+    t.string   "http_method"
+    t.string   "url"
+    t.string   "params"
+    t.integer  "user_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["user_id"], name: "index_log_trackers_on_user_id", using: :btree
   end
 
   create_table "messages", force: :cascade do |t|
