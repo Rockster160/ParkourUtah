@@ -1,5 +1,32 @@
+/*
+Instructions for use:
+
+$('.selector').searchable({
+  getOptionsFromUrl: "/scoped/my_objects", // URL in which to send query string to retrieve results
+  arrayOfOptionsFromUrlResponse: function(data) {
+    return data; // Any data manipulation or unwrapping to return the ARRAY of object to be used from the API call
+  },
+  templateFromOption: function(selected_obj) {
+      // An HTML-safe template built from the data
+    return '<div><strong>' +
+    selected_obj.name +
+    '</strong><span class="pull-right">' +
+    selected_obj.id +
+    '</span></br>' +
+    selected_obj.parent.name +
+    '</div>';
+  }
+}).on("searchable:selected", function(evt, selected_obj) {
+    // Callback to handle the clicked action
+  window.location.href = "/scoped/my_objects/" + selected_obj.id;
+});
+
+$('.selector').searchableFromSelect()
+
+*/
+
 (function ( $ ) {
-  var unique_searchable_id = 0;
+  var unique_searchable_id = 0, current_searchable_request = undefined;
   var dropdownMaxValues = 10, keyEventUp = 38, keyEventDown = 40, keyEventEnter = 13, keyEventEsc = 27;
 
   var encodeObjToStr = function(obj) {
@@ -20,10 +47,10 @@
       var searchable_id = $menu.attr("data-searching-for");
       $searchableField = $('[data-uniq-searchable-id=' + searchable_id + ']');
 
-      var offset = $searchableField.offset();
+      var offset = $searchableField.position();
       var posY = offset.top + $searchableField.outerHeight(true);
       var posX = offset.left;
-      if (!isUsingMobileDevice()) {
+      if (!isUsingiOSDevice() && $searchableField.is(":focus")) {
         posY -= $(window).scrollTop();
         posX -= $(window).scrollLeft();
       }
@@ -31,6 +58,10 @@
     }
   }
 
+  var isUsingiOSDevice = function() {
+    var user_agent = (navigator.userAgent||navigator.vendor||window.opera);
+    return user_agent.match(/(ip(hone|od|ad))/i)
+  }
   var isUsingMobileDevice = function() {
     var user_agent = (navigator.userAgent||navigator.vendor||window.opera);
     var mobile_user_agent_regexp = /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i
@@ -38,7 +69,7 @@
     return mobile_user_agent_regexp.test(user_agent) || mobile_vendor_regexp.test(user_agent.substr(0,4));
   };
 
-  $(window).on("scroll resize touchmove", function() {
+  $(window).on("scroll resize", function() {
     repositionSearchableMenu();
   })
 
@@ -114,6 +145,10 @@
         populateDropdownFromInput();
       }).on('blur', function() {
         // When the dropdown loses focus, get rid of the dropdown.
+        if (current_searchable_request) {
+          current_searchable_request.abort();
+          current_searchable_request = undefined;
+        }
         hideDropdowns();
       }).on('selected-option', function(evt, optionVal) {
         var option_str = encodeObjToStr(optionVal);
@@ -126,6 +161,7 @@
       })
 
       var hideDropdowns = function() {
+        $('.fix-virtual-keyboard-position-offset').removeClass('.fix-virtual-keyboard-position-offset');
         $('.js-searchable-menu').remove();
       }
 
@@ -148,8 +184,10 @@
               if (foundCount < dropdownMaxValues) {
                 $(search_string.split('')).each(function() {
                   var char_index = optionText.indexOf(this);
-                  if (char_index < 0 || !string_valid) {
+                  if (char_index < 0) {
                     string_valid = false;
+                  } else {
+                    optionText = optionText.substr(char_index + 1);
                   }
                 })
                 if (string_valid) {
@@ -255,11 +293,16 @@
 
         displayLoadingContainerForDropdown();
 
-        $.get(getOptionsFromUrl, params).success(function(data) {
+        if (current_searchable_request != undefined) {
+          current_searchable_request.abort();
+        }
+        current_searchable_request = $.get(getOptionsFromUrl, params).success(function(data) {
           hideDropdowns();
           var arrayResponse = arrayOfOptionsFromUrlResponse(data) || [];
           optionsList = arrayResponse.slice(0, max_dropdown_values);
           populateDropdownWithOptions(optionsList)
+        }).complete(function() {
+          current_searchable_request = undefined;
         })
       }
 
@@ -288,18 +331,19 @@
         name: "dropdown-searchable-field-" + dropdown_uniq_searchable_id,
         "data-uniq-searchable-id": dropdown_uniq_searchable_id,
         placeholder: placeholder,
-        class: "dropdown-searchable-generated-text-field dropdown-searchable-field-" + dropdown_uniq_searchable_id + ' ' + options["additional_classes"]
+        class: "dropdown-searchable-generated-text-field dropdown-searchable-field-" + dropdown_uniq_searchable_id + ' ' + options["additional_classes"],
+        width: $(this).outerWidth()
       })
       search_field.insertAfter(dropdown);
 
       var getOptionsFromSelect = function() {
         var options_to_return = []
         $(dropdown).children('option').each(function() {
-          if ($(this).html().length > 0 && $(this).val().length > 0 && !$(this).disabled) {
-            options_to_return.push({
+          if ($(this).html().length > 0 && $(this).val().length > 0 && !this.disabled) {
+            options_to_return.push(Object.assign({
               text: $(this).html(),
               value: $(this).val()
-            })
+            }, $(this).data()));
           }
         })
         return options_to_return
@@ -308,14 +352,16 @@
       search_field.searchable({
         optionsList: getOptionsFromSelect(),
         templateFromOption: function(option) {
-          return '<div>' + option.text + '</div>';
+          return options.templateFromOption(option) || '<div>' + option.text + '</div>';
         }
       }).on("searchable:selected", function(evt, selected_option) {
         if (selected_option.value) {
           var option = $(dropdown).find('option[value=' + selected_option.value + ']');
           $(option).prop('selected', true);
           $(option).parents('select').change();
-          search_field.val('');
+          if (!options.retainFieldValueAfterSelect) {
+            search_field.val('');
+          }
         }
       })
     })
