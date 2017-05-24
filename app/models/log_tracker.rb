@@ -14,9 +14,19 @@
 #
 
 class LogTracker < ApplicationRecord
-  belongs_to :user
+  belongs_to :user, optional: true
+
+  after_create_commit :broadcast_creation
 
   def params_json
     JSON.parse(params.gsub("=>", ":"))
   end
+
+  private
+
+  def broadcast_creation
+    rendered_message = LogTrackersController.render partial: 'log_trackers/logger_row', locals: { logger: self }
+    ActionCable.server.broadcast "logger_channel", message: rendered_message
+  end
+
 end

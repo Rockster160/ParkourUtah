@@ -8,7 +8,11 @@
   </div>
   <div style="margin-top: 20px;">
     <h4>User</h4>
-    <p><a href="<%= admin_user_path(@logger.user) %>"><%= @logger.user.id %> <%= @logger.user.email %></a></p>
+    <% if @logger.user.present? %>
+      <p><a href="<%= admin_user_path(@logger.user) %>"><%= @logger.user.id %> <%= @logger.user.email %></a></p>
+    <% else %>
+      <p><i>Not signed in</i></p>
+    <% end %>
   </div>
   <div style="margin-top: 20px;">
     <h4>IP</h4>

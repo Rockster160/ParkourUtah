@@ -22,7 +22,7 @@ class CustomLogger
       message_to_log = "\n#{formatted_time.strftime('%b %d, %Y %H:%M:%S.%L')} - #{message}\n#{ip_address}#{display_name}#{display_cart}\n"
       if request
         filtered_params = filter_hash(request.env["action_dispatch.request.parameters"])
-        LogTracker.create({
+        logger = LogTracker.create({
           user_agent: request.user_agent,
           ip_address: request.try(:remote_ip),
           http_method: request.env["REQUEST_METHOD"],
@@ -31,6 +31,7 @@ class CustomLogger
           user_id: user.try(:id),
           created_at: formatted_time
         })
+        binding.pry unless logger.persisted?
       end
       Rails.logger.info "\nCustomLogger: #{message_to_log}\n\n"
       File.open("log/custom_logger.txt", "a+"){|f| f << message_to_log }

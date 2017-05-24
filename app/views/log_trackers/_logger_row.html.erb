@@ -1,0 +1,6 @@
+<a href="<%= log_tracker_path(logger) %>" class="trow">
+  <div class="tcell"><%= logger.created_at.to_formatted_s(:short_with_time) %></div>
+  <div class="tcell"><%= logger.user.try(:email) %></div>
+  <div class="tcell"><%= logger.ip_address %></div>
+  <div class="tcell"><%= logger.url %></div>
+</a>
