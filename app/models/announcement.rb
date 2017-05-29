@@ -21,7 +21,7 @@ class Announcement < ApplicationRecord
   scope :not_delivered, -> { where(delivered_at: nil) }
 
   def self.current
-    delivered.not_expired.order(:created_at).first
+    delivered.not_expired.order(:delivered_at).last
   end
 
   def deliver
