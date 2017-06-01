@@ -62,7 +62,7 @@ class ApplicationMailer < ActionMailer::Base
     @user = @cart.user
     @address = @user.try(:address)
 
-    mail(to: email, subject: "Order confirmation")
+    mail(to: email || @user.try(:email), subject: "Order confirmation")
   end
 
   def public_mailer(key_id, email)
