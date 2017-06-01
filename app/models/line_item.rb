@@ -75,6 +75,7 @@ class LineItem < ApplicationRecord
     self.instructor_ids = ids.to_s
   end
   def instructors
+    return User.none unless instructor_ids.present?
     User.instructors.where(id: instructor_ids.split(","))
   end
 
@@ -82,7 +83,8 @@ class LineItem < ApplicationRecord
     self.location_ids = ids.to_s
   end
   def locations
-    Spot.where(id: instructor_ids.split(","))
+    return Spot.none unless location_ids.present?
+    Spot.where(id: location_ids.split(","))
   end
 
   def possible_time_range

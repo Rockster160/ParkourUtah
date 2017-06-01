@@ -61,11 +61,11 @@
         <% time_range = @item.possible_time_range %>
         <div class="form-field">
           <%= f.label :time_range_start %>
-          <%= f.select :time_range_start, time_range %>
+          <%= f.select :time_range_start, time_range, {include_blank: true}, class: 'pkut-textbox' %>
         </div>
         <div class="form-field">
           <%= f.label :time_range_end %>
-          <%= f.select :time_range_end, time_range %>
+          <%= f.select :time_range_end, time_range, {include_blank: true}, class: 'pkut-textbox' %>
         </div>
         <hr>
       </div>

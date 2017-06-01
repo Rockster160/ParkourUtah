@@ -2,6 +2,7 @@
   <%= form_tag update_cart_path(item_id: item.id), remote: true do %>
     <h3 class="pkut-text"><%= item.title %></h3>
     <br/>
+    <p>Please select your preferred details from the dropdowns below.</p>
     <div class="flex-row">
       <% col_size = item.colors && item.sizes ? 6 : 12 %>
       <% if item.sizes %>
@@ -14,6 +15,24 @@
         <div class="text-center">
           <h5 class="pkut-text">Colors</h5>
           <%= select_tag :color, options_for_select(item.colors) %>
+        </div>
+      <% end %>
+      <% if item.instructors.present? %>
+        <div class="text-center">
+          <h5 class="pkut-text">Instructor</h5>
+          <%= select_tag :instructor_name, options_for_select(item.instructors.map(&:display_name)) %>
+        </div>
+      <% end %>
+      <% if item.locations.present? %>
+        <div class="text-center">
+          <h5 class="pkut-text">Location</h5>
+          <%= select_tag :location_name, options_for_select(item.locations.map(&:title)) %>
+        </div>
+      <% end %>
+      <% if item.time_range_start.present? || item.time_range_end.present? %>
+        <div class="text-center">
+          <h5 class="pkut-text">Select Time</h5>
+          <%= select_tag :desired_time, options_for_select(item.time_range) %>
         </div>
       <% end %>
     </div>

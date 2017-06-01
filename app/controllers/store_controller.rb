@@ -41,7 +41,10 @@ class StoreController < ApplicationController
       end
       size = params[:size] ? "#{params[:size]} " : ""
       color = params[:color] ? "#{params[:color]} " : ""
-      name = "#{size}#{color}#{item_title}"
+      instructor = params[:instructor_name] ? "#{params[:instructor_name]} " : ""
+      location = params[:location_name] ? " at #{params[:location_name]}" : ""
+      time = params[:desired_time] ? ", #{params[:desired_time]}" : ""
+      name = "#{size}#{color}#{instructor}#{item_title}#{location}#{time}"
 
       orders = @cart.cart_items
       order = orders.where(order_name: name).first

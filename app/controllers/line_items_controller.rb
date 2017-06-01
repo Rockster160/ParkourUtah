@@ -25,7 +25,6 @@ class LineItemsController < ApplicationController
   end
 
   def update
-    puts "#{item_params}".colorize(:red)
     item = LineItem.find(params[:id])
     if item.update(item_params)
       flash[:notice] = "Item successfully updated."

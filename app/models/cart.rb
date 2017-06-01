@@ -16,6 +16,8 @@ class Cart < ApplicationRecord
   belongs_to :user, optional: true
   has_many :cart_items, dependent: :destroy
 
+  scope :purchased, -> { where.not(purchased_at: nil) }
+
   def notify_slack_of_purchase
     if user.present?
       user_url = Rails.application.routes.url_helpers.admin_user_url(user)
@@ -47,8 +49,8 @@ class Cart < ApplicationRecord
     slack_message << "```"
 
     if Rails.env.production?
-      SlackNotifier.notify(slack_message, "#special-purchases") if cart_items.any? { |cart_item| [2, 15].include?(cart_item.id) }
-      SlackNotifier.notify(slack_message, "#purchases") if cart_items.any? { |cart_item| [2, 15].exclude?(cart_item.id) }
+      SlackNotifier.notify(slack_message, "#special-purchases") if cart_items.any? { |cart_item| [2, 15].include?(cart_item.line_item_id) }
+      SlackNotifier.notify(slack_message, "#purchases") if cart_items.any? { |cart_item| [2, 15].exclude?(cart_item.line_item_id) }
     else
       SlackNotifier.notify(slack_message, "#slack-testing")
     end
