@@ -27,7 +27,7 @@ class Waiver < ApplicationRecord
 
   def expires_soon?
     return true if expiry_date.nil?
-    (Time.zone.now >= (self.expiry_date - 1.week) && self.signed)
+    (Time.zone.now >= (self.expiry_date - 8.days) && self.signed)
   end
 
   def is_active?
