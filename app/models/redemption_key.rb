@@ -2,13 +2,14 @@
 #
 # Table name: redemption_keys
 #
-#  id           :integer          not null, primary key
-#  key          :string
-#  redemption   :string
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  redeemed     :boolean          default(FALSE)
-#  line_item_id :integer
+#  id                         :integer          not null, primary key
+#  key                        :string
+#  redemption                 :string
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  redeemed                   :boolean          default(FALSE)
+#  line_item_id               :integer
+#  can_be_used_multiple_times :boolean          default(FALSE)
 #
 
 class RedemptionKey < ApplicationRecord
@@ -19,13 +20,11 @@ class RedemptionKey < ApplicationRecord
   # LineItem.find(x).redemption_keys.create
 
   def self.redeem(key)
-    item = self.where(key: key).first
-    if item
-      if item.redeemed
-        return false
-      else
-        item.update(redeemed: true)
-      end
+    key_to_redeem = self.where(key: key).first
+    if key_to_redeem
+      return true if key_to_redeem.try(:can_be_used_multiple_times?)
+      return false if key_to_redeem.redeemed?
+      key_to_redeem.update(redeemed: true)
     end
     true
   end

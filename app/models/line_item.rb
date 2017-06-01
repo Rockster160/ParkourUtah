@@ -23,6 +23,10 @@
 #  is_full_image        :boolean          default(FALSE)
 #  redemption_item_id   :integer
 #  show_text_as_image   :boolean          default(TRUE)
+#  instructor_ids       :string
+#  location_ids         :string
+#  time_range_start     :string
+#  time_range_end       :string
 #
 
 class LineItem < ApplicationRecord
