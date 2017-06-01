@@ -78,10 +78,10 @@ class StoreController < ApplicationController
         @order = CartItem.create(line_item_id: key.line_item_id, redeemed_token: params[:redemption_key], cart_id: @cart.try(:id))
       end
     end
+    @redeemed_token = true
+    @invalid = !@order
 
-    respond_to do |format|
-      format.js
-    end
+    render :update_cart
   end
 
   def charge
