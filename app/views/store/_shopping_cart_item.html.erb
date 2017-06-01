@@ -7,7 +7,7 @@
     <div class="shopping-cart-line-item-title"><%= order.order_name %></div>
     <div class="shopping-cart-line-item-price"><%= number_to_currency(order.item.cost_in_dollars) %></div>
     <div class="shopping-cart-line-item-quantity">
-      <% if order.redeemed_token.length > 0 %>
+      <% if order.redeemed_token.length > 0 && !RedemptionKey.where(key: order.redeemed_token).first.try(:can_be_used_multiple_times?) %>
         <input value="<%= order.amount %>" id="<%= order.order_name %>" disabled="disabled" size="1" maxlength="2" class="shopping-cart-line-item-quantity-input value-selector-<%= order.order_name.parameterize %>"></input>
       <% else %>
         <input value="<%= order.amount %>" id="<%= order.order_name %>" size="1" maxlength="2" class="shopping-cart-line-item-quantity-input value-selector-<%= order.order_name.parameterize %>"></input>

@@ -24,3 +24,11 @@ $('.shopping-cart-line-item-quantity-input').each(function(){
   addFlashNotice("");
   $('.orders-placeholder').append('<div class="hidden-holder"><%= j render partial: "shopping_cart_item", locals: {order: @order} %></div>');
 <% end %>
+<% if @redeemed_token %>
+  <% if @invalid %>
+    $('.redemption-key-container').val('').attr('placeholder', 'Invalid Code');
+  <% else %>
+    $('.redemption-key-container').val('').attr('placeholder', 'Coupon Code');
+    $('.redemption-key-container').val('');
+  <% end %>
+<% end %>
