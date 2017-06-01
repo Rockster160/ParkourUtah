@@ -55,6 +55,8 @@
                   <a alt="..." class="pkut-btn" data-toggle="modal" data-target="#info<%= item.id %>">Select Color</a><br/>
                 <% elsif item.sizes %>
                   <a alt="..." class="pkut-btn" data-toggle="modal" data-target="#info<%= item.id %>">Select Size</a><br/>
+                <% elsif item.instructors || item.locations || item.times %>
+                  <a alt="..." class="pkut-btn" data-toggle="modal" data-target="#info<%= item.id %>">Set Location</a><br/>
                 <% else %>
                   <% if user_signed_in? || category == :gift_card %>
                     <%= link_to "Add to Cart", update_cart_path(item_id: item.id), class: "pkut-btn", remote: true, method: :post %><br/>

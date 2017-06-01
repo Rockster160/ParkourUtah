@@ -23,6 +23,9 @@
 #  is_full_image        :boolean          default(FALSE)
 #  redemption_item_id   :integer
 #  show_text_as_image   :boolean          default(TRUE)
+#  instructor_ids       :string
+#  location_ids         :string
+#  select_time          :boolean
 #
 
 class LineItem < ApplicationRecord
@@ -65,6 +68,20 @@ class LineItem < ApplicationRecord
     return nil unless size
     my_sizes = size.split(',').map(&:squish)
     my_sizes.any? ? my_sizes : nil
+  end
+
+  def instructors=(ids)
+    self.instructor_ids = ids.to_s
+  end
+  def instructors
+    User.instructors.where(id: instructor_ids.split(","))
+  end
+
+  def locations=(ids)
+    self.location_ids = ids.to_s
+  end
+  def locations
+    Spot.where(id: instructor_ids.split(","))
   end
 
   def cost

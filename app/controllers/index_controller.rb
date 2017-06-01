@@ -146,7 +146,8 @@ class IndexController < ApplicationController
       "You have a product, service and have no customers?",
       "buy a cheap",
       "href=",
-      "GetBusinessFunded"
+      "BusinessFund",
+      "private loan"
     ]
   end
 

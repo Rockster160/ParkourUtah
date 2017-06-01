@@ -32,7 +32,6 @@ class LineItemsController < ApplicationController
     else
       flash[:alert] = "There was an error updating the item."
     end
-    puts "#{item.attributes}".colorize(:red)
     puts "#{item.reload.attributes}".colorize(:red)
     redirect_to dashboard_path
   end
@@ -67,6 +66,8 @@ class LineItemsController < ApplicationController
   end
 
   def item_params
+    params[:line_item][:locations] = params[:line_item][:location_ids].try(:keys)&.join(",")
+    params[:line_item][:instructors] = params[:line_item][:instructor_ids].try(:keys)&.join(",")
     params.require(:line_item).permit(
       :description,
       :title,
@@ -82,7 +83,10 @@ class LineItemsController < ApplicationController
       :taxable,
       :is_full_image,
       :show_text_as_image,
-      :redemption_item_id
+      :redemption_item_id,
+      :instructors,
+      :locations,
+      :select_time
     )
   end
 

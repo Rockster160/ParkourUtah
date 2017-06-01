@@ -32,20 +32,63 @@
         <%= f.select :category, @categories, {}, class: 'pkut-textbox' %>
       </div>
       <div class="form-field">
-        <%= f.check_box :hidden %>
-        <%= f.label :hidden, 'Hidden? (Hidden items are only purchasable with a redemption key)' %>
+        <div class="pkut-checkbox">
+          <%= check_box_tag :display_location_info, '', @item.instructor_ids.present? || @item.location_ids.present? || @item.select_time?, data: { reveal: "#location-info" } %>
+          <%= label_tag :display_location_info, "Display location Info?" %>
+        </div>
+      </div>
+      <div id="location-info">
+        <div class="form-field">
+          <%= f.label :instructors %>
+          <% User.instructors.each do |instructor| %>
+            <div class="pkut-checkbox">
+              <%= check_box_tag "line_item[instructor_ids][#{instructor.id}]", true, @item.instructor_ids.to_s.split(",").include?(instructor.id.to_s) %>
+              <%= label_tag "line_item[instructor_ids][#{instructor.id}]", instructor.display_name %>
+            </div>
+          <% end %>
+        </div>
+        <hr>
+        <div class="form-field">
+          <%= f.label :locations %>
+          <% Spot.all.each do |spot| %>
+            <div class="pkut-checkbox">
+              <%= check_box_tag "line_item[location_ids][#{spot.id}]", true, @item.location_ids.to_s.split(",").include?(spot.id.to_s) %>
+              <%= label_tag "line_item[location_ids][#{spot.id}]", spot.title %>
+            </div>
+          <% end %>
+        </div>
+        <hr>
+        <div class="form-field">
+          <div class="pkut-checkbox">
+            <%= f.check_box :select_time? %>
+            <%= f.label :select_time?, "Show input box to allow user to select a time?" %>
+          </div>
+        </div>
+        <hr>
       </div>
       <div class="form-field">
-        <%= f.check_box :taxable %>
-        <%= f.label :taxable, 'Taxable?' %>
+        <div class="pkut-checkbox">
+          <%= f.check_box :hidden %>
+          <%= f.label :hidden, 'Hidden? (Hidden items are only purchasable with a redemption key)' %>
+        </div>
       </div>
       <div class="form-field">
-        <%= f.check_box :is_full_image %>
-        <%= f.label :is_full_image, 'Image takes up entire box?' %>
+        <div class="pkut-checkbox">
+          <%= f.check_box :taxable %>
+          <%= f.label :taxable, 'Taxable?' %>
+        </div>
       </div>
       <div class="form-field">
-        <%= f.check_box :show_text_as_image %>
-        <%= f.label :show_text_as_image, 'When checked, instead of displaying an image, will display the title (and cost) over a red box with a long text shadow.' %>
+        <div class="pkut-checkbox">
+          <%= f.check_box :is_full_image %>
+          <%= f.label :is_full_image, 'Image takes up entire box?' %>
+        </div>
+      </div>
+      <div class="form-field">
+        <div class="pkut-checkbox">
+          <%= f.check_box :show_text_as_image %>
+          <%= f.label :show_text_as_image, 'When checked, instead of displaying an image, will display the title (and cost) over a red box with a long text shadow.' %>
+        </div>
       </div>
       <div class="form-field">
         <%= f.label :credits %>
