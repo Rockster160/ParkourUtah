@@ -33,7 +33,7 @@
       </div>
       <div class="form-field">
         <div class="pkut-checkbox">
-          <%= check_box_tag :display_location_info, '', @item.instructor_ids.present? || @item.location_ids.present? || @item.select_time?, data: { reveal: "#location-info" } %>
+          <%= check_box_tag :display_location_info, '', @item.instructor_ids.present? || @item.location_ids.present? || @item.time_range_start.present? || @item.time_range_end.present?, data: { reveal: "#location-info" } %>
           <%= label_tag :display_location_info, "Display location Info?" %>
         </div>
       </div>
@@ -58,11 +58,14 @@
           <% end %>
         </div>
         <hr>
+        <% time_range = @item.possible_time_range %>
         <div class="form-field">
-          <div class="pkut-checkbox">
-            <%= f.check_box :select_time? %>
-            <%= f.label :select_time?, "Show input box to allow user to select a time?" %>
-          </div>
+          <%= f.label :time_range_start %>
+          <%= f.select :time_range_start, time_range %>
+        </div>
+        <div class="form-field">
+          <%= f.label :time_range_end %>
+          <%= f.select :time_range_end, time_range %>
         </div>
         <hr>
       </div>

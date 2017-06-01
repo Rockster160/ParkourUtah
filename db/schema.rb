@@ -234,7 +234,8 @@ ActiveRecord::Schema.define(version: 20170601031406) do
     t.boolean  "show_text_as_image",   default: true
     t.string   "instructor_ids"
     t.string   "location_ids"
-    t.boolean  "select_time"
+    t.string   "time_range_start"
+    t.string   "time_range_end"
   end
 
   create_table "log_trackers", force: :cascade do |t|

@@ -86,7 +86,8 @@ class LineItemsController < ApplicationController
       :redemption_item_id,
       :instructors,
       :locations,
-      :select_time
+      :time_range_start,
+      :time_range_end
     )
   end
 

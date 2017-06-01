@@ -19,12 +19,12 @@ class RedemptionKey < ApplicationRecord
   # LineItem.find(x).redemption_keys.create
 
   def self.redeem(key)
-    item = self.where(key: key).first
-    if item
-      if item.redeemed
+    key_to_redeem = self.where(key: key).first
+    if key_to_redeem
+      if key_to_redeem.redeemed?
         return false
       else
-        item.update(redeemed: true)
+        key_to_redeem.update(redeemed: true)
       end
     end
     true

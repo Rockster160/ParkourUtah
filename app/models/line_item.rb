@@ -25,7 +25,8 @@
 #  show_text_as_image   :boolean          default(TRUE)
 #  instructor_ids       :string
 #  location_ids         :string
-#  select_time          :boolean
+#  time_range_start     :string
+#  time_range_end       :string
 #
 
 class LineItem < ApplicationRecord
@@ -82,6 +83,26 @@ class LineItem < ApplicationRecord
   end
   def locations
     Spot.where(id: instructor_ids.split(","))
+  end
+
+  def possible_time_range
+    alotted_times = []
+    alotted_times += ["12:00 AM", "12:30 AM"]
+    (1..11).each do |t|
+      alotted_times += ["#{t}:00 AM", "#{t}:30 AM"]
+    end
+    alotted_times += ["12:00 PM", "12:30 PM"]
+    (1..11).each do |t|
+      alotted_times += ["#{t}:00 PM", "#{t}:30 PM"]
+    end
+    alotted_times
+  end
+
+  def time_range
+    alotted_times = possible_time_range
+    start_idx = alotted_times.index(time_range_start) || 0
+    end_idx = alotted_times.index(time_range_end) || alotted_times.length - 1
+    alotted_times[start_idx..end_idx]
   end
 
   def cost
