@@ -13,9 +13,12 @@
     <p>If any athletes are missing, please be sure that all information is filled out entirely with the requested formats.</p>
     <div class="text-center">
       <%= link_to 'REVIEW AND DOWNLOAD WAIVER', '//s3-us-west-2.amazonaws.com/pkut-default/RELEASE+AGREEMENT1.pdf', class: 'pkut-link', target: '_blank' %>
-      <div class="text-field-height pkut-checkbox arrow-required">
+      <br>
+      <div class="pkut-checkbox center-checkbox">
         <%= check_box_tag :signed, '', nil, class: 'required-checkbox' %>
-        <%= label_tag :signed, '' %>
+        <%= label_tag :signed do %>
+          <div class="arrow-required">Required</div>
+        <% end %>
       </div>
     </div>
     <p>By checking the box above, I hereby agree to waive any liability of Parkour Utah for the athletes listed above. By entering my name below, I certify that I have downloaded, read, and understand all of the terms and provisions in the liability waiver document available for download above.</p>

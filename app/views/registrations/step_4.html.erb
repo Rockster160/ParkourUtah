@@ -79,9 +79,11 @@
               <span class="pkut-link title open-review-modal"><%= athlete.fast_pass_pin.to_s.rjust(4, "0") %></span>
             </div>
             <div class="col-sm-4 col-xs-8">
-              <div class="pkut-checkbox arrow-required">
+              <div class="pkut-checkbox">
                 <%= check_box_tag "agreed[#{athlete.id}]", '', false, class: "customRequired" %>
-                <%= label_tag "agreed[#{athlete.id}]", '' %>
+                <%= label_tag "agreed[#{athlete.id}]" do %>
+                  <div class="arrow-required">Required</div>
+                <% end %>
               </div>
             </div>
           </div>

@@ -25,8 +25,10 @@ class AdminUsersController < ApplicationController
   def update_notifications
     user = User.find(params[:id])
     user.notifications.blow!
-    params[:notify].each do |attribute, value|
-      user.notifications.update(attribute => true)
+    if params[:notify].try(:any?)
+      params[:notify].each do |attribute, value|
+        user.notifications.update(attribute => true)
+      end
     end
     redirect_back fallback_location: root_path
   end
