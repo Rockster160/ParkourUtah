@@ -15,8 +15,9 @@ $('.shopping-cart-line-item-quantity-input').each(function() {
 updateCartItems();
 
 <% if @order %>
-  addFlashNotice("");
   $('.orders-placeholder').append('<div class="hidden-holder"><%= j render partial: "shopping_cart_item", locals: {order: @order} %></div>');
+  <% message = @order.item.bundle_amount? && @order.item.bundle_cost_in_pennies ? "Hey! If you buy #{@order.item.bundle_amount} or more of these, you get the family discount!" : "" %>
+  addFlashNotice('<%= message %>');
 <% end %>
 <% if @redeemed_token %>
   <% if @invalid %>
