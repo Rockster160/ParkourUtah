@@ -26,9 +26,8 @@ $('.shopping-cart-line-item-quantity-input').each(function(){
 <% end %>
 <% if @redeemed_token %>
   <% if @invalid %>
-    $('.redemption-key-container').val('').attr('placeholder', 'Invalid Code');
+    $('.redemption-key-container').val('').attr('placeholder', 'Invalid Code').blur();
   <% else %>
-    $('.redemption-key-container').val('').attr('placeholder', 'Coupon Code');
-    $('.redemption-key-container').val('');
+    $('.redemption-key-container').val('').attr('placeholder', 'Coupon Code').blur();
   <% end %>
 <% end %>

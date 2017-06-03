@@ -75,7 +75,7 @@ class StoreController < ApplicationController
 
   def redeem
     key = RedemptionKey.where(key: params[:redemption_key]).first
-    if key.present? && key.redeemed == false
+    if key.present? && !key.redeemed? && !key.expired?
       items_with_key = @cart.cart_items.where(redeemed_token: params[:redemption_key])
       if key.item.present? && (items_with_key.none? || key.can_be_used_multiple_times?)
         @order = CartItem.create(line_item_id: key.line_item_id, redeemed_token: params[:redemption_key], cart_id: @cart.try(:id))

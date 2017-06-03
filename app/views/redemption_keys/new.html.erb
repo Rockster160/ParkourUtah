@@ -12,6 +12,10 @@
         <%= label_tag :how_many %> <br>
         <%= number_field :how_many, '', step: 1, class: 'pkut-textbox restrictNumeric' %>
       </div>
+      <div class="form-field">
+        <%= label_tag :expiry_date, "Expiry Date (Leave blank for no expiration)" %> <br>
+        <%= text_field_tag :expiry_date, '', class: 'pkut-textbox datepicker-field' %>
+      </div>
       <h4><%= submit_tag "Generate!", class: 'pkut-btn' %></h4>
     </div>
   <% end %>

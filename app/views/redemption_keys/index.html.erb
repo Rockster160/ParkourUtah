@@ -3,7 +3,17 @@
   <%= link_to "Generate Keys", new_redemption_key_path, class: 'pkut-btn' %>
   <div style="margin-top: 20px;">
     <% @keys.each do |key| %>
-      <p><%= key.line_item.title %> - <%= key.key %></p>
+      <p>
+        <%= link_to redemption_key_path(key), class: "danger", method: :delete do %>
+          <i class="fa fa-times-circle-o"></i>
+        <% end %>
+        <%= key.line_item.title %> - <%= key.key %>
+        <% if key.expiry_date %>
+          <div style="padding-left: 30px;">
+            Expires: <%= key.expiry_date %>
+          </div>
+        <% end %>
+      </p>
     <% end %>
   </div>
 </div>

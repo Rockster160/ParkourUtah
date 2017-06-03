@@ -10,6 +10,7 @@
 #  redeemed                   :boolean          default(FALSE)
 #  line_item_id               :integer
 #  can_be_used_multiple_times :boolean          default(FALSE)
+#  expires_at                 :datetime
 #
 
 require 'test_helper'

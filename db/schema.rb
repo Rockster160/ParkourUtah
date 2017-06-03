@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170601051806) do
+ActiveRecord::Schema.define(version: 20170603171615) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,15 +25,6 @@ ActiveRecord::Schema.define(version: 20170601051806) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_addresses_on_user_id", using: :btree
-  end
-
-  create_table "announcement_views", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "announcement_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.index ["announcement_id"], name: "index_announcement_views_on_announcement_id", using: :btree
-    t.index ["user_id"], name: "index_announcement_views_on_user_id", using: :btree
   end
 
   create_table "announcements", force: :cascade do |t|
@@ -307,6 +298,7 @@ ActiveRecord::Schema.define(version: 20170601051806) do
     t.boolean  "redeemed",                   default: false
     t.integer  "line_item_id"
     t.boolean  "can_be_used_multiple_times", default: false
+    t.datetime "expires_at"
     t.index ["line_item_id"], name: "index_redemption_keys_on_line_item_id", using: :btree
   end
 

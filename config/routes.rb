@@ -53,7 +53,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :redemption_keys, except: [ :show, :edit, :update, :destroy ] do
+  resources :redemption_keys, except: [ :show, :edit, :update ] do
     member do
       get :redeem
     end

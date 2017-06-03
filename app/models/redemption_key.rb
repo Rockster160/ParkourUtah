@@ -10,6 +10,7 @@
 #  redeemed                   :boolean          default(FALSE)
 #  line_item_id               :integer
 #  can_be_used_multiple_times :boolean          default(FALSE)
+#  expires_at                 :datetime
 #
 
 class RedemptionKey < ApplicationRecord
@@ -19,9 +20,16 @@ class RedemptionKey < ApplicationRecord
 
   # LineItem.find(x).redemption_keys.create
 
+  scope :expired, -> { where("expires_at < ?", Time.zone.now) }
+  scope :not_expired, -> { where.not("expires_at < ?", Time.zone.now) }
+  scope :redeemed, -> { where(redeemed: true) }
+  scope :not_redeemed, -> { where.not(redeemed: true) }
+  scope :redeemable, -> { not_redeemed }
+
   def self.redeem(key)
     key_to_redeem = self.where(key: key).first
     if key_to_redeem
+      return false if key_to_redeem.expired?
       return true if key_to_redeem.try(:can_be_used_multiple_times?)
       return false if key_to_redeem.redeemed?
       key_to_redeem.update(redeemed: true)
@@ -29,7 +37,23 @@ class RedemptionKey < ApplicationRecord
     true
   end
 
+  def expired?
+    return false unless expires_at
+    self.expires_at < Time.zone.now
+  end
+
   def item; self.line_item; end
+
+  def expiry_date=(date_str)
+    begin
+      self.expires_at = Time.zone.parse(date_str)
+    rescue
+      errors.add(:expires_at, "Must be a valid date.")
+    end
+  end
+  def expiry_date
+    self.expires_at&.strftime('%b %d, %Y')
+  end
 
   def generate_key
     caps = ('A'..'Z').to_a
