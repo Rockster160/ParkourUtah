@@ -37,11 +37,14 @@ class Cart < ApplicationRecord
 
     max_name = [10, cart_items.map(&:order_name).map(&:to_s).map(&:length)].flatten.max + 2
     max_quantity = [2, cart_items.map(&:amount).map(&:to_s).map(&:length)].flatten.max + 2
-    max_cost = [5, cart_items.map(&:line_item).map(&:cost_in_pennies).map(&:to_s).map(&:length)].flatten.max + 5
+    max_cost = [5, cart_items.map(&:line_item).map(&:cost_in_pennies).map(&:to_s).map(&:length)].flatten.max + 12
 
     slack_message << "```"
     cart_items.each do |cart_item|
-      slack_message << "#{cart_item.order_name.ljust(max_name)} #{cart_item.amount.to_s.rjust(max_quantity)}x #{number_to_currency(cart_item.line_item.cost_in_pennies / 100).rjust(max_cost)}\n"
+      exceeds_bundle = cart_item.line_item.exceeds_bundle?(cart_item.amount)
+      cost_str = exceeds_bundle ? "bundle #{number_to_currency(cart_item.line_item.bundle_cost)}".rjust(max_cost) : "#{number_to_currency(cart_item.line_item.cost_in_dollars).rjust(max_cost)}"
+
+      slack_message << "#{cart_item.order_name.ljust(max_name)} #{cart_item.amount.to_s.rjust(max_quantity)}x #{cost_str}\n"
     end
     slack_message << "#{'-- Tax:'.ljust(max_name)} #{''.rjust(max_quantity)}  #{number_to_currency(taxes_in_dollars).rjust(max_cost)}\n" if taxes > 0
     slack_message << "#{'-- Shipping:'.ljust(max_name)} #{''.rjust(max_quantity)}  #{number_to_currency(shipping_in_dollars).rjust(max_cost)}\n" if shipping > 0
@@ -98,7 +101,7 @@ class Cart < ApplicationRecord
   def price
     cost = 0
     self.cart_items.each do |order|
-      cost += (order.item.cost * order.amount)
+      cost += order.item.cost_for(order.amount)
     end
     cost <= 0 ? 0 : cost
   end
@@ -115,7 +118,7 @@ class Cart < ApplicationRecord
   def taxes
     cost = 0
     self.cart_items.each do |order|
-      cost += (order.item.tax * order.amount)
+      cost += order.item.tax_for(order.amount)
     end
     cost
   end

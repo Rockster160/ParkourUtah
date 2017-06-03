@@ -2,31 +2,33 @@
 #
 # Table name: line_items
 #
-#  id                   :integer          not null, primary key
-#  display_file_name    :string
-#  display_content_type :string
-#  display_file_size    :integer
-#  display_updated_at   :datetime
-#  description          :text
-#  cost_in_pennies      :integer
-#  title                :string
-#  category             :string
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  size                 :string
-#  hidden               :boolean
-#  item_order           :integer
-#  credits              :integer          default(0)
-#  is_subscription      :boolean          default(FALSE)
-#  taxable              :boolean          default(TRUE)
-#  color                :string
-#  is_full_image        :boolean          default(FALSE)
-#  redemption_item_id   :integer
-#  show_text_as_image   :boolean          default(TRUE)
-#  instructor_ids       :string
-#  location_ids         :string
-#  time_range_start     :string
-#  time_range_end       :string
+#  id                     :integer          not null, primary key
+#  display_file_name      :string
+#  display_content_type   :string
+#  display_file_size      :integer
+#  display_updated_at     :datetime
+#  description            :text
+#  cost_in_pennies        :integer
+#  title                  :string
+#  category               :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  size                   :string
+#  hidden                 :boolean
+#  item_order             :integer
+#  credits                :integer          default(0)
+#  is_subscription        :boolean          default(FALSE)
+#  taxable                :boolean          default(TRUE)
+#  color                  :string
+#  is_full_image          :boolean          default(FALSE)
+#  redemption_item_id     :integer
+#  show_text_as_image     :boolean          default(TRUE)
+#  instructor_ids         :string
+#  location_ids           :string
+#  time_range_start       :string
+#  time_range_end         :string
+#  bundle_amount          :integer
+#  bundle_cost_in_pennies :integer
 #
 
 class LineItem < ApplicationRecord
@@ -118,8 +120,31 @@ class LineItem < ApplicationRecord
     self.cost_in_pennies.to_f / 100
   end
 
-  def tax
-    self.taxable? ? (self.cost.to_f * 0.0825).round : 0
+  def bundle_cost=(new_dollar_cost)
+    self.bundle_cost_in_pennies = new_dollar_cost.to_f * 100
+  end
+  def bundle_cost
+    return unless bundle_cost_in_pennies.to_i > 0
+    self.bundle_cost_in_pennies.to_f / 100
+  end
+
+  def exceeds_bundle?(amount)
+    return false unless bundle_amount.to_i > 0 && bundle_cost_in_pennies.to_i > 0
+    amount >= bundle_amount
+  end
+
+  def cost_for(amount)
+    if exceeds_bundle?(amount)
+      (self.bundle_cost_in_pennies.to_f * amount).round
+    else
+      (self.cost.to_f * amount).round
+    end
+  end
+
+  def tax_for(amount)
+    return 0 unless taxable?
+    tax_multiplier = 0.0825
+    (cost_for(amount) * tax_multiplier).round
   end
 
   def assign_item_position_if_nil

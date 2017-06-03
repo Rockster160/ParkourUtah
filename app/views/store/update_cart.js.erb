@@ -12,13 +12,7 @@ $('.shopping-cart-line-item-quantity-input').each(function() {
   var amount = "<%= order.amount %>";
   $('.value-selector-<%= order.order_name.parameterize %>').val(amount);
 <% end %>
-$('.shopping-cart-line-item-quantity-input').each(function(){
-  var $container = $(this).parents('.shopping-cart-cell');
-  if ($(this).val() == "0" || $(this).val() == "" || $(this).val() == 0) {
-    $container.remove();
-    $(this).remove();
-  }
-});
+updateCartItems();
 
 <% if @order %>
   addFlashNotice("");

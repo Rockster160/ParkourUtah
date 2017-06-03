@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170603171615) do
+ActiveRecord::Schema.define(version: 20170603204105) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -211,22 +211,24 @@ ActiveRecord::Schema.define(version: 20170603171615) do
     t.integer  "cost_in_pennies"
     t.string   "title"
     t.string   "category"
-    t.datetime "created_at",                           null: false
-    t.datetime "updated_at",                           null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
     t.string   "size"
     t.boolean  "hidden"
     t.integer  "item_order"
-    t.integer  "credits",              default: 0
-    t.boolean  "is_subscription",      default: false
-    t.boolean  "taxable",              default: true
+    t.integer  "credits",                default: 0
+    t.boolean  "is_subscription",        default: false
+    t.boolean  "taxable",                default: true
     t.string   "color"
-    t.boolean  "is_full_image",        default: false
+    t.boolean  "is_full_image",          default: false
     t.integer  "redemption_item_id"
-    t.boolean  "show_text_as_image",   default: true
+    t.boolean  "show_text_as_image",     default: true
     t.string   "instructor_ids"
     t.string   "location_ids"
     t.string   "time_range_start"
     t.string   "time_range_end"
+    t.integer  "bundle_amount"
+    t.integer  "bundle_cost_in_pennies"
   end
 
   create_table "log_trackers", force: :cascade do |t|

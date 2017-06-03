@@ -86,7 +86,9 @@ class LineItemsController < ApplicationController
       :instructors,
       :locations,
       :time_range_start,
-      :time_range_end
+      :time_range_end,
+      :bundle_cost,
+      :bundle_amount
     )
   end
 

@@ -30,10 +30,10 @@
   <% if content_for?(:modals) %>
     <%= yield(:modals) %>
   <% end %>
-  <% if params[:trigger_fb_purchase].present? %>
+  <% if params[:trigger_fb_purchase].present? && Rails.env.production? %>
     <script>
       fbq('track', 'Purchase', {
-        item_ids:  <%= params[:trigger_fb_purchase][:item_ids] %>,
+        item_ids:  <%= params[:trigger_fb_purchase][:item_ids]&.map(&:to_i) %>,
         value: <%= params[:trigger_fb_purchase][:value].to_f %>,
         currency: 'USD'
       });
