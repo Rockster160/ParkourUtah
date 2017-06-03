@@ -147,7 +147,8 @@ class IndexController < ApplicationController
       "buy a cheap",
       "href=",
       "BusinessFund",
-      "private loan"
+      "private loan",
+      "Харьков"
     ]
   end
 
