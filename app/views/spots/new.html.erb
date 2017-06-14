@@ -2,6 +2,7 @@
   <script src="//maps.google.com/maps/api/js?v=3.23&key=<%= ENV['PKUT_GMAPS_KEY'] %>"></script>
   <script src="//cdn.rawgit.com/mahnunchik/markerclustererplus/master/dist/markerclusterer.min.js"></script>
 <% end %>
+
 <div class="central-container form-offset">
   <h1>New Spot</h1>
   <%= form_for [@spot], html: {id: 'gmaps_form'} do |f| %>

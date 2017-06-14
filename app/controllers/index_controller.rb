@@ -154,7 +154,10 @@ class IndexController < ApplicationController
       "Viagra",
       "Pharmacy Express",
       "mostwellweb",
-      "loceawake"
+      "loceawake",
+      "stop-menopause",
+      "trade-24.info",
+      "money train"
     ]
   end
 
