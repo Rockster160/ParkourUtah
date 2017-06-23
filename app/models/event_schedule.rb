@@ -45,7 +45,7 @@ class EventSchedule < ApplicationRecord
   validate :has_either_address_or_spot
   validate :has_at_least_one_payment_rule
 
-  scope :in_the_future, -> { where("start_date < :now AND (end_date IS NULL OR end_date > :now)", now: Time.zone.now) }
+  scope :in_the_future, -> { where("end_date IS NULL OR end_date > :now", now: Time.zone.now) }
 
   enum day_of_week: {
     sunday: 0,
