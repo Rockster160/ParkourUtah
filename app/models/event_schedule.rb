@@ -45,7 +45,7 @@ class EventSchedule < ApplicationRecord
   validate :has_either_address_or_spot
   validate :has_at_least_one_payment_rule
 
-  scope :in_the_future, -> { where("end_date IS NULL OR end_date > :now", now: Time.zone.now) }
+  scope :in_the_future, -> { where("end_date IS NULL OR end_date >= :recently", recently: 3.months.ago) }
 
   enum day_of_week: {
     sunday: 0,
@@ -68,7 +68,7 @@ class EventSchedule < ApplicationRecord
     time_zone = Time.zone
     first_date = time_zone.local(first_day.year, first_day.month, first_day.day, first_day.hour, first_day.minute).beginning_of_day
     last_date = time_zone.local(last_day.year, last_day.month, last_day.day, last_day.hour, last_day.minute).end_of_day
-    scheduled = where("end_date IS NULL OR end_date > :last_date", first_date: first_date, last_date: last_date)
+    scheduled = where("start_date <= :last_date AND (end_date IS NULL OR end_date > :first_date)", first_date: first_date, last_date: last_date)
     scheduled.map do |schedule|
       scheduled_events = schedule.events.where(original_date: first_date..last_date)
       scheduled_events.empty? ? schedule.new_events_for_time_range(first_date, last_date) : scheduled_events.where(date: first_date..last_date)
