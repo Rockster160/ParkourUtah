@@ -157,7 +157,11 @@ class IndexController < ApplicationController
       "loceawake",
       "stop-menopause",
       "trade-24.info",
-      "money train"
+      "money train",
+      "roulette",
+      "blackjack",
+      "online casino",
+      "badmansino"
     ]
   end
 
