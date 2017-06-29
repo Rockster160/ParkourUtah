@@ -125,6 +125,8 @@ class IndexController < ApplicationController
   def blacklisted_body?
     @blacklisted ||= begin
       return true if params[:comment].nil?
+      return true if params[:phone].split("").uniq.length <= 3
+      return true if params[:name].include?("http://")
       body_blacklist.any? { |blacklist_string| params[:comment].include?(blacklist_string) }
     end
   end
@@ -161,7 +163,10 @@ class IndexController < ApplicationController
       "roulette",
       "blackjack",
       "online casino",
-      "badmansino"
+      "badmansino",
+      "top-pharm",
+      "webcamdirty",
+      "free-dating"
     ]
   end
 
