@@ -1,4 +1,4 @@
-require 'net/http'
+ require 'net/http'
 class IndexController < ApplicationController
   before_action :still_signed_in
   skip_before_action :verify_authenticity_token
@@ -166,7 +166,9 @@ class IndexController < ApplicationController
       "badmansino",
       "top-pharm",
       "webcamdirty",
-      "free-dating"
+      "free-dating",
+      "We are not responsible for any financial loss",
+      "This is your final notice to renew"
     ]
   end
 
