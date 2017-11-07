@@ -12,6 +12,7 @@
 #  updated_at      :datetime         not null
 #  stripe_id       :string
 #  user_id         :integer
+#  card_declined   :boolean
 #
 
 class RecurringSubscription < ApplicationRecord

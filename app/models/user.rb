@@ -214,6 +214,10 @@ class User < ApplicationRecord
     athletes.select { |athlete| !(athlete.waiver) || athlete.waiver.expires_soon? || !(athlete.waiver.is_active?) }
   end
 
+  def card_declined?
+    recurring_subscriptions.where(card_declined: true).any?
+  end
+
   def is_subscribed_to?(event_schedule_id)
     event_subscriptions.where(event_schedule_id: event_schedule_id).any?
   end

@@ -16,4 +16,10 @@ $(document).ready(function() {
     }
   })
   $("[data-reveal] input, input[data-reveal]").change();
+  
+  $("[data-clickit]").click(function(e) {
+    e.preventDefault();
+    $($(this).attr("data-clickit")).click();
+    return false;
+  })
 })

@@ -136,7 +136,9 @@ Rails.application.routes.draw do
   get "users/sign_up", action: "new", controller: "users"
   get "users/edit", action: "edit", controller: "users"
   get "users/edit", action: "edit", controller: "users"
-  resource :user, except: [ :show ]
+  resource :user, except: [ :show ] do
+    post :update_card_details
+  end
   devise_for :users
   devise_scope :user do
     get "/account" => "users#edit"

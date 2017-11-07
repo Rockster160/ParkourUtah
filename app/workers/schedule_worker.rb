@@ -80,6 +80,7 @@ class ScheduleWorker
   def monthly_subscription_charges(params)
     Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
     RecurringSubscription.assigned.auto_renew.inactive.group_by(&:user).each do |user, recurring_subscriptions|
+      next if user.card_declined?
       recurring_subscriptions.group_by(&:stripe_id).each do |stripe_id, stripe_subscriptions|
         next unless stripe_id.present?
         total_cost = stripe_subscriptions.map(&:cost_in_pennies).sum
@@ -107,6 +108,7 @@ class ScheduleWorker
             end
           end
         else
+          stripe_subscriptions.update_all(card_declined: true)
           SlackNotifier.notify("There was an issue updating the subscription for #{user.email}\n```#{stripe_charge}```", "#server-errors")
         end
       end
