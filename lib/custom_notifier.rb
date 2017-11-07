@@ -34,7 +34,7 @@ module ExceptionNotifier
       attchs = [color: 'danger', text: exception_message, mrkdwn_in: %w(text fields)]
 
       environ = Rails.env.production? ? '' : " [#{Rails.env.upcase}]"
-      ::SlackNotifier.notify(text, '#server-errors', "PKUT", ':pkut:', attchs)
+      ::SlackNotifier.notify(text, '#server-errors', "PKUT#{environ}", ':pkut:', attchs)
     end
 
   end
