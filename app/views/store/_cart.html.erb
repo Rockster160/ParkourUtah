@@ -1,3 +1,8 @@
+<% content_for :nav_btn do %>
+  <div class="visible-xs">
+    <a alt="..." class="pkut-btn cart-btn" data-toggle="modal" data-target="#cart_modal">Shopping Cart</a><br/>
+  </div>
+<% end %>
 <div class="hidden-xs">
   <div class="shopping-cart-container">
     <div class="shopping-cart">
@@ -31,10 +36,6 @@
           data-description="All Sales are Final"
           data-amount=0></script>
 <% end %>
-
-<div class="visible-xs">
-  <a alt="..." class="pkut-btn cart-btn" data-toggle="modal" data-target="#cart_modal">Shopping Cart</a><br/>
-</div>
 
 <div class="modal fade" id="cart_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="central-container">

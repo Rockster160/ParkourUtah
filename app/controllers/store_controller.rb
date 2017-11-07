@@ -1,5 +1,6 @@
 class StoreController < ApplicationController
   before_action :set_cart
+  skip_before_action :verify_authenticity_token
 
   def index
     @items_by_category = {}

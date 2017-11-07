@@ -1,7 +1,7 @@
 @import "config/variables";
 @import 'config/font-imports';
 
-$dropdown-z-index: $navbar-z-index - 1;
+$dropdown-z-index: $navbar-z-index + 10;
 .navbar-offset { height: $navbar-height; }
 
 .navigation {
@@ -11,13 +11,13 @@ $dropdown-z-index: $navbar-z-index - 1;
   min-height: $navbar-height;
   max-width: 100vw;
 
-  background-color: $pkut-grey-white;
-  opacity: 0.8;
+  background-color: rgba($pkut-grey-white, 0.8);
   border-bottom: 3px solid $pkut-grey;
 
   .navigation-items {
     text-align: right;
     position: relative;
+
     .navigation-item {
       display: inline-block;
       line-height: $navbar-height;
@@ -30,6 +30,7 @@ $dropdown-z-index: $navbar-z-index - 1;
       padding: 0 10px;
       position: relative;
       font-size: 14px;
+
       &:after {
         content: '';
         position: absolute;
@@ -106,8 +107,9 @@ $dropdown-z-index: $navbar-z-index - 1;
 
       padding: 5px 0;
       text-align: left;
-      z-index: $dropdown-z-index;
+      z-index: 1032;
       min-width: 160px;
+
       &.open {
         display: block;
       }

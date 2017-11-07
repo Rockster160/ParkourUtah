@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  skip_before_action :verify_authenticity_token
   before_action :validate_user_signed_in, except: [ :new, :create ]
   before_action :verify_user_is_not_signed_in, only: [ :new, :create ]
   before_action :still_signed_in

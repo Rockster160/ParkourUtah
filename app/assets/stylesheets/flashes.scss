@@ -3,7 +3,7 @@
 
 .flash-banner, .inline-flash {
   position: fixed;
-  z-index: $navbar-z-index - 10;
+  z-index: $navbar-z-index + 1;
   top: 70px;
   right: 20px;
   max-width: 100%;

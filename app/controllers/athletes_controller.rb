@@ -1,4 +1,5 @@
 class AthletesController < ApplicationController
+  skip_before_action :verify_authenticity_token
   before_action :validate_user_signed_in
   layout 'application', except: [ :secret ]
 
