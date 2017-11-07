@@ -125,7 +125,7 @@ function isScrolledIntoView(elem) {
   var docViewTop = $window.scrollTop(), docViewBottom = docViewTop + $window.height();
   var elemTop = $elem.offset().top, elemBottom = elemTop + $elem.height();
 
-  return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+  return ((elemBottom - 200 <= docViewBottom) && (elemTop + 200 >= docViewTop));
 }
 
 arrUniq = function(arr) {

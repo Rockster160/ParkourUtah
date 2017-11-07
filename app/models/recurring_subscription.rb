@@ -59,7 +59,6 @@ class RecurringSubscription < ApplicationRecord
       1.month.from_now
     end
     self.expires_at = extended_time
-    self.save
   end
 
 end

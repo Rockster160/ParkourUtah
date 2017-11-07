@@ -4,7 +4,8 @@
 <div class="week-container">
   <% (week.first.to_date..week.last.to_date).each do |day| %>
     <% events = events_for_week[day.strftime('%Y-%m-%d')] || [] %>
-    <div class="day-container <%= date.to_date == day.to_date ? 'chosen-day' : '' %>" data-date="<%= day.to_date %>">
+      <% next if events.none? %>
+    <div class="day-container <%= date.to_date == day.to_date ? 'chosen-day' : '' %> <%= 'mobile-today' if day.to_date == Date.today %>" data-date="<%= day.to_date %>">
       <h5 class="day-label"><%= day.strftime('%A %B %d, %Y') %></h5>
       <div class="mobile-events-container">
         <% events.each do |event| %>

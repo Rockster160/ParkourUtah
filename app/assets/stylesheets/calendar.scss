@@ -49,6 +49,8 @@ $single-day-height: Calc(100vh - 100px); //150 = mobile controls + navbar
       }
     }
   }
+  .today .day-label { background: khaki; }
+  .chosen-day .day-label { border-width: 2px; }
 }
 
 .date-picker-container {
