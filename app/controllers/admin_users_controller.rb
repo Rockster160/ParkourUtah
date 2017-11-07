@@ -25,7 +25,7 @@ class AdminUsersController < ApplicationController
   def update_notifications
     user = User.find(params[:id])
     user.notifications.blow!
-    if params[:notify].try(:any?)
+    if params[:notify].present?
       params[:notify].each do |attribute, value|
         user.notifications.update(attribute => true)
       end

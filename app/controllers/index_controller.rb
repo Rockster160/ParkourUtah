@@ -28,10 +28,12 @@ class IndexController < ApplicationController
 
   def update_notifications
     current_user.notifications.blow!
-    params[:notify].each do |attribute, value|
-      current_user.notifications.update(attribute => true)
+    if params[:notify].present?
+      params[:notify].each do |attribute, value|
+        current_user.notifications.update(attribute => true)
+      end
     end
-    redirect_to account_path
+    redirect_to account_path(anchor: "notifications")
   end
 
   def receive_sms
