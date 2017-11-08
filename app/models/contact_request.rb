@@ -31,7 +31,7 @@ class ContactRequest < ApplicationRecord
     email_url = Rails.application.routes.url_helpers.batch_email_admin_url(recipients: email)
     text_url = Rails.application.routes.url_helpers.phone_number_chat_rooms_url(phone)
     escaped_body = body.split("\n").map { |line| "\n>#{line}" }.join("")
-    contact_message = "*#{name}* has requested Contact!\n#{escaped_body}\nReach out by contacting: <#{email_url}|Via Email> or <#{text_url}|Via Text>\nOr call: #{phone}"
+    contact_message = "*#{name.squish}* has requested Contact!\n#{escaped_body}\nReach out by contacting: <#{email_url}|Via Email> or <#{text_url}|Via Text>\nOr call: #{phone}"
     channel = Rails.env.production? ? "#support" : "#slack-testing"
     SlackNotifier.notify(contact_message, channel)
   end
