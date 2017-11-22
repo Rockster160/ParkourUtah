@@ -1,5 +1,5 @@
 Rails.application.routes.default_url_options[:host] = 'parkourutah.com'
-Rails.application.routes.default_url_options[:protocol] = 'http://'
+Rails.application.routes.default_url_options[:protocol] = 'https://'
 Rails.application.routes.default_url_options[:port] = nil
 Rails.application.configure do
 
@@ -10,12 +10,12 @@ Rails.application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
-  config.action_cable.url = "ws://parkourutah.com/cable"
-  config.action_cable.allowed_request_origins = ["http://parkourutah.com"]
+  config.action_cable.url = "wss://parkourutah.com/cable"
+  config.action_cable.allowed_request_origins = ["https://parkourutah.com"]
 
-  routes.default_url_options = { host: 'parkourutah.com', protocol: 'http://', port: nil }
-  config.action_mailer.default_url_options = { host: 'parkourutah.com', protocol: 'http://', port: nil }
-  config.action_mailer.asset_host = 'http://parkourutah.com'
+  routes.default_url_options = { host: 'parkourutah.com', protocol: 'https://', port: nil }
+  config.action_mailer.default_url_options = { host: 'parkourutah.com', protocol: 'https://', port: nil }
+  config.action_mailer.asset_host = 'https://parkourutah.com'
   ActionMailer::Base.delivery_method = :smtp
   ActionMailer::Base.smtp_settings = {
     :address              => 'email-smtp.us-west-2.amazonaws.com',
