@@ -108,7 +108,7 @@ class ScheduleWorker
             end
           end
         else
-          stripe_subscriptions.update_all(card_declined: true)
+          stripe_subscriptions.each { |subscription| subscription.update(card_declined: true) }
           SlackNotifier.notify("There was an issue updating the subscription for #{user.email}\n```#{stripe_charge}```", "#server-errors")
         end
       end
