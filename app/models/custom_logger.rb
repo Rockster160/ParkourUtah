@@ -31,7 +31,6 @@ class CustomLogger
           user_id: user.try(:id),
           created_at: formatted_time
         })
-        binding.pry unless logger.persisted?
       end
       Rails.logger.info "\nCustomLogger: #{message_to_log}\n\n"
       File.open("log/custom_logger.txt", "a+"){|f| f << message_to_log }
