@@ -59,7 +59,7 @@ class ClassSummaryCalculator
           profit = amount_earned - amount_to_pay_instructor
 
           [instructor, summary_instructor, event_class, day, @summary].each do |object_to_increment|
-            object_to_increment.total_earned += amount_earned rescue Rails.logger.warn "#{object_to_increment.class}: #{object_to_increment}"
+            object_to_increment.total_earned += amount_earned rescue CustomLogger.log("#{object_to_increment.class}: #{object_to_increment}".colorize(:red))
             object_to_increment.total_payment += amount_to_pay_instructor
             object_to_increment.profit += profit
           end
