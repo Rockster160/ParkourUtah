@@ -5,8 +5,8 @@ class ClassSummaryCalculator
 
   CalculatedSummary = Struct.new(:start_date, :end_date, :days, :instructors, :total_earned, :total_payment, :profit) do
     def instructor_by_name(name)
-      instructors.each do |instructor|
-        return instructor if instructor.name == name
+      instructors.find do |instructor|
+        instructor.name == name
       end
     end
   end
@@ -59,7 +59,7 @@ class ClassSummaryCalculator
           profit = amount_earned - amount_to_pay_instructor
 
           [instructor, summary_instructor, event_class, day, @summary].each do |object_to_increment|
-            object_to_increment.total_earned += amount_earned
+            object_to_increment.total_earned += amount_earned rescue Rails.logger.warn "#{object_to_increment.class}: #{object_to_increment}"
             object_to_increment.total_payment += amount_to_pay_instructor
             object_to_increment.profit += profit
           end
