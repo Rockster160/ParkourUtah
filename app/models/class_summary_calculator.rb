@@ -43,8 +43,6 @@ class ClassSummaryCalculator
         event = EventSchedule.find(event_class.schedule_id)
         event_class.instructors.each do |instructor|
           summary_instructor = @summary.instructor_by_name(instructor.name)
-          summary_instructor = summary_instructor.first if summary_instructor.is_a?(Array)
-          raise InstructorNotFound unless summary_instructor.present?
 
           minimum_to_pay_instructor = event.min_payment_per_session || 0
           payment_per_student = event.payment_per_student || 0
@@ -60,6 +58,7 @@ class ClassSummaryCalculator
           profit = amount_earned - amount_to_pay_instructor
 
           [instructor, summary_instructor, event_class, day, @summary].each do |object_to_increment|
+            next unless object_to_increment.respond_to?(:total_earned)
             object_to_increment.total_earned += amount_earned
             object_to_increment.total_payment += amount_to_pay_instructor
             object_to_increment.profit += profit
