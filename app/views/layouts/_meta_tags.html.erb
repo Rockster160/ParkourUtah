@@ -1,0 +1,53 @@
+<% if content_for?(:title) %>
+  <title><%= content_for(:title) %></title>
+  <meta name="title" content="<%= content_for(:title) %>">
+  <meta name="og:title" content="<%= content_for(:title) %>">
+  <meta name="twitter:title" content="<%= content_for(:title) %>">
+<% else %>
+  <title>Parkour Utah</title>
+  <meta name="title" content="Parkour Utah">
+  <meta name="og:title" content="Parkour Utah">
+  <meta name="twitter:title" content="Parkour Utah">
+<% end %>
+
+<% if content_for?(:description) %>
+  <meta name="description" content="<%= content_for(:description) %>">
+  <meta name="og:description" content="<%= content_for(:description) %>">
+  <meta name="twitter:description" content="<%= content_for(:description) %>">
+<% else %>
+  <% default_description = "Utah's premier parkour instruction designed by and run by parkour athletes. For anyone interested in learning parkour (ages 7-100+) our first two classes are free. Sign up and check us out!" %>
+  <meta name="description" content="<%= default_description %>">
+  <meta name="og:description" content="<%= default_description %>">
+  <meta name="twitter:description" content="<%= default_description %>">
+<% end %>
+
+<% unless Rails.env.production? %>
+  <%# This prevents Google from finding our Staging server %>
+  <meta name="robots" content="noindex">
+<% end %>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
+<meta name="google-site-verification" content="5uf1OKzOYIfhb6m-6kpArPbzV2wNzPoig7yKI8lElk0" />
+
+<meta name="keywords" content="Parkour, Parkour Utah, parkour in utah, pkut, free running, freerunning, jump, flip, lessons, kids, free">
+
+<!-- <meta name="image" content="<%=  %>">
+<meta name="og:image" content="<%=  %>">
+<meta name="twitter:image" content="<%=  %>"> -->
+
+<!-- <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image:alt" content="Parkour Utah"> -->
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="<%= root_url %>">
+<meta property="og:site_name" content="ParkourUtah">
+
+<%= content_for(:meta) %>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<%= render partial: "layouts/facebook_tracking" if Rails.env.production? %>
+
+<%= csrf_meta_tags %>
+<%= action_cable_meta_tag %>
