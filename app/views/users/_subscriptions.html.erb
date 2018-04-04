@@ -1,3 +1,23 @@
+<% if current_user.subscribed_athletes.any? %>
+  <hr>
+  <div class="row">
+    <p>You are currently set up to auto-pay for <strong class="pkut-text">monthly</strong> subscriptions.</p>
+    <% current_user.subscribed_athletes.sort_by {|a|a.current_subscription.try(:expires_at)}.each do |athlete| %>
+      <% subscription = athlete.current_subscription %>
+      <% next unless subscription.present? %>
+      <div class="row">
+        <div class="col-sm-6">
+          <p>The next payment of <%= number_to_currency(subscription.cost) %> for <%= athlete.full_name %> will process on <%= (subscription.expires_at + 1.day).strftime('%B %e, %Y') %>.</p>
+        </div>
+        <div class="col-sm-6 text-center">
+          <%= link_to 'Unsubscribe', unsubscribe_monthly_subscription_path(athlete.id), class: 'pkut-btn', method: :delete %>
+        </div>
+      </div>
+    <% end %>
+    <p><a href="#" data-clickit=".stripe-button-el">Update Card Details</a></p>
+  </div>
+<% end %>
+
 <% if current_user.can_receive_sms %>
   <% if current_user.subscribed_events.any? %>
     <hr>
@@ -21,26 +41,6 @@
 <% else %>
   <h3 class="pkut-text">You have blacklisted ParkourUtah, so we are unable to message you about your subscribed classes!</h3>
   <h3 class="pkut-text">Visit the <a data-tab-target="#notifications">"Notifications"</a> tab in order to unblacklist us.</h3>
-<% end %>
-
-<% if current_user.subscribed_athletes.any? %>
-  <hr>
-  <div class="row">
-    <p>You are currently set up to auto-pay for monthly subscriptions.</p>
-    <% current_user.subscribed_athletes.sort_by {|a|a.current_subscription.try(:expires_at)}.each do |athlete| %>
-      <% subscription = athlete.current_subscription %>
-      <% next unless subscription.present? %>
-      <div class="row">
-        <div class="col-sm-6">
-          <p>The next payment of <%= number_to_currency(subscription.cost) %> for <%= athlete.full_name %> will process on <%= (subscription.expires_at + 1.day).strftime('%B %e, %Y') %>.</p>
-        </div>
-        <div class="col-sm-6 text-center">
-          <%= link_to 'Unsubscribe', unsubscribe_monthly_subscription_path(athlete.id), class: 'pkut-btn', method: :delete %>
-        </div>
-      </div>
-    <% end %>
-    <p><a href="#" data-clickit=".stripe-button-el">Update Card Details</a></p>
-  </div>
 <% end %>
 
 <% if current_user.athletes_with_unlimited_access.count > 0 %>

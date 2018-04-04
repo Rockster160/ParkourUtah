@@ -1,0 +1,53 @@
+Public:
+Homepage
+- Sections
+ * Landing (video?) CTA buttons
+ * About?
+ * People?
+ * Locations/Calendar
+ * Contact
+FAQ
+- Desperately needs redesign
+% Make dynamic so Ryan can add questions
+ * Needs link parsing and color markdown
+Store
+- Redesign?
+% Items/Item types 
+% Coupons
+% Carts / previous purchases
+Calendar
+% Events / Recurring
+ * Timezone should be relative to event
+% Spots/Locations?
+% Instructors
+Registration + Flow
+
+User:
+Account
+- Info (address, email, assword, etc)
+- Athletes - Info, waivers, forgot pin, trials, subscriptions, pin/id info, assign subscriptions, Add new athletes
+- Notifications Sms/Email, which classes subscribed to, etc
+- Emergency Contacts
+Chat?
+(Update Card Info)
+
+Instructors:
+- Need a way to search/lookup students and add them to class manually without having them enter in codes
+
+Admin:
+- Need a "rails admin" interface for searching/modifying any and all data
+- Need a better mass-send interface 
+ * search/find and select users/athletes by name, id, email, phone
+ * After adding, need a decent interface for delivering either text or emails
+ - Searchable Dropdowns everywhere
+Dashboard
+Should have table-style lists of buttons and/or a better interface for starting classes
+Redemption Keys
+Purchase History
+Chat
+
+Stuff to admin:
+Soft delete EVERYTHING
+Rails Admin: User (Instructors), Store Items, Events, Attendance, Announcements?
+Summary Generator - soft delete users and don't require them being instructors to generate
+
