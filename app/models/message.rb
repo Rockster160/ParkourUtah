@@ -57,6 +57,7 @@ class Message < ApplicationRecord
   def error!(msg="")
     update(error: true, error_message: msg)
     ActionCable.server.broadcast "room_#{chat_room_id}_channel", error: { message_id: self.id, message: msg }
+    false
   end
 
   def from_instructor?

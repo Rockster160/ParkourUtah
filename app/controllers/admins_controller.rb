@@ -52,8 +52,13 @@ class AdminsController < ApplicationController
     @messages_sent = []
     phone_numbers.each do |phone_number|
       if phone_number.length == 10
-        @messages_sent << current_user.sent_messages.text.create(body: params[:message], chat_room_name: phone_number)
-        @success << phone_number
+        message = current_user.sent_messages.text.create(body: params[:message], chat_room_name: phone_number)
+        @messages_sent << message
+        if message.deliver
+          @success << phone_number
+        else
+          @failed << phone_number
+        end
       else
         @failed << phone_number
       end
