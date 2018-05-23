@@ -12,7 +12,7 @@ namespace :db_to_json do
         next puts "Skipping: #{klass}".colorize(:yellow) if klass.to_s.in?(["AwsLogger"])
         begin
           puts "#{klass}: #{klass.count}".colorize(:green)
-          full_export[klass.table_name] = klass.all.map do |instance|
+          full_export[klass.to_s] = klass.all.map do |instance|
             instance.attributes
           end
         rescue => e
@@ -21,6 +21,7 @@ namespace :db_to_json do
       end
       f.puts full_export.to_json
     end
+    puts "Successfully exported to: #{file}".colorize(:yellow)
   end
 end
 
