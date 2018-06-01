@@ -29,7 +29,7 @@ class CreateCompetitions < ActiveRecord::Migration[5.0]
         end
         Competition.create(
           spot: spot,
-          name: "University Place Competition: June 25th",
+          name: "University Place Competition",
           start_time: DateTime.new(2018, 6, 25, 17, 30, 0, Time.find_zone("Mountain Time (US & Canada)").formatted_offset)
         )
       end

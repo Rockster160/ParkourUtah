@@ -5,11 +5,23 @@ class CompetitorsController < ApplicationController
     @eligible_athletes = current_user.athletes.where.not(id: @competition.competitors.pluck(:athlete_id))
     @competitor = Competitor.create(competitor_params)
 
-    render "competitions/new" unless @competitor.persisted?
+    unless @competitor.persisted?
+      flash.now[:alert] = "Failed to create competitor. Please try again."
+      render "competitions/show"
+    end
 
-    
+    athlete = @competitor.athlete
+    charge = StripeCharger.charge(params[:stripeToken], 2500, description: "#{@competition.name} Competitor: #{athlete.full_name}")
 
-    redirect_to competitions_path, notice: "Success!"
+    if charge.try(:status) == "succeeded"
+      slack_message = "New *#{@competition.name}* Competitor: *#{athlete.full_name}*\n<#{admin_user_url(athlete.user)}|Click here to view their account.>"
+      SlackNotifier.notify(slack_message, Rails.env.production? ? "#special-purchases" : "#slack-testing")
+      redirect_to account_path, notice: "#{athlete.full_name} is enrolled in #{@competition.name}. See you there!"
+    else
+      @competitor.try(:destroy)
+      flash.now[:alert] = charge&.dig(:failure_message).presence || "Failed to charge card. Please verify you entered the correct details or contact your banking institution."
+      render "competitions/show"
+    end
   end
 
   private
@@ -26,24 +38,3 @@ class CompetitorsController < ApplicationController
   end
 
 end
-
-
-# {
-#   "competitor"=>{
-#     "athlete"=>"1",
-#     "years_training"=>"",
-#     "instagram_handle"=>"",
-#     "song"=>"",
-#     "bio"=>""
-#   },
-#   "stripeToken"=>"tok_1CY4qDKFLsydVrynL9EtnuqY",
-#   "stripeTokenType"=>"card",
-#   "stripeEmail"=>"rocco11nicholls@gmail.com",
-#   "stripeBillingName"=>"Rocco Nicholls",
-#   "stripeBillingAddressCountry"=>"United States",
-#   "stripeBillingAddressCountryCode"=>"US",
-#   "stripeBillingAddressZip"=>"84088-2517",
-#   "stripeBillingAddressLine1"=>"8062 Lismore Ln",
-#   "stripeBillingAddressCity"=>"West Jordan",
-#   "stripeBillingAddressState"=>"UT",
-# }

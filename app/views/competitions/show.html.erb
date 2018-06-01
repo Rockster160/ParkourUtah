@@ -6,7 +6,7 @@
     &amp;
     <%= image_tag "YGTLogo.png" %>
   </div>
-  <%= form_for @competitor do |f| %>
+  <%= form_for @competitor, url: competitors_path do |f| %>
     <div class="split-half">
       <div class="description">
         <p>Welcome to the registration for Parkour Utah’s First Annual Parkour Competition held at Univeristy Place in Utah County! <br>We're really excited to get this going and to turn this into one of the largest competitions in Utah.</p>
@@ -32,7 +32,7 @@
             data-amount="2500">
     </script>
   <% end %>
-  <p class="text-center"><%= link_to "Submit", "", class: "pkut-btn disabled", id: "form-submit", data: { toggle: "modal", target: "#waiver_modal" } %></p>
+  <p class="text-center"><%= link_to "Submit", "", class: "pkut-btn #{'disabled' if @competitor.athlete_id.blank?}", id: "form-submit", data: { toggle: "modal", target: "#waiver_modal" } %></p>
 </div>
 
 <%= render_modal("waiver_modal", "medium-modal text-left") do %>
@@ -61,5 +61,25 @@
     <%= text_field_tag :signed_by, '', placeholder: 'Signed By', class: 'pkut-textbox customRequired', autocomplete: 'off' %>
     <br/>
     <%= link_to "Submit", "", class: "pkut-btn disabled", id: "waiver-submit", data: { clickit: ".stripe-button-el", dismiss: :modal } %>
+  </div>
+<% end %>
+
+<% if current_user&.admin? %>
+  <div class="small-container" style="margin: 0 auto;">
+    <p>Registered competitors (only admins see this section)</p>
+    <ul>
+    <% @competition.competitors.each do |c| %>
+      <% next unless c.persisted? %>
+      <li>
+        <%= link_to "#{c.athlete_id}: #{c.athlete.full_name}", admin_user_path(c.athlete.user) %>
+        <ul>
+          <li><strong>Exp:</strong> <%= c.years_training %> years</li>
+          <li><strong>Instagram:</strong> <%= link_to c.instagram_handle, "https://www.instagram.com/#{c.instagram_handle}" if c.instagram_handle %></li>
+          <li><strong>Song:</strong> <%= c.song %></li>
+          <li><strong>Bio:</strong> <%= content_tag :pre, c.bio if c.bio.present? %></li>
+        </ul>
+      </li>
+    <% end %>
+    </ul>
   </div>
 <% end %>
