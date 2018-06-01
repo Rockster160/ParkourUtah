@@ -73,6 +73,24 @@
           <% end %>
           <%= render partial: 'store/selection_modal', locals: {item: item} %>
         <% end %>
+
+        <%# TODO: Remove me June 23? %>
+        <% if category == :classes %>
+          <div class="item-flip-container" ontouchstart="this.classList.toggle('hover');">
+            <div class="item-flipper">
+              <div class="item-front">
+                <div class="front-container">
+                  <div class="red-backed-item-title"><small>University Place Competition</small><br>$25.00</div>
+                </div>
+              </div>
+              <div class="item-back">
+                <p class="item-text">The competition will be held on the grounds of The Orchard at University Place on Monday June 25th starting at 5:30pm. Prior to the competition a free parkour seminar will be held starting at 2:00pm, you are welcome to invite anyone to attend and learn some parkour. Ages 7 and up will be allowed to compete.</p>
+                <a href="<%= competition_path(1) %>" class="pkut-btn">Register</a>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
       <% end %>
     <% end %>
   </div>
