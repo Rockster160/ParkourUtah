@@ -1,0 +1,19 @@
+<div class="competitions-wrapper central-container">
+  <h3>Current Competitions:</h3>
+
+  <% @competitions.each do |competition| %>
+    <a href="<%= competition_path(competition) %>" class="competition-container" style="background-image: url(<%= asset_path('UniversityPlace.jpg') %>)">
+      <div class="title">University Place Competition</div>
+      <div class="sponsors">
+        Sponsored by: <br>
+        YGT, University Place, &amp; Parkour Utah
+      </div>
+      <div class="details">
+        Youth &amp; Adult <br>
+        June 25th, 2018
+      </div>
+      <div class="cost">$25</div>
+      <div class="end-date">Registration Closes June 23rd</div>
+    </a>
+  <% end %>
+</div>

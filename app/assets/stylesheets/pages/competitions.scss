@@ -1,0 +1,46 @@
+@import "config/variables";
+
+.competitions-wrapper {
+  color: $pkut-grey-dark;
+  margin-bottom: 30px;
+
+  .competition-container {
+    display: block;
+    width: 400px;
+    max-width: 100%;
+    position: relative;
+    background-size: cover;
+    color: white;
+    font-size: 20px;
+    text-decoration: none !important;
+    padding: 8px 5px;
+    border-radius: 8px;
+    border: 1px solid white;
+    box-shadow: 5px 5px 20px -5px $pkut-grey-dark;
+    font-family: 'MicroExtendFLF-Bold', Arial, sans-serif;
+
+    * {
+      text-decoration: none !important;
+      line-height: 1.2;
+      text-shadow:
+        -1px -1px 0 black,
+        1px -1px 0 black,
+        -1px 1px 0 black,
+        1px 1px 0 black,
+        3px 3px 4px black;
+    }
+
+    .sponsors {
+    }
+    .details {
+      margin: 18px 0;
+    }
+    .cost {
+      font-size: 24px;
+    }
+    .end-date {
+      text-align: center;
+      font-size: 16px;
+    }
+  }
+}

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171107040627) do
+ActiveRecord::Schema.define(version: 20180530005449) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -135,6 +135,31 @@ ActiveRecord::Schema.define(version: 20171107040627) do
     t.datetime "updated_at",               null: false
     t.integer  "message_type"
     t.datetime "last_message_received_at"
+  end
+
+  create_table "competitions", force: :cascade do |t|
+    t.integer  "spot_id"
+    t.string   "name"
+    t.datetime "start_time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["spot_id"], name: "index_competitions_on_spot_id", using: :btree
+  end
+
+  create_table "competitors", force: :cascade do |t|
+    t.integer  "athlete_id"
+    t.integer  "competition_id"
+    t.string   "full_name"
+    t.date     "birthdate"
+    t.string   "years_training"
+    t.string   "instagram_handle"
+    t.string   "song"
+    t.string   "bio"
+    t.string   "stripe_charge_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.index ["athlete_id"], name: "index_competitors_on_athlete_id", using: :btree
+    t.index ["competition_id"], name: "index_competitors_on_competition_id", using: :btree
   end
 
   create_table "contact_requests", force: :cascade do |t|
