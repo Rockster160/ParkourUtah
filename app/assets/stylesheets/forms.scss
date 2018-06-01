@@ -230,6 +230,7 @@
     background-color: $pkut-red-dark;
     outline: none;
     text-decoration: none;
+    pointer-events: none;
   }
   &.low-btn { z-index: 99; }
 }

@@ -1,0 +1,65 @@
+<div class="competition-wrapper">
+  <h3><%= @competition.name %></h3>
+  <p>This Competition is brought to you by:</p>
+  <div class="sponsors">
+    <%= image_tag "UPLogo.png" %>
+    &amp;
+    <%= image_tag "YGTLogo.png" %>
+  </div>
+  <%= form_for @competitor do |f| %>
+    <div class="split-half">
+      <div class="description">
+        <p>Welcome to the registration for Parkour Utah’s First Annual Parkour Competition held at Univeristy Place in Utah County! <br>We're really excited to get this going and to turn this into one of the largest competitions in Utah.</p>
+        <p>The competition will be held on the grounds of The Orchard at University Place on Monday June 25th starting at 5:30pm. Prior to the competition a free parkour seminar will be held starting at 2:00pm, you are welcome to invite anyone to attend and learn some parkour. Ages 7 and up will be allowed to compete.</p>
+        <p>This competition costs $25, payment and a secondary waiver follows registration. We will email/text you when your registration is approved.</p>
+        <p>Youth runs will be 45 seconds long. Adult runs will be 1 minute long. You may select a song to play for your run so long as the song does not contain lewd/suggestive or crude language. Please post the name of or a youtube link for the song.</p>
+      </div>
+      <div class="form">
+        <%= f.hidden_field :competition_id %>
+        <div class="form-field"><%= f.select :athlete_id, @eligible_athletes.collect { |a| [a.full_name, a.id] }, { include_blank: "Select Athlete" }, class: "pkut-dropdown", id: "selected-athlete" %></div>
+        <div class="form-field"><%= f.text_field :years_training, placeholder: "Years Training Parkour", class: "pkut-textbox disableEnterSubmit" %></div>
+        <div class="form-field"><%= f.text_field :instagram_handle, placeholder: "Instagram Handle", class: "pkut-textbox disableEnterSubmit" %></div>
+        <div class="form-field"><%= f.text_field :song, placeholder: "Song (no swearing, lewdness, etc...)", class: "pkut-textbox disableEnterSubmit" %></div>
+        <div class="form-field"><%= f.text_area :bio, placeholder: "Bio (140 character limit)", class: "pkut-textarea" %></div>
+      </div>
+    </div>
+    <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+            data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+            data-image="http://parkourutah.com/favicon.ico"
+            data-name="Parkour Utah"
+            data-billing-address="true"
+            data-description="All Sales are Final"
+            data-amount="2500">
+    </script>
+  <% end %>
+  <p class="text-center"><%= link_to "Submit", "", class: "pkut-btn disabled", id: "form-submit", data: { toggle: "modal", target: "#waiver_modal" } %></p>
+</div>
+
+<%= render_modal("waiver_modal", "medium-modal text-left") do %>
+  <h2 class="title">Waiver</h2>
+  <div class="row">
+    <div class="col-sm-4">This waiver is for</div>
+    <div class="col-sm-8 waiver-athletes"></div>
+  </div>
+  <br/>
+  <p>If this information is incorrect please click the red X on the top right and update the information before attempting to sign the waiver again.</p>
+  <div class="text-center">
+    <%= link_to 'REVIEW AND DOWNLOAD WAIVER', '//s3-us-west-2.amazonaws.com/pkut-default/RELEASE+AGREEMENT1.pdf', class: 'pkut-link', target: '_blank' %>
+    <br>
+    <div class="pkut-checkbox center-checkbox">
+      <%= check_box_tag :signed, '', nil, class: 'required-checkbox' %>
+      <%= label_tag :signed do %>
+        <div class="arrow-required">Required</div>
+      <% end %>
+    </div>
+  </div>
+  <p>By checking the box above, I hereby agree to waive any liability of Parkour Utah for the athletes listed above. By entering my name below, I certify that I have downloaded, read, and understand all of the terms and provisions in the liability waiver document available for download above.</p>
+  <p>I also certify that I understand that the above document that I have downloaded and read is a legal document, and it is my understanding that an electronic signature has the same effect and can be enforced in the same way as a writen signature, as stated in Utah Code 46-4-201.</p>
+  <p>By signing this document, I am waiving any liability claims against Parkour Utah, Woodbury Corporation, and University Place for the athlete selected, and certify that I am the athlete or the parent and/or guardian of the athlete, and I am waiving any liability claims against Parkour Utah, Woodbury Corporation, and University Place on behalf of the athletes listed above.</p>
+  <br/>
+  <div class="text-center">
+    <%= text_field_tag :signed_by, '', placeholder: 'Signed By', class: 'pkut-textbox customRequired', autocomplete: 'off' %>
+    <br/>
+    <%= link_to "Submit", "", class: "pkut-btn disabled", id: "waiver-submit", data: { clickit: ".stripe-button-el", dismiss: :modal } %>
+  </div>
+<% end %>

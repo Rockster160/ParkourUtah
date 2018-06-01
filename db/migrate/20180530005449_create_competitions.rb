@@ -10,8 +10,6 @@ class CreateCompetitions < ActiveRecord::Migration[5.0]
     create_table :competitors do |t|
       t.belongs_to :athlete
       t.belongs_to :competition
-      t.string :full_name
-      t.date :birthdate
       t.string :years_training
       t.string :instagram_handle
       t.string :song
