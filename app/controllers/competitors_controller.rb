@@ -14,6 +14,8 @@ class CompetitorsController < ApplicationController
     charge = StripeCharger.charge(params[:stripeToken], 2500, description: "#{@competition.name} Competitor: #{athlete.full_name}")
 
     if charge.try(:status) == "succeeded"
+      @competitor.update(stripe_charge_id: charge[:id])
+      # FIXME: Need to send email to user?
       slack_message = "New *#{@competition.name}* Competitor: *#{athlete.full_name}*\n<#{admin_user_url(athlete.user)}|Click here to view their account.>"
       SlackNotifier.notify(slack_message, Rails.env.production? ? "#special-purchases" : "#slack-testing")
       redirect_to account_path, notice: "#{athlete.full_name} is enrolled in #{@competition.name}. See you there!"

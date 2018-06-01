@@ -16,15 +16,20 @@
       <hr>
 
       <% if athlete.has_unlimited_access? %>
-        <div class="unlimited-access-details">
+        <div class="details">
           Has unlimited classes until:
-          <div class="unlimited-access-date"><%= athlete.has_access_until.strftime('%B %e, %Y') %></div>
+          <div class="value"><%= athlete.has_access_until.strftime('%B %e, %Y') %></div>
         </div>
       <% end %>
       <% if athlete.unused_trials.count > 0 %>
-        <div class="unused-trial-details">
+        <div class="details">
           Trial Classes remaining:
-          <div class="unused-trials-count"><%= athlete.unused_trials.count %></div>
+          <div class="value"><%= athlete.unused_trials.count %></div>
+        </div>
+      <% end %>
+      <% if athlete.competitors.any? %>
+        <div class="details">
+          * Enrolled in <%= athlete.competitors.first.competition.name %>
         </div>
       <% end %>
 

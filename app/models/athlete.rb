@@ -36,6 +36,7 @@ class Athlete < ApplicationRecord
   has_many :trial_classes,           dependent: :destroy
   has_many :recurring_subscriptions, dependent: :destroy
   has_many :attendances,             dependent: :destroy
+  has_many :competitors,             dependent: :destroy
 
   has_attached_file :athlete_photo,
                :styles => { :medium => "300", :thumb => "100x100#" },

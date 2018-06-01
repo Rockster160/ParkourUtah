@@ -149,8 +149,6 @@ ActiveRecord::Schema.define(version: 20180530005449) do
   create_table "competitors", force: :cascade do |t|
     t.integer  "athlete_id"
     t.integer  "competition_id"
-    t.string   "full_name"
-    t.date     "birthdate"
     t.string   "years_training"
     t.string   "instagram_handle"
     t.string   "song"

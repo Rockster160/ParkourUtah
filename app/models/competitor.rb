@@ -5,8 +5,6 @@
 #  id               :integer          not null, primary key
 #  athlete_id       :integer
 #  competition_id   :integer
-#  full_name        :string
-#  birthdate        :date
 #  years_training   :string
 #  instagram_handle :string
 #  song             :string

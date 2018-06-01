@@ -1,4 +1,4 @@
-<% if current_user.subscribed_athletes.any? %>
+<% if current_user.athletes.joins(:recurring_subscriptions).any? %>
   <hr>
   <div class="row">
     <p>You are currently set up to auto-pay for <strong class="pkut-text">monthly</strong> subscriptions.</p>
