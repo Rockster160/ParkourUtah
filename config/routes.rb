@@ -33,7 +33,9 @@ Rails.application.routes.draw do
   end
 
   resources :competitions, only: [:index, :show]
-  resources :competitors, only: [:create]
+  resources :competitors, only: [:create, :update] do
+    get :complete, on: :member
+  end
   resources :spots
   resources :events, only: [ :show, :edit, :update ] do
     member do

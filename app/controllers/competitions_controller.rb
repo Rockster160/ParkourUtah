@@ -9,6 +9,7 @@ class CompetitionsController < ApplicationController
     @competition = Competition.current.find(params[:id])
     @competitor = @competition.competitors.new
     @eligible_athletes = current_user.athletes.where.not(id: @competition.competitors.pluck(:athlete_id))
+    @registered_athletes = current_user.athletes.where(id: @competition.competitors.pluck(:athlete_id))
   end
 
 end

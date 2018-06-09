@@ -1,5 +1,6 @@
 <div class="competition-wrapper">
   <h3><%= @competition.name %>: <%= @competition.start_time.strftime("%B %dth") %></h3>
+  <h3>$25</h3>
   <p>This Competition is brought to you by:</p>
   <div class="sponsors">
     <%= image_tag "UPLogo.png" %>
@@ -15,12 +16,25 @@
         <p>Youth runs will be 45 seconds long. Adult runs will be 1 minute long. You may select a song to play for your run so long as the song does not contain lewd/suggestive or crude language. Please post the name of or a youtube link for the song.</p>
       </div>
       <div class="form">
-        <%= f.hidden_field :competition_id %>
-        <div class="form-field"><%= f.select :athlete_id, @eligible_athletes.collect { |a| [a.full_name, a.id] }, { include_blank: "Select Athlete" }, class: "pkut-dropdown", id: "selected-athlete" %></div>
-        <div class="form-field"><%= f.text_field :years_training, placeholder: "Years Training Parkour", class: "pkut-textbox disableEnterSubmit" %></div>
-        <div class="form-field"><%= f.text_field :instagram_handle, placeholder: "Instagram Handle", class: "pkut-textbox disableEnterSubmit" %></div>
-        <div class="form-field"><%= f.text_field :song, placeholder: "Song (no swearing, lewdness, etc...)", class: "pkut-textbox disableEnterSubmit" %></div>
-        <div class="form-field"><%= f.text_area :bio, placeholder: "Bio (140 character limit)", class: "pkut-textarea", maxlength: "140" %></div>
+        <div class="form-field">
+          <% if @registered_athletes.any? %>
+            <p><span class="pkut-text"><%= @registered_athletes.pluck(:full_name).to_sentence %></span> <%= @registered_athletes.one? ? "has" : "have" %> already been registered for this competition.</p>
+          <% end %>
+          <% if @eligible_athletes.none? %>
+            <p class="pkut-text">You don't have any athletes eligible to enter this competition.</p>
+          <% end %>
+        </div>
+        <% if @eligible_athletes.any? %>
+          <%= f.hidden_field :competition_id %>
+          <div class="form-field">
+            <span class="pkut-text"><strong>Please add 1 athlete at a time.</strong></span>
+            <%= f.select :athlete_id, @eligible_athletes.collect { |a| [a.full_name, a.id] }, { include_blank: "Select Athlete" }, class: "pkut-dropdown", id: "selected-athlete" %>
+          </div>
+          <div class="form-field"><%= f.text_field :years_training, placeholder: "Years Training Parkour", class: "pkut-textbox disableEnterSubmit" %></div>
+          <div class="form-field"><%= f.text_field :instagram_handle, placeholder: "Instagram Handle", class: "pkut-textbox disableEnterSubmit" %></div>
+          <div class="form-field"><%= f.text_field :song, placeholder: "Song (no swearing, lewdness, etc...)", class: "pkut-textbox disableEnterSubmit" %></div>
+          <div class="form-field"><%= f.text_area :bio, placeholder: "Bio (140 character limit)", class: "pkut-textarea", maxlength: "140" %></div>
+        <% end %>
       </div>
     </div>
     <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
@@ -32,7 +46,7 @@
             data-amount="2500">
     </script>
   <% end %>
-  <p class="text-center"><%= link_to "Submit", "", class: "pkut-btn #{'disabled' if @competitor.athlete_id.blank?}", id: "form-submit", data: { toggle: "modal", target: "#waiver_modal" } %></p>
+  <p class="text-center"><%= link_to "Register Competitor $25", "", class: "pkut-btn #{'disabled' if @competitor.athlete_id.blank?}", id: "form-submit", data: { toggle: "modal", target: "#waiver_modal" } %></p>
 </div>
 
 <%= render_modal("waiver_modal", "medium-modal text-left") do %>
@@ -44,7 +58,7 @@
   <br/>
   <p>If this information is incorrect please click the red X on the top right and update the information before attempting to sign the waiver again.</p>
   <div class="text-center">
-    <%= link_to 'REVIEW AND DOWNLOAD WAIVER', '//s3-us-west-2.amazonaws.com/pkut-default/RELEASE+AGREEMENT1.pdf', class: 'pkut-link', target: '_blank' %>
+    <%= link_to 'REVIEW AND DOWNLOAD WAIVER', '//s3-us-west-2.amazonaws.com/pkut-default/PKUT+UP+Woodbury+Corp+Waiver.pdf', class: 'pkut-link', target: '_blank' %>
     <br>
     <div class="pkut-checkbox center-checkbox">
       <%= check_box_tag :signed, '', nil, class: 'required-checkbox' %>
@@ -53,7 +67,7 @@
       <% end %>
     </div>
   </div>
-  <p>By checking the box above, I hereby agree to waive any liability of Parkour Utah for the athletes listed above. By entering my name below, I certify that I have downloaded, read, and understand all of the terms and provisions in the liability waiver document available for download above.</p>
+  <p>By checking the box above, I hereby agree to waive any liability of University Place and/or Woodbury Corp and/or Parkour Utah for the athletes listed above. By entering my name below, I certify that I have downloaded, read, and understand all of the terms and provisions in the liability waiver document available for download above.</p>
   <p>I also certify that I understand that the above document that I have downloaded and read is a legal document, and it is my understanding that an electronic signature has the same effect and can be enforced in the same way as a writen signature, as stated in Utah Code 46-4-201.</p>
   <p>By signing this document, I am waiving any liability claims against Parkour Utah, Woodbury Corporation, and University Place for the athlete selected, and certify that I am the athlete or the parent and/or guardian of the athlete, and I am waiving any liability claims against Parkour Utah, Woodbury Corporation, and University Place on behalf of the athletes listed above.</p>
   <br/>
@@ -68,16 +82,21 @@
   <div class="small-container" style="margin: 0 auto;">
     <p>Registered competitors (only admins see this section)</p>
     <ul>
-    <% @competition.competitors.each do |c| %>
-      <% next unless c.persisted? %>
+    <% @competition.competitors.order("approved_at NULLS FIRST, created_at DESC").each do |competitor| %>
+      <% next unless competitor.persisted? %>
       <li>
-        <%= link_to "#{c.athlete_id}: #{c.athlete.full_name}", admin_user_path(c.athlete.user) %>
+        <%= link_to "#{competitor.athlete_id}: #{competitor.athlete.full_name}", admin_user_path(competitor.athlete.user) %>
         <ul>
-          <li><strong>Exp:</strong> <%= c.years_training %> years</li>
-          <li><strong>Instagram:</strong> <%= link_to c.instagram_handle, "https://www.instagram.com/#{c.instagram_handle}" if c.instagram_handle %></li>
-          <li><strong>Song:</strong> <%= c.song %></li>
-          <li><strong>Bio:</strong> <%= content_tag :pre, c.bio if c.bio.present? %></li>
-          <li><%= link_to "View in Stripe", "https://dashboard.stripe.com/payments/#{c.stripe_charge_id}" if c.stripe_charge_id.present? %></li>
+          <% if competitor.approved_at? %>
+            <li style="color: green;">Approved</li>
+          <% else %>
+            <li><%= link_to "Approve this athlete", competitor_path(competitor), method: :patch, data: { confirm: "Are you sure?" } unless competitor.approved_at? %></li>
+          <% end %>
+          <li><strong>Exp:</strong> <%= competitor.years_training %> years</li>
+          <li><strong>Instagram:</strong> <%= link_to competitor.instagram_handle, "https://www.instagram.com/#{competitor.instagram_handle}" if competitor.instagram_handle %></li>
+          <li><strong>Song:</strong> <%= competitor.song %></li>
+          <li><strong>Bio:</strong> <%= content_tag :pre, competitor.bio if competitor.bio.present? %></li>
+          <li><%= link_to "View in Stripe", "https://dashboard.stripe.com/payments/#{competitor.stripe_charge_id}" if competitor.stripe_charge_id.present? %></li>
         </ul>
       </li>
     <% end %>

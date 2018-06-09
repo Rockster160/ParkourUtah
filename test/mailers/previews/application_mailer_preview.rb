@@ -77,6 +77,14 @@ class ApplicationMailerPreview < ActionMailer::Preview
     ApplicationMailer.summary_mail(summary)
   end
 
+  def registered_competitor
+    ApplicationMailer.registered_competitor(Competitor.first.id)
+  end
+
+  def approved_competitor
+    ApplicationMailer.approved_competitor(Competitor.first.id)
+  end
+
   private
 
   def class_summary_fake_data

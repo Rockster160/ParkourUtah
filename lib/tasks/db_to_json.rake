@@ -1,7 +1,7 @@
 namespace :db_to_json do
   desc "Exports the Database into a JSON file"
   task export: :environment do |t, args|
-    file = ENV["FILENAME"] || "db_dump-#{DateTime.current.strftime("%m-%d-%y")}.json"
+    file = ENV["FILENAME"] || "../db_dump-#{DateTime.current.strftime("%m-%d-%y")}.json"
     puts "Outputting to: #{file}".colorize(:yellow)
 
     File.open(file, "w+") do |f|
@@ -25,6 +25,6 @@ namespace :db_to_json do
   end
 end
 
-# rails db_to_json:export; mv db_dump-04-21-18.json ../db_dump-04-21-18.json
+# rails db_to_json:export FILENAME=../db_dump-04-21-18.json
+# rails db:drop db:create; migrations; rails json_to_db:import FILENAME=/Users/zoro/code/db_dump-04-21-18.json
 # raw = File.read("../db_dump-04-21-18.json"); json = JSON.parse(raw) rescue nil; json.try(:keys)
-# head -c 5000 ../db_dump-04-21-18.json

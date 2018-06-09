@@ -88,6 +88,18 @@ class ApplicationMailer < ActionMailer::Base
     mail(to: @athlete.user.email, subject: "Request for ID or Pin Reset")
   end
 
+  def registered_competitor(competitor_id)
+    @competitor = Competitor.find(competitor_id)
+
+    mail(to: @competitor.athlete.user.email, subject: "Registration complete: #{@competitor.athlete.full_name}")
+  end
+
+  def approved_competitor(competitor_id)
+    @competitor = Competitor.find(competitor_id)
+
+    mail(to: @competitor.athlete.user.email, subject: "#{@competitor.athlete.full_name} has been approved!")
+  end
+
   def summary_mail(summary, to_email=nil, include_totals=false)
     @include_totals = include_totals
     @summary = summary

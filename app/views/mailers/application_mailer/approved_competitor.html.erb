@@ -1,0 +1,21 @@
+<div style="width: 600px; max-width: 100%; margin: 0 auto;">
+  <p>Hello,</p>
+  <p></p>
+  <p>This email is to serve as a heads up that your registration for <span style="color: #DF0D15;"><%= @competitor.athlete.full_name %></span> is approved. Below is a quick review to confirm the information provided:</p>
+
+  <li><span style="color: #DF0D15;"><%= @competitor.athlete.full_name %></span></li>
+  <li><strong>Years Training Parkour:</strong> <%= @competitor.years_training %></li>
+  <li><strong>Instagram Handle:</strong> <%= link_to @competitor.instagram_handle, "https://www.instagram.com/#{@competitor.instagram_handle}" if @competitor.instagram_handle %></li>
+  <li><strong>Song:</strong> <%= @competitor.song %></li>
+  <li><strong>Bio:</strong> <%= content_tag :pre, @competitor.bio if @competitor.bio.present? %></li>
+
+  <p>If there is any issue with the information provided, please email us back. As a friendly reminder no changes will be made after the evening of Saturday June 23rd!</p>
+
+  <p>See you at the competition!</p>
+  <br>
+  <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Ryan Sannar<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;Manager<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;Parkour Utah
+  </p>
+</div>
