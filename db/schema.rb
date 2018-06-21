@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180609002523) do
+ActiveRecord::Schema.define(version: 20180619231636) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -137,6 +137,18 @@ ActiveRecord::Schema.define(version: 20180609002523) do
     t.datetime "last_message_received_at"
   end
 
+  create_table "competition_judgements", force: :cascade do |t|
+    t.integer  "competitor_id"
+    t.integer  "judge_id"
+    t.integer  "category"
+    t.float    "category_score"
+    t.float    "overall_impression"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.index ["competitor_id"], name: "index_competition_judgements_on_competitor_id", using: :btree
+    t.index ["judge_id"], name: "index_competition_judgements_on_judge_id", using: :btree
+  end
+
   create_table "competitions", force: :cascade do |t|
     t.integer  "spot_id"
     t.string   "name"
@@ -157,6 +169,8 @@ ActiveRecord::Schema.define(version: 20180609002523) do
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
     t.datetime "approved_at"
+    t.integer  "age"
+    t.integer  "sort_order"
     t.index ["athlete_id"], name: "index_competitors_on_athlete_id", using: :btree
     t.index ["competition_id"], name: "index_competitors_on_competition_id", using: :btree
   end

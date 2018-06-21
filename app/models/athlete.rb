@@ -150,6 +150,14 @@ class Athlete < ApplicationRecord
     self.waiver.sign!
   end
 
+  def age
+    now = Time.now.utc.to_date
+    dob = DateTime.parse(date_of_birth)
+    now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
+  rescue
+    nil
+  end
+
   def waiver
     waivers.by_most_recent(:created_at).first
   end

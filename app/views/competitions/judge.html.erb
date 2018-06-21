@@ -1,0 +1,10 @@
+<div class="text-center judgement-page">
+  <h2><%= @competition.name %>: <br> <%= @competition.start_time.strftime("%B %dth") %></h2>
+  <h3>Category:</h3>
+  <ul>
+    <% CompetitionJudgement.categories.each do |category, _category_val| %>
+      <li><h4><%= link_to category.titleize, competition_category_path(@competition, category) %></h4></li>
+    <% end %>
+    <li><h4><%= link_to "Monitor", competition_monitor_path(@competition) %></h4></li>
+  </ul>
+</div>

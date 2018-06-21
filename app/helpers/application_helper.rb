@@ -1,5 +1,10 @@
 module ApplicationHelper
 
+  def current_instructor?
+    return false unless user_signed_in?
+    current_user.instructor?
+  end
+
   def strip_phone_number(phone_number)
     stripped_number = phone_number.to_s.gsub(/[^0-9]/, "").last(10)
     return unless stripped_number.length == 10

@@ -32,7 +32,13 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :competitions, only: [:index, :show]
+  resources :competitions, only: [:index, :show] do
+    get :monitor
+    get :judge
+    get "judge/:category",              action: :category, as: :category
+    get "judge/:category/:competitor_id",  action: :competitor, as: :competitor
+    post "judge/:category/:competitor_id", action: :judge_competitor, as: :judge_competitor
+  end
   resources :competitors, only: [:create, :update] do
     get :complete, on: :member
   end

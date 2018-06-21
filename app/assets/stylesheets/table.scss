@@ -6,6 +6,13 @@
   text-align: center;
 }
 
+.table {
+  .tbody { display: table-row-group; }
+  .thead { display: table-header-group; }
+  .tr { display: table-row; }
+  .td, .th { display: table-cell; }
+}
+
 .ttable {
   display: table;
   &.wide { width: 100%; max-width: 100%; }

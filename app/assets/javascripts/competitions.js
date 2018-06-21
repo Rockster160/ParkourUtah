@@ -18,10 +18,14 @@ $(document).ready(function() {
       }
     })
 
-    // $("#waiver-submit").click(function() {
-    //   if ($(this).hasClass("disabled")) { return }
-    //   // $("form").submit()
-    // })
-
   }
+
+  $(".judgement-page .table").tableSort()
+
+  $("#competition_judgement_category_score").change(function() {
+    $("#category_score").text($(this).val() || "00")
+  })
+  $("#competition_judgement_overall_impression").change(function() {
+    $("#overall_impression").text($(this).val() || "00")
+  })
 })

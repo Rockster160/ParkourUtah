@@ -1,0 +1,40 @@
+<div class="text-center judgement-page skinny-container">
+  <h2><%= @competition.name %>: <br> <%= @competition.start_time.strftime("%B %dth") %></h2>
+  <h3 class="text-left">Youth:</h3>
+  <div class="table tableSorter">
+    <div class="thead">
+      <div class="tr">
+        <div class="th" data-sortBy="numeric">#</div>
+        <div class="th wide" data-sortBy="text">Name</div>
+        <div class="th" data-sortBy="numeric">Rank</div>
+      </div>
+    </div>
+      <% @competitors.youth.each do |competitor| %>
+        <div class="tr">
+          <div class="td"><%= competitor.position %></div>
+          <div class="td"><%= link_to competitor.full_name, competition_competitor_path(@competition, @category, competitor) %></div>
+          <div class="td" data-sortAs="<%= competitor.rank || 'ZZZZ' %>"><%= competitor.rank || "N/A" %></div>
+        </div>
+      <% end %>
+  </div>
+
+  <hr style="border-width: 10px;">
+
+  <h3 class="text-left">Adult:</h3>
+  <div class="table tableSorter">
+    <div class="thead">
+      <div class="tr">
+        <div class="th" data-sortBy="numeric">#</div>
+        <div class="th wide" data-sortBy="text">Name</div>
+        <div class="th" data-sortBy="numeric">Rank</div>
+      </div>
+    </div>
+      <% @competitors.adult.each do |competitor| %>
+        <div class="tr">
+          <div class="td"><%= competitor.position %></div>
+          <div class="td"><%= link_to competitor.full_name, competition_competitor_path(@competition, @category, competitor) %></div>
+          <div class="td" data-sortAs="<%= competitor.rank || 'ZZZZ' %>"><%= competitor.rank || "N/A" %></div>
+        </div>
+      <% end %>
+  </div>
+</div>

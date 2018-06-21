@@ -1,0 +1,49 @@
+<div class="judgement-page skinny-container">
+  <h3 class="pull-right"><a href="<%= competition_category_path(@competition, @category) %>" class="pkut-text">Back</a></h3>
+  <h2>Category - <%= @category.titleize %></h2>
+  <div class="flex-row">
+    <h3><%= link_to @competitor.full_name, admin_user_path(@competitor.athlete.user_id) %></h3>
+    <h5>
+      Age: <%= @competitor.athlete.age || "?" %> <br>
+      <% if @competitor.years_training.present? %>
+        Years training: <%= @competitor.years_training %> <br>
+      <% end %>
+      <% if @competitor.instagram_handle.present? %>
+        Instagram: <%= link_to @competitor.instagram_handle, "https://www.instagram.com/#{@competitor.instagram_handle}" %> <br>
+      <% end %>
+      <% if @competitor.bio.present? %>
+        Bio: <%= content_tag :pre, @competitor.bio %>
+      <% end %>
+    </h5>
+  </div>
+
+  <div class="text-center">
+    <%= form_for @competitor.competition_judgements.by_category(@category).first_or_initialize, url: competition_judge_competitor_path, method: :post, html: { class: "judge-form" } do |f| %>
+      <h2><%= @category.upcase %></h2>
+      <div class="text-field-wrapper">
+        <%= f.text_field :category_score, placeholder: "00" %>
+        <span>/20</span>
+      </div>
+      <h2>OVERALL IMPRESSION</h2>
+      <div class="text-field-wrapper">
+        <%= f.text_field :overall_impression, placeholder: "00" %>
+        <span>/20</span>
+      </div>
+      <%= f.submit "Confirm", class: "hidden", id: "submit-judgment" %>
+      <h3><%= link_to "Confirm", "#", class: "pkut-text", data: { modal: "#confirm-judgment" } %></h3>
+    <% end %>
+  </div>
+</div>
+
+<%= render_modal("confirm-judgment", "skinny-modal") do %>
+  <h3><%= link_to @competitor.full_name, admin_user_path(@competitor.athlete.user_id) %></h3>
+  <div class="scores">
+    <div class="category">
+      Flow: <span id="category_score">00</span>/20 points
+    </div>
+    <div class="overall">
+      Overall: <span id="overall_impression">00</span>/20 points
+    </div>
+  </div>
+  <%= link_to "Confirm", "#", class: "pkut-btn", data: { clickit: "#submit-judgment" } %>
+<% end %>

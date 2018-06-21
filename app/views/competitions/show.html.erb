@@ -1,5 +1,8 @@
 <div class="competition-wrapper">
-  <h3><%= @competition.name %>: <%= @competition.start_time.strftime("%B %dth") %></h3>
+  <% if current_instructor? %>
+    <%= link_to "Judge Portal", competition_judge_path(@competition), class: "pkut-btn" %>
+  <% end %>
+  <h3><%= @competition.name %>: <br> <%= @competition.start_time.strftime("%B %dth") %></h3>
   <h3>$25</h3>
   <p>This Competition is brought to you by:</p>
   <div class="sponsors">
@@ -93,7 +96,8 @@
           <% else %>
             <li><%= link_to "Approve this athlete", competitor_path(competitor), method: :patch, data: { confirm: "Are you sure?" } unless competitor.approved_at? %></li>
           <% end %>
-          <li><strong>Exp:</strong> <%= competitor.years_training %> years</li>
+          <li><strong>Age:</strong> <%= competitor.age %></li>
+          <li><strong>Years:</strong> <%= competitor.years_training %></li>
           <li><strong>Instagram:</strong> <%= link_to competitor.instagram_handle, "https://www.instagram.com/#{competitor.instagram_handle}" if competitor.instagram_handle %></li>
           <li><strong>Song:</strong> <%= competitor.song %></li>
           <li><strong>Bio:</strong> <%= content_tag :pre, competitor.bio if competitor.bio.present? %></li>
