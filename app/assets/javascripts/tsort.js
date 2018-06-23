@@ -80,17 +80,20 @@ Array - Specifc table
       });
 
       /* GET TABLE DATA */
-      function getTableData() {
-
+      function getTableData(initial_run) {
+        table_data = new Array()
+        sorted_table_data = new Array()
         /* PUT TABLE DATA INTO AN OBJECT ARRAY */
+        console.log(initial_run);
+        $(table).find('.tr').removeClass(function(idx, className) { return (className.match (/(^|\s)tsort_id-\S+/g) || []).join(' ') })
         $(table).find('.tr').each(function(index) {
           if (index > 0) $(this).addClass('tsort_id-' + (index - 1)); // Add a class to each .tr that corresponds with the object id (tsortid-0)
           $(this).find('.td').each(function (td_index) {
             if ($(this).is(":first-child")) {
               table_data.push(new Object());
               table_data[table_data.length - 1].id = index - 1;
-              table_data[table_data.length - 1].td = new Array();
               table_data[table_data.length - 1].height = $(this).parent().height();
+              table_data[table_data.length - 1].td = new Array();
             }
 
             if ( $(this).attr('data-sortAs') != undefined ) {
@@ -180,70 +183,62 @@ Array - Specifc table
         }
       });
 
-
-
-      /* FUNCTIONALITY */
-      $(table).find('.tr .th').click(function() {
-
+      function sortFromColumn(th, toggle) {
         if (animating) return; // Disables animation spamming
 
-        if ( sorting_criteria[$(this).index()] == 'nosort' ) { // Check if column is supposed to be sorted, otherwise exit function
+        if ( sorting_criteria[$(th).index()] == 'nosort' ) { // Check if column is supposed to be sorted, otherwise exit function
           return;
         }
 
-        th_index_selected = $(this).index();
+        th_index_selected = $(th).index();
         if (table_data.length == 0) { // Get the table data if we haven't already
-          getTableData();
+          getTableData(true);
         }
 
-        if (!sorted_table_data[th_index_selected]) {  // If we haven't sorted this column yet
-          sorted_table_data[th_index_selected] = table_data.concat(); // Make a copy of the original table data
-
-          if (sorting_criteria[th_index_selected] == 'numeric') {    // Sort numeric
-            sorted_table_data[th_index_selected].sort(function(a,b) {
-              return a.td[th_index_selected] - b.td[th_index_selected];
-            });
-          } else if (sorting_criteria[th_index_selected] == 'text') { // Sort text
-            sorted_table_data[th_index_selected].sort(function(a,b) {
-              return a.td[th_index_selected].localeCompare(b.td[th_index_selected]);
-            });
+        var new_direction = 'ascending' // default
+        if (sorting_history.length > 0) {
+          var previous_direction = sorting_history[sorting_history.length - 1]['direction']
+          if (toggle) {
+            var sorting_same_column = th_index_selected == sorting_history[sorting_history.length - 1]['column_id']
+            if (previous_direction == 'ascending' && sorting_same_column) { new_direction = 'descending' }
+          } else {
+            new_direction = previous_direction
           }
         }
+        sorting_history.push( { column_id: th_index_selected, direction: new_direction } );
 
-        // sorting_history keeps track of all the columns the user selected to sort, and their order
-        // To also be used later for priority sorting in case two values are equal
-        if ( sorting_history.length == 0 ) {
-          sorting_history.push( { column_id: th_index_selected, direction: 'ascending' } ); // If this is the first column clicked, add to sorting_history
-        } else if ( sorting_history.length != 0 ) { // If this is not the first column clicked
-          if ( th_index_selected == sorting_history[sorting_history.length - 1]['column_id'] ) { // Check if it's the same column clicked as before to determine the asec/desc order
-            switch ( sorting_history[sorting_history.length - 1]['direction'] ) {
-              case 'ascending': {
-                sorting_history.push( { column_id: th_index_selected, direction: 'descending' } );
-
-                break;
-              }
-
-              case 'descending': {
-                sorting_history.push( { column_id: th_index_selected, direction: 'ascending' } );
-
-                break;
-              }
-            }
-          } else { // If this is not the same column clicked as before, set to ascending
-            sorting_history.push( { column_id: th_index_selected, direction: 'ascending' } );
-          }
+        sorted_table_data[th_index_selected] = table_data.concat(); // Make a copy of the original table data
+        if (sorting_criteria[th_index_selected] == 'numeric') {    // Sort numeric
+          sorted_table_data[th_index_selected].sort(function(a,b) {
+            var left = a.td[th_index_selected], right = b.td[th_index_selected]
+            if (left == "") { return new_direction == 'ascending' ? 1  : -1 }
+            if (right == "") { return new_direction == 'ascending' ? -1 : 1 }
+            return left - right
+          });
+        } else if (sorting_criteria[th_index_selected] == 'text') { // Sort text
+          sorted_table_data[th_index_selected].sort(function(a,b) {
+            var left = a.td[th_index_selected], right = b.td[th_index_selected]
+            if (left == "") { return new_direction == 'ascending' ? 1  : -1 }
+            if (right == "") { return new_direction == 'ascending' ? -1 : 1 }
+            return left.localeCompare(right);
+          });
         }
+        $(table).find('.tr .th').removeClass("is-sorted").removeClass("sorted-ascending").removeClass("sorted-descending")
+        $(th).addClass("is-sorted").addClass("sorted-" + new_direction)
 
         // Call the display_table function with the data array and direction requested
-        display_table(sorted_table_data[th_index_selected], sorting_history[sorting_history.length -1]['direction']);
-        display_arrow(th_index_selected, sorting_history[sorting_history.length -1]['direction']);
+        display_table(sorted_table_data[th_index_selected], sorting_history[sorting_history.length - 1]['direction']);
+        display_arrow(th_index_selected, sorting_history[sorting_history.length - 1]['direction']);
+      }
+
+      /* FUNCTIONALITY */
+      $(table).find('.tr .th').click(function() {
+        sortFromColumn(this, true)
       });
 
       $(table).on("reorder", function() {
-        console.log("reorder");
-      }).on("change", function() {
-        table_data = new Array()
-        sorted_table_data = new Array()
+        getTableData(table_data.length == 0);
+        sortFromColumn($(".tr .th.is-sorted").get(0), false)
       })
 
       // Display arrow direction

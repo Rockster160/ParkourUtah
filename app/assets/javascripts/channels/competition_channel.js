@@ -31,7 +31,7 @@ $(document).ready(function() {
         row.find("[data-category=total]").text(competitor.total || "--")
         row.find("[data-category=rank]").text(competitor.rank || "--")
       })
-      $(".tableSorter").trigger("change").trigger("reorder")
+      $(".tableSorter").trigger("reorder")
     }
   }
 })

@@ -11,20 +11,20 @@
         <% end %>
         <div class="th" data-sort="numeric">Overall</div>
         <div class="th" data-sort="numeric">Total</div>
-        <div class="th" data-sort="numeric">Rank</div>
+        <div class="th is-sorted" data-sort="numeric">Rank</div>
       </div>
     </div>
     <% @competitors.youth.each do |competitor| %>
       <div class="tr" data-competitor-id="<%= competitor.id %>">
-        <div class="td" data-sortAs="numeric"><%= competitor.position %></div>
-        <div class="td" data-sortAs="text"><%= competitor.full_name %></div>
+        <div class="td"><%= competitor.position %></div>
+        <div class="td"><%= competitor.full_name %></div>
         <% @categories.each do |category| %>
           <% score = competitor.score_display(category) %>
-          <div class="td" data-sortAs="numeric" data-category="<%= category.downcase %>"><%= link_to score, competition_competitor_path(@competition, category, competitor) %></div>
+          <div class="td" data-category="<%= category.downcase %>"><%= link_to score, competition_competitor_path(@competition, category, competitor) %></div>
         <% end %>
-        <div class="td" data-sortAs="numeric" data-category="overall_impression"><%= competitor.score_display(:overall_impression) %></div>
-        <div class="td" data-sortAs="numeric" data-category="total"><%= competitor.score_display %></div>
-        <div class="td super-text" data-sortAs="numeric" data-category="rank"><%= competitor.rank || "--" %></div>
+        <div class="td" data-category="overall_impression"><%= competitor.score_display(:overall_impression) %></div>
+        <div class="td" data-category="total"><%= competitor.score_display %></div>
+        <div class="td super-text" data-category="rank"><%= competitor.rank || "--" %></div>
       </div>
     <% end %>
   </div>
@@ -42,20 +42,20 @@
         <% end %>
         <div class="th" data-sort="numeric">Overall</div>
         <div class="th" data-sort="numeric">Total</div>
-        <div class="th" data-sort="numeric">Rank</div>
+        <div class="th is-sorted" data-sort="numeric">Rank</div>
       </div>
     </div>
     <% @competitors.adult.each do |competitor| %>
       <div class="tr" data-competitor-id="<%= competitor.id %>">
-        <div class="td" data-sortAs="numeric"><%= competitor.position %></div>
-        <div class="td" data-sortAs="text"><%= competitor.full_name %></div>
+        <div class="td"><%= competitor.position %></div>
+        <div class="td"><%= competitor.full_name %></div>
         <% @categories.each do |category| %>
           <% score = competitor.score_display(category) %>
-          <div class="td" data-sortAs="numeric" data-category="<%= category.downcase %>"><%= link_to score, competition_competitor_path(@competition, category, competitor) %></div>
+          <div class="td" data-category="<%= category.downcase %>"><%= link_to score, competition_competitor_path(@competition, category, competitor) %></div>
         <% end %>
-        <div class="td" data-sortAs="numeric" data-category="overall_impression"><%= competitor.score_display(:overall_impression) %></div>
-        <div class="td" data-sortAs="numeric" data-category="total"><%= competitor.score_display %></div>
-        <div class="td super-text" data-sortAs="numeric" data-category="rank"><%= competitor.rank || "--" %></div>
+        <div class="td" data-category="overall_impression"><%= competitor.score_display(:overall_impression) %></div>
+        <div class="td" data-category="total"><%= competitor.score_display %></div>
+        <div class="td super-text" data-category="rank"><%= competitor.rank || "--" %></div>
       </div>
     <% end %>
   </div>
