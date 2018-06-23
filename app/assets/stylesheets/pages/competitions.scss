@@ -120,7 +120,7 @@
   }
 }
 
-.judgement-page {
+.judgement-page, .monitor-page {
   h2 { color: $pkut-grey-dark; }
 
   ul  {
@@ -137,18 +137,32 @@
   }
 
   .table.tableSorter {
-    width: 100%;
-    max-width: 500px;
+    width: 500px;
+    max-width: 100%;
     margin: 0 auto;
 
     .th {
       font-size: 20px;
       text-align: center;
       text-decoration: underline;
+      white-space: nowrap;
+      padding: 0 5px;
 
       &.wide { width: 100%; }
     }
     .td { font-size: 18px; }
+    .super-text {
+      color: $pkut-red;
+      font-size: 26px;
+      font-weight: bold;
+    }
+  }
+
+  &.monitor-page {
+    .table {
+      width: 100%;
+      max-width: 100%;
+    }
   }
 
   .judge-form {

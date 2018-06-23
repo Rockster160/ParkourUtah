@@ -27,20 +27,34 @@ class Competitor < ApplicationRecord
 
   delegate :full_name, to: :athlete
 
+  def youth?; age.to_i < 14; end
+  def adult?; age.to_i >= 14; end
+  def age_group; age < 14 ? :youth : :adult; end
+
   def rank(category=nil)
-    idx = competition.ranked_competitors(category).index(self)
+    idx = competition.ranked_competitors(age_group, category).index(self)
     return if idx.nil?
     idx + 1
   end
 
   def score(category=nil)
+    judgments = competition_judgements.send(age_group)
+    return if judgments.none?
     if category.to_s == "overall_impression"
-      (competition_judgements.sum(:overall_impression) / competition_judgements.count).round(1)
+      (judgments.sum(:overall_impression) / judgments.count).round(1)
     elsif category.present?
-      competition_judgements.find_by(category: CompetitionJudgement.categories[category]).try(:category_score)
+      category_judgements = judgments.by_category(category)
+      return if category_judgements.none?
+      category_judgements.first.category_score
     else
-      competition_judgements.sum(:category_score) + score(:overall_impression)
+      judgments.sum(:category_score) + score(:overall_impression)
     end
+  end
+
+  def score_display(category=nil)
+    raw_score = score(category)
+    return "--" if raw_score.nil?
+    raw_score&.round(1).to_s.gsub(/(\.)0+$/, '').presence || "--"
   end
 
   def position
@@ -51,7 +65,6 @@ class Competitor < ApplicationRecord
 
   def set_initial_values
     self.age = age = athlete.age || 0
-    group = age < 18 ? :youth : :adult
-    self.sort_order = self.class.send(group).maximum(:sort_order).to_i + 1
+    self.sort_order = self.class.send(age_group).maximum(:sort_order).to_i + 1
   end
 end

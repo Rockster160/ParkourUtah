@@ -18,15 +18,16 @@
   </div>
 
   <div class="text-center">
-    <%= form_for @competitor.competition_judgements.by_category(@category).first_or_initialize, url: competition_judge_competitor_path, method: :post, html: { class: "judge-form" } do |f| %>
+    <% judgement = @competitor.competition_judgements.by_category(@category).first_or_initialize %>
+    <%= form_for judgement, url: competition_judge_competitor_path, method: :post, html: { class: "judge-form" } do |f| %>
       <h2><%= @category.upcase %></h2>
       <div class="text-field-wrapper">
-        <%= f.text_field :category_score, placeholder: "00" %>
+        <%= f.text_field :category_score, placeholder: "00", value: judgement.category_score.to_s.gsub(/(\.)0+$/, '') %>
         <span>/20</span>
       </div>
       <h2>OVERALL IMPRESSION</h2>
       <div class="text-field-wrapper">
-        <%= f.text_field :overall_impression, placeholder: "00" %>
+        <%= f.text_field :overall_impression, placeholder: "00", value: judgement.overall_impression.to_s.gsub(/(\.)0+$/, '') %>
         <span>/20</span>
       </div>
       <%= f.submit "Confirm", class: "hidden", id: "submit-judgment" %>
@@ -41,7 +42,7 @@
     <div class="category">
       Flow: <span id="category_score">00</span>/20 points
     </div>
-    <div class="overall">
+    <div class="overall_impression">
       Overall: <span id="overall_impression">00</span>/20 points
     </div>
   </div>

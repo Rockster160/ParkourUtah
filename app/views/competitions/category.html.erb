@@ -4,18 +4,20 @@
   <div class="table tableSorter">
     <div class="thead">
       <div class="tr">
-        <div class="th" data-sortBy="numeric">#</div>
-        <div class="th wide" data-sortBy="text">Name</div>
-        <div class="th" data-sortBy="numeric">Rank</div>
+        <div class="th" data-sort="numeric"># </div>
+        <div class="th wide" data-sort="text">Name </div>
+        <div class="th wide" data-sort="numeric">Score </div>
+        <div class="th" data-sort="numeric">Rank </div>
       </div>
     </div>
-      <% @competitors.youth.each do |competitor| %>
-        <div class="tr">
-          <div class="td"><%= competitor.position %></div>
-          <div class="td"><%= link_to competitor.full_name, competition_competitor_path(@competition, @category, competitor) %></div>
-          <div class="td" data-sortAs="<%= competitor.rank || 'ZZZZ' %>"><%= competitor.rank || "N/A" %></div>
-        </div>
-      <% end %>
+    <% @competitors.youth.each do |competitor| %>
+      <div class="tr">
+        <div class="td" data-sortAs="numeric"><%= competitor.position %></div>
+        <div class="td" data-sortAs="text"><%= link_to competitor.full_name, competition_competitor_path(@competition, @category, competitor) %></div>
+        <div class="td" data-sortAs="numeric"><%= competitor.score_display(@category) %></div>
+        <div class="td" data-sortAs="numeric"><%= competitor.rank(@category) || "--" %></div>
+      </div>
+    <% end %>
   </div>
 
   <hr style="border-width: 10px;">
@@ -24,17 +26,19 @@
   <div class="table tableSorter">
     <div class="thead">
       <div class="tr">
-        <div class="th" data-sortBy="numeric">#</div>
-        <div class="th wide" data-sortBy="text">Name</div>
-        <div class="th" data-sortBy="numeric">Rank</div>
+        <div class="th" data-sort="numeric"># </div>
+        <div class="th wide" data-sort="text">Name </div>
+        <div class="th wide" data-sort="numeric">Score </div>
+        <div class="th" data-sort="numeric">Rank </div>
       </div>
     </div>
-      <% @competitors.adult.each do |competitor| %>
-        <div class="tr">
-          <div class="td"><%= competitor.position %></div>
-          <div class="td"><%= link_to competitor.full_name, competition_competitor_path(@competition, @category, competitor) %></div>
-          <div class="td" data-sortAs="<%= competitor.rank || 'ZZZZ' %>"><%= competitor.rank || "N/A" %></div>
-        </div>
-      <% end %>
+    <% @competitors.adult.each do |competitor| %>
+      <div class="tr">
+        <div class="td" data-sortAs="numeric"><%= competitor.position %></div>
+        <div class="td" data-sortAs="text"><%= link_to competitor.full_name, competition_competitor_path(@competition, @category, competitor) %></div>
+        <div class="td" data-sortAs="numeric"><%= competitor.score_display(@category) %></div>
+        <div class="td" data-sortAs="numeric"><%= competitor.rank(@category) || "--" %></div>
+      </div>
+    <% end %>
   </div>
 </div>

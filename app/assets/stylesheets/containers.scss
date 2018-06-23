@@ -3,11 +3,16 @@
   max-width: 100%;
   margin: 0 auto;
 }
+.medium-container {
+  width: 900px;
+  max-width: 100%;
+  margin: 0 auto;
+}
 
 .flex-row {
   display: flex;
   flex-direction: row;
-  
+
   &.flex-center { justify-content: space-around; }
 }
 

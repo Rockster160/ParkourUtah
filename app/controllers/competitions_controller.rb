@@ -1,5 +1,5 @@
 class CompetitionsController < ApplicationController
-  before_action :validate_instructor
+  before_action :validate_instructor, except: [:index, :show, :results]
 
   def index
     @competitions = Competition.current.by_most_recent(:start_time)
@@ -11,6 +11,12 @@ class CompetitionsController < ApplicationController
     @competitor = @competition.competitors.new
     @eligible_athletes = current_user.athletes.where.not(id: @competition.competitors.pluck(:athlete_id))
     @registered_athletes = current_user.athletes.where(id: @competition.competitors.pluck(:athlete_id))
+  end
+
+  def results
+    competition = Competition.find(params[:competition_id])
+
+    render json: competition.competitor_hash
   end
 
   def judge
@@ -31,6 +37,8 @@ class CompetitionsController < ApplicationController
 
   def monitor
     @competition = Competition.find(params[:competition_id])
+    @competitors = @competition.competitors.order(:sort_order)
+    @categories = CompetitionJudgement.categories.keys.map(&:titleize)
   end
 
   def judge_competitor

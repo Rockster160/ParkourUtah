@@ -1,6 +1,5 @@
 $(document).ready(function() {
   if ($(".competition-wrapper").length > 0) {
-
     $("#selected-athlete").change(function() {
       $(".waiver-athletes").text($(this).find("option:selected").text())
       if ($(this).val() != "") {
@@ -17,15 +16,14 @@ $(document).ready(function() {
         $("#waiver-submit").addClass("disabled")
       }
     })
-
   }
 
-  $(".judgement-page .table").tableSort()
+  $(".tableSorter").tableSort()
 
   $("#competition_judgement_category_score").change(function() {
     $("#category_score").text($(this).val() || "00")
-  })
+  }).change()
   $("#competition_judgement_overall_impression").change(function() {
     $("#overall_impression").text($(this).val() || "00")
-  })
+  }).change()
 })

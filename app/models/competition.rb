@@ -16,10 +16,22 @@ class Competition < ApplicationRecord
 
   scope :current, -> { where("start_time > ?", DateTime.current) }
 
-  def ranked_competitors(category=nil)
-    category_competitors = competitors.joins(:competition_judgements)
-    category_competitors = category_competitors.where(competition_judgements: { category: CompetitionJudgement.categories[category] }) if category.present?
-    category_competitors.sort_by { |competitor| competitor.score(category) }
+  def ranked_competitors(age_group, category=nil)
+    category_competitors = competitors.send(age_group).joins(:competition_judgements).distinct
+    category_competitors.reject { |competitor| competitor.score(category).nil? }.sort_by { |competitor| -competitor.score(category) }
   end
 
+  def competitor_hash
+    categories = CompetitionJudgement.categories.keys
+    competitors.order(:sort_order).map do |competitor|
+      hash = { id: competitor.id }
+      categories.each do |category|
+        hash[category] = competitor.score_display(category)
+      end
+      hash[:overall_impression] = competitor.score_display(:overall_impression)
+      hash[:total] = competitor.score_display
+      hash[:rank] = competitor.rank
+      hash
+    end
+  end
 end
