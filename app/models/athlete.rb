@@ -151,11 +151,12 @@ class Athlete < ApplicationRecord
   end
 
   def age
+    return unless date_of_birth
     now = Time.now.utc.to_date
-    dob = DateTime.parse(date_of_birth)
+    dob = DateTime.parse(date_of_birth) rescue nil
+    dob ||= DateTime.strptime(date_of_birth, '%m/%d/%Y') rescue nil
+    return unless dob
     now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
-  rescue
-    nil
   end
 
   def waiver
