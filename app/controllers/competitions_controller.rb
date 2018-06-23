@@ -25,7 +25,7 @@ class CompetitionsController < ApplicationController
 
   def category
     @competition = Competition.find(params[:competition_id])
-    @competitors = @competition.competitors.order(:sort_order)
+    @competitors = @competition.competitors.approved.order(:sort_order)
     @category = params[:category]
   end
 
@@ -37,7 +37,7 @@ class CompetitionsController < ApplicationController
 
   def monitor
     @competition = Competition.find(params[:competition_id])
-    @competitors = @competition.competitors.order(:sort_order)
+    @competitors = @competition.competitors.approved.order(:sort_order)
     @categories = CompetitionJudgement.categories.keys.map(&:titleize)
   end
 

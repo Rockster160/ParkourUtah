@@ -17,13 +17,13 @@ class Competition < ApplicationRecord
   scope :current, -> { where("start_time > ?", DateTime.current) }
 
   def ranked_competitors(age_group, category=nil)
-    category_competitors = competitors.send(age_group).joins(:competition_judgements).distinct
+    category_competitors = competitors.approved.send(age_group).joins(:competition_judgements).distinct
     category_competitors.reject { |competitor| competitor.score(category).nil? }.sort_by { |competitor| -competitor.score(category) }
   end
 
   def competitor_hash
     categories = CompetitionJudgement.categories.keys
-    competitors.order(:sort_order).map do |competitor|
+    competitors.approved.order(:sort_order).map do |competitor|
       hash = { id: competitor.id }
       categories.each do |category|
         hash[category] = competitor.score_display(category)

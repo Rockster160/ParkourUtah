@@ -24,6 +24,7 @@ class Competitor < ApplicationRecord
 
   scope :youth, -> { where("age < 14") }
   scope :adult, -> { where("age >= 14") }
+  scope :approved, -> { where.not(approved_at: nil) }
 
   delegate :full_name, to: :athlete
 
