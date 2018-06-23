@@ -1,13 +1,15 @@
 <div class="text-center judgement-page skinny-container">
   <h2><%= @competition.name %>: <br> <%= @competition.start_time.strftime("%B %dth") %></h2>
+  <h2><%= @category.titleize %></h2>
+
   <h3 class="text-left">Youth:</h3>
   <div class="table tableSorter">
     <div class="thead">
       <div class="tr">
-        <div class="th" data-sort="numeric"># </div>
-        <div class="th wide" data-sort="text">Name </div>
-        <div class="th wide" data-sort="numeric">Score </div>
-        <div class="th" data-sort="numeric">Rank </div>
+        <div class="th" data-sort="numeric">#</div>
+        <div class="th wide" data-sort="text">Name</div>
+        <div class="th wide" data-sort="numeric">Score</div>
+        <div class="th" data-sort="numeric">Rank</div>
       </div>
     </div>
     <% @competitors.youth.each do |competitor| %>
@@ -26,10 +28,10 @@
   <div class="table tableSorter">
     <div class="thead">
       <div class="tr">
-        <div class="th" data-sort="numeric"># </div>
-        <div class="th wide" data-sort="text">Name </div>
-        <div class="th wide" data-sort="numeric">Score </div>
-        <div class="th" data-sort="numeric">Rank </div>
+        <div class="th" data-sort="numeric">#</div>
+        <div class="th wide" data-sort="text">Name</div>
+        <div class="th wide" data-sort="numeric">Score</div>
+        <div class="th" data-sort="numeric">Rank</div>
       </div>
     </div>
     <% @competitors.adult.each do |competitor| %>
