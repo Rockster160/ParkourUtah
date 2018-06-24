@@ -83,6 +83,9 @@
 <% end %>
 
 <% if current_user&.admin? %>
+  <p class="text-center">
+    <%= link_to "Export to CSV", export_competition_path(@competition), download: true, class: "pkut-btn" %>
+  </p>
   <div class="small-container" style="margin: 0 auto;">
     <p>Registered competitors (only admins see this section)</p>
     <ul>

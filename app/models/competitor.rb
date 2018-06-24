@@ -27,6 +27,7 @@ class Competitor < ApplicationRecord
   scope :approved, -> { where.not(approved_at: nil) }
 
   delegate :full_name, to: :athlete
+  before_save -> { set_initial_values }
 
   def youth?; age.to_i < 14; end
   def adult?; age.to_i >= 14; end
@@ -65,7 +66,7 @@ class Competitor < ApplicationRecord
   private
 
   def set_initial_values
-    self.age = age = athlete.age || 0
-    self.sort_order = self.class.send(age_group).maximum(:sort_order).to_i + 1
+    self.age ||= age = athlete.age || 0
+    self.sort_order ||= self.class.send(age_group).maximum(:sort_order).to_i + 1
   end
 end

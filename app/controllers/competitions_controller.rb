@@ -1,5 +1,5 @@
 class CompetitionsController < ApplicationController
-  before_action :validate_instructor, except: [:index, :show, :results]
+  before_action :validate_instructor, except: [:index, :show]
 
   def index
     @competitions = Competition.current.by_most_recent(:start_time)
@@ -11,6 +11,18 @@ class CompetitionsController < ApplicationController
     @competitor = @competition.competitors.new
     @eligible_athletes = current_user.athletes.where.not(id: @competition.competitors.pluck(:athlete_id))
     @registered_athletes = current_user.athletes.where(id: @competition.competitors.pluck(:athlete_id))
+  end
+
+  def export
+    @competition = Competition.current.find(params[:id])
+    @competitors = @competition.competitors.approved.order(:sort_order)
+    csv_str = CSV.generate do |csv|
+      csv << ["Name", "Song"]
+      @competitors.each do |c|
+        csv << [c.full_name, c.song]
+      end
+    end
+    send_data csv_str, filename: "competitors_export.csv"
   end
 
   def results

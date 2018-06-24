@@ -33,6 +33,7 @@ Rails.application.routes.draw do
   end
 
   resources :competitions, only: [:index, :show] do
+    get :export, on: :member
     get :monitor
     get :judge
     get :results

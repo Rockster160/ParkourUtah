@@ -4,7 +4,7 @@
   <div class="flex-row">
     <h3><%= link_to @competitor.full_name, admin_user_path(@competitor.athlete.user_id) %></h3>
     <h5>
-      Age: <%= @competitor.athlete.age || "?" %> <br>
+      Age: <%= @competitor.age || "?" %> | (<%= @competitor.athlete.date_of_birth %>) <br>
       <% if @competitor.years_training.present? %>
         Years training: <%= @competitor.years_training %> <br>
       <% end %>
