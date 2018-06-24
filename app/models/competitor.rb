@@ -66,7 +66,7 @@ class Competitor < ApplicationRecord
   private
 
   def set_initial_values
-    self.age ||= age = athlete.age || 0
+    self.age = age = athlete.age || 0
     self.sort_order ||= self.class.send(age_group).maximum(:sort_order).to_i + 1
   end
 end
