@@ -104,7 +104,11 @@
           <li><strong>Instagram:</strong> <%= link_to competitor.instagram_handle, "https://www.instagram.com/#{competitor.instagram_handle}" if competitor.instagram_handle %></li>
           <li><strong>Song:</strong> <%= competitor.song %></li>
           <li><strong>Bio:</strong> <%= content_tag :pre, competitor.bio if competitor.bio.present? %></li>
-          <li><%= link_to "View in Stripe", "https://dashboard.stripe.com/payments/#{competitor.stripe_charge_id}" if competitor.stripe_charge_id.present? %></li>
+          <% if competitor.stripe_charge_id.present? %>
+            <li><%= link_to "View in Stripe", "https://dashboard.stripe.com/payments/#{competitor.stripe_charge_id}" %></li>
+          <% else %>
+            <li><strong>Sponsored Athlete - no payment</strong></li>
+          <% end %>
         </ul>
       </li>
     <% end %>
