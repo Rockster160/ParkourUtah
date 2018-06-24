@@ -17,9 +17,9 @@ class CompetitionsController < ApplicationController
     @competition = Competition.current.find(params[:id])
     @competitors = @competition.competitors.approved.order(:sort_order)
     csv_str = CSV.generate do |csv|
-      csv << ["Name", "Song"]
+      csv << ["Name", "Age", "Years Training", "Instagram", "Song", "Bio"]
       @competitors.each do |c|
-        csv << [c.full_name, c.song]
+        csv << [c.full_name, c.age, c.years_training, c.instagram_handle, c.song, c.bio]
       end
     end
     send_data csv_str, filename: "competitors_export.csv"
