@@ -17,7 +17,7 @@ class CompetitorsController < ApplicationController
     end
 
     athlete = @competitor.athlete
-    charge = StripeCharger.charge(params[:stripeToken], 2500, description: "#{@competition.name} Competitor: #{athlete.full_name}")
+    charge = StripeCharger.charge(params[:stripeToken], 3500, description: "#{@competition.name} Competitor: #{athlete.full_name}")
 
     if charge.try(:status) == "succeeded"
       @competitor.update(stripe_charge_id: charge[:id])
