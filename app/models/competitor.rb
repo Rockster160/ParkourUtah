@@ -70,3 +70,7 @@ class Competitor < ApplicationRecord
     self.sort_order ||= self.class.send(age_group).maximum(:sort_order).to_i + 1
   end
 end
+
+# Competitor.find_each {|c| c.send(:set_initial_values); c.save}
+# Competitor.order(:created_at).youth.each.with_index {|c, idx| c.update(sort_order: idx + 1)}
+# Competitor.order(:created_at).adult.each.with_index {|c, idx| c.update(sort_order: idx + 1)}
