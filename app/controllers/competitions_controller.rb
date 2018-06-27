@@ -15,7 +15,7 @@ class CompetitionsController < ApplicationController
   end
 
   def export
-    @competition = Competition.current.find(params[:id])
+    @competition = Competition.find(params[:id])
     @competitors = @competition.competitors.approved.order(:sort_order)
     csv_str = CSV.generate do |csv|
       csv << ["Name", "Age", "Years Training", "Instagram", "Song", "Bio"]
