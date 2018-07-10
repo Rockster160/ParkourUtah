@@ -11,7 +11,7 @@ class SmsMailerWorker
           api.account.messages.create(
             body: message,
             to: num,
-            from: "+17405714304"
+            from: "+18444355867"
           )
         rescue Twilio::REST::RequestError => e
           m = Message.where(phone_number: num, body: msg).last
@@ -33,5 +33,5 @@ class SmsMailerWorker
       puts "\e[31m DEV: Text Message to #{num}:\n#{msg} \e[0m"
     end
   end
-  
+
 end
