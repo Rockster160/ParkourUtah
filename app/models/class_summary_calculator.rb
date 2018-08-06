@@ -97,7 +97,7 @@ class ClassSummaryCalculator
       day_class.instructors << class_instructor
     else
       event.attendances.group_by(&:instructor_id).each do |instructor_id, attendances|
-        instructor = User.instructors.find(instructor_id)
+        instructor = User.find(instructor_id)
 
         class_instructor = ClassInstructor.new(instructor.full_name, [], 0, 0, 0)
         class_instructor.students = generate_students_by_event_and_attendances(event, attendances)
