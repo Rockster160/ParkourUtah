@@ -24,6 +24,19 @@
         <h4>This chat room is linked via text, so messages sent from here will be delivered to the phone number: <div class="text-center"><%= format_phone_number(@chat_room.name) %></div></h4>
       <% end %>
     <% end %>
+
+    <div class="user-details">
+      <% if @chat_room.support_user.present? %>
+        <h5>Credits:</h5>
+        <%= @chat_room.support_user.credits %>
+        <h5>Athletes:</h5>
+        <ul>
+          <% @chat_room.support_user.athletes.each do |athlete| %>
+            <li><%= athlete.full_name %></li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
   <% end %>
 
   <%= form_for [@chat_room, @chat_room.messages.new], html: { class: "messages-form" } do |f| %>
