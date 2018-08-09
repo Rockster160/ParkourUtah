@@ -22,7 +22,7 @@ class ScheduleWorker
   private
 
   def post_to_custom_logger(params)
-    CustomLogger.log_blip!("\e[32m")
+    # CustomLogger.log_blip!("\e[32m")
   end
 
   def send_class_text(params)
@@ -44,6 +44,30 @@ class ScheduleWorker
         end
       end
     end
+  end
+
+  def subscribe_new_user(params)
+    date_range = minutes_ago(130)..minutes_ago(110)
+    EventSchedule.joins(:event_subscriptions).distinct.events_today.each do |attended_event|
+      next if attended_event.cancelled?
+      next unless date_range.cover?(attended_event.date)
+      event_schedule = attended_event.event_schedule
+      attended_event.attendances.group_by { |attendance| attendance.athlete.user_id }.each do |user_id, attendances|
+        user = User.find(user_id)
+        next unless user.can_receive_sms? && user.notifications.text_class_reminder?
+        next if user.subscribed_events.where(id: event_schedule.id).any?
+        next unless attended_event.event_schedule.attendances.where(athlete_id: user.athlete_ids).where.not(event_id: attended_event.id).none?
+        athletes = attendances.map(&:athlete)
+        names = athletes.map { |athlete| athlete.full_name.split(" ").first.squish }.to_sentence
+
+        num = user.phone_number
+        if num.length == 10 && user.event_subscriptions.find_or_create_by(event_schedule_id: event_schedule.id)
+          msg = "Thanks for visiting #{attended_event.title}, we loved having #{names} in class!\nWe've set up an auto text message reminder to go out before class each week. To review and edit your text message subscriptions please visit parkourutah.com/account#subscriptions when logged into your Parkour Utah account. Thank you!"
+          Message.text.create(body: msg, chat_room_name: num, sent_from_id: 0).deliver
+        end
+      end
+    end
+    nil
   end
 
   def waiver_checks(params)
@@ -151,16 +175,20 @@ class ScheduleWorker
     Time.zone.now + (seconds * 60)
   end
 
+  def days_from_now(seconds)
+    Time.zone.now + (seconds * 60 * 60 * 24)
+  end
+
   def weeks_from_now(seconds)
     Time.zone.now + (seconds * 60 * 60 * 24 * 7)
   end
 
-  def days_ago(seconds)
-    Time.zone.now - (seconds * 60 * 60 * 24)
+  def minutes_ago(seconds)
+    Time.zone.now - (seconds * 60)
   end
 
-  def days_from_now(seconds)
-    Time.zone.now + (seconds * 60 * 60 * 24)
+  def days_ago(seconds)
+    Time.zone.now - (seconds * 60 * 60 * 24)
   end
 
 end
