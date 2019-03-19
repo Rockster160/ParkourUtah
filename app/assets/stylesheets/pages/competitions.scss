@@ -1,28 +1,28 @@
 @import "config/variables";
 
 .competitions-wrapper {
-  color: $pkut-grey-dark;
   margin-bottom: 30px;
+  color: $pkut-grey-dark;
 
   .competition-container {
-    position: relative;
     display: block;
+    position: relative;
+    box-shadow: 5px 5px 20px -5px $pkut-grey-dark;
+    border: 1px solid white;
+    border-radius: 8px;
+    background-size: cover;
+    padding: 8px 5px;
     width: 400px;
     max-width: 100%;
-    background-size: cover;
-    border-radius: 8px;
-    border: 1px solid white;
-    box-shadow: 5px 5px 20px -5px $pkut-grey-dark;
+    color: white;
 
     font-family: 'MicroExtendFLF-Bold', Arial, sans-serif;
-    color: white;
     font-size: 20px;
     text-decoration: none !important;
-    padding: 8px 5px;
 
     * {
-      text-decoration: none !important;
       line-height: 1.2;
+      text-decoration: none !important;
       text-shadow:
       -1px -1px 0 black,
       1px -1px 0 black,
@@ -38,77 +38,84 @@
       font-size: 24px;
     }
     .end-date {
-      text-align: center;
       font-size: 16px;
+      text-align: center;
     }
   }
 }
 
 .competition-wrapper {
   margin: 0 auto;
+  padding: 8px 5px;
   width: 900px;
   max-width: 100%;
+  color: $pkut-grey-dark;
 
   font-family: 'MicroExtendFLF-Bold', Arial, sans-serif;
-  color: $pkut-grey-dark;
   font-size: 20px;
-  text-decoration: none !important;
-  padding: 8px 5px;
   text-align: center;
+  text-decoration: none !important;
 
   .sponsors img { height: 200px; }
   .split-half {
     display: flex;
     padding: 10px;
 
-    & > * { margin: 10px auto; padding: 10px;}
-
-    .description {
-      text-align: left;
-
-      p {
-        line-height: 1.5;
-        & + p { margin-top: 20px; }
-      }
+    & > * {
+      margin: 10px auto;
+      padding: 10px;
     }
     .form {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+    }
+  }
 
+    .description {
+      text-align: left;
+      white-space: pre-wrap;
+
+      p {
+        line-height: 1.5;
+
+        & + p { margin-top: 20px; }
+      }
+    }
+    .form {
       .form-field {
+        margin: 0 auto;
         width: 350px;
         max-width: 100%;
 
         * { font-size: 16px; }
         span * { font-size: 14px; }
         select {
-          width: 100%;
-          height: 28px;
-          background-color: white;
-          margin: 10px auto;
+          appearance: none;
           box-sizing: border-box;
+          margin: 10px auto;
           box-shadow: none;
 
           border: 2px solid $pkut-grey-dark;
           border-radius: 8px;
-          padding: 0 12px;
-
-          line-height: 100%;
-
-          color: $pkut-grey-dark;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          font-weight: normal;
 
           background: white url('https://image.freepik.com/free-icon/caret-arrowhead-facing-down_318-34455.png') no-repeat calc(100% - 15px) 55%;
+          background-color: white;
           background-size: 10px 10px;
-          appearance: none;
+          padding: 0 12px;
+          width: 100%;
+          height: 28px;
+          overflow: hidden;
           resize: none;
+
+          color: $pkut-grey-dark;
+          font-weight: normal;
+
+          line-height: 100%;
+          text-overflow: ellipsis;
         }
       }
     }
-  }
   @media(max-width: 900px) {
     .split-half { display: block; }
   }
@@ -124,29 +131,29 @@
   h2 { color: $pkut-grey-dark; }
 
   ul  {
-    width: 200px;
-    max-width: 100%;
     margin: 0 auto;
     padding-left: 60px;
+    width: 200px;
+    max-width: 100%;
 
     li {
-      list-style-type: none;
       color: $pkut-red;
+      list-style-type: none;
       text-align: left;
     }
   }
 
   .table.tableSorter {
+    margin: 0 auto;
     width: 500px;
     max-width: 100%;
-    margin: 0 auto;
 
     .th {
+      padding: 0 5px;
       font-size: 20px;
       text-align: center;
       text-decoration: underline;
       white-space: nowrap;
-      padding: 0 5px;
 
       &.wide { width: 100%; }
     }
@@ -174,22 +181,22 @@
         position: absolute;
         top: 50%;
         margin-top: -15px;
-        font-size: 30px;
         margin-left: 10px;
+        font-size: 30px;
       }
       input[type=text] {
-        font-size: 80px;
-        font-family: 'MicroExtendFLF-Bold', Arial, sans-serif;
-        text-align: center;
-        width: 250px;
         border: 2px solid black;
-        color: black;
         background: $pkut-grey;
         padding: 10px 0;
+        width: 250px;
+        color: black;
+        font-family: 'MicroExtendFLF-Bold', Arial, sans-serif;
+        font-size: 80px;
+        text-align: center;
       }
-      ::placeholder { color: black; opacity: 1; }
-      :-ms-input-placeholder { color: black; opacity: 1; }
-      ::-ms-input-placeholder { color: black; opacity: 1; }
+      ::placeholder { opacity: 1; color: black; }
+      :-ms-input-placeholder { opacity: 1; color: black; }
+      ::-ms-input-placeholder { opacity: 1; color: black; }
     }
   }
 }
@@ -205,7 +212,7 @@
 }
 
 .waiver-athletes {
-  font-size: 18px;
   color: $pkut-red;
+  font-size: 18px;
   text-transform: uppercase;
 }

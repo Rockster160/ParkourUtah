@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180619231636) do
+ActiveRecord::Schema.define(version: 20190317162359) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -153,8 +153,12 @@ ActiveRecord::Schema.define(version: 20180619231636) do
     t.integer  "spot_id"
     t.string   "name"
     t.datetime "start_time"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.string   "slug"
+    t.text     "description"
+    t.text     "option_costs"
+    t.text     "sponsor_images"
     t.index ["spot_id"], name: "index_competitions_on_spot_id", using: :btree
   end
 
