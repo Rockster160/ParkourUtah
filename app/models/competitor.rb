@@ -28,13 +28,12 @@ class Competitor < ApplicationRecord
   scope :approved, -> { where.not(approved_at: nil) }
 
   delegate :full_name, to: :athlete
-  delegate :age, to: :athlete
+  delegate :age,       to: :athlete
+  delegate :youth?,    to: :athlete
+  delegate :adult?,    to: :athlete
+  delegate :age_group, to: :athlete
+
   before_save -> { set_initial_values }
-
-
-  def youth?; age.to_i < 14; end
-  def adult?; age.to_i >= 14; end
-  def age_group; youth? ? :youth : :adult; end
 
   def cost
     costs = competition.option_costs.deep_symbolize_keys

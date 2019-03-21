@@ -47,14 +47,13 @@
         <div class="form-field"><%= f.text_area :bio, placeholder: "Bio (140 character limit)", class: "pkut-textarea", maxlength: "140" %></div>
       <% end %>
     </div>
-    <%= f.submit %>
-    <!-- <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+    <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
             data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
             data-image="http://parkourutah.com/favicon.ico"
             data-name="Parkour Utah"
             data-billing-address="true"
             data-description="All Sales are Final">
-    </script> -->
+    </script>
   <% end %>
   <p class="text-center">
     <%= link_to "", class: "pkut-btn #{'disabled' if @competitor.athlete_id.blank?}", id: "form-submit", data: { toggle: "modal", target: "#waiver_modal" } do %>
