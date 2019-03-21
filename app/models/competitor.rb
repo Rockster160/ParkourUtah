@@ -15,6 +15,7 @@
 #  approved_at      :datetime
 #  age              :integer
 #  sort_order       :integer
+#  selected_comp    :string
 #
 
 class Competitor < ApplicationRecord
@@ -27,11 +28,22 @@ class Competitor < ApplicationRecord
   scope :approved, -> { where.not(approved_at: nil) }
 
   delegate :full_name, to: :athlete
+  delegate :age, to: :athlete
   before_save -> { set_initial_values }
+
 
   def youth?; age.to_i < 14; end
   def adult?; age.to_i >= 14; end
-  def age_group; age < 14 ? :youth : :adult; end
+  def age_group; youth? ? :youth : :adult; end
+
+  def cost
+    costs = competition.option_costs.deep_symbolize_keys
+    return costs[:all] if costs[:all].present?
+
+    registration_period = competition.late_registration?(created_at || Time.current) ? :late : :early
+
+    costs.dig(age_group, registration_period, selected_comp.to_s.to_sym)
+  end
 
   def rank(category=nil)
     idx = competition.ranked_competitors(age_group, category).index(self)

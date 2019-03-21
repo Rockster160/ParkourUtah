@@ -23,17 +23,31 @@ class Competition < ApplicationRecord
 
   scope :current, -> { where("start_time > ?", DateTime.current) }
 
-  def late_registration?
-    Time.current > start_time - 1.week
+  def late_registration?(from_time=Time.current)
+    from_time > start_time.beginning_of_week
+  end
+
+  def options
+    @options ||= option_costs.deep_symbolize_keys
+  end
+
+  def registration_time
+    late_registration? ? :late : :early
+  end
+
+  def select_options(age_group)
+    (options.dig(age_group, registration_time) || []).map do |comp_name, price|
+      ["#{comp_name} ($#{price})", comp_name]
+    end
   end
 
   def cost_range
-    costs = option_costs.deep_symbolize_keys
-    return "$#{costs[:all]}" if costs[:all].present?
+    options = option_costs.deep_symbolize_keys
+    return "$#{options[:all]}" if options[:all].present?
 
     min = nil
     max = nil
-    costs.each do |age_group, registration_time|
+    options.each do |age_group, registration_time|
       registration_time.each do |time, comps|
         comps.each do |name, price|
           min = price if min.nil? || price < min

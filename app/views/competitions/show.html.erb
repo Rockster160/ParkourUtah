@@ -16,39 +16,49 @@
     </div>
   <% end %>
   <%= form_for @competitor, url: competitors_path do |f| %>
-      <div class="description"><%= @competition.description %></div>
-      <div class="form text-center">
-        <div class="form-field">
-          <% if @registered_athletes.any? %>
-            <p><span class="pkut-text"><%= @registered_athletes.pluck(:full_name).to_sentence %></span> <%= @registered_athletes.one? ? "has" : "have" %> already been registered for this competition.</p>
-          <% end %>
-          <% if @eligible_athletes.none? %>
-            <p class="pkut-text">You don't have any athletes eligible to enter this competition.</p>
-          <% end %>
-        </div>
-        <% if @eligible_athletes.any? %>
-          <%= f.hidden_field :competition_id %>
-          <div class="form-field">
-            <span class="pkut-text"><strong>Please add 1 athlete at a time.</strong></span>
-            <%= f.select :athlete_id, @eligible_athletes.collect { |a| [a.full_name, a.id] }, { include_blank: "Select Athlete" }, class: "pkut-dropdown", id: "selected-athlete" %>
-          </div>
-          <div class="form-field"><%= f.text_field :instagram_handle, placeholder: "Instagram Handle", class: "pkut-textbox disableEnterSubmit" %></div>
-          <div class="form-field"><%= f.text_field :song, placeholder: "Song (family friendly - leave blank for random)", class: "pkut-textbox disableEnterSubmit" %></div>
-          <div class="form-field"><%= f.text_area :bio, placeholder: "Bio (140 character limit)", class: "pkut-textarea", maxlength: "140" %></div>
+    <div class="description"><%= @competition.description %></div>
+    <div class="form text-center">
+      <div class="form-field">
+        <% if @registered_athletes.any? %>
+          <p><span class="pkut-text"><%= @registered_athletes.pluck(:full_name).to_sentence %></span> <%= @registered_athletes.one? ? "has" : "have" %> already been registered for this competition.</p>
+        <% end %>
+        <% if @eligible_athletes.none? %>
+          <p class="pkut-text">You don't have any athletes eligible to enter this competition.</p>
         <% end %>
       </div>
-    <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+      <% if @eligible_athletes.any? %>
+        <%= f.hidden_field :competition_id %>
+        <div class="form-field">
+          <span class="pkut-text"><strong>Please add 1 athlete at a time.</strong></span>
+          <%= f.select :athlete_id do %>
+            <option>Select Athlete</option>
+            <% @eligible_athletes.each do |athlete| %>
+              <option value="<%= athlete.id %>" data-age-group="<%= athlete.age_group %>"><%= athlete.full_name %></option>
+            <% end %>
+          <% end %>
+        </div>
+        <div class="form-field">
+          <% [:youth, :adult].each do |age_group| %>
+            <%= f.select :selected_comp, @competition.select_options(age_group), {}, { class: "comp-select", data: { reveal: age_group } } if @competition.options[age_group].present? %>
+          <% end %>
+        </div>
+        <div class="form-field"><%= f.text_field :instagram_handle, placeholder: "Instagram Handle", class: "pkut-textbox disableEnterSubmit" %></div>
+        <div class="form-field"><%= f.text_field :song, placeholder: "Song (family friendly - leave blank for random)", class: "pkut-textbox disableEnterSubmit" %></div>
+        <div class="form-field"><%= f.text_area :bio, placeholder: "Bio (140 character limit)", class: "pkut-textarea", maxlength: "140" %></div>
+      <% end %>
+    </div>
+    <%= f.submit %>
+    <!-- <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
             data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
             data-image="http://parkourutah.com/favicon.ico"
             data-name="Parkour Utah"
             data-billing-address="true"
-            data-description="All Sales are Final"
-            data-amount="3500">
-    </script>
+            data-description="All Sales are Final">
+    </script> -->
   <% end %>
   <p class="text-center">
     <%= link_to "", class: "pkut-btn #{'disabled' if @competitor.athlete_id.blank?}", id: "form-submit", data: { toggle: "modal", target: "#waiver_modal" } do %>
-      Register Competitor $<span class="competitor-cost">35</span>
+      Register Competitor <span class="competitor-cost"></span>
     <% end %>
   </p>
 </div>
@@ -83,11 +93,11 @@
 <% end %>
 
 <% if current_user&.admin? %>
-  <p class="text-center">
-    <%= link_to "Export to CSV", export_competition_path(@competition), download: true, class: "pkut-btn" %>
-  </p>
   <div class="small-container" style="margin: 0 auto;">
     <p>Registered competitors (only admins see this section)</p>
+    <p class="text-center">
+      <%= link_to "Export to CSV", export_competition_path(@competition), download: true, class: "pkut-btn" %>
+    </p>
     <ul>
     <% @competition.competitors.order("approved_at NULLS FIRST, created_at DESC").each do |competitor| %>
       <% next unless competitor.persisted? %>

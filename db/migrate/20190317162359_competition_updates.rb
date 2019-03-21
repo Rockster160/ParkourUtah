@@ -5,6 +5,8 @@ class CompetitionUpdates < ActiveRecord::Migration[5.0]
     add_column :competitions, :option_costs, :text
     add_column :competitions, :sponsor_images, :text
 
+    add_column :competitors, :selected_comp, :string
+
     comp = Competition.first
     if comp.present?
       comp.update(

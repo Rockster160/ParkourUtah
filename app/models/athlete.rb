@@ -67,6 +67,10 @@ class Athlete < ApplicationRecord
     ((0...9999).to_a - bads.flatten)
   end
 
+  def youth?; age < 14; end
+  def adult?; !youth?; end
+  def age_group; adult? ? :adult : :youth; end
+
   def self.find_or_create_by_name_and_dob(param, user)
     name = param["name"]
     dob = param["dob"]

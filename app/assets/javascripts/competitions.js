@@ -1,12 +1,16 @@
 $(document).ready(function() {
   if ($(".competition-wrapper").length > 0) {
-    $("#selected-athlete").change(function() {
-      $(".waiver-athletes").text($(this).find("option:selected").text())
+    $("#competitor_athlete_id").change(function() {
+      var selected = $(this).find("option:selected")
+      $(".waiver-athletes").text(selected.text())
+
       if ($(this).val() != "") {
         $("#form-submit").removeClass("disabled")
       } else {
         $("#form-submit").addClass("disabled")
       }
+
+      revealElement($("[data-reveal=" + selected.attr("data-age-group") + "]"))
     })
 
     $("#signed").change(function() {
@@ -16,7 +20,10 @@ $(document).ready(function() {
         $("#waiver-submit").addClass("disabled")
       }
     })
+
+    hideElement($("[data-reveal]"))
   }
+
 
   $(".tableSorter").tableSort()
 

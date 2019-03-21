@@ -175,6 +175,7 @@ ActiveRecord::Schema.define(version: 20190317162359) do
     t.datetime "approved_at"
     t.integer  "age"
     t.integer  "sort_order"
+    t.string   "selected_comp"
     t.index ["athlete_id"], name: "index_competitors_on_athlete_id", using: :btree
     t.index ["competition_id"], name: "index_competitors_on_competition_id", using: :btree
   end
