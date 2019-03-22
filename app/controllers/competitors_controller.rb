@@ -50,7 +50,8 @@ class CompetitorsController < ApplicationController
       :instagram_handle,
       :song,
       :bio,
-      :selected_comp
+      :selected_comp,
+      :shirt_size
     )
   end
 

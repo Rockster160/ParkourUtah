@@ -16,6 +16,7 @@
 #  age              :integer
 #  sort_order       :integer
 #  selected_comp    :string
+#  shirt_size       :string
 #
 
 class Competitor < ApplicationRecord
