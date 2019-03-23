@@ -6,13 +6,13 @@ class CompetitionsController < ApplicationController
   end
 
   def show
-    return redirect_to new_user_session_path, notice: "Please sign in before registering for a competition" unless user_signed_in?
     if params[:slug].present?
       @competition = Competition.find_by(slug: params[:slug])
     else
       @competition = Competition.find(params[:id])
     end
-    raise ActiveRecord::NotFound if @competition.start_time < DateTime.current && !current_user.try(:instructor?)
+
+    return unless user_signed_in?
     @competitor = @competition.competitors.new
     @eligible_athletes = current_user.athletes.where.not(id: @competition.competitors.pluck(:athlete_id))
     @registered_athletes = current_user.athletes.where(id: @competition.competitors.pluck(:athlete_id))
