@@ -49,6 +49,7 @@ class CompetitorsController < ApplicationController
       :years_training,
       :instagram_handle,
       :song,
+      :referred_by,
       :bio,
       :selected_comp,
       :shirt_size

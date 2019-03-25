@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190322154419) do
+ActiveRecord::Schema.define(version: 20190325234228) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -177,6 +177,7 @@ ActiveRecord::Schema.define(version: 20190322154419) do
     t.integer  "sort_order"
     t.string   "selected_comp"
     t.string   "shirt_size"
+    t.string   "referred_by"
     t.index ["athlete_id"], name: "index_competitors_on_athlete_id", using: :btree
     t.index ["competition_id"], name: "index_competitors_on_competition_id", using: :btree
   end

@@ -48,6 +48,7 @@
           </div>
           <div class="form-field"><%= f.text_field :instagram_handle, placeholder: "Instagram Handle", class: "pkut-textbox disableEnterSubmit" %></div>
           <div class="form-field"><%= f.text_field :song, placeholder: "Song (family friendly - leave blank for random)", class: "pkut-textbox disableEnterSubmit" %></div>
+          <div class="form-field"><%= f.text_field :referred_by, placeholder: "Referred By", class: "pkut-textbox disableEnterSubmit" %></div>
           <div class="form-field"><%= f.text_area :bio, placeholder: "Bio (140 character limit)", class: "pkut-textarea", maxlength: "140" %></div>
         <% end %>
       </div>
@@ -123,6 +124,7 @@
           <li><strong>Years:</strong> <%= competitor.years_training %></li>
           <li><strong>Instagram:</strong> <%= link_to competitor.instagram_handle, "https://www.instagram.com/#{competitor.instagram_handle}" if competitor.instagram_handle %></li>
           <li><strong>Song:</strong> <%= competitor.song %></li>
+          <li><strong>Referred By:</strong> <%= competitor.referred_by %></li>
           <li><strong>Bio:</strong> <%= content_tag :pre, competitor.bio if competitor.bio.present? %></li>
           <% if competitor.stripe_charge_id.present? %>
             <li><%= link_to "View in Stripe", "https://dashboard.stripe.com/payments/#{competitor.stripe_charge_id}" %></li>

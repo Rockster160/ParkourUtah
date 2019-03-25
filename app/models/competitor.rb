@@ -17,6 +17,7 @@
 #  sort_order       :integer
 #  selected_comp    :string
 #  shirt_size       :string
+#  referred_by      :string
 #
 
 class Competitor < ApplicationRecord
