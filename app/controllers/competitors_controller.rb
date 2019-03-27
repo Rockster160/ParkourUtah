@@ -18,7 +18,7 @@ class CompetitorsController < ApplicationController
 
     athlete = @competitor.athlete
     # athlete.update(athlete_photo: params.dig(:athlete, :photo)) if params.dig(:athlete, :photo).present?
-    charge = StripeCharger.charge(params[:stripeToken], @competitor.cost, description: "#{@competition.name} Competitor: #{athlete.full_name} for #{@competitor.selected_comp}")
+    charge = StripeCharger.charge(params[:stripeToken], @competitor.cost * 100, description: "#{@competition.name} Competitor: #{athlete.full_name} for #{@competitor.selected_comp}")
 
     if charge.try(:status) == "succeeded"
       @competitor.update(stripe_charge_id: charge[:id])
