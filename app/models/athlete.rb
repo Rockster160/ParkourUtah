@@ -63,8 +63,8 @@ class Athlete < ApplicationRecord
     end
     bads << 0
     bads << ENV["PKUT_PIN"].to_i
-    bads << Athlete.all.map { |user| user.fast_pass_id }
-    ((0...9999).to_a - bads.flatten)
+    bads += Athlete.pluck(:fast_pass_id)
+    ((0...9999).to_a - bads)
   end
 
   def youth?; age.to_i < 14; end

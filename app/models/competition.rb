@@ -41,6 +41,10 @@ class Competition < ApplicationRecord
     end
   end
 
+  def age_groups
+    options.keys
+  end
+
   def cost_range
     options = option_costs.deep_symbolize_keys
     return "$#{options[:all]}" if options[:all].present?

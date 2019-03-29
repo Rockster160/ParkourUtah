@@ -38,7 +38,7 @@ class Competitor < ApplicationRecord
   before_save -> { set_initial_values }
 
   def cost
-    costs = competition.option_costs.deep_symbolize_keys
+    costs = competition.options
     return costs[:all] if costs[:all].present?
 
     registration_period = competition.late_registration?(created_at || Time.current) ? :late : :early
