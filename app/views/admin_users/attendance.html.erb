@@ -6,7 +6,7 @@
     <div class="athlete-history-container">
       <h4><%= athlete.full_name %> - ID: <%= athlete.fast_pass_id %></h4>
       <ul>
-        <% athlete.attendances.each do |attendance| %>
+        <% athlete.attendances.by_most_recent(:created_at).each do |attendance| %>
         <li>
           <%= attendance.created_at.strftime('%B %-d, %Y') %> - <%= attendance.event ? attendance.event.title : 'This event was deleted' %><br>
           Host: <%= attendance.instructor.full_name %>
