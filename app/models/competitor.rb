@@ -18,6 +18,7 @@
 #  selected_comp    :string
 #  shirt_size       :string
 #  referred_by      :string
+#  coupon_code      :string
 #
 
 class Competitor < ApplicationRecord
@@ -44,6 +45,15 @@ class Competitor < ApplicationRecord
     registration_period = competition.late_registration?(created_at || Time.current) ? :late : :early
 
     costs.dig(age_group, registration_period, selected_comp.to_s.to_sym)
+  end
+
+  def discounted_cost
+    case coupon_code
+    when "SpecialCode"
+      cost * 0.5
+    else
+      cost
+    end
   end
 
   def rank(category=nil)

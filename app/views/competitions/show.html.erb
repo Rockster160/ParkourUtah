@@ -50,6 +50,7 @@
           <div class="form-field"><%= f.text_field :song, placeholder: "Song (family friendly - leave blank for random)", class: "pkut-textbox disableEnterSubmit" %></div>
           <div class="form-field"><%= f.text_field :referred_by, placeholder: "Referred By", class: "pkut-textbox disableEnterSubmit" %></div>
           <div class="form-field"><%= f.text_area :bio, placeholder: "Bio (140 character limit)", class: "pkut-textarea", maxlength: "140" %></div>
+          <div class="form-field"><%= f.text_field :coupon_code, placeholder: "Coupon Code", class: "pkut-textbox disableEnterSubmit" %></div>
         <% end %>
       </div>
       <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
@@ -92,9 +93,9 @@
       <% end %>
     </div>
   </div>
-  <p>By checking the box above, I hereby agree to waive any liability of University Place and/or Woodbury Corp and/or Parkour Utah for the athletes listed above. By entering my name below, I certify that I have downloaded, read, and understand all of the terms and provisions in the liability waiver document available for download above.</p>
+  <p>By checking the box above, I hereby agree to waive any liability of Parkour Utah and it's affiliated organizations for the athletes listed above. By entering my name below, I certify that I have downloaded, read, and understand all of the terms and provisions in the liability waiver document available for download above.</p>
   <p>I also certify that I understand that the above document that I have downloaded and read is a legal document, and it is my understanding that an electronic signature has the same effect and can be enforced in the same way as a writen signature, as stated in Utah Code 46-4-201.</p>
-  <p>By signing this document, I am waiving any liability claims against Parkour Utah, Woodbury Corporation, and University Place for the athlete selected, and certify that I am the athlete or the parent and/or guardian of the athlete, and I am waiving any liability claims against Parkour Utah, Woodbury Corporation, and University Place on behalf of the athletes listed above.</p>
+  <p>By signing this document, I am waiving any liability claims against Parkour Utah and it's affiliated organizations for the athlete selected, and certify that I am the athlete or the parent and/or guardian of the athlete, and I am waiving any liability claims against Parkour Utah and it's affiliated organizations on behalf of the athletes listed above.</p>
   <br/>
   <div class="text-center">
     <%= text_field_tag :signed_by, '', placeholder: 'Signed By', class: 'pkut-textbox customRequired', autocomplete: 'off' %>
@@ -126,6 +127,17 @@
           <li><strong>Song:</strong> <%= competitor.song %></li>
           <li><strong>Referred By:</strong> <%= competitor.referred_by %></li>
           <li><strong>Bio:</strong> <%= content_tag :pre, competitor.bio if competitor.bio.present? %></li>
+          <li><strong>Competition:</strong> <%= competitor.competition.name %></li>
+          <li><strong>Category:</strong> <%= competitor.selected_comp %></li>
+          <% if @competition.age_groups.many? %>
+            <li><strong>Age Group:</strong> <%= competitor.age_group.to_s.titleize %> (<%= competitor.age_group == :adult ? "14+" : "Under 14" %>)</li>
+          <% end %>
+          <% if competitor.shirt_size.present? %>
+            <li><strong>Shirt Size:</strong> <%= competitor.shirt_size %></li>
+          <% end %>
+          <li><strong>Referred by:</strong> <%= competitor.referred_by %></li>
+          <li><strong>Payment Received:</strong> $<%= competitor.discounted_cost %> <%= "(#{competitor.coupon_code})" if competitor.coupon_code.present? %></li>
+
           <% if competitor.stripe_charge_id.present? %>
             <li><%= link_to "View in Stripe", "https://dashboard.stripe.com/payments/#{competitor.stripe_charge_id}" %></li>
           <% else %>
