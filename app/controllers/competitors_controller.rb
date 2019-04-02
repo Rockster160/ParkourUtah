@@ -18,10 +18,11 @@ class CompetitorsController < ApplicationController
 
     athlete = @competitor.athlete
     # athlete.update(athlete_photo: params.dig(:athlete, :photo)) if params.dig(:athlete, :photo).present?
-    charge = StripeCharger.charge(params[:stripeToken], (@competitor.discounted_cost * 100).round, description: "#{@competition.name} Competitor: #{athlete.full_name} for #{@competitor.selected_comp}")
+    no_charge = @competitor.discounted_cost == 0
+    charge = StripeCharger.charge(params[:stripeToken], (@competitor.discounted_cost * 100).round, description: "#{@competition.name} Competitor: #{athlete.full_name} for #{@competitor.selected_comp}") unless no_charge
 
-    if charge.try(:status) == "succeeded"
-      @competitor.update(stripe_charge_id: charge[:id])
+    if no_charge || charge.try(:status) == "succeeded"
+      @competitor.update(stripe_charge_id: charge[:id]) if charge.present?
       ApplicationMailer.registered_competitor(@competitor.id).deliver_later
       slack_message = "New *<#{competition_url(@competition)}|#{@competition.name}>* Competitor: *#{athlete.full_name}*\n<#{admin_user_url(athlete.user)}|Click here to view their account.>"
       SlackNotifier.notify(slack_message, Rails.env.production? ? "#special-purchases" : "#slack-testing")

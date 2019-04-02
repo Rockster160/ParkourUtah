@@ -49,8 +49,10 @@ class Competitor < ApplicationRecord
 
   def discounted_cost
     case coupon_code
+    when "PKr0lWmmCeVR6VDZAWmnPPNQ3e1UwIo5t"
+      0
     when "SpecialCode"
-      cost * 0.5
+      cost * 1.5
     else
       cost
     end

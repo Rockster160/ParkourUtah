@@ -17,6 +17,7 @@
 # Unused
 #
 # location
+# sent
 class Attendance < ApplicationRecord
 
   attr_accessor :skip_validations, :event_date
