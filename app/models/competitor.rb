@@ -49,10 +49,16 @@ class Competitor < ApplicationRecord
 
   def discounted_cost
     case coupon_code
-    when "PKr0lWmmCeVR6VDZAWmnPPNQ3e1UwIo5t"
+    when "FIVEOFF"
+      cost - 5
+    when "TENOFF"
+      cost - 10
+    when "HALFSIES"
+      cost * 0.5
+    when "3-KIDS"
+      cost * 0.85
+    when "KITCHEN-SINK"
       0
-    when "SpecialCode"
-      cost * 1.5
     else
       cost
     end
