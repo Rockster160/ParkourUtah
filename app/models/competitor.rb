@@ -48,7 +48,7 @@ class Competitor < ApplicationRecord
   end
 
   def discounted_cost
-    case coupon_code
+    case coupon_code.to_s.upcase
     when "FIVEOFF"
       cost - 5
     when "TENOFF"
