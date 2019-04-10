@@ -152,6 +152,14 @@ class StoreController < ApplicationController
         if RedemptionKey.redeem(order.redeemed_token)
           current_user.update(credits: (current_user.credits + (order.amount * line_item.credits))) if user_signed_in?
         end
+        if line_item.id == (Rails.env.development? ? 1 : 44)
+          order.amount.times do
+            new_sub = current_user.recurring_subscriptions.create(cost_in_pennies: 55, auto_renew: false)
+            unless new_sub.persisted?
+              CustomLogger.log("Discount Subscription Error! User: #{current_user.try(:id)} Item: #{line_item.try(:id)} Cost: #{line_item.try(:cost_in_pennies)}")
+            end
+          end
+        end
         if line_item.is_subscription? && user_signed_in?
           order.amount.times do
             new_sub = current_user.recurring_subscriptions.create(cost_in_pennies: line_item.cost_in_pennies, stripe_id: @customer.try(:id))

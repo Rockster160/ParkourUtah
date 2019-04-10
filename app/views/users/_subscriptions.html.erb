@@ -1,7 +1,10 @@
 <% if current_user.athletes.joins(:recurring_subscriptions).any? %>
   <hr>
   <div class="row">
-    <p>You are currently set up to auto-pay for <strong class="pkut-text">monthly</strong> subscriptions.</p>
+    <% if current_user.recurring_subscriptions.where(auto_renew: true).any? %>
+      <p>You are currently set up to auto-pay for <strong class="pkut-text">monthly</strong> subscriptions.</p>
+      <p><a href="#" data-clickit=".stripe-button-el">Update Card Details</a></p>
+    <% end %>
     <% current_user.subscribed_athletes.sort_by {|a|a.current_subscription.try(:expires_at)}.each do |athlete| %>
       <% subscription = athlete.current_subscription %>
       <% next unless subscription.present? %>
@@ -14,7 +17,6 @@
         </div>
       </div>
     <% end %>
-    <p><a href="#" data-clickit=".stripe-button-el">Update Card Details</a></p>
   </div>
 <% end %>
 
