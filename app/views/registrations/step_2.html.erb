@@ -54,11 +54,13 @@
       </div>
     </div>
 
-    <div class="row text-center">
-      <h4>How did you hear about us? If you were referred by a person, please tell us their name.</h4>
-      <%= f.select :referrer, options_for_select(["", "Billboard", "Facebook", "Google Search", "Flyer", "Word of Mouth"], @user.referrer), {}, class: "pkut-dropdown show-referral-text-box" %>
-      <%= text_field_tag "user[referrer_text]", @user.referrer, placeholder: "John Smith", class: "pkut-textbox referral-text-field hidden" %>
-    </div>
+    <% unless @user.skip_trials? %>
+      <div class="row text-center">
+        <h4>How did you hear about us? If you were referred by a person, please tell us their name.</h4>
+        <%= f.select :referrer, options_for_select(["", "Billboard", "Facebook", "Google Search", "Flyer", "Word of Mouth"], @user.referrer), {}, class: "pkut-dropdown show-referral-text-box" %>
+        <%= text_field_tag "user[referrer_text]", @user.referrer, placeholder: "John Smith", class: "pkut-textbox referral-text-field hidden" %>
+      </div>
+    <% end %>
 
     <div class="actions">
       <%= f.submit "Next", class: "pkut-btn pull-right" %><br />

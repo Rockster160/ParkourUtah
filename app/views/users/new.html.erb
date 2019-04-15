@@ -5,6 +5,7 @@
   <h1 class="header-text">Get Started</h1>
 
   <%= form_for(@user, url: user_path) do |f| %>
+    <%= f.hidden_field :skip_trials %>
     <div class="field">
       <%= f.email_field :email, placeholder: 'Email Address', class: "pkut-textbox customRequired" %>
     </div>

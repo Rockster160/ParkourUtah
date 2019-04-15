@@ -1,9 +1,9 @@
 <div class="central-container form-offset disableEnterSubmit">
   <%= render partial: 'registrations/progress_bar', locals: {step: 5} %>
   <h2 class="header-text">Registration Complete!</h2>
-  <h4>Congratulations!</h4>
-  <p>You have completed your account registration. We want to reward you!</p>
-  <% if current_user.athletes.unverified.count > 0 %>
+  <% if current_user.athletes.unverified.count > 0 && !current_user.skip_trials? %>
+    <h4>Congratulations!</h4>
+    <p>You have completed your account registration. We want to reward you!</p>
     <div class="pkut-btn big-btn orange-btn-glowing forceOpen" data-toggle="modal" data-target="#verify_athletes">
       Click here to receive 2 trial classes!
     </div>

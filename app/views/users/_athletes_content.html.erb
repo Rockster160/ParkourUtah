@@ -1,4 +1,4 @@
-<% if @user.athletes.unverified.count > 0 %>
+<% if @user.athletes.unverified.count > 0 && !@user.skip_trials? %>
   <div class="text-center">
     <div class="pkut-btn big-btn orange-btn-glowing forceOpen" data-toggle="modal" data-target="#verify_athletes">
       Click here to receive 2 trial classes!

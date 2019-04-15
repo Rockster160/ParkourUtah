@@ -50,6 +50,7 @@
 #  should_display_on_front_page   :boolean          default(TRUE)
 #  can_receive_sms                :boolean          default(TRUE)
 #  full_name                      :string
+#  skip_trials                    :boolean          default(FALSE)
 #
 
 # Ununsed?
@@ -247,7 +248,7 @@ class User < ApplicationRecord
   end
 
   def create_default_notifications
-    self.notifications ||= Notifications.new({
+    self.notifications ||= Notifications.create(
       email_newsletter:      true,
 
       email_class_reminder:  true,
@@ -259,7 +260,7 @@ class User < ApplicationRecord
       text_low_credits:      false,
       text_waiver_expiring:  false,
       text_class_cancelled:  false
-    })
+    )
   end
 
   def send_welcome_email

@@ -1,11 +1,17 @@
 class UsersController < ApplicationController
   skip_before_action :verify_authenticity_token
-  before_action :validate_user_signed_in, except: [ :new, :create ]
-  before_action :verify_user_is_not_signed_in, only: [ :new, :create ]
+  before_action :validate_user_signed_in, except: [ :freeplay, :new, :create ]
+  before_action :verify_user_is_not_signed_in, only: [ :freeplay, :new, :create ]
   before_action :still_signed_in
 
   def new
     @user = User.new
+  end
+
+  def freeplay
+    @user = User.new(skip_trials: true)
+
+    render :new
   end
 
   def create
@@ -108,8 +114,10 @@ class UsersController < ApplicationController
     @user.athletes_where_expired_past_or_soon.each do |athlete|
       @notifications[:athletes] << "The waiver belonging to #{athlete.full_name} is about to expire!"
     end
-    @user.athletes.unverified.each do |athlete|
-      @notifications[:athletes] << "#{athlete.full_name} can receive 2 free trial classes by verifying their Fast Pass ID and Fast Pass Pin."
+    unless @user.skip_trials?
+      @user.athletes.unverified.each do |athlete|
+        @notifications[:athletes] << "#{athlete.full_name} can receive 2 free trial classes by verifying their Fast Pass ID and Fast Pass Pin."
+      end
     end
     @user.recurring_subscriptions.unassigned.each do
       @notifications[:subscriptions] << "You have unassigned subscriptions!"
@@ -123,6 +131,7 @@ class UsersController < ApplicationController
       :password,
       :password_confirmation,
       :current_password,
+      :skip_trials,
       emergency_contacts_attributes: [
         :id,
         :number,

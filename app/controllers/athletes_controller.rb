@@ -65,7 +65,7 @@ class AthletesController < ApplicationController
       athlete = Athlete.find(athlete_id)
       if athlete.fast_pass_id == codes[:fast_pass_id].to_i && athlete.fast_pass_pin == codes[:fast_pass_pin].to_i
         if athlete.update(verified: true)
-          athlete.sign_up_verified
+          athlete.sign_up_verified unless athlete.user.skip_trials?
         end
       end
     end
