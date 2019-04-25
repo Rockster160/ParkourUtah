@@ -2,6 +2,10 @@ class SpotsController < ApplicationController
   before_action :load_spot, except: [:index, :new, :create]
   before_action :validate_admin, except: [:index, :show]
 
+  def show
+    @instructors = @spot.instructors.distinct
+  end
+
   def index
     @spots = Spot.all
   end

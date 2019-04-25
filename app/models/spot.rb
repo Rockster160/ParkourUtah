@@ -15,8 +15,9 @@
 #
 
 class Spot < ApplicationRecord
-  
+
   has_many :event_schedules
+  has_many :instructors, through: :event_schedules
   has_many :images
   has_many :ratings
 
