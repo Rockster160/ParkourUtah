@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190415161231) do
+ActiveRecord::Schema.define(version: 20190425192550) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -199,6 +199,13 @@ ActiveRecord::Schema.define(version: 20190415161231) do
     t.string  "number"
     t.string  "name"
     t.index ["user_id"], name: "index_emergency_contacts_on_user_id", using: :btree
+  end
+
+  create_table "event_reminders", force: :cascade do |t|
+    t.integer "event_schedule_id"
+    t.integer "relative_time_difference"
+    t.text    "message"
+    t.index ["event_schedule_id"], name: "index_event_reminders_on_event_schedule_id", using: :btree
   end
 
   create_table "event_schedules", force: :cascade do |t|
