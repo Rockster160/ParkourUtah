@@ -37,6 +37,7 @@ class EventSchedule < ApplicationRecord
   has_many :event_reminders
 
   before_save :add_hash_to_colors
+  after_create { event_reminders.create }
 
   default_on_create color: "##{6.times.map { rand(16).to_s(16) }.join('')}"
   default_on_create payment_per_student: 4
@@ -49,13 +50,13 @@ class EventSchedule < ApplicationRecord
   scope :in_the_future, -> { where("end_date IS NULL OR end_date >= :recently", recently: 1.month.ago) }
 
   enum day_of_week: {
-    sunday: 0,
-    monday: 1,
-    tuesday: 2,
+    sunday:    0,
+    monday:    1,
+    tuesday:   2,
     wednesday: 3,
-    thursday: 4,
-    friday: 5,
-    saturday: 6,
+    thursday:  4,
+    friday:    5,
+    saturday:  6
   }
 
   def self.events_today
