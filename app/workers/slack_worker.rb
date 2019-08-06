@@ -1,7 +1,7 @@
 require 'slack-notifier'
 class SlackWorker
   include Sidekiq::Worker
-  WEBHOOK_URL = "https://hooks.slack.com/services/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"
+  WEBHOOK_URL = ENV["PKUT_SLACK_HOOK"]
 
   # https://api.slack.com/docs/attachments
 
