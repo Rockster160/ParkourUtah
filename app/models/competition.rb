@@ -15,6 +15,8 @@
 #  coupon_codes   :text
 #
 
+# Add sponsor names, registration closure date
+# ^^ Update index
 class Competition < ApplicationRecord
   serialize :option_costs,   JSONWrapper
   serialize :sponsor_images, JSONWrapper
@@ -24,6 +26,10 @@ class Competition < ApplicationRecord
   has_many :competitors
 
   scope :current, -> { where("start_time > ?", DateTime.current) }
+
+  def self.from_slug(slug)
+    find_by("LOWER(slug) = ?", slug.to_s.downcase)
+  end
 
   def late_registration?(from_time=Time.current)
     from_time > start_time.beginning_of_week

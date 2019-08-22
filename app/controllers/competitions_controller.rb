@@ -1,17 +1,12 @@
 class CompetitionsController < ApplicationController
   before_action :validate_instructor, except: [:index, :show]
+  before_action :redirect_to_slug, only: :show
 
   def index
     @competitions = Competition.current.by_most_recent(:start_time)
   end
 
   def show
-    if params[:slug].present?
-      @competition = Competition.find_by(slug: params[:slug])
-    else
-      @competition = Competition.find(params[:id])
-    end
-
     return unless user_signed_in?
     @competitor = @competition.competitors.new
     @eligible_athletes = current_user.athletes.where.not(id: @competition.competitors.pluck(:athlete_id))
@@ -70,6 +65,16 @@ class CompetitionsController < ApplicationController
     judged.save
 
     redirect_to competition_category_path(@competition, @category)
+  end
+
+  private
+
+  def redirect_to_slug
+    if params[:slug].present?
+      @competition = Competition.from_slug(params[:slug])
+    else
+      redirect_to "/" + Competition.find(params[:id]).slug
+    end
   end
 
 end

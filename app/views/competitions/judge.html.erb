@@ -5,6 +5,7 @@
     <% CompetitionJudgement.categories.each do |category, _category_val| %>
       <li><h4><%= link_to category.titleize, competition_category_path(@competition, category) %></h4></li>
     <% end %>
-    <li><h4><%= link_to "Monitor", competition_monitor_path(@competition) %></h4></li>
   </ul>
+  <br>
+  <h4><%= link_to "Monitor", competition_monitor_path(@competition) %></h4>
 </div>

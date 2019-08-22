@@ -3,17 +3,17 @@
 
   <% @competitions.each do |competition| %>
     <a href="<%= competition_path(competition) %>" class="competition-container" style="background-image: url(<%= asset_path('UniversityPlacePreview.png') %>)">
-      <div class="title">University Place Competition</div>
+      <div class="title"><%= competition.name %></div>
       <div class="sponsors">
         Sponsored by: <br>
         YGT, University Place, &amp; Parkour Utah
       </div>
       <div class="details">
-        Youth &amp; Adult <br>
-        June 25th, 2018
+        <%= competition.age_groups.map(&:capitalize).to_sentence(last_word_connector: " & ", two_words_connector: " & ") %> <br>
+        <%= competition.start_time.to_formatted_s(:simple) %>
       </div>
-      <div class="cost">$35</div>
-      <div class="end-date">Registration Closes June 23rd</div>
+      <div class="cost"><%= competition.cost_range %></div>
+      <div class="end-date">Registration Closes Sept 1st</div>
     </a>
   <% end %>
 </div>
