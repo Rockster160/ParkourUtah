@@ -12,11 +12,13 @@
 #  description    :text
 #  option_costs   :text
 #  sponsor_images :text
+#  coupon_codes   :text
 #
 
 class Competition < ApplicationRecord
   serialize :option_costs,   JSONWrapper
   serialize :sponsor_images, JSONWrapper
+  serialize :coupon_codes,   JSONWrapper
 
   belongs_to :spot, optional: true
   has_many :competitors

@@ -43,9 +43,9 @@
               <%= f.select :selected_comp, @competition.select_options(age_group), {}, { class: "comp-select", data: { reveal: age_group } } if @competition.options[age_group].present? %>
             <% end %>
           </div>
-          <div class="form-field">
-            <%= f.select :shirt_size, ["Adult XS", "Adult S", "Adult M", "Adult L", "Adult XL"], include_blank: "Select Shirt Size" %>
-          </div>
+          <!-- <div class="form-field">
+            <%#= f.select :shirt_size, ["Adult XS", "Adult S", "Adult M", "Adult L", "Adult XL"], include_blank: "Select Shirt Size" %>
+          </div> -->
           <div class="form-field"><%= f.text_field :instagram_handle, placeholder: "Instagram Handle", class: "pkut-textbox disableEnterSubmit" %></div>
           <div class="form-field"><%= f.text_field :song, placeholder: "Song (family friendly - leave blank for random)", class: "pkut-textbox disableEnterSubmit" %></div>
           <div class="form-field"><%= f.text_field :referred_by, placeholder: "Referred By", class: "pkut-textbox disableEnterSubmit" %></div>

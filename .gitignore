@@ -23,4 +23,7 @@ todo.txt
 /.c9/*
 pkut.zip
 
+# Ignore DB files
+*.sql
+
 git config core.fileMode false

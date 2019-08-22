@@ -48,20 +48,13 @@ class Competitor < ApplicationRecord
   end
 
   def discounted_cost
-    case coupon_code.to_s.upcase
-    when "FIVEOFF"
-      cost - 5
-    when "TENOFF"
-      cost - 10
-    when "HALFSIES"
-      cost * 0.5
-    when "3-KIDS"
-      cost * 0.85
-    when "KITCHEN-SINK"
-      0
-    else
-      cost
-    end
+    return cost unless coupon_code.present?
+    coupon = competition.coupon_codes.try(:dig, coupon_code.to_s.upcase)
+    return cost unless coupon.present?
+
+    eval(coupon.gsub("cost", cost.to_s)).to_f
+  rescue
+    cost
   end
 
   def rank(category=nil)

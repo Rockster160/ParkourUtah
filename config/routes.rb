@@ -33,7 +33,7 @@ Rails.application.routes.draw do
     end
   end
 
-  get "/:slug" => "competitions#show", constraints: ->(request) { request.path_parameters[:slug].present? && Competition.find_by(slug: request.path_parameters[:slug].parameterize).present? }
+  get "/:slug" => "competitions#show", constraints: ->(request) { request.path_parameters[:slug].present? && Competition.find_by(slug: request.path_parameters[:slug]).present? }
   resources :competitions, only: [:index, :show] do
     get :export, on: :member
     get :monitor
