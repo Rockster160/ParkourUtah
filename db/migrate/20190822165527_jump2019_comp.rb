@@ -27,7 +27,7 @@ class Jump2019Comp < ActiveRecord::Migration[5.0]
           }
         }
       },
-      sponsor_images: ["UPLogo.png", "YGTLogo.png"],
+      sponsor_images: ["UPLogo.png", "YGT_logo2.png"],
       coupon_codes: {
         "PRIVILEGE-OF-ROYALTY" => "0",
         "KING-SOLOMON"         => "cost * 0.50",
