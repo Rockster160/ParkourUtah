@@ -25,5 +25,6 @@ pkut.zip
 
 # Ignore DB files
 *.sql
+commands.rb
 
 git config core.fileMode false
