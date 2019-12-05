@@ -54,8 +54,8 @@ Rails.application.routes.draw do
     end
   end
   resources :event_schedules, except: [ :destroy ] do
+    get :contacts, on: :collection
     member do
-      get :contacts
       post :subscribe
       delete :unsubscribe
       post :send_message_to_subscribers

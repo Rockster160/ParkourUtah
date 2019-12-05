@@ -1,5 +1,6 @@
 <div class="central-container form-offset">
   <%= form_tag "", method: :get do %>
+    <%= hidden_field_tag :event_schedule_ids, params[:event_schedule_ids] %>
     <div class="form-field">
       <div class="pkut-radio">
         <%= radio_button_tag :contact_type, :attendance, params[:contact_type] != "subscription", data: { reveal: ".dates" } %>
@@ -29,11 +30,12 @@
     <% if @users.blank? %>
       <h3>No users found. Use the filters above to select dates</h3>
     <% else %>
-      <h2>Phone Numbers</h2>
+      <h1>Users (<%= @users.count %>)</h1>
+      <h3>Phone Numbers</h3>
       <pre><%= @users.pluck(:phone_number).join(", ") %></pre>
-      <h2>Emails</h2>
+      <h3>Emails</h3>
       <pre><%= @users.pluck(:email).join(", ") %></pre>
-      <h2>CSV</h2>
+      <h3>CSV</h3>
       <%= link_to "Download CSV", request.params.merge(csv: true) %>
     <% end %>
   </div>

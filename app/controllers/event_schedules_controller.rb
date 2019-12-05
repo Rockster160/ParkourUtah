@@ -9,17 +9,18 @@ class EventSchedulesController < ApplicationController
 
   def contacts
     return if params[:contact_type].blank?
+    event_ids = params[:event_schedule_ids].split(",")
 
     if params[:contact_type] == "attendance"
-      return if params[:start_date].blank?
-
       @users = User.joins(athletes: [attendances: [event: :event_schedule]])
-        .where(event_schedules: { id: params[:id] })
-        .where("attendances.created_at > ?", safe_parse(params[:start_date] || Date.new))
+        .where(event_schedules: { id: event_ids })
+        .where("attendances.created_at > ?", safe_parse(params[:start_date]) || Date.new)
         .where("attendances.created_at < ?", safe_parse(params[:end_date]) || Date.current)
         .distinct
     elsif params[:contact_type] == "subscription"
-      @users = EventSchedule.find(params[:id]).subscribed_users.distinct
+      @users = User.joins(event_subscriptions: :event_schedule)
+        .where(event_schedules: { id: event_ids })
+        .distinct
     end
 
     return unless params[:csv] == "true"
@@ -31,7 +32,7 @@ class EventSchedulesController < ApplicationController
       end
     end
 
-    send_data csv_str, filename: "User Export ES#{params[:id]}-#{Date.today.to_formatted_s(:simple)}.csv"
+    send_data csv_str, filename: "User Export ES#{event_ids.join(",")}-#{Date.today.to_formatted_s(:simple)}.csv"
   end
 
   def show
