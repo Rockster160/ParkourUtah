@@ -1,4 +1,7 @@
 $(document).ready(function() {
+  $("input[data-reveal][type=radio]").click(function() {
+    $("input[type=radio][name=" + $(this).attr("name") + "]").change()
+  })
   $("[data-reveal] input").change(function() {
     var container = $(this).parents('[data-reveal]');
     if (container.find('[data-show]').is(':checked')) {
@@ -16,7 +19,7 @@ $(document).ready(function() {
     }
   })
   $("[data-reveal] input, input[data-reveal]").change();
-  
+
   $("[data-clickit]").click(function(e) {
     e.preventDefault();
     $($(this).attr("data-clickit")).click();

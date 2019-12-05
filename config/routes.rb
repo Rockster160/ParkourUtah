@@ -55,6 +55,7 @@ Rails.application.routes.draw do
   end
   resources :event_schedules, except: [ :destroy ] do
     member do
+      get :contacts
       post :subscribe
       delete :unsubscribe
       post :send_message_to_subscribers

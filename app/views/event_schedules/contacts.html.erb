@@ -1,0 +1,40 @@
+<div class="central-container form-offset">
+  <%= form_tag "", method: :get do %>
+    <div class="form-field">
+      <div class="pkut-radio">
+        <%= radio_button_tag :contact_type, :attendance, params[:contact_type] != "subscription", data: { reveal: ".dates" } %>
+        <%= label_tag :contact_type_attendance, "Attendance Users" %>
+      </div>
+      <div class="pkut-radio">
+        <%= radio_button_tag :contact_type, :subscription, params[:contact_type] == "subscription", data: { reveal: "#location-info" } %>
+        <%= label_tag :contact_type_subscription, "Subscribed Users" %>
+      </div>
+    </div>
+
+    <div class="dates">
+      <div class="form-field">
+        <%= label_tag :start_date, "Start Date" %> <br>
+        <%= text_field_tag :start_date, params[:start_date], class: 'pkut-textbox datepicker-field' %>
+      </div>
+      <div class="form-field">
+        <%= label_tag :end_date, "End Date" %> <br>
+        <%= text_field_tag :end_date, params[:end_date] || Time.zone.now.strftime('%b %d, %Y'), class: 'pkut-textbox datepicker-field' %>
+      </div>
+    </div>
+
+    <%= submit_tag "Generate", class: "pkut-btn" %>
+  <% end %>
+
+  <div class="user-table">
+    <% if @users.blank? %>
+      <h3>No users found. Use the filters above to select dates</h3>
+    <% else %>
+      <h2>Phone Numbers</h2>
+      <pre><%= @users.pluck(:phone_number).join(", ") %></pre>
+      <h2>Emails</h2>
+      <pre><%= @users.pluck(:email).join(", ") %></pre>
+      <h2>CSV</h2>
+      <%= link_to "Download CSV", request.params.merge(csv: true) %>
+    <% end %>
+  </div>
+</div>

@@ -7,6 +7,33 @@ class EventSchedulesController < ApplicationController
     @event_schedules = EventSchedule.in_the_future
   end
 
+  def contacts
+    return if params[:contact_type].blank?
+
+    if params[:contact_type] == "attendance"
+      return if params[:start_date].blank?
+
+      @users = User.joins(athletes: [attendances: [event: :event_schedule]])
+        .where(event_schedules: { id: params[:id] })
+        .where("attendances.created_at > ?", safe_parse(params[:start_date] || Date.new))
+        .where("attendances.created_at < ?", safe_parse(params[:end_date]) || Date.current)
+        .distinct
+    elsif params[:contact_type] == "subscription"
+      @users = EventSchedule.find(params[:id]).subscribed_users.distinct
+    end
+
+    return unless params[:csv] == "true"
+
+    csv_str = CSV.generate do |csv|
+      csv << ["ID", "Email", "Phone", "Athletes"]
+      @users.each do |user|
+        csv << [user.id, user.email, user.phone_number, user.athletes.pluck(:id, :full_name).map { |a| a.join(": ") }.join("\n")]
+      end
+    end
+
+    send_data csv_str, filename: "User Export ES#{params[:id]}-#{Date.today.to_formatted_s(:simple)}.csv"
+  end
+
   def show
     @event_schedule = EventSchedule.find(params[:id])
     @attendances_by_date = @event_schedule.attendances.order(:created_at).group_by { |a| a.event.date }
@@ -68,6 +95,12 @@ class EventSchedulesController < ApplicationController
   end
 
   private
+
+  def safe_parse(date_str)
+    Date.parse(date_str)
+  rescue ArgumentError
+    nil
+  end
 
   def event_schedule_params
     params.require(:event_schedule).permit(

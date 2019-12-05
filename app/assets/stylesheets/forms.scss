@@ -15,36 +15,36 @@
 }
 
 .form-container {
+  margin:  0 auto;
   width: 100%;
   max-width: 350px;
-  margin:  0 auto;
 
   h3 { margin-top: 20px; }
   .pkut-dropdown, .pkut-textarea { margin-bottom: 10px; }
 }
 
 .errors-container {
-  background: pink;
-  border-radius: 8px;
+  margin-bottom: 30px;
   border-width: 3px;
   border-style: outset;
+  border-radius: 8px;
   border-color: red;
+  background: pink;
   padding: 10px;
   text-align: left;
-  margin-bottom: 30px;
 }
 
 .notification-container {
-  background: $notification-color;
-  border-radius: 8px;
-  color: #F5F5F5;
+  margin: 0 auto;
+  margin-bottom: 30px;
   box-shadow: 1px 2px 4px black;
+  border-radius: 8px;
+  background: $notification-color;
   padding: 10px;
   padding-left: 30px;
-  text-align: left;
-  margin-bottom: 30px;
   max-width: 600px;
-  margin: 0 auto;
+  color: #F5F5F5;
+  text-align: left;
   .notification {}
 }
 
@@ -54,43 +54,43 @@
 }
 
 .pkut-box {
-  text-align: left;
-  padding: 0 2.5%;
   margin-left: 10px;
-  width: 600px;
   border: 2px solid $mat-grey;
   border-radius: 7px;
   background: $mat-grey-light;
+  padding: 0 2.5%;
+  width: 600px;
+  text-align: left;
 }
 
 .pkut-dropdown {
-  line-height: 30px;
-  font-size: 21px;
-  max-width: 350px;
   width: 100%;
+  max-width: 350px;
+  font-size: 21px;
+  line-height: 30px;
 }
 
 .text-field-height {
-  height: 30px;
   margin: 10px 0;
+  height: 30px;
 }
 
 .pkut-textbox {
   margin: 10px 0;
-  width: 350px;
-  max-width: 100%;
-  padding: 4px 0 0 10px;
-  height: 30px;
-
-  font-size: 21px;
-  color: black;
 
   border: 2px solid $pkut-grey-dark;
   border-radius: 7px;
+  padding: 4px 0 0 10px;
+  width: 350px;
+  max-width: 100%;
+  height: 30px;
+  color: black;
+
+  font-size: 21px;
   &:focus {
     outline: none;
-    border: 1px solid #DF0D15;
     box-shadow: inset 0px 0px 0px 1px #DF0D15;
+    border: 1px solid #DF0D15;
   }
   &.sm-textbox {
     width: 155px;
@@ -121,52 +121,52 @@
 .show-required {
   position: relative;
   &:before {
-    content: '(Required)';
     position: absolute;
     top: 20px;
     padding-left: 10px;
+    content: '(Required)';
   }
   .what-is-pin {
     position: absolute;
-    width: 70px;
     top: -30px;
     right: 5px;
+    width: 70px;
   }
 }
 
 .pkut-textarea {
-  width: 100%;
-  min-height: 6em;
-  font-size: 1.3em;
-  color: black;
-  padding: 5px;
-  border-radius: 20px;
 
   border: 2px solid $pkut-grey-dark;
+  border-radius: 20px;
   border-radius: 7px;
+  padding: 5px;
+  width: 100%;
+  min-height: 6em;
+  color: black;
+  font-size: 1.3em;
   &:focus { outline: none; }
 }
 
 .mat-pkut-textarea {
   @extend .pkut-textarea;
+  border: 1px solid $mat-grey;
+  border-radius: 3px;
 
   resize: none;
-  border-radius: 3px;
-  border: 1px solid $mat-grey;
   &:focus {
-    border: 1px solid $mat-pkut-red;
     box-shadow: inset 0px 0px 0px 1px $mat-pkut-red;
+    border: 1px solid $mat-pkut-red;
   }
 }
 
 .contact-us {
   .contact-links {
     display: flex;
-    margin: 0 auto;
     justify-content: space-between;
+    margin: 0 auto;
+    margin-top: 10px;
     width: 400px;
     max-width: 100%;
-    margin-top: 10px;
 
     .contact-link img {
       width: 50px;
@@ -197,53 +197,53 @@
 .pkut-btn {
   display: inline-block;
   position: relative;
-  outline: none;
-
-  line-height: 1;
-  text-decoration: none;
 
   z-index: 100;
   transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
   margin: 8px 20px;
-  max-width: 300px;
-
-  padding: 5px 20px;
-  font-family: 'MicroExtendFLF-Bold', Arial, sans-serif;
-  font-size: 18px;
+  outline: none;
+  box-shadow: none;
 
   border: none;
   border-radius: 3px;
-  box-shadow: none;
-
-  color: $pkut-grey-white;
   background-color: $pkut-red;
 
+  padding: 5px 20px;
+  max-width: 300px;
+
+  color: $pkut-grey-white;
+  font-family: 'MicroExtendFLF-Bold', Arial, sans-serif;
+  font-size: 18px;
+
+  line-height: 1;
+  text-decoration: none;
+
   &:hover {
-    color: $pkut-grey-light;
-    background-color: $pkut-red-dark;
-    outline: none;
-    text-decoration: none;
     cursor: pointer;
+    outline: none;
+    background-color: $pkut-red-dark;
+    color: $pkut-grey-light;
+    text-decoration: none;
   }
   &.disabled {
-    color: $pkut-grey-light;
-    background-color: $pkut-red-dark;
     outline: none;
-    text-decoration: none;
+    background-color: $pkut-red-dark;
     pointer-events: none;
+    color: $pkut-grey-light;
+    text-decoration: none;
   }
   &.low-btn { z-index: 99; }
 }
 
 .big-btn {
-  z-index: 99;
-  white-space: normal;
   position: relative;
+  z-index: 99;
   margin: 20px auto;
+  white-space: normal;
   a {
+    max-width: 200px;
     color: white;
     text-decoration: none;
-    max-width: 200px;
   }
   &.orange-btn-glowing {
     animation: glowing 1800ms infinite;
@@ -257,46 +257,46 @@
 
 
 .main-btn {
-  transition: all 0.2s ease-in-out;
-  position: relative;
   display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  transition: all 0.2s ease-in-out;
+  margin: 7px;
   border: 1px solid white;
   border-radius: 6px;
-  margin: 7px;
-  padding: 10px 0;
-  width: 170px;
-
-  text-align: center;
-  text-transform: uppercase;
-  font-size: 17px;
-  line-height: 1.33;
-  color: white;
-  vertical-align: middle;
-  text-decoration: none;
 
   background: transparent;
+  padding: 10px 0;
+  width: 170px;
+  color: white;
+  font-size: 17px;
+  line-height: 1.33;
+
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
 
   &:hover {
     cursor: pointer;
+    box-shadow: none !important;
+
+    background-color: $mat-white;
 
     color: $mat-pkut-red;
     text-decoration: none;
-
-    background-color: $mat-white;
-    box-shadow: none !important;
   }
 
   &:after {
-    content: '';
+    position: absolute;
     top: 0;
     left: 0;
-    position: absolute;
+    opacity: 0;
     z-index: -1;
+    transition: opacity 0.1s ease-in-out;
+    box-shadow: 0px 10px 40px 0px $mat-grey-dark;
     width: 100%;
     height: 100%;
-    opacity: 0;
-    box-shadow: 0px 10px 40px 0px $mat-grey-dark;
-    transition: opacity 0.1s ease-in-out;
+    content: '';
   }
 
   &:hover:after {
@@ -313,12 +313,12 @@
   }
 }
 .call-to-arms {
-  color: $mat-white;
-  width: 170px;
-  padding: 20px 0;
 
   border-color: transparent;
   background: $mat-pkut-red;
+  padding: 20px 0;
+  width: 170px;
+  color: $mat-white;
 
   &:hover {
     background-color: $mat-white;
@@ -331,28 +331,28 @@
   label {
     position: relative;
     margin-left: 20px;
-    font-weight: normal;
-    font-size: 18px;
     width: 100%;
+    font-size: 18px;
+    font-weight: normal;
     &:before {
-      content: "";
       position: absolute;
       top: 0px;
       left: -35px;
-      width: 15px;
-      height: 15px;
       border: 2px inset $pkut-grey;
       background: white;
+      width: 15px;
+      height: 15px;
+      content: "";
     }
     &:hover {
       cursor: pointer;
       &:after {
-        content: "\2713 ";
         position: absolute;
-        color: $pkut-grey-dark;
-        font-size: 21px;
         top: -8px;
         left: -35px;
+        color: $pkut-grey-dark;
+        font-size: 21px;
+        content: "\2713 ";
       }
     }
   }
@@ -362,13 +362,13 @@
   }
   input[type=checkbox]:checked + label {
     &:after {
-      content: "\2713 ";
-      text-shadow: 1px 1px $pkut-grey-dark;
       position: absolute;
-      color: $pkut-red;
-      font-size: 21px;
       top: -8px;
       left: -35px;
+      color: $pkut-red;
+      font-size: 21px;
+      text-shadow: 1px 1px $pkut-grey-dark;
+      content: "\2713 ";
     }
   }
   &.center-checkbox {
@@ -396,22 +396,79 @@
   }
 }
 
+.pkut-radio {
+  width: 100%;
+
+  label {
+    position: relative;
+    margin-left: 20px;
+    width: 100%;
+    font-size: 18px;
+    font-weight: normal;
+
+    &:before {
+      position: absolute;
+      top: 0px;
+      left: -35px;
+      border: 2px inset $pkut-grey;
+      border-radius: 100%;
+      background: white;
+      width: 15px;
+      height: 15px;
+      content: "";
+    }
+
+    &:hover {
+      cursor: pointer;
+
+      &:after {
+        position: absolute;
+        top: 3px;
+        left: -32px;
+        border-radius: 100%;
+        background: $pkut-red-dark;
+        width: 10px;
+        height: 10px;
+        color: $pkut-grey-dark;
+        content: "";
+      }
+    }
+  }
+  input[type=radio] {
+    display: none;
+    visibility: hidden;
+  }
+  input[type=radio]:checked + label {
+    &:after {
+      position: absolute;
+      top: 3px;
+      left: -32px;
+      border-radius: 100%;
+      background: $pkut-red;
+      width: 10px;
+      height: 10px;
+      color: $pkut-grey-dark;
+      content: "";
+    }
+  }
+}
+
 .arrow-required {
   display: inline-block;
   margin-left: 50px;
-  font-size: 14px;
   background: red;
   color: black;
+  font-size: 14px;
   font-weight: bold;
   &:before {
-    content: '';
     position: absolute;
-    width: 0;
-    height: 0;
+    margin-top: -6px;
+    margin-left: -20px;
     border-top: 16px solid transparent;
     border-right: 20px solid red;
     border-bottom: 16px solid transparent;
-    margin-top: -6px;
-    margin-left: -20px;
+    width: 0;
+    height: 0;
+    content: '';
   }
 }
