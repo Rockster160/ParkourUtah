@@ -22,6 +22,14 @@ class AdminUsersController < ApplicationController
     @athletes = User[params[:id]].athletes
   end
 
+  def unsubscribe_all
+    user = User.find(params[:id])
+
+    user.event_subscriptions.destroy_all
+
+    redirect_to admin_user_path(user), notice: "Successfully unsubscribed user from all classes."
+  end
+
   def update_notifications
     user = User.find(params[:id])
     user.notifications.blow!

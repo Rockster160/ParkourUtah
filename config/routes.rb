@@ -117,6 +117,7 @@ Rails.application.routes.draw do
   resources :admin_users, path: "admin/users", only: [ :show, :index, :destroy ] do
     member do
       get :attendance
+      get :unsubscribe_all
       post :update_trials
       post :update_credits
       post :update_notifications

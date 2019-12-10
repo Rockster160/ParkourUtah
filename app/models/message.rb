@@ -99,6 +99,7 @@ class Message < ApplicationRecord
   def notify_slack
     phone_number = chat_room.name
     user_link = Rails.application.routes.url_helpers.admin_user_url(sent_from) if sent_from.present?
+
     opt_out = %w(STOP STOPALL UNSUBSCRIBE CANCEL END QUIT).include?(body.squish.upcase)
     slack_message = ""
 
@@ -106,12 +107,24 @@ class Message < ApplicationRecord
       sent_from.update(can_receive_sms: false) if sent_from.present?
       slack_message += "#{format_phone_number(phone_number)} has opted out of text messages from PKUT.\nThey will no longer receive text messages from us (Including messages sent from the admin text messaging page).\nIn order to re-enable messages, they must send a text message saying \"START\" to us, and then log in to their account, Home, then click Notifications, then the button that says 'Text Me!'\nIf the message sends successfully, they will be able to receive text messages from us again.\n"
     else
+      slack_message += "##{sent_from.id} - #{sent_from.email}" if sent_from.present?
+
       escaped_body = body.split("\n").map { |line| "\n>#{line}" }.join("")
       slack_message += "*Received text message from: #{format_phone_number(phone_number)}*\n#{escaped_body}"
-      respond_link = Rails.application.routes.url_helpers.chat_room_url(chat_room)
-      slack_message += "\n<#{respond_link}|Click here to respond!>"
     end
-    slack_message += sent_from.present? ? "\nPhone Number seems to match: <#{user_link}|#{sent_from.id} - #{sent_from.email}>" : ""
+
+    links = []
+    user_link = Rails.application.routes.url_helpers.admin_user_url(sent_from) if sent_from.present?
+    links << "<#{user_link}|Account>" if user_link.present?
+
+    respond_link = Rails.application.routes.url_helpers.chat_room_url(chat_room)
+    links << "<#{respond_link}|View Chat>"
+
+    unsub_link = Rails.application.routes.url_helpers.unsubscribe_all_admin_user_url(sent_from) if sent_from.present?
+    links << "<#{unsub_link}|Unsubscribe Classes>" if unsub_link.present?
+
+    slack_message += "\n#{links.map(&:presence).compact.join(" | ")}" if links.any?
+
     channel = Rails.env.production? ? "#support" : "#slack-testing"
     SlackNotifier.notify(slack_message, channel)
   end
