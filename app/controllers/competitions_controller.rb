@@ -73,7 +73,7 @@ class CompetitionsController < ApplicationController
     if params[:slug].present?
       @competition = Competition.from_slug(params[:slug])
     else
-      @competition = Competition.find(params[:id] || params[:slug]).try(:slug)
+      @competition = Competition.find(params[:id] || params[:slug])
       return redirect_to "/" + @competition.slug if @competition.present?
       redirect_to root_path, alert: "Competition not found"
     end
