@@ -170,7 +170,9 @@ class IndexController < ApplicationController
       "webcamdirty",
       "free-dating",
       "We are not responsible for any financial loss",
-      "This is your final notice to renew"
+      "This is your final notice to renew",
+      "Talk With Web Visitor",
+      "DOMAIN SERVICES EXPIRATION NOTICE"
     ]
   end
 
