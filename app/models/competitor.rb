@@ -49,7 +49,7 @@ class Competitor < ApplicationRecord
 
   def discounted_cost
     return cost unless coupon_code.present?
-    coupon = competition.coupon_codes.try(:dig, coupon_code.to_s.upcase)
+    coupon = competition.coupon_codes.find { |k, _v| k.downcase == coupon_code.downcase }&.last
     return cost unless coupon.present?
 
     eval(coupon.gsub("cost", cost.to_s)).to_f
