@@ -157,6 +157,8 @@ class IndexController < ApplicationController
       "л",
       "Viagra",
       "Pharmacy Express",
+      "pharmacyoutlets",
+      "pharmacyusa",
       "mostwellweb",
       "loceawake",
       "stop-menopause",
@@ -172,7 +174,12 @@ class IndexController < ApplicationController
       "We are not responsible for any financial loss",
       "This is your final notice to renew",
       "Talk With Web Visitor",
-      "DOMAIN SERVICES EXPIRATION NOTICE"
+      "DOMAIN SERVICES",
+      "dogloverclub",
+      "complete selection of all Ray-Ban sunglasses",
+      "digital marketing strategies",
+      "DOMAINSERVICES",
+      "Get yours here:"
     ]
   end
 
