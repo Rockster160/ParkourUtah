@@ -38,6 +38,15 @@ class Competitor < ApplicationRecord
 
   before_save -> { set_initial_values }
 
+  # Remove before next comp
+  def adult?
+    true
+  end
+
+  def youth?
+    false
+  end
+
   def cost
     costs = competition.options
     return costs[:all] if costs[:all].present?

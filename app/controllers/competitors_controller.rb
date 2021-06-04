@@ -37,7 +37,10 @@ class CompetitorsController < ApplicationController
   def update
     @competitor = Competitor.find(params[:id])
     @competitor.update(approved_at: DateTime.current)
-    # ApplicationMailer.approved_competitor(@competitor.id).deliver_later
+    if Time.current < DateTime.new(2021, 6, 10)
+      # Mailer has specific details
+      ApplicationMailer.approved_competitor(@competitor.id).deliver_later
+    end
     redirect_to competition_path(@competitor.competition)
   end
 
