@@ -56,7 +56,7 @@ class Message < ApplicationRecord
 
   def error!(msg="")
     update(error: true, error_message: msg)
-    ActionCable.server.broadcast "room_#{chat_room_id}_channel", error: { message_id: self.id, message: msg }
+    ActionCable.server.broadcast "room_#{chat_room_id}_channel", { error: { message_id: self.id, message: msg }}
     false
   end
 
@@ -141,7 +141,7 @@ class Message < ApplicationRecord
 
   def broadcast_creation
     rendered_message = MessagesController.render template: 'messages/index', locals: { messages: [self] }, layout: false
-    ActionCable.server.broadcast "room_#{chat_room_id}_channel", message: rendered_message, current_user: nil
+    ActionCable.server.broadcast "room_#{chat_room_id}_channel", { message: rendered_message, current_user: nil }
   end
 
 end

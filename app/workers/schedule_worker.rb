@@ -22,7 +22,7 @@ class ScheduleWorker
   private
 
   def post_to_custom_logger(params)
-    # CustomLogger.log_blip!("\e[32m")
+    CustomLogger.log_blip!("\e[32m")
   end
 
   def send_class_text(params)
@@ -152,23 +152,24 @@ class ScheduleWorker
   end
 
   def pull_logs_from_s3(params)
-    return unless Rails.env.production?
-    s3 = AWS::S3.new
-    buckets = [s3.buckets["pkut-default"], s3.buckets["pkut-uploads"]]
-    buckets.each do |bucket|
-      log_files = bucket.objects.with_prefix('logs')
-      log_files.each do |log_file|
-        file_body = log_file.read
-        logit = AwsLogger.create(orginal_string: file_body)
-        if logit.persisted? || logit.is_log_request?
-          log_file.delete
-        else
-          unless logit.is_log_request?
-            SlackNotifier.notify("Failed to delete file: \n#{log_file}:```#{file_body}```", "#server-errors")
-          end
-        end
-      end
-    end
+    return # Temporary while we figure out the AWS gems
+    # return unless Rails.env.production?
+    # s3 = AWS::S3.new
+    # buckets = [s3.buckets["pkut-default"], s3.buckets["pkut-uploads"]]
+    # buckets.each do |bucket|
+    #   log_files = bucket.objects.with_prefix('logs')
+    #   log_files.each do |log_file|
+    #     file_body = log_file.read
+    #     logit = AwsLogger.create(orginal_string: file_body)
+    #     if logit.persisted? || logit.is_log_request?
+    #       log_file.delete
+    #     else
+    #       unless logit.is_log_request?
+    #         SlackNotifier.notify("Failed to delete file: \n#{log_file}:```#{file_body}```", "#server-errors")
+    #       end
+    #     end
+    #   end
+    # end
   end
 
   def minutes_from_now(seconds)

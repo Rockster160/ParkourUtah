@@ -23,7 +23,7 @@ class MessageChannel < ApplicationCable::Channel
     chat_room_id = data['chat_room_id']
     chat_room = ChatRoom.find(chat_room_id)
 
-    ActionCable.server.broadcast "room_#{chat_room_id}_channel", is_typing: user.display_name, typing_user_id: user_id
+    ActionCable.server.broadcast "room_#{chat_room_id}_channel", { is_typing: user.display_name, typing_user_id: user_id }
   end
 
 end

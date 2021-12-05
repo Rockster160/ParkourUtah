@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '5.0.1'
+gem 'rails', '~> 6.1.4'
 gem 'sprockets', '3.6.3'
 gem 'coffee-script'
 gem 'pg'
@@ -8,13 +8,13 @@ gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
-gem 'sdoc', '~> 0.4.0', group: :doc
-gem 'redis'
+# gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'redis', '~> 3.3.3'
 gem 'redis-namespace'
 
 gem 'faker'
 gem 'jquery-rails'
-gem "therubyracer"
+gem "therubyracer", '~> 0.12'
 gem "less-rails"
 gem "twitter-bootstrap-rails"
 gem 'twitter-typeahead-rails'
@@ -23,9 +23,11 @@ gem "select2-rails"
 gem 'autoprefixer-rails'
 gem 'rails_12factor', group: :production
 gem 'devise'
+gem 'json', "~> 1.8"
 gem 'jquery-ui-rails'
-gem "paperclip", "~> 4.2"
-gem 'aws-sdk', '< 2.0'
+gem "paperclip"
+# gem 'aws-sdk-rails'
+# gem 'aws-sdk-s3'
 gem 'httparty'
 gem 'sidekiq'
 gem 'sidekiq-cron', "~> 0.4.0"
@@ -44,9 +46,10 @@ gem 'underscore-rails'
 gem 'geocoder'
 gem 'browser'
 gem 'chroma'
-gem 'exception_notification'
-gem 'slack-notifier'
+# gem 'exception_notification'
+# gem 'slack-notifier'
 gem 'colorize'
+gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '01f92d86d15d85cfd0f20dabd025dcbd36a8a60f'
 # Export class Summaries
 gem 'rubyzip', '~> 1.1.0'
 gem 'axlsx', '2.1.0.pre'

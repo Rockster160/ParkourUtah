@@ -5,7 +5,7 @@ config = {
   port: Redis.current.client.port,
   password: Redis.current.client.password,
   db: (!!defined?(REDIS_CONFIG) ? REDIS_CONFIG[:db_worker] : Redis.current.client.db),
-  namespace: "sidekiq_#{Rails.application.class.parent_name}_#{Rails.env}".downcase
+  namespace: "sidekiq_#{Rails.application.class.name}_#{Rails.env}".downcase
 }
 
 Sidekiq.configure_server { |c| c.redis = config }

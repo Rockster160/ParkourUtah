@@ -1,14 +1,14 @@
   <div class="video-bg">
     <% unless mobile_device? %>
       <video autoplay="" loop="" muted="">
-        <source src="<%= asset_path('pkut-bg-video.mov') %>" type="video/mp4">
+        <source src="<%#= asset_path('pkut-bg-video.mov') %>" type="video/mp4">
       </video>
     <% end %>
   </div>
 <div class="header-container" id="home">
   <div class="header vert">
     <div class="container">
-      <%= image_tag('PKUT-full-color.png', class: 'img-responsive pkut-main center-block') %>
+      <%#= image_tag('PKUT-full-color.png', class: 'img-responsive pkut-main center-block') %>
       <div>&nbsp;</div>
       <div class="call-nav">
         <a href="#about" class="main-btn lead scroll-link">About Us</a>
