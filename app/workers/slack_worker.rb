@@ -1,4 +1,3 @@
-require 'slack-notifier'
 class SlackWorker
   include Sidekiq::Worker
   WEBHOOK_URL = ENV["PKUT_SLACK_HOOK"]
