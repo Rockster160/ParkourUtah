@@ -33,8 +33,7 @@ gem 'sidekiq'
 gem 'sidekiq-cron', "~> 0.4.0"
 gem 'sinatra', require: nil
 gem 'twilio-ruby'
-gem 'puma-daemon', require: false
-gem 'puma'
+gem 'puma', "~> 4"
 gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 gem 'jquery-tablesorter'
 gem 'maskedinput-rails'
