@@ -229,6 +229,9 @@ GEM
       pry (>= 0.10.4)
     puma (5.4.0)
       nio4r (~> 2.0)
+    puma-daemon (0.1.2)
+      puma (>= 5.0)
+      rack
     raabro (1.4.0)
     rack (2.2.3)
     rack-protection (2.1.0)
@@ -398,6 +401,7 @@ DEPENDENCIES
   pry-nav
   pry-rails
   puma
+  puma-daemon
   rails (~> 6.1.4)
   rails_12factor
   recaptcha
