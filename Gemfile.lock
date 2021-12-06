@@ -117,7 +117,7 @@ GEM
       warden (~> 1.2.3)
     dotimeout-rails (2.0.0)
     erubi (1.10.0)
-    et-orbi (1.2.4)
+    et-orbi (1.2.6)
       tzinfo
     exception_notification (4.4.3)
       actionmailer (>= 4.0, < 7)
@@ -147,7 +147,7 @@ GEM
     ffi (1.15.4)
     font-awesome-sass (5.15.1)
       sassc (>= 1.11)
-    fugit (1.5.1)
+    fugit (1.5.2)
       et-orbi (~> 1.1, >= 1.1.8)
       raabro (~> 1.4)
     geocoder (1.6.7)
@@ -302,9 +302,8 @@ GEM
       rack (~> 2.0)
       rack-protection (>= 1.5.0)
       redis (>= 3.3.5, < 4.2)
-    sidekiq-cron (0.4.5)
-      redis-namespace (>= 1.5.2)
-      rufus-scheduler (>= 2.0.24)
+    sidekiq-cron (1.2.0)
+      fugit (~> 1.1)
       sidekiq (>= 4.2.1)
     sinatra (2.1.0)
       mustermann (~> 1.0)
@@ -404,10 +403,11 @@ DEPENDENCIES
   redis (~> 3.3.3)
   redis-namespace
   rubyzip (~> 1.1.0)
+  rufus-scheduler
   sass-rails (~> 5.0)
   select2-rails
   sidekiq
-  sidekiq-cron (~> 0.4.0)
+  sidekiq-cron
   sinatra
   slack-notifier
   spring

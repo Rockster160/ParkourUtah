@@ -29,8 +29,9 @@ gem "paperclip"
 # gem 'aws-sdk-rails'
 # gem 'aws-sdk-s3'
 gem 'httparty'
+gem 'rufus-scheduler'
 gem 'sidekiq'
-gem 'sidekiq-cron', "~> 0.4.0"
+gem 'sidekiq-cron'
 gem 'sinatra', require: nil
 gem 'twilio-ruby'
 gem 'puma', "~> 4"

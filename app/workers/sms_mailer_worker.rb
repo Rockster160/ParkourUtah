@@ -5,11 +5,10 @@ class SmsMailerWorker
   def perform(num, msg)
     if Rails.env.production?
       api = Twilio::REST::Client.new(ENV['PKUT_TWILIO_ACCOUNT_SID'], ENV['PKUT_TWILIO_AUTH_TOKEN'])
-      message = "Hi! This is the new Parkour Utah contact number. Feel free to message or call us back with any questions!\n"
       messages = msg.scan(/.{1,800}/m)
       messages.each do |message|
         begin
-          api.account.messages.create(
+          api.accounts.client.messages.create(
             body: message,
             to: num,
             from: "+18444355867"
