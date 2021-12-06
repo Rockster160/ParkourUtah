@@ -32,18 +32,18 @@
   &.flash-notice > .flash-container {
     background-color: $flash-notice-bg;
     color: $mat-grey-light;
-    .dismiss-flash i.fa-times-circle-o { color: $mat-grey-dark; }
+    .dismiss-flash i.fa-times-circle { color: $mat-grey-dark; }
   }
   &.flash-alert > .flash-container {
     background-color: $flash-alert-bg;
     color: $mat-grey-light;
-    .dismiss-flash i.fa-times-circle-o { color: $mat-grey-light; }
+    .dismiss-flash i.fa-times-circle { color: $mat-grey-light; }
   }
   &.flash-announcement > .flash-container {
     width: 300px;
     background-color: #009DB2;
     color: $mat-grey-light;
-    .dismiss-flash i.fa-times-circle-o { color: $mat-grey-light; }
+    .dismiss-flash i.fa-times-circle { color: $mat-grey-light; }
   }
   &.high-flash {
     top: 10px; right: 10px;

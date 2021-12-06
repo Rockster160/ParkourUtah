@@ -2,14 +2,14 @@
 <div class="<%= inline ? 'inline-flash' : 'flash-banner' %> flash-<%= type %> <%= 'high-flash' if @high_flash %> ">
   <div class="flash-container">
     <% if type == 'alert' %>
-      <i class="fa fa-ban"></i>
+      <i class="fas fa-ban"></i>
     <% elsif type == 'notice' %>
-      <i class="fa fa-check-circle-o"></i>
+      <i class="far fa-check-circle"></i>
     <% end %>
     <%= message %>
     <div class="dismiss-flash">
       <a id="dismissFlash">
-        <i class="fa fa-times-circle-o"></i>
+        <i class="far fa-times-circle"></i>
       </a>
     </div>
   </div>
