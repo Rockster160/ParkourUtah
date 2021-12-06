@@ -27,14 +27,12 @@ test:
 staging:
   <<: *default
   database: parkour_utah_staging
-  username: parkour_utah
   password: <%= ENV['PKUT_STAGING_PG_PASSWORD'] %>
   pool: 5
   host: localhost
 
 production:
   <<: *default
-  username: parkour_utah
   password: <%= ENV["PKUT_DB_PASSWORD"] %>
   database: parkour_utah_production
   pool: 5

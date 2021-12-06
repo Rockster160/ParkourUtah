@@ -28,3 +28,5 @@ pkut.zip
 commands.rb
 
 git config core.fileMode false
+
+/config/master.key
