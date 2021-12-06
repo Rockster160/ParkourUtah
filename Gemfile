@@ -14,7 +14,7 @@ gem 'redis-namespace'
 
 gem 'faker'
 gem 'jquery-rails'
-gem "therubyracer", '~> 0.12'
+gem "therubyracer", '~> 0.12', platforms: :ruby
 gem "less-rails"
 gem "twitter-bootstrap-rails"
 gem 'twitter-typeahead-rails'
