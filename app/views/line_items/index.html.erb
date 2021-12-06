@@ -12,7 +12,7 @@
         <td class="hidden sortable-url"><%= update_position_line_item_path(item) %></td>
         <td>
           <%= link_to edit_line_item_path(item.id), class: 'pkut-btn' do %>
-            <%= icon('arrows', '', class: 'fa-lg')  %>
+            <%= icon("fas", 'arrows', '', class: 'fa-lg')  %>
             <% if item.hidden? %>
               <span style="color:white;">&lt;Hidden&gt;</span>
             <% end %>

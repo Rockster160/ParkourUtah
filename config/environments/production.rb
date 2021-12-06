@@ -99,5 +99,5 @@ Rails.application.configure do
 
 end
 
-# require "#{Rails.root}/lib/custom_notifier"
-# Rails.application.config.middleware.use ExceptionNotification::Rack, custom: {}
+require "#{Rails.root}/lib/custom_notifier"
+Rails.application.config.middleware.use ExceptionNotification::Rack, custom: {}

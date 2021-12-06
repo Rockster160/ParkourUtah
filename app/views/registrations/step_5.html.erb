@@ -1,5 +1,5 @@
 <div class="central-container form-offset disableEnterSubmit">
-  <%= render partial: 'registrations/progress_bar', locals: {step: 5} %>
+  <%= render partial: 'registrations/progress_bar', locals: {reg_step: 5} %>
   <h2 class="header-text">Registration Complete!</h2>
   <% if current_user.athletes.unverified.count > 0 && !current_user.skip_trials? %>
     <h4>Congratulations!</h4>

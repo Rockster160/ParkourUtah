@@ -25,7 +25,7 @@ $progress-bar-color: $pkut-grey;
 
   background: $progress-bar-color;
   box-shadow: 0 3px 7px $pkut-grey;
-  i.fa {
+  i.fas {
     position: relative;
     top: 28px;
     font-size: 115px;
@@ -33,7 +33,7 @@ $progress-bar-color: $pkut-grey;
   span {
     &.step-passed {
       color: $pkut-grey;
-      i.fa {
+      i.fas {
         color: $pkut-red;
         text-shadow: none;
       }
@@ -51,7 +51,7 @@ $progress-bar-color: $pkut-grey;
     }
     &.step-current {
       color: $pkut-red;
-      i.fa { color: $pkut-grey-dark; }
+      i.fas { color: $pkut-grey-dark; }
       ::after {
         content: '';
         z-index: -1;
@@ -96,7 +96,7 @@ $progress-bar-color: $pkut-grey;
         }
       }
     }
-    i.fa {
+    i.fas {
       top: 24px;
       font-size: 90px;
     }
@@ -127,7 +127,7 @@ $progress-bar-color: $pkut-grey;
         }
       }
     }
-    i.fa {
+    i.fas {
       top: 24px;
       font-size: 90px;
     }
@@ -160,7 +160,7 @@ $progress-bar-color: $pkut-grey;
         }
       }
     }
-    i.fa {
+    i.fas {
       top: 16px;
       font-size: 60px;
     }

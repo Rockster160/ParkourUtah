@@ -119,6 +119,9 @@ GEM
     erubi (1.10.0)
     et-orbi (1.2.4)
       tzinfo
+    exception_notification (4.4.3)
+      actionmailer (>= 4.0, < 7)
+      activesupport (>= 4.0, < 7)
     execjs (2.8.1)
     faker (2.19.0)
       i18n (>= 1.6, < 2)
@@ -308,6 +311,7 @@ GEM
       rack (~> 2.2)
       rack-protection (= 2.1.0)
       tilt (~> 2.0)
+    slack-notifier (2.4.0)
     spring (2.1.1)
     sprockets (3.6.3)
       concurrent-ruby (~> 1.0)
@@ -373,6 +377,7 @@ DEPENDENCIES
   colorize
   devise
   dotimeout-rails
+  exception_notification
   faker
   font-awesome-sass
   geocoder
@@ -382,7 +387,7 @@ DEPENDENCIES
   jquery-rails
   jquery-tablesorter
   jquery-ui-rails
-  json (~> 1.8)
+  json
   kaminari
   less-rails
   maskedinput-rails
@@ -404,6 +409,7 @@ DEPENDENCIES
   sidekiq
   sidekiq-cron (~> 0.4.0)
   sinatra
+  slack-notifier
   spring
   sprockets (= 3.6.3)
   stripe!

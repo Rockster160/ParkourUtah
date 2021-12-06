@@ -23,7 +23,7 @@ gem "select2-rails"
 gem 'autoprefixer-rails'
 gem 'rails_12factor', group: :production
 gem 'devise'
-gem 'json', "~> 1.8"
+gem 'json'
 gem 'jquery-ui-rails'
 gem "paperclip"
 # gem 'aws-sdk-rails'
@@ -46,8 +46,8 @@ gem 'underscore-rails'
 gem 'geocoder'
 gem 'browser'
 gem 'chroma'
-# gem 'exception_notification'
-# gem 'slack-notifier'
+gem 'exception_notification'
+gem 'slack-notifier'
 gem 'colorize'
 gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '01f92d86d15d85cfd0f20dabd025dcbd36a8a60f'
 # Export class Summaries
