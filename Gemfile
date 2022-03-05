@@ -12,7 +12,7 @@ gem 'jbuilder', '~> 2.0'
 gem 'redis', '~> 3.3.3'
 gem 'redis-namespace'
 
-gem 'faker'
+# gem 'faker'
 gem 'jquery-rails'
 gem "twitter-bootstrap-rails"
 gem 'twitter-typeahead-rails'

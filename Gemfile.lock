@@ -124,8 +124,6 @@ GEM
       actionmailer (>= 4.0, < 7)
       activesupport (>= 4.0, < 7)
     execjs (2.8.1)
-    faker (2.19.0)
-      i18n (>= 1.6, < 2)
     faraday (1.7.1)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
@@ -382,7 +380,6 @@ DEPENDENCIES
   devise
   dotimeout-rails
   exception_notification
-  faker
   font-awesome-sass
   geocoder
   gmaps4rails
