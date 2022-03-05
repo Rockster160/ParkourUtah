@@ -25,6 +25,7 @@ gem 'json'
 gem 'jquery-ui-rails'
 gem "paperclip"
 gem 'net-smtp', require: false
+gem 'net-pop', require: false
 # gem 'aws-sdk-rails'
 # gem 'aws-sdk-s3'
 gem 'httparty'

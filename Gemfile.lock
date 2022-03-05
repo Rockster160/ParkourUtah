@@ -208,6 +208,10 @@ GEM
     multipart-post (2.1.1)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
+    net-pop (0.1.1)
+      digest
+      net-protocol
+      timeout
     net-protocol (0.1.2)
       io-wait
       timeout
@@ -392,6 +396,7 @@ DEPENDENCIES
   kaminari
   maskedinput-rails
   mimemagic!
+  net-pop
   net-smtp
   nokogiri (~> 1.10.4)
   paperclip
