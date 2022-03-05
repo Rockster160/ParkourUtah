@@ -93,7 +93,8 @@ class AwsLogger < ApplicationRecord
   def parse_time
     str_time = @temp_attributes[:time]
     return unless str_time.present?
-    @temp_attributes[:time] = DateTime.strptime(str_time[1..-2], "%d/%b/%Y:%H:%M:%S %z") rescue nil
+    @temp_attributes[:time] = DateTime.strptime(str_time[1..-2], "%d/%b/%Y:%H:%M:%S %z")
+  rescue StandardError
   end
 
   def check_if_all_set

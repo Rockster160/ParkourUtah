@@ -8,7 +8,7 @@ class StripeCharger
     }.merge(additional_params))
   rescue Stripe::CardError => e
     {failure_message: "Failed to Charge: #{e}"}
-  rescue => e
+  rescue StandardError => e
     CustomLogger.log("\e[31mOther error: \n#{e}\e[0m")
     {failure_message: "Failed to Charge, try logging out and back in or trying a different browser."}
   end

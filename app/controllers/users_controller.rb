@@ -91,7 +91,7 @@ class UsersController < ApplicationController
       end
 
       flash[:notice] = "Updated your card successfully!"
-    rescue => e
+    rescue StandardError => e
       flash[:alert] = "There was an error updating your card. Please try again."
     end
 

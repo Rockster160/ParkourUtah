@@ -116,7 +116,7 @@ class ScheduleWorker
           })
         rescue Stripe::CardError => e
           stripe_charge = {failure_message: "Stripe Error: Failed to Charge: #{e}"}
-        rescue => e
+        rescue StandardError => e
           stripe_charge = {failure_message: "Failed to Charge: #{e}"}
         end
         if stripe_charge.try(:status) == "succeeded"

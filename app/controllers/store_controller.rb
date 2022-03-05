@@ -139,7 +139,7 @@ class StoreController < ApplicationController
         }.merge(@customer.present? ? {customer: @customer.id} : {source: params[:stripeToken]}))
       rescue Stripe::CardError => e
         stripe_charge = {failure_message: "Failed to Charge: #{e}"}
-      rescue => e
+      rescue StandardError => e
         CustomLogger.log("\e[31mOther error: \n#{e}\e[0m")
         stripe_charge = {failure_message: "Failed to Charge, try logging out and back in or trying a different browser."}
       end

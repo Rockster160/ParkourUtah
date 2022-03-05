@@ -82,7 +82,7 @@ class IndexController < ApplicationController
         unsubscribe_params = Rack::Utils.parse_nested_query(Base64.urlsafe_decode64(params[:unsubscribe_code] || ''))
         @unsubscribe_type = unsubscribe_params['unsubscribe'].try(:to_sym) || :all
         user_id = unsubscribe_params['user_id'].try(:to_i)
-      rescue
+      rescue StandardError
       end
     end
     @user = User.find(user_id) if user_id.present?

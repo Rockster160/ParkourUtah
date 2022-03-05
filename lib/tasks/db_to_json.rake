@@ -15,7 +15,7 @@ namespace :db_to_json do
           full_export[klass.to_s] = klass.all.map do |instance|
             instance.attributes
           end
-        rescue => e
+        rescue StandardError => e
           puts "#{e.class}: #{(e.try(:message) || e.try(:body) || e).to_s.first(50)}".colorize(:red)
         end
       end

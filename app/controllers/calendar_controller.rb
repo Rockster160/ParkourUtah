@@ -44,7 +44,7 @@ class CalendarController < ApplicationController
     day, month, year = a.length == 4 ? [c, b, a] : [b, a, c]
     begin
       Time.zone.local(year.to_i, month.to_i, day.to_i)
-    rescue
+    rescue StandardError
       Time.zone.now
     end
   end

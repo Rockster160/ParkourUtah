@@ -48,7 +48,7 @@ class Announcement < ApplicationRecord
     begin
       parsed_date = Time.zone.parse(new_date).to_datetime
       self.expires_at = Time.zone.local(parsed_date.year, parsed_date.month, parsed_date.day, current_date.hour, current_date.minute)
-    rescue => e
+    rescue StandardError => e
       errors.add(:expires_at, "must have a valid Date.")
     end
   end
@@ -62,7 +62,7 @@ class Announcement < ApplicationRecord
     begin
       parsed_date = Time.zone.parse(new_time).to_datetime
       self.expires_at = Time.zone.local(current_date.year, current_date.month, current_date.day, parsed_date.hour, parsed_date.minute)
-    rescue => e
+    rescue StandardError => e
       errors.add(:expires_at, "must have a valid Time.")
     end
   end

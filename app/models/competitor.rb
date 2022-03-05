@@ -62,7 +62,7 @@ class Competitor < ApplicationRecord
     return cost unless coupon.present?
 
     eval(coupon.gsub("cost", cost.to_s)).to_f
-  rescue
+  rescue StandardError
     cost
   end
 

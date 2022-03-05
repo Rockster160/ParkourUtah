@@ -47,7 +47,7 @@ class RedemptionKey < ApplicationRecord
   def expiry_date=(date_str)
     begin
       self.expires_at = Time.zone.parse(date_str)
-    rescue
+    rescue StandardError
       errors.add(:expires_at, "Must be a valid date.")
     end
   end

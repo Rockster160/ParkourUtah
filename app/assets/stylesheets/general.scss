@@ -121,50 +121,11 @@
     transition: all 0.13s ease-out;
     border-radius: 100%;
 
-    .bubble {
+    img {
       position: absolute;
       top: 0; left: 0; right: 0;
       width: 100%;
       height: 100%;
-      overflow: hidden;
-      border-radius: 100%;
-      &:before {
-        transition: all 0.3s ease-out;
-        display: inline-block;
-        position: absolute;
-        content: "";
-        font-family: "FontAwesome5Free-Regular";
-        color: white;
-        width: 100%;
-        height: 100%;
-        line-height: 50px;
-        font-size: 25px;
-        text-align: center;
-        left: 0;
-        top: 0;
-        z-index: 1;
-      }
-      &.facebook:before { content: "\f09a"; }
-      &.youtube:before { content: "\f167"; }
-      &.twitter:before { content: "\f099"; }
-      &:after {
-        transition: all 0.13s ease-in;
-        content: "";
-        position: absolute;
-        top: 50px;
-        left: 0;
-        right: 0;
-        height: 50px;
-        width: 50px;
-        border-radius: 100%;
-        background-color: white;
-      }
-    }
-    &:hover {
-      .bubble:after { top: 0; }
-      .bubble.facebook:before { color: #3B5998 }
-      .bubble.youtube:before { color: #B31217 }
-      .bubble.twitter:before { color: #55ACEE }
     }
   }
 }

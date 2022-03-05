@@ -83,16 +83,22 @@ class EventSchedule < ApplicationRecord
 
   def start_str_date; start_date.present? ? start_date.strftime('%b %d, %Y') : nil; end
   def start_str_date=(new_date)
-    self.start_date = Time.zone.parse(new_date) rescue nil
+    self.start_date = Time.zone.parse(new_date)
+  rescue StandardError
   end
   def end_str_date; end_date.present? ? end_date.strftime('%b %d, %Y') : nil; end
   def end_str_date=(new_date)
-    self.end_date = Time.zone.parse(new_date) rescue nil
+    self.end_date = Time.zone.parse(new_date)
+  rescue StandardError
   end
 
   def time_of_day=(new_time_str)
     return nil if new_time_str.split(":")[0].to_i <= 12 && (new_time_str =~ /(a|p)m/i).nil?
-    time = Time.zone.parse(new_time_str) rescue nil
+    begin
+      time = Time.zone.parse(new_time_str)
+    rescue StandardError
+      time = nil
+    end
     self.hour_of_day = time.try(:hour)
     self.minute_of_day = time.try(:min)
   end

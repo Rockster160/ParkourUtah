@@ -48,7 +48,7 @@ class AttendancesController < ApplicationController
   def set_date
     begin
       @date = Time.zone.parse(params[:date] || params.dig(:attendance, :event_date))
-    rescue
+    rescue StandardError
       @date = nil
     end
   end
