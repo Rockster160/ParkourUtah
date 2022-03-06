@@ -131,7 +131,7 @@ class User < ApplicationRecord
   scope :by_fuzzy_text, lambda { |text|
     text = "%#{text}%"
     joins('LEFT OUTER JOIN athletes ON users.id = athletes.user_id')
-      .where("email ILIKE ? OR concat(users.first_name, ' ', users.last_name) ILIKE ? OR CAST(users.id AS TEXT) ILIKE ? OR athletes.full_name ILIKE ? OR CAST(athletes.fast_pass_id AS TEXT) ILIKE ?", text, text, text, text, text).uniq
+      .where("email ILIKE ? OR concat(users.first_name, ' ', users.last_name) ILIKE ? OR CAST(users.id AS TEXT) ILIKE ? OR athletes.full_name ILIKE ? OR CAST(athletes.fast_pass_id AS TEXT) ILIKE ?", text, text, text, text, text).distinct
   }
   scope :by_phone_number, ->(number) { where("REGEXP_REPLACE(phone_number, '[^0-9]', '', 'g') ILIKE ?", "%#{strip_phone_number(number)}") }
   scope :instructors, -> { where("role > 0").order(:instructor_position) }
