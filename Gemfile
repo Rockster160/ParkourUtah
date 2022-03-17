@@ -41,7 +41,7 @@ gem 'maskedinput-rails'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem "dotimeout-rails"
 gem 'kaminari'
-gem 'nokogiri', "~> 1.10.4"
+gem 'nokogiri', "~> 1.13.2"
 gem 'gmaps4rails'
 gem 'underscore-rails'
 gem 'geocoder'
