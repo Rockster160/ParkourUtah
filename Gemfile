@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails', '~> 6.1.4'
-gem 'sprockets', '3.6.3'
+gem 'sprockets', '3.7.2'
 gem 'coffee-script'
 gem 'pg'
 gem 'sass-rails', '~> 5.0'
