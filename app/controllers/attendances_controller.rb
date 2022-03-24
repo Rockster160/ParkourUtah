@@ -14,7 +14,7 @@ class AttendancesController < ApplicationController
 
   def create
     if @event.present? && @event.valid? && @event.save && @attendance.valid? && @attendance.save
-      @attendance.update_attribute(created_at: @event.date.end_of_day)
+      @attendance.update_columns(created_at: @event.date.end_of_day)
       redirect_to attendances_path, notice: "Successfully added Student to Class"
     else
       redirect_to new_attendance_path(attendance: passable_attributes_for_attendance, errors: @attendance.errors.full_messages + (@event&.errors&.full_messages || []))
