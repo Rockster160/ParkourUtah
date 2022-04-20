@@ -1,4 +1,7 @@
 <div class="competitions-wrapper central-container">
+  <% if current_admin? %>
+    <%= link_to "New Competition", new_competition_path, class: "pkut-btn" %>
+  <% end %>
   <h3>Current Competitions:</h3>
 
   <% @competitions.each do |competition| %>

@@ -34,7 +34,7 @@ Rails.application.routes.draw do
   end
 
   get "/:slug" => "competitions#show", constraints: ->(request) { request.path_parameters[:slug].present? && Competition.from_slug(request.path_parameters[:slug]).present? }
-  resources :competitions, only: [:index, :show] do
+  resources :competitions do
     get :export, on: :member
     get :monitor
     get :judge

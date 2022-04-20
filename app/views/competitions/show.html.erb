@@ -1,7 +1,11 @@
 <div class="competition-wrapper">
+  <% if current_admin? %>
+    <%= link_to "Edit", edit_competition_path(@competition), class: "pkut-btn" %>
+  <% end %>
   <% if current_instructor? %>
     <%= link_to "Judge Portal", competition_judge_path(@competition), class: "pkut-btn" %>
   <% end %>
+
   <h3><%= @competition.name %>: <br> <%= @competition.start_time.strftime("%B %-dth") %></h3>
   <h3><%= @competition.cost_range %></h3>
   <% sponsors = @competition.sponsor_images %>

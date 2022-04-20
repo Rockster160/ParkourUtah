@@ -8,13 +8,56 @@ class CompetitionsController < ApplicationController
 
   def show
     return unless user_signed_in?
+
     @competitor = @competition.competitors.new
     @eligible_athletes = current_user.athletes.where.not(id: @competition.competitors.pluck(:athlete_id))
     @registered_athletes = current_user.athletes.where(id: @competition.competitors.pluck(:athlete_id))
   end
 
+  def new
+    @competition = Competition.new
+
+    render :form
+  end
+
+  def edit
+    @competition = comp_from_id
+
+    render :form
+  end
+
+  def create
+    @competition = Competition.new
+
+    if @competition.update(competition_params)
+      redirect_to @competition
+    else
+      render :form
+    end
+  end
+
+  def update
+    @competition = comp_from_id
+
+    if @competition.update(competition_params)
+      redirect_to @competition
+    else
+      render :form
+    end
+  end
+
+  def destroy
+    @competition = comp_from_id
+
+    if @competition.destroy
+      redirect_to :competitions
+    else
+      render :form
+    end
+  end
+
   def export
-    @competition = Competition.find(params[:id])
+    @competition = comp_from_id
     @competitors = @competition.competitors.approved.order(:sort_order)
     csv_str = CSV.generate do |csv|
       csv << ["Name", "Age", "Years Training", "Instagram", "Song", "Bio"]
@@ -69,14 +112,29 @@ class CompetitionsController < ApplicationController
 
   private
 
-  def redirect_to_slug
-    if params[:slug].present?
-      @competition = Competition.from_slug(params[:slug])
-    else
-      @competition = Competition.find(params[:id] || params[:slug])
-      return redirect_to "/" + @competition.slug if @competition.try(:slug).present?
-      redirect_to root_path, alert: "Competition not found" if @competition.nil?
-    end
+  def comp_from_id
+    id = params[:slug].presence || params[:id]
+    Competition.find_by(slug: id) || Competition.find(id)
   end
 
+  def competition_params
+    params.require(:competition).permit(
+      :name,
+      :slug,
+      :start_time,
+      :spot_id,
+      :sponsor_images,
+      :description,
+      option_costs: {},
+    )
+  end
+
+  def redirect_to_slug
+    @competition = comp_from_id
+
+    return if params[:slug].present?
+    return redirect_to "/" + @competition.slug if @competition.try(:slug).present?
+
+    redirect_to root_path, alert: "Competition not found" if @competition.nil?
+  end
 end

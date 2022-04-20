@@ -25,6 +25,8 @@ class Competition < ApplicationRecord
   belongs_to :spot, optional: true
   has_many :competitors
 
+  before_save :set_slug
+
   scope :current, -> { where("start_time > ?", DateTime.current) }
 
   def self.from_slug(slug)
@@ -88,5 +90,15 @@ class Competition < ApplicationRecord
       hash[:rank] = competitor.rank
       hash
     end
+  end
+
+  def to_param
+    slug || id
+  end
+
+  private
+
+  def set_slug
+    self.slug = (self.slug.presence || name).parameterize
   end
 end

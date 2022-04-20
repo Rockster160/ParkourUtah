@@ -2,7 +2,14 @@ module ApplicationHelper
 
   def current_instructor?
     return false unless user_signed_in?
+
     current_user.instructor?
+  end
+
+  def current_admin?
+    return false unless user_signed_in?
+
+    current_user.admin?
   end
 
   def strip_phone_number(phone_number)
