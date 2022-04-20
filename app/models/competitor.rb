@@ -57,13 +57,13 @@ class Competitor < ApplicationRecord
   end
 
   def discounted_cost
-    return cost unless coupon_code.present?
-    coupon = competition.coupon_codes.find { |k, _v| k.downcase == coupon_code.downcase }&.last
-    return cost unless coupon.present?
+    return cost.to_f unless coupon_code.present?
+    coupon = competition.coupon_codes.find { |k, _v| k.to_s.downcase == coupon_code.downcase }&.last
+    return cost.to_f unless coupon.present?
 
     eval(coupon.gsub("cost", cost.to_s)).to_f
   rescue StandardError
-    cost
+    cost.to_f
   end
 
   def rank(category=nil)

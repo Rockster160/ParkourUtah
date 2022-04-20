@@ -4,6 +4,7 @@ Competition.create(
   start_time: DateTime.new(2022, 4, 22, 16, 0, 0, "MDT"),
   spot_id: 33, # Salt Palace
   sponsor_images: ["FitCon-comp20190412.png"],
+  discount_codes: { "HERO": 0, "HALF-OFF": "cost * 0.5" },
   option_costs: {
     all: 20,
     # youth: {
