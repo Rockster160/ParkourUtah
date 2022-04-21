@@ -114,7 +114,7 @@ class CompetitionsController < ApplicationController
 
   def comp_from_id
     id = params[:slug].presence || params[:id]
-    Competition.find_by(slug: id) || Competition.find(id)
+    Competition.from_slug(id) || Competition.find(id)
   end
 
   def competition_params
