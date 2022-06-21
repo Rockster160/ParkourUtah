@@ -9,7 +9,7 @@
   <h3><%= @competition.name %>: <br> <%= @competition.start_time.strftime("%B %-dth") %></h3>
   <h3><%= @competition.cost_range %></h3>
   <% sponsors = @competition.sponsor_images %>
-  <% if sponsors.any? %>
+  <% if sponsors&.any? %>
     <p>This Competition is brought to you by:</p>
     <div class="sponsors">
       <% count = sponsors.length %>

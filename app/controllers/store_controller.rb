@@ -55,7 +55,7 @@ class StoreController < ApplicationController
         if params[:new_amount].to_i <= 0
           order.destroy!
         else
-          order.update(amount: params[:new_amount])
+          order&.update(amount: params[:new_amount])
         end
       else
         if order

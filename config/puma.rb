@@ -3,7 +3,7 @@
 
 # Thread count - default 5
 threads_count_min = ENV.fetch("RAILS_MIN_THREADS") { 1 }.to_i
-threads_count_max = ENV.fetch("RAILS_MAX_THREADS") { 10 }.to_i
+threads_count_max = ENV.fetch("RAILS_MAX_THREADS") { 5 }.to_i
 threads threads_count_min, threads_count_max
 
 # Port - default 3000
