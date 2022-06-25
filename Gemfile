@@ -52,9 +52,9 @@ gem 'slack-notifier'
 gem 'colorize'
 gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '01f92d86d15d85cfd0f20dabd025dcbd36a8a60f'
 # Export class Summaries
-gem 'rubyzip', '~> 1.1.0'
-gem 'axlsx', '2.1.0.pre'
-gem 'axlsx_rails'
+gem 'rubyzip'
+gem 'caxlsx'
+gem 'caxlsx_rails'
 # /Export class Summaries
 
 group :development, :test do
