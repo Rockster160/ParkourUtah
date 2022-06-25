@@ -2,6 +2,7 @@ class ClassHandlersController < ApplicationController
   before_action :validate_instructor
   before_action :set_event_schedule
   before_action :set_class_variables
+  skip_before_action :verify_authenticity_token
 
   def fast_pass_id
     if @event_schedule.present?
