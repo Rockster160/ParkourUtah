@@ -10,6 +10,7 @@ $(document).ready(function() {
         $("#form-submit").addClass("disabled")
       }
 
+      hideElement($("[data-reveal]"))
       revealElement($("[data-reveal=" + selected.attr("data-age-group") + "]"))
     })
 
