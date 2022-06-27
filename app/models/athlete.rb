@@ -67,7 +67,7 @@ class Athlete < ApplicationRecord
     ((0...9999).to_a - bads)
   end
 
-  def youth?; age.to_i < 14; end
+  def youth?; age && age.to_i < 14; end
   def adult?; !youth?; end
   def age_group; adult? ? :adult : :youth; end
 
