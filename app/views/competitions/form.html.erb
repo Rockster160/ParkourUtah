@@ -28,10 +28,14 @@
         <%= f.select :spot_id, Spot.pluck(:title, :id), { selected: @competition.spot_id, include_blank: "None" }, class: "pkut-textbox" %>
       </div>
 
-      <div class="form-field">
-        <%= label_tag "competition[option_costs][all]", "Registration cost. Ping Rocco if you need to break down by age/registration time" %>
-        <%= number_field_tag "competition[option_costs][all]", @competition.option_costs&.dig(:all), class: "pkut-textbox" %>
-      </div>
+      <% if (@competition.option_costs.keys - [:all]).any? %>
+        <pre><%= JSON.pretty_generate(@competition.option_costs) %></pre>
+      <% else %>
+        <div class="form-field">
+          <%= label_tag "competition[option_costs][all]", "Registration cost. Ping Rocco if you need to break down by age/registration time" %>
+          <%= number_field_tag "competition[option_costs][all]", @competition.option_costs&.dig(:all), class: "pkut-textbox" %>
+        </div>
+      <% end %>
 
       <div class="form-field">
         <%= f.label :description %>*
