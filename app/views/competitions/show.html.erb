@@ -6,7 +6,7 @@
     <%= link_to "Judge Portal", competition_judge_path(@competition), class: "pkut-btn" %>
   <% end %>
 
-  <h3><%= @competition.name %>: <br> <%= @competition.start_time.strftime("%B %-dth") %></h3>
+  <h3><%= @competition.name %>: <br> <%= @competition.start_time&.strftime("%B %-dth") %></h3>
   <h3><%= @competition.cost_range %></h3>
   <% sponsors = @competition.sponsor_images %>
   <% if sponsors&.any? %>
@@ -19,7 +19,7 @@
       <% end %>
     </div>
   <% end %>
-  <div class="description"><%= @competition.description %></div>
+  <div class="description"><%= @competition.show_description %></div>
   <% if user_signed_in? %>
     <%= form_for @competitor, url: competitors_path do |f| %>
       <div class="form text-center">

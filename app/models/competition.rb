@@ -41,6 +41,13 @@ class Competition < ApplicationRecord
     @options ||= option_costs.deep_symbolize_keys
   end
 
+  def show_description
+    url_regex = /(https?:\/\/[\w\-\_\.\/~\$\&\+\,\/\:\;\=\?\@]+\.[\w\-\_\.\/~\$\&\+\,\/\:\;\=\?\@]+)/i
+    description.gsub(url_regex) do |match|
+      "<a href='#{match}' target='_blank'>#{match}</a>"
+    end.html_safe
+  end
+
   def registration_time
     late_registration? ? :late : :early
   end
@@ -56,13 +63,14 @@ class Competition < ApplicationRecord
   end
 
   def cost_range
+    return if option_costs.blank?
     options = option_costs.deep_symbolize_keys
     return "$#{options[:all]}" if options[:all].present?
 
     min = nil
     max = nil
     options.each do |age_group, registration_time|
-      registration_time.each do |time, comps|
+      registration_time.presence&.each do |time, comps|
         comps.each do |name, price|
           min = price if min.nil? || price < min
           max = price if max.nil? || price > max
