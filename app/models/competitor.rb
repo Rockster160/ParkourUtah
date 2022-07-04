@@ -49,11 +49,14 @@ class Competitor < ApplicationRecord
 
   def cost
     costs = competition.options
-    return costs[:all] if costs[:all].present?
+    return costs[:all] if costs[:all].present? && !costs[:all].is_a?(Hash)
 
     registration_period = competition.late_registration?(created_at || Time.current) ? :late : :early
 
-    costs.dig(age_group, registration_period, selected_comp.to_s.to_sym)
+    group = costs.key?(age_group) ? costs[age_group] : costs[:all]
+    period = group.key?(registration_period) ? group[registration_period] : group[:all]
+
+    period[selected_comp.to_s.to_sym]
   end
 
   def discounted_cost
