@@ -28,7 +28,7 @@
         <%= f.select :spot_id, Spot.pluck(:title, :id), { selected: @competition.spot_id, include_blank: "None" }, class: "pkut-textbox" %>
       </div>
 
-      <% if ((@competition.option_costs&.keys || []) - [:all]).any? %>
+      <% if @competition.persisted? %>
         <pre><%= JSON.pretty_generate(@competition.option_costs) %></pre>
       <% else %>
         <div class="form-field">
