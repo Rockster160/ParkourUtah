@@ -53,9 +53,11 @@ class Competition < ApplicationRecord
   end
 
   def select_options(age_group)
-    (options.dig(age_group, registration_time) || options.dig(age_group, :all) || []).map do |comp_name, price|
-      ["#{comp_name} ($#{price})", comp_name]
-    end + (options.dig(:all) || []).map  do |comp_name, price|
+    options_list = options.dig(age_group, registration_time).to_a
+    options_list += options.dig(age_group, :all).to_a
+    options_list += options.dig(:all, :all).to_a
+
+    options_list.uniq.map do |comp_name, price|
       ["#{comp_name} ($#{price})", comp_name]
     end
   end

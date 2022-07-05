@@ -43,9 +43,13 @@
             <% end %>
           </div>
           <div class="form-field">
-            <% [:youth, :adult].each do |age_group| %>
-              <% if @competition.options[age_group].present? %>
-                <%= f.select :selected_comp, @competition.select_options(age_group), {}, { class: "comp-select", data: { reveal: age_group } } %>
+            <% if @competition.options[:all].present? && @competition.options[:all].is_a?(Hash) %>
+              <%= f.select :selected_comp, @competition.select_options(:all), {}, { class: "comp-select" } %>
+            <% else %>
+              <% [:youth, :adult].each do |age_group| %>
+                <% if @competition.options[age_group].present? %>
+                  <%= f.select :selected_comp, @competition.select_options(age_group), {}, { class: "comp-select", data: { reveal: age_group } } %>
+                <% end %>
               <% end %>
             <% end %>
           </div>
