@@ -67,7 +67,7 @@ class Competition < ApplicationRecord
   def cost_range
     return if option_costs.blank?
     options = option_costs.deep_symbolize_keys
-    return "$#{options[:all]}" if options[:all].present?
+    return "$#{options[:all]}" if options[:all].present? && !options[:all].is_a?(Hash)
 
     min = nil
     max = nil
