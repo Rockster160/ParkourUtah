@@ -35,13 +35,13 @@ class LineItem < ApplicationRecord
 
   has_many :redemption_keys
 
-  has_attached_file :display,
-    styles: { :medium => "300x300>", :thumb => "100x100#" },
-    :default_url => "http://parkourutah.com/images/missing.png",
-    :storage => :s3,
-    :bucket => ENV['PKUT_S3_BUCKET_NAME'],
-    :convert_options => { :all => '-background white -flatten +matte' }
-  validates_attachment_content_type :display, :content_type => /\Aimage\/.*\Z/
+  # has_attached_file :display,
+  #   styles: { :medium => "300x300>", :thumb => "100x100#" },
+  #   :default_url => "http://parkourutah.com/images/missing.png",
+  #   :storage => :s3,
+  #   :bucket => ENV['PKUT_S3_BUCKET_NAME'],
+  #   :convert_options => { :all => '-background white -flatten +matte' }
+  # validates_attachment_content_type :display, :content_type => /\Aimage\/.*\Z/
 
   before_save :assign_item_position_if_nil
   before_destroy :destroy_keys

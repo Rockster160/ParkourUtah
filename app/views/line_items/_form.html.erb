@@ -90,24 +90,8 @@
         </div>
       </div>
       <div class="form-field">
-        <div class="pkut-checkbox">
-          <%= f.check_box :is_full_image %>
-          <%= f.label :is_full_image, 'Image takes up entire box?' %>
-        </div>
-      </div>
-      <div class="form-field">
-        <div class="pkut-checkbox">
-          <%= f.check_box :show_text_as_image %>
-          <%= f.label :show_text_as_image, 'When checked, instead of displaying an image, will display the title (and cost) over a red box with a long text shadow.' %>
-        </div>
-      </div>
-      <div class="form-field">
         <%= f.label :credits %>
         <%= f.text_field :credits, class: 'pkut-textbox restrictNumeric' %>
-      </div>
-      <div class="form-field">
-        <%= f.label :display %>
-        <%= f.file_field :display %>
       </div>
       <%= submit_tag "Submit", class: "btn btn-success" %>
       <% if @item.persisted? %>
