@@ -23,7 +23,7 @@ $(document).ready(function() {
       $(data).each(function() {
         var competitor = this
         var row = $("[data-competitor-id=" + competitor.id + "]")
-        $(["flow", "execution", "creativity", "difficulty"]).each(function() {
+        $(["Judge 1", "Judge 2", "Judge 3", "Judge 4"]).each(function() {
           var category = this.toString(), score = competitor[category] || "--"
           row.find("[data-category=" + category + "] a").text(score || "--")
         })

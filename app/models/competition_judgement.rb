@@ -25,7 +25,12 @@ class CompetitionJudgement < ApplicationRecord
   delegate :competition, to: :competitor
   delegate :athlete,     to: :competitor
 
-  enum category: [:flow, :execution, :creativity, :difficulty]
+  enum category: [
+    "Judge 1", 
+    "Judge 2", 
+    "Judge 3", 
+    "Judge 4"
+  ]
 
   after_commit :broadcast
 
