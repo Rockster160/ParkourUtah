@@ -216,7 +216,7 @@ class User < ApplicationRecord
   end
 
   def card_declined?
-    recurring_subscriptions.where(card_declined: true).any?
+    recurring_subscriptions.auto_renew.active.where(card_declined: true).any?
   end
 
   def is_subscribed_to?(event_schedule_id)
