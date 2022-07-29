@@ -31,7 +31,6 @@ class LineItemsController < ApplicationController
     else
       flash[:alert] = "There was an error updating the item."
     end
-    puts "#{item.reload.attributes}".colorize(:red)
     redirect_to dashboard_path
   end
 
