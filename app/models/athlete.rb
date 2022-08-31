@@ -189,7 +189,7 @@ class Athlete < ApplicationRecord
   end
 
   def sign_up_verified
-    2.times { self.trial_classes.create }
+    self.trial_classes.create
   end
 
   private

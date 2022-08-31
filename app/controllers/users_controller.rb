@@ -116,7 +116,7 @@ class UsersController < ApplicationController
     end
     unless @user.skip_trials?
       @user.athletes.unverified.each do |athlete|
-        @notifications[:athletes] << "#{athlete.full_name} can receive 2 free trial classes by verifying their Fast Pass ID and Fast Pass Pin."
+        @notifications[:athletes] << "#{athlete.full_name} can receive 1 free trial class by verifying their Fast Pass ID and Fast Pass Pin."
       end
     end
     @user.recurring_subscriptions.unassigned.each do
