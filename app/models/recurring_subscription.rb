@@ -20,6 +20,7 @@ class RecurringSubscription < ApplicationRecord
   belongs_to :athlete, optional: true
   belongs_to :user
 
+  scope :available, -> { where(card_declined: [nil, false]) }
   scope :auto_renew, -> { where(auto_renew: true) }
   scope :assigned, -> { where.not(athlete_id: nil) }
   scope :unassigned, -> { where(athlete_id: nil) }
