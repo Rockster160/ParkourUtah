@@ -1,5 +1,7 @@
 require 'sidekiq/web'
 
+Sidekiq::Extensions.enable_delay!
+
 config = {
   host: Redis.current.client.host,
   port: Redis.current.client.port,
