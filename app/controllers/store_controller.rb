@@ -173,6 +173,7 @@ class StoreController < ApplicationController
       @stripe_error = stripe_charge.try(:failure_message)
       CustomLogger.log("Stripe Error: \e[31m#{stripe_charge}\e[0m", current_user, nil)
     end
+    @did_charge = order_success
     return order_success
   end
 
@@ -202,11 +203,13 @@ class StoreController < ApplicationController
       end
     end
 
-    items_with_redemption = @cart.items.select { |item| item.redemption_item_id }
-    redemption_items = items_with_redemption.map(&:redemption_item)
-    redemption_keys = redemption_items.each do |item|
-      key = item.redemption_keys.create
-      ApplicationMailer.delay.public_mailer(key.id, @cart.email)
+    if @did_charge
+      items_with_redemption = @cart.items.select { |item| item.redemption_item_id }
+      redemption_items = items_with_redemption.map(&:redemption_item)
+      redemption_keys = redemption_items.each do |item|
+        key = item.redemption_keys.create
+        ApplicationMailer.delay.public_mailer(key.id, @cart.email)
+      end
     end
 
     if user_signed_in?
