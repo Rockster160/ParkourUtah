@@ -9,7 +9,7 @@ namespace :db_to_json do
       Rails.application.eager_load!
       ActiveRecord::Base.descendants.each do |klass|
         next puts "Not DB backed: #{klass}".colorize(:red) unless klass.try(:table_name).present?
-        next puts "Skipping: #{klass}".colorize(:yellow) if klass.to_s.in?(["AwsLogger"])
+        next puts "Skipping: #{klass}".colorize(:yellow) if klass.to_s.in?(["AwsLogger", "LogTracker"])
         begin
           puts "#{klass}: #{klass.count}".colorize(:green)
           full_export[klass.to_s] = klass.all.map do |instance|
