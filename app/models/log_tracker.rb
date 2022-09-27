@@ -30,6 +30,3 @@ class LogTracker < ApplicationRecord
   end
 
 end
-
-# ianlogs = LogTracker.where(user_id: 1031).where("params ILIKE '%fast_pass_id%'").order(created_at: :desc)
-# puts ianlogs.map { |lt| "#{lt.created_at.to_formatted_s(:short_with_time)} - Fast Pass ID: #{lt.params_json['fast_pass_id']} Fast Pass Pin: #{lt.params_json['fast_pass_id']}" }
