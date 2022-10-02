@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_22_165527) do
+ActiveRecord::Schema.define(version: 2022_10_01_233914) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,9 +66,11 @@ ActiveRecord::Schema.define(version: 2019_08_22_165527) do
     t.datetime "updated_at", null: false
     t.string "type_of_charge"
     t.boolean "sent", default: false
+    t.bigint "purchased_plan_item_id"
     t.index ["athlete_id"], name: "index_attendances_on_athlete_id"
     t.index ["event_id"], name: "index_attendances_on_event_id"
     t.index ["instructor_id"], name: "index_attendances_on_instructor_id"
+    t.index ["purchased_plan_item_id"], name: "index_attendances_on_purchased_plan_item_id"
   end
 
   create_table "aws_loggers", id: :serial, force: :cascade do |t|
@@ -223,6 +225,7 @@ ActiveRecord::Schema.define(version: 2019_08_22_165527) do
     t.integer "max_payment_per_session"
     t.boolean "accepts_unlimited_classes", default: true
     t.boolean "accepts_trial_classes", default: true
+    t.text "tags"
     t.index ["instructor_id"], name: "index_event_schedules_on_instructor_id"
     t.index ["spot_id"], name: "index_event_schedules_on_spot_id"
   end
@@ -276,6 +279,9 @@ ActiveRecord::Schema.define(version: 2019_08_22_165527) do
     t.string "time_range_end"
     t.integer "bundle_amount"
     t.integer "bundle_cost_in_pennies"
+    t.bigint "plan_item_id"
+    t.text "tags"
+    t.index ["plan_item_id"], name: "index_line_items_on_plan_item_id"
   end
 
   create_table "log_trackers", id: :serial, force: :cascade do |t|
@@ -316,6 +322,28 @@ ActiveRecord::Schema.define(version: 2019_08_22_165527) do
     t.boolean "email_class_cancelled", default: false
     t.boolean "email_newsletter", default: true
     t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
+  create_table "plan_items", force: :cascade do |t|
+    t.jsonb "free_items"
+    t.jsonb "discount_items"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "purchased_plan_items", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "athlete_id"
+    t.bigint "cart_id"
+    t.bigint "plan_item_id"
+    t.jsonb "free_items"
+    t.jsonb "discount_items"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["athlete_id"], name: "index_purchased_plan_items_on_athlete_id"
+    t.index ["cart_id"], name: "index_purchased_plan_items_on_cart_id"
+    t.index ["plan_item_id"], name: "index_purchased_plan_items_on_plan_item_id"
+    t.index ["user_id"], name: "index_purchased_plan_items_on_user_id"
   end
 
   create_table "ratings", id: :serial, force: :cascade do |t|

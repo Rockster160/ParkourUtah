@@ -3,37 +3,41 @@
 # Table name: line_items
 #
 #  id                     :integer          not null, primary key
-#  display_file_name      :string
-#  display_content_type   :string
-#  display_file_size      :integer
-#  display_updated_at     :datetime
-#  description            :text
-#  cost_in_pennies        :integer
-#  title                  :string
-#  category               :string
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
-#  size                   :string
-#  hidden                 :boolean
-#  item_order             :integer
-#  credits                :integer          default(0)
-#  is_subscription        :boolean          default(FALSE)
-#  taxable                :boolean          default(TRUE)
-#  color                  :string
-#  is_full_image          :boolean          default(FALSE)
-#  redemption_item_id     :integer
-#  show_text_as_image     :boolean          default(TRUE)
-#  instructor_ids         :string
-#  location_ids           :string
-#  time_range_start       :string
-#  time_range_end         :string
 #  bundle_amount          :integer
 #  bundle_cost_in_pennies :integer
+#  category               :string
+#  color                  :string
+#  cost_in_pennies        :integer
+#  credits                :integer          default(0)
+#  description            :text
+#  display_content_type   :string
+#  display_file_name      :string
+#  display_file_size      :integer
+#  display_updated_at     :datetime
+#  hidden                 :boolean
+#  instructor_ids         :string
+#  is_full_image          :boolean          default(FALSE)
+#  is_subscription        :boolean          default(FALSE)
+#  item_order             :integer
+#  location_ids           :string
+#  show_text_as_image     :boolean          default(TRUE)
+#  size                   :string
+#  tags                   :text
+#  taxable                :boolean          default(TRUE)
+#  time_range_end         :string
+#  time_range_start       :string
+#  title                  :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  plan_item_id           :bigint
+#  redemption_item_id     :integer
 #
 
 class LineItem < ApplicationRecord
 
   has_many :redemption_keys
+  has_one :redemption_item, class_name: "LineItem", optional: true
+  has_one :plan_item, optional: true
 
   # has_attached_file :display,
   #   styles: { :medium => "300x300>", :thumb => "100x100#" },
@@ -48,10 +52,6 @@ class LineItem < ApplicationRecord
 
   def users_who_purchased
     User.joins(carts: [cart_items: [:line_item]]).where(line_items: {id: self.id}).where.not(carts: {purchased_at: nil}).distinct
-  end
-
-  def redemption_item
-    LineItem.find(redemption_item_id)
   end
 
   def destroy_keys
