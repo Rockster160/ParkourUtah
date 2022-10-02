@@ -1,0 +1,12 @@
+<div class="central-container form-offset">
+  <%= link_to "Back to Dashboard", dashboard_path, class: "pkut-btn" %> <br>
+  <%= link_to new_plan_item_path, class: "pkut-btn" do %>
+    <i class="fa fa-plus"></i> New Plan
+  <% end %>
+  <hr>
+
+  <% @plans.each do |plan| %>
+    <%= link_to plan.name, edit_plan_item_path(plan.id), class: "pkut-btn" %>
+    <br>
+  <% end %>
+</div>

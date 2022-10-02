@@ -62,6 +62,7 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :plan_items, except: [ :show, :destroy ]
   resources :line_items, except: [ :show ] do
     member do
       put :update_position
