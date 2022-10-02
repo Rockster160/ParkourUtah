@@ -22,7 +22,7 @@
 #  location_ids           :string
 #  show_text_as_image     :boolean          default(TRUE)
 #  size                   :string
-#  tags                   :text
+#  tags                   :jsonb
 #  taxable                :boolean          default(TRUE)
 #  time_range_end         :string
 #  time_range_start       :string
@@ -36,8 +36,8 @@
 class LineItem < ApplicationRecord
 
   has_many :redemption_keys
-  has_one :redemption_item, class_name: "LineItem", optional: true
-  has_one :plan_item, optional: true
+  has_one :redemption_item, class_name: "LineItem"
+  has_one :plan_item
 
   # has_attached_file :display,
   #   styles: { :medium => "300x300>", :thumb => "100x100#" },
@@ -152,6 +152,10 @@ class LineItem < ApplicationRecord
       self.item_order = (LineItem.all.map { |l| l.item_order }.compact.sort.last + 1)
       self.save!
     end
+  end
+
+  def tags=(new_tag_str)
+    super(new_tag_str.split(",").map { |tag| tag.downcase.squish })
   end
 
 end

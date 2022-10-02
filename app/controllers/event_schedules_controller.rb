@@ -114,6 +114,7 @@ class EventSchedulesController < ApplicationController
       :cost,
       :title,
       :description,
+      :tags,
       :full_address,
       :city,
       :color,

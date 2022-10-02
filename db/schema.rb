@@ -225,7 +225,7 @@ ActiveRecord::Schema.define(version: 2022_10_01_233914) do
     t.integer "max_payment_per_session"
     t.boolean "accepts_unlimited_classes", default: true
     t.boolean "accepts_trial_classes", default: true
-    t.text "tags"
+    t.jsonb "tags"
     t.index ["instructor_id"], name: "index_event_schedules_on_instructor_id"
     t.index ["spot_id"], name: "index_event_schedules_on_spot_id"
   end
@@ -280,7 +280,7 @@ ActiveRecord::Schema.define(version: 2022_10_01_233914) do
     t.integer "bundle_amount"
     t.integer "bundle_cost_in_pennies"
     t.bigint "plan_item_id"
-    t.text "tags"
+    t.jsonb "tags"
     t.index ["plan_item_id"], name: "index_line_items_on_plan_item_id"
   end
 
@@ -325,6 +325,7 @@ ActiveRecord::Schema.define(version: 2022_10_01_233914) do
   end
 
   create_table "plan_items", force: :cascade do |t|
+    t.text "name"
     t.jsonb "free_items"
     t.jsonb "discount_items"
     t.datetime "created_at", precision: 6, null: false

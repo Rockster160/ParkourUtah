@@ -1,6 +1,7 @@
 class AddTagsToTables < ActiveRecord::Migration[6.1]
   def change
     create_table :plan_items do |t|
+      t.text :name
       t.jsonb :free_items
       t.jsonb :discount_items
 
@@ -22,7 +23,7 @@ class AddTagsToTables < ActiveRecord::Migration[6.1]
     add_reference :line_items, :plan_item
     add_reference :attendances, :purchased_plan_item
 
-    add_column :event_schedules, :tags, :text
-    add_column :line_items, :tags, :text
+    add_column :event_schedules, :tags, :jsonb
+    add_column :line_items, :tags, :jsonb
   end
 end

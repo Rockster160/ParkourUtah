@@ -67,6 +67,10 @@
         <%= f.text_area :description, class: 'pkut-textarea' %>
       </div>
       <div class="form-field">
+        <%= f.label :tags, "Tags (Comma separated, used for discounting from plans)" %> <br>
+        <%= f.text_field :tags, class: 'pkut-textbox', value: @event_schedule.tags&.join(", ") %>
+      </div>
+      <div class="form-field">
         <%= f.label :city %> <br>
         <%= f.text_field :city, class: 'pkut-textbox customRequired' %>
       </div>

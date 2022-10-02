@@ -32,6 +32,14 @@
         <%= f.text_area :description, placeholder: 'Marvelous skills sewn with godly thread.', class: 'customRequired pkut-textarea' %>
       </div>
       <div class="form-field">
+        <%= f.label :tags, "Tags (Comma separated, used for discounting from plans)" %> <br>
+        <%= f.text_field :tags, class: 'pkut-textbox', value: @item.tags&.join(", ") %>
+      </div>
+      <div class="form-field">
+        <%= f.label :plan_item_id, "Offers plan:" %>
+        <%= f.select :plan_item_id, @plans, { include_blank: "No plan attached" }, class: 'pkut-textbox' %>
+      </div>
+      <div class="form-field">
         <%= f.label :redemption_item_id %>
         <%= f.select :redemption_item_id, @hidden_items, {include_blank: "Not a Gift Card"}, class: 'pkut-textbox' %>
       </div>

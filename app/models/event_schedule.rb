@@ -18,7 +18,7 @@
 #  minute_of_day             :integer
 #  payment_per_student       :integer
 #  start_date                :datetime
-#  tags                      :text
+#  tags                      :jsonb
 #  title                     :string
 #  created_at                :datetime
 #  updated_at                :datetime
@@ -145,6 +145,10 @@ class EventSchedule < ApplicationRecord
     to_week_day = EventSchedule.day_of_weeks[day_of_week]
     day_count = (to_week_day - from_date.wday) % 7
     day_count.days
+  end
+
+  def tags=(new_tag_str)
+    super(new_tag_str.split(",").map { |tag| tag.downcase.squish })
   end
 
   private

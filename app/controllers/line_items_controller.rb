@@ -61,6 +61,7 @@ class LineItemsController < ApplicationController
 
   def set_hidden
     @hidden_items = LineItem.where(hidden: true).reorder(created_at: :desc).map { |item| [item.title, item.id] }
+    @plans = PlanItem.reorder(created_at: :desc).map { |item| [item.name, item.id] }
   end
 
   def item_params
@@ -68,6 +69,7 @@ class LineItemsController < ApplicationController
     params[:line_item][:instructors] = params[:line_item][:instructor_ids].try(:keys)&.join(",")
     params.require(:line_item).permit(
       :description,
+      :tags,
       :title,
       # :display,
       :cost_in_pennies,
@@ -81,6 +83,7 @@ class LineItemsController < ApplicationController
       :taxable,
       # :is_full_image,
       # :show_text_as_image,
+      :plan_item_id,
       :redemption_item_id,
       :instructors,
       :locations,

@@ -5,6 +5,7 @@
 #  id             :bigint           not null, primary key
 #  discount_items :jsonb
 #  free_items     :jsonb
+#  name           :text
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #
