@@ -11,20 +11,31 @@
       </div>
 
       <div class="">
-        expandable fields
-        <br>
-        <input type="text" name="" value="tag">
-        <input type="text" name="" value="count">
-        interval
-        <select class="" name="">
-          <option value="day">day</option>
-          <option value="week">week</option>
-          <option value="month">month</option>
-        </select>
-        <br>
-        <input type="text" name="" value="tag">
-        <input type="text" name="" value="discount">
-        <br>
+        <div class="infinite-wrapper">
+          <template>
+            <div class="infinite-row">
+              <input type="text" name="" placeholder="tag">
+              <input type="text" name="" placeholder="count">
+              interval
+              <select class="" name="">
+                <option value="day">day</option>
+                <option value="week">week</option>
+                <option value="month">month</option>
+              </select>
+            </div>
+          </template>
+          <div class="infinite-rows"></div>
+        </div>
+
+        <div class="infinite-wrapper">
+          <template>
+            <div class="infinite-row">
+              <input type="text" name="" placeholder="tag">
+              <input type="text" name="" placeholder="discount">
+            </div>
+          </template>
+          <div class="infinite-rows"></div>
+        </div>
       </div>
 
       <%= submit_tag "Submit", class: "btn btn-success" %>
