@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_01_233914) do
+ActiveRecord::Schema.define(version: 2022_10_03_041906) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,7 +104,11 @@ ActiveRecord::Schema.define(version: 2022_10_01_233914) do
     t.datetime "updated_at", null: false
     t.string "redeemed_token", default: ""
     t.string "order_name"
+    t.bigint "purchased_plan_item_id"
+    t.text "discount_type"
+    t.integer "discount_cost_in_pennies"
     t.index ["cart_id"], name: "index_cart_items_on_cart_id"
+    t.index ["purchased_plan_item_id"], name: "index_cart_items_on_purchased_plan_item_id"
   end
 
   create_table "carts", id: :serial, force: :cascade do |t|

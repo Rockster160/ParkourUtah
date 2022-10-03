@@ -12,7 +12,6 @@ $('.shopping-cart-line-item-quantity-input').each(function() {
   var amount = "<%= order.amount %>";
   $('.value-selector-<%= order.order_name.parameterize %>').val(amount);
 <% end %>
-updateCartItems();
 
 <% if @order %>
   $('.orders-placeholder').append('<div class="hidden-holder"><%= j render partial: "shopping_cart_item", locals: {order: @order} %></div>');
@@ -26,3 +25,4 @@ updateCartItems();
     $('.redemption-key-container').val('').attr('placeholder', 'Coupon Code').blur();
   <% end %>
 <% end %>
+updateCartItems();

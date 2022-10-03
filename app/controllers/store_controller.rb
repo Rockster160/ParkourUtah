@@ -34,18 +34,16 @@ class StoreController < ApplicationController
     if params[:delete_all]
       @cart.cart_items.destroy_all
     else
-      item_title = if params[:item_id]
-        item = LineItem.find(params[:item_id])
-        item.title
-      else
-        params[:item_name]
-      end
+      item = LineItem.find_by(id: params[:item_id]) if params[:item_id]
+      item_title = item&.title || params[:item_name]
       size = params[:size] ? "#{params[:size]} " : ""
       color = params[:color] ? "#{params[:color]} " : ""
       instructor = params[:instructor_name] ? "#{params[:instructor_name]} " : ""
       location = params[:location_name] ? " at #{params[:location_name]}" : ""
       time = params[:desired_time] ? ", #{params[:desired_time]}" : ""
       name = "#{size}#{color}#{instructor}#{item_title}#{location}#{time}"
+
+      discount_data = item&.discounted_cost_data(current_user) || {}
 
       orders = @cart.cart_items
       order = orders.where(order_name: name).first
@@ -61,7 +59,13 @@ class StoreController < ApplicationController
         if order
           order.increment!(:amount)
         else
-          order = CartItem.create(line_item_id: item.id, order_name: name)
+          order = CartItem.create(
+            line_item_id: item.id,
+            order_name: name,
+            discount_cost_in_pennies: discount_data[:cost],
+            discount_type: discount_data[:discount],
+            purchased_plan_item_id: discount_data[:plan_id],
+          )
           orders << order
           @order = order
         end

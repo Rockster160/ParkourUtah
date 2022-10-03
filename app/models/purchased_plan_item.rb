@@ -44,4 +44,7 @@ class PurchasedPlanItem < ApplicationRecord
     self.athlete_id = new_athlete.id
     update(expires_at: 1.month.from_now)
   end
+
+  # free_items: [{"tags"=>["classes"], "count"=>2, "interval"=>"week"}],
+  # discount_items: [{"tags"=>["classes"], "discount"=>"50%"}]
 end

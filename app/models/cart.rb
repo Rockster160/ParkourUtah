@@ -101,7 +101,7 @@ class Cart < ApplicationRecord
   def price
     cost = 0
     self.cart_items.each do |order|
-      cost += order.item.cost_for(order.amount)
+      cost += order.item.cost_for(order.amount, user)
     end
     cost <= 0 ? 0 : cost
   end
@@ -118,7 +118,7 @@ class Cart < ApplicationRecord
   def taxes
     cost = 0
     self.cart_items.each do |order|
-      cost += order.item.tax_for(order.amount)
+      cost += order.item.tax_for(order.amount, user)
     end
     cost
   end
