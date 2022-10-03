@@ -27,5 +27,11 @@ $(document).ready(function() {
     if (found_empty) { return }
 
     cloneTemplate(wrapper[0])
+  }).on("click", ".remove-row", function() {
+    let wrapper = $(this).parents(".infinite-wrapper")
+    $(this).parents(".infinite-row").remove()
+    if (wrapper.find(".infinite-row").length == 0) {
+      cloneTemplate(wrapper[0])
+    }
   })
 })

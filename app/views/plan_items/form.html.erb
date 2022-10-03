@@ -11,30 +11,28 @@
       </div>
 
       <div class="">
+        <h3>Granted access for classes</h3>
         <div class="infinite-wrapper">
           <template>
-            <div class="infinite-row">
-              <input type="text" name="" placeholder="tag">
-              <input type="text" name="" placeholder="count">
-              interval
-              <select class="" name="">
-                <option value="day">day</option>
-                <option value="week">week</option>
-                <option value="month">month</option>
-              </select>
-            </div>
+            <%= render partial: "row_template", locals: { item: nil, type: :free_items } %>
           </template>
-          <div class="infinite-rows"></div>
+          <div class="infinite-rows">
+            <% @plan.free_items&.each do |item| %>
+              <%= render partial: "row_template", locals: { item: item, type: :free_items } %>
+            <% end %>
+          </div>
         </div>
 
+        <h3>Discounts for shop items</h3>
         <div class="infinite-wrapper">
           <template>
-            <div class="infinite-row">
-              <input type="text" name="" placeholder="tag">
-              <input type="text" name="" placeholder="discount">
-            </div>
+            <%= render partial: "row_template", locals: { item: nil, type: :discount_items } %>
           </template>
-          <div class="infinite-rows"></div>
+          <div class="infinite-rows">
+            <% @plan.discount_items&.each do |item| %>
+              <%= render partial: "row_template", locals: { item: item, type: :discount_items } %>
+            <% end %>
+          </div>
         </div>
       </div>
 

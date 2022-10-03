@@ -9,11 +9,16 @@
   margin: 0 auto;
 }
 
-.flex-row {
+.spaced-row {
   display: flex;
   flex-direction: row;
+  justify-content: flex-start;
 
   &.flex-center { justify-content: space-around; }
+  & > * {
+    vertical-align: top;
+    margin: 15px;
+  }
 }
 
 #location-info {

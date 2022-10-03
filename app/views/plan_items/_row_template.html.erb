@@ -1,0 +1,35 @@
+<% item = (item || {}).with_indifferent_access %>
+<% free = type == :free_items %>
+
+<div class="infinite-row plan-item-row flex-row">
+  <label>
+    <h4>Tag(s)</h4>
+    <span>Comma separated</span>
+    <input class="pkut-textbox" type="text" name="plan_item[<%= type %>][][tags]" placeholder="Tags" value="<%= item[:tags]&.join(", ") %>">
+  </label>
+  <label>
+    <% if free %>
+      <h4>Count</h4>
+      <span>Classes to grant free access to.<br>Leave blank or 0 for unlimited.</span>
+      <input class="pkut-textbox" type="text" name="plan_item[<%= type %>][][count]" placeholder="Count" value="<%= item[:count] %>">
+    <% else %>
+      <h4>Discount</h4>
+      <span>Amount to discount Use "$" to subtract a flat amount or "%" to remove that percent.</span>
+      <input class="pkut-textbox" type="text" name="plan_item[<%= type %>][][discount]" placeholder="Discount" value="<%= item[:discount] %>">
+    <% end %>
+  </label>
+  <% if free %>
+    <label>
+      <h4>Interval</h4>
+      <span></span>
+      <select class="pkut-textbox" name="plan_item[<%= type %>][][interval]">
+        <% options = [:day, :week, :month] %>
+        <% selected = options.find { |o| o == item[:interval]&.to_sym } || :week %>
+        <% options.each do |opt| %>
+          <%= content_tag :option, "per #{opt}", value: opt, selected: selected == opt ? :selected : nil %>
+        <% end %>
+      </select>
+    </label>
+  <% end %>
+  <span class="remove-row">X</span>
+</div>
