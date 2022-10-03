@@ -138,6 +138,54 @@ class ScheduleWorker
     end
   end
 
+  def monthly_plan_charges(params)
+    Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
+    PurchasedPlanItem.assigned.auto_renew.inactive.available.group_by(&:user).each do |user, recurring_plan|
+      recurring_plan.group_by(&:stripe_id).each do |stripe_id, plans|
+        next unless stripe_id.present?
+        stripe_error = nil
+
+        total_cost = plans.map(&:cost_in_pennies).sum
+        begin
+          stripe_charge = Stripe::Charge.create({
+            amount:   total_cost,
+            currency: "usd",
+            customer: stripe_id
+          })
+        rescue Stripe::CardError => e
+          stripe_charge = { failure_message: "Stripe Error: Failed to Charge: #{e}" }
+          stripe_error = e
+        rescue StandardError => e
+          stripe_charge = { failure_message: "Failed to Charge: #{e}" }
+          stripe_error = e
+        end
+        if stripe_charge.try(:status) == "succeeded"
+          slack_message = "Charged Plan Subscriptions for #{user.email} at #{number_to_currency(total_cost/100.to_f)}."
+          channel = Rails.env.production? ? "#purchases" : "#slack-testing"
+          SlackNotifier.notify(slack_message, channel)
+
+          plans.each do |plan|
+            plan.update(auto_renew: false)
+            new_sub = current_user.purchased_plan_items.create(
+              athlete_id: plan.athlete_id,
+              stripe_id: plan.stripe_id,
+              plan_item_id: plan.plan_item_id,
+              cost_in_pennies: plan.cost_in_pennies,
+              discount_items: plan.discount_items,
+              free_items: plan.free_items,
+            )
+            unless new_sub.persisted?
+              SlackNotifier.notify("Failed to create new sub: ```#{new_sub.try(:attributes)}\n#{new_sub.try(:errors).try(:full_messages)}```", "#server-errors")
+            end
+          end
+        else
+          plans.each { |subscription| subscription.update(card_declined: stripe_error) }
+          SlackNotifier.notify("There was an issue updating the subscription for #{user.email}\n```#{stripe_charge}```", "#server-errors")
+        end
+      end
+    end
+  end
+
   def send_summary(params)
     return true unless Rails.env.production? || params["send_without_prod"]
     now = Time.zone.now

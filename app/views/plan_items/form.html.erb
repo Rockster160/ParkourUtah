@@ -6,7 +6,7 @@
       <%= render partial: 'layouts/error_container', locals: { resource: @plan } %>
 
       <div class="form-field">
-        <%= f.label :name %>
+        <%= f.label :name, "Name (Not visible to customers)" %>
         <%= f.text_field :name, class: "customRequired pkut-textbox" %>
       </div>
 

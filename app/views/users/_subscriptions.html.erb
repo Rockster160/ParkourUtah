@@ -17,22 +17,31 @@
     <% current_user.purchased_plan_items.order(:expires_at).each do |plan| %>
       <% athlete = plan.athlete %>
       <% if athlete.present? %>
-        <div class="row">
-          <div class="col-sm-6">
-            <p>Summary of things?</p>
-            <p>The next payment of <%= number_to_currency(plan.cost) %> for <%= athlete.full_name %> will process on <%= (plan.expires_at + 1.day).strftime('%B %e, %Y') %>.</p>
+        <% if plan.auto_renew? %>
+          <div class="row">
+            <div class="col-sm-6">
+              <p>The next payment of <%= number_to_currency(plan.cost) %> for <%= athlete.full_name %> will process on <%= (plan.expires_at + 1.day).strftime('%B %e, %Y') %>.</p>
+            </div>
+            <div class="col-sm-6 text-center">
+              <%= link_to 'Unsubscribe', unsubscribe_plan_athlete_path(athlete.id, plan_id: plan), class: 'pkut-btn', method: :delete %>
+            </div>
           </div>
-          <div class="col-sm-6 text-center">
-            <%= link_to 'Unsubscribe', "", class: 'pkut-btn', method: :delete %>
+        <% else %>
+          <div class="row">
+            <p><%= athlete.full_name %> has access to plan benefits until: <%= plan.expires_at.strftime('%B %-d, %Y') %></p>
           </div>
-        </div>
+        <% end %>
       <% else %>
         <div class="row">
           <div class="col-sm-6">
-            <p>Summary of things?</p>
+            <p><%= plan.plan_item.line_item.title %></p>
+            <small><%= plan.plan_item.line_item.description %></small>
           </div>
           <div class="col-sm-6 text-center">
-            <%= link_to "Assign", "", class: 'pkut-btn', method: :delete %>
+            <div class="pkut-btn forceOpen" data-toggle="modal" data-target="#assign_plan_<%= plan.id %>">
+              Assign
+            </div>
+            <%= render partial: "athletes/assign_plans", locals: { plan: plan } %>
           </div>
         </div>
       <% end %>

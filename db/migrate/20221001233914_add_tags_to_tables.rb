@@ -18,6 +18,7 @@ class AddTagsToTables < ActiveRecord::Migration[6.1]
       t.datetime :expires_at
       t.boolean :auto_renew, default: true
       t.text :stripe_id
+      t.text :card_declined
 
       t.jsonb :free_items
       t.jsonb :discount_items

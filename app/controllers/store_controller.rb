@@ -24,9 +24,9 @@ class StoreController < ApplicationController
   def unsubscribe
     athlete = Athlete.find(params[:id])
     if athlete.current_subscription.update(auto_renew: false)
-      redirect_to account_path, notice: 'Successfully Unsubscribed'
+      redirect_to account_path(anchor: :subscriptions), notice: 'Successfully Unsubscribed'
     else
-      redirect_to account_path, notice: 'There was an error unsubscribing.'
+      redirect_to account_path(anchor: :subscriptions), notice: 'There was an error unsubscribing.'
     end
   end
 
@@ -162,6 +162,7 @@ class StoreController < ApplicationController
         end
         plan_item = line_item.plan_item
         if plan_item.present?
+          @purchased_subscription = true
           current_user.purchased_plan_items.create(
             cart_id: @cart.id,
             stripe_id: @customer.try(:id),
@@ -172,6 +173,7 @@ class StoreController < ApplicationController
           )
         end
         if line_item.is_subscription? && user_signed_in?
+          @purchased_subscription = true
           order.amount.times do
             new_sub = current_user.recurring_subscriptions.create(cost_in_pennies: line_item.cost_in_pennies, stripe_id: @customer.try(:id))
             unless new_sub.persisted?
@@ -224,7 +226,7 @@ class StoreController < ApplicationController
     end
 
     if user_signed_in?
-      redirect_to account_path(trigger_fb_purchase: {value: @cart.total_in_dollars, item_ids: @cart.items.map(&:id), currency: 'USD'})
+      redirect_to account_path(anchor: @purchased_subscription ? :subscriptions : nil, trigger_fb_purchase: {value: @cart.total_in_dollars, item_ids: @cart.items.map(&:id), currency: 'USD'})
     else
       redirect_to root_path(trigger_fb_purchase: {value: @cart.total_in_dollars, item_ids: @cart.items.map(&:id), currency: 'USD'})
     end

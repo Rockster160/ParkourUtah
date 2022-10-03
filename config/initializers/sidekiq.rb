@@ -22,6 +22,7 @@ cron_jobs = [
   { name: "waiver_checks",                cron: "30 9 * * *",   class: "ScheduleWorker", args: { waiver_checks: nil } },
   { name: "remind_recurring_payments",    cron: "30 10 * * *",  class: "ScheduleWorker", args: { remind_recurring_payments: nil } },
   { name: "monthly_subscription_charges", cron: "0 7 * * *",    class: "ScheduleWorker", args: { monthly_subscription_charges: nil } },
+  { name: "monthly_plan_charges",         cron: "0 7 * * *",    class: "ScheduleWorker", args: { monthly_plan_charges: nil } },
   { name: "send_summary_monthly",         cron: "0 7 1 * *",    class: "ScheduleWorker", args: { send_summary: {scope: 'month'} } },
   { name: "pull_logs_from_s3",            cron: "0 * * * *",    class: "ScheduleWorker", args: { pull_logs_from_s3: {} } }
 ]

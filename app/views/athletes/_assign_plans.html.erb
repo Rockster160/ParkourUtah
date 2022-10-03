@@ -1,0 +1,15 @@
+<%= render_modal("assign_plan_#{plan.id}", "skinny-modal") do %>
+  <h1 class="pkut-text">Assign Plan</h1>
+  Select the athlete that you would like to apply the plan to.
+  <br/>
+  <br/>
+  <% current_user.athletes.each do |athlete| %>
+    <div class="row">
+      <%= link_to assign_plan_athlete_path(athlete.id, plan_id: plan.id), method: :post do %>
+        <%= icon("fas", 'star', '', class: 'fa-lg', style: "color: gold;") %>
+        <%= athlete.full_name %>
+      <% end %>
+    </div>
+    <br/>
+  <% end %>
+<% end %>

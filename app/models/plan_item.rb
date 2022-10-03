@@ -11,6 +11,7 @@
 #
 class PlanItem < ApplicationRecord
   has_many :purchased_plan_items
+  has_one :line_item
 
   def free_items=(new_json)
     fixed_json = new_json.map { |item|

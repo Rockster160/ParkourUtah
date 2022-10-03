@@ -36,8 +36,8 @@
 class LineItem < ApplicationRecord
 
   has_many :redemption_keys
-  has_one :redemption_item, class_name: "LineItem"
-  has_one :plan_item
+  belongs_to :redemption_item, class_name: "LineItem"
+  belongs_to :plan_item
 
   # has_attached_file :display,
   #   styles: { :medium => "300x300>", :thumb => "100x100#" },

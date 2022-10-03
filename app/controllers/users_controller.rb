@@ -122,6 +122,9 @@ class UsersController < ApplicationController
     @user.recurring_subscriptions.unassigned.each do
       @notifications[:subscriptions] << "You have unassigned subscriptions!"
     end
+    @user.purchased_plan_items.unassigned.each do
+      @notifications[:subscriptions] << "You have unassigned subscriptions!"
+    end
   end
 
   def user_params

@@ -341,6 +341,7 @@ ActiveRecord::Schema.define(version: 2022_10_01_233914) do
     t.datetime "expires_at"
     t.boolean "auto_renew", default: true
     t.text "stripe_id"
+    t.text "card_declined"
     t.jsonb "free_items"
     t.jsonb "discount_items"
     t.datetime "created_at", precision: 6, null: false
