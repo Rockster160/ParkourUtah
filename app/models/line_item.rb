@@ -165,7 +165,7 @@ class LineItem < ApplicationRecord
 
     potential_discounts = plans.each_with_object([]) do |plan, arr|
       # discount_items: [{"tags"=>["classes"], "discount"=>"50%"}]
-      plan.discount_items.each do |item|
+      plan.discount_items&.each do |item|
         matching_tags = item["tags"] & tags
         next unless matching_tags.any?
 
@@ -187,7 +187,7 @@ class LineItem < ApplicationRecord
     end
 
     # Best discount
-    potential_discounts.sort_by { |discount| -discount[:cost] }.first
+    potential_discounts.sort_by { |discount| discount[:cost] }.first
   end
 
   def assign_item_position_if_nil

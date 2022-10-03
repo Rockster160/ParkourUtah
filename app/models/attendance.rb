@@ -42,7 +42,7 @@ class Attendance < ApplicationRecord
       "Credits",
       "Unlimited Subscription",
       "Trial Class",
-      # "Plan",
+      "Plan",
     ]
   end
 

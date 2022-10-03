@@ -39,6 +39,7 @@ class Event < ApplicationRecord
   delegate :cost_in_pennies,            to: :event_schedule, allow_nil: true
   delegate :title,                      to: :event_schedule, allow_nil: true
   delegate :description,                to: :event_schedule, allow_nil: true
+  delegate :tags,                       to: :event_schedule, allow_nil: true
   delegate :full_address,               to: :event_schedule, allow_nil: true
   delegate :city,                       to: :event_schedule, allow_nil: true
   delegate :color,                      to: :event_schedule, allow_nil: true
