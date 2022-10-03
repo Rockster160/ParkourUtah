@@ -160,6 +160,17 @@ class StoreController < ApplicationController
             end
           end
         end
+        plan_item = line_item.plan_item
+        if plan_item.present?
+          current_user.purchased_plan_items.create(
+            cart_id: @cart.id,
+            stripe_id: @customer.try(:id),
+            plan_item_id: plan_item.id,
+            cost_in_pennies: line_item.cost_in_pennies,
+            discount_items: plan_item.discount_items,
+            free_items: plan_item.free_items,
+          )
+        end
         if line_item.is_subscription? && user_signed_in?
           order.amount.times do
             new_sub = current_user.recurring_subscriptions.create(cost_in_pennies: line_item.cost_in_pennies, stripe_id: @customer.try(:id))

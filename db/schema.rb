@@ -337,6 +337,10 @@ ActiveRecord::Schema.define(version: 2022_10_01_233914) do
     t.bigint "athlete_id"
     t.bigint "cart_id"
     t.bigint "plan_item_id"
+    t.integer "cost_in_pennies"
+    t.datetime "expires_at"
+    t.boolean "auto_renew", default: true
+    t.text "stripe_id"
     t.jsonb "free_items"
     t.jsonb "discount_items"
     t.datetime "created_at", precision: 6, null: false

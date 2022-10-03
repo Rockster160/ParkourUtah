@@ -1,3 +1,45 @@
+<% if @user.recurring_subscriptions.unassigned.count > 0 %>
+  <div class="text-center">
+    <div class="pkut-btn big-btn forceOpen" data-toggle="modal" data-target="#assign_subscriptions">
+      Assign subscriptions to students!
+    </div>
+  </div>
+  <%= render partial: 'athletes/assign_subscriptions' %>
+<% end %>
+
+<% if current_user.purchased_plan_items.active.any? %>
+  <hr>
+  <div class="row">
+    <% if current_user.purchased_plan_items.where(auto_renew: true).any? %>
+      <p>You are currently set up to auto-pay for the below plans.</p>
+      <p><a href="#" data-clickit=".stripe-button-el">Update Card Details</a></p>
+    <% end %>
+    <% current_user.purchased_plan_items.order(:expires_at).each do |plan| %>
+      <% athlete = plan.athlete %>
+      <% if athlete.present? %>
+        <div class="row">
+          <div class="col-sm-6">
+            <p>Summary of things?</p>
+            <p>The next payment of <%= number_to_currency(plan.cost) %> for <%= athlete.full_name %> will process on <%= (plan.expires_at + 1.day).strftime('%B %e, %Y') %>.</p>
+          </div>
+          <div class="col-sm-6 text-center">
+            <%= link_to 'Unsubscribe', "", class: 'pkut-btn', method: :delete %>
+          </div>
+        </div>
+      <% else %>
+        <div class="row">
+          <div class="col-sm-6">
+            <p>Summary of things?</p>
+          </div>
+          <div class="col-sm-6 text-center">
+            <%= link_to "Assign", "", class: 'pkut-btn', method: :delete %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
+
 <% if current_user.athletes.joins(:recurring_subscriptions).any? %>
   <hr>
   <div class="row">

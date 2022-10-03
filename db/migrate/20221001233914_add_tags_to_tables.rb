@@ -14,6 +14,11 @@ class AddTagsToTables < ActiveRecord::Migration[6.1]
       t.belongs_to :cart
       t.belongs_to :plan_item
 
+      t.integer :cost_in_pennies
+      t.datetime :expires_at
+      t.boolean :auto_renew, default: true
+      t.text :stripe_id
+
       t.jsonb :free_items
       t.jsonb :discount_items
 
