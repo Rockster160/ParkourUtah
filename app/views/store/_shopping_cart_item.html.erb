@@ -5,7 +5,14 @@
     <% end %>
     <span class="delete-x pull-right" id="<%= order.order_name %>">X</span>
     <div class="shopping-cart-line-item-title"><%= order.order_name %></div>
-    <div class="shopping-cart-line-item-price"><span class="normal-price"><%= number_to_currency(order.item.cost_in_dollars) %></span> <span class="bundle-price hidden"><%= number_to_currency(order.item.bundle_cost) %></span></div>
+    <div class="shopping-cart-line-item-price">
+      <span class="normal-price"><%= number_to_currency(order.item.cost_in_dollars) %></span>
+      <% if order.discounted? %>
+        <span class="discount-price"><%= number_to_currency(order.discounted_cost) %></span>
+      <% else %>
+        <span class="bundle-price hidden"><%= number_to_currency(order.item.bundle_cost) %></span>
+      <% end %>
+    </div>
     <div class="shopping-cart-line-item-quantity" data-bundle-amount="<%= order.item.bundle_amount %>">
       <% if order.redeemed_token.length > 0 && !RedemptionKey.where(key: order.redeemed_token).first.try(:can_be_used_multiple_times?) %>
         <input value="<%= order.amount %>" id="<%= order.order_name %>" disabled="disabled" size="1" maxlength="2" class="shopping-cart-line-item-quantity-input value-selector-<%= order.order_name.parameterize %>"></input>

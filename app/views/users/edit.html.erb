@@ -29,7 +29,7 @@
             <h1 class="text-center"><%= tab_type.capitalize %></h1>
             <% if @notifications[tab_type].any? %>
               <ul class="notification-container">
-                <% @notifications[tab_type].each do |notification| %>
+                <% @notifications[tab_type].uniq.each do |notification| %>
                   <li class="notification"><%= notification %></li>
                 <% end %>
               </ul>

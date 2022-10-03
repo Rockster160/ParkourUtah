@@ -16,7 +16,7 @@
         <%= f.number_field :bundle_amount, placeholder: '3', class: 'pkut-textbox', step: "1", min: "0" %>
       </div>
       <div class="form-field">
-        <%= f.label :bundle_cost %>
+        <%= f.label :bundle_cost, "Cost per item when bundled" %>
         <%= f.number_field :bundle_cost, placeholder: '30.99', class: 'pkut-textbox', step: "any", min: "0" %>
       </div>
       <div class="form-field">
@@ -30,6 +30,14 @@
       <div class="form-field">
         <%= f.label :description %>
         <%= f.text_area :description, placeholder: 'Marvelous skills sewn with godly thread.', class: 'customRequired pkut-textarea' %>
+      </div>
+      <div class="form-field">
+        <%= f.label :tags, "Tags (Comma separated, used for discounting from plans)" %> <br>
+        <%= f.text_field :tags, class: 'pkut-textbox', value: @item.tags&.join(", ") %>
+      </div>
+      <div class="form-field">
+        <%= f.label :plan_item_id, "Offers plan:" %>
+        <%= f.select :plan_item_id, @plans, { include_blank: "No plan attached" }, class: 'pkut-textbox' %>
       </div>
       <div class="form-field">
         <%= f.label :redemption_item_id %>

@@ -1,3 +1,54 @@
+<% if @user.recurring_subscriptions.unassigned.count > 0 %>
+  <div class="text-center">
+    <div class="pkut-btn big-btn forceOpen" data-toggle="modal" data-target="#assign_subscriptions">
+      Assign subscriptions to students!
+    </div>
+  </div>
+  <%= render partial: 'athletes/assign_subscriptions' %>
+<% end %>
+
+<% if current_user.purchased_plan_items.active.any? %>
+  <hr>
+  <div class="row">
+    <% if current_user.purchased_plan_items.where(auto_renew: true).any? %>
+      <p>You are currently set up to auto-pay for the below plans.</p>
+      <p><a href="#" data-clickit=".stripe-button-el">Update Card Details</a></p>
+    <% end %>
+    <% current_user.purchased_plan_items.order(:expires_at).each do |plan| %>
+      <% athlete = plan.athlete %>
+      <% if athlete.present? %>
+        <% if plan.auto_renew? %>
+          <div class="row">
+            <div class="col-sm-6">
+              <p>The next payment of <%= number_to_currency(plan.cost) %> for <%= athlete.full_name %> will process on <%= (plan.expires_at + 1.day).strftime('%B %e, %Y') %>.</p>
+            </div>
+            <div class="col-sm-6 text-center">
+              <%= link_to 'Unsubscribe', unsubscribe_plan_athlete_path(athlete.id, plan_id: plan), class: 'pkut-btn', method: :delete %>
+            </div>
+          </div>
+        <% else %>
+          <div class="row">
+            <p><%= athlete.full_name %> has access to plan benefits until: <%= plan.expires_at.strftime('%B %-d, %Y') %></p>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="row">
+          <div class="col-sm-6">
+            <p><%= plan.plan_item.line_item.title %></p>
+            <small><%= plan.plan_item.line_item.description %></small>
+          </div>
+          <div class="col-sm-6 text-center">
+            <div class="pkut-btn forceOpen" data-toggle="modal" data-target="#assign_plan_<%= plan.id %>">
+              Assign
+            </div>
+            <%= render partial: "athletes/assign_plans", locals: { plan: plan } %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
+
 <% if current_user.athletes.joins(:recurring_subscriptions).any? %>
   <hr>
   <div class="row">

@@ -3,26 +3,27 @@
 # Table name: event_schedules
 #
 #  id                        :integer          not null, primary key
-#  instructor_id             :integer
-#  spot_id                   :integer
-#  start_date                :datetime
-#  end_date                  :datetime
-#  hour_of_day               :integer
-#  minute_of_day             :integer
-#  day_of_week               :integer
-#  cost_in_pennies           :integer
-#  title                     :string
-#  description               :text
-#  full_address              :string
+#  accepts_trial_classes     :boolean          default(TRUE)
+#  accepts_unlimited_classes :boolean          default(TRUE)
 #  city                      :string
 #  color                     :string
+#  cost_in_pennies           :integer
+#  day_of_week               :integer
+#  description               :text
+#  end_date                  :datetime
+#  full_address              :string
+#  hour_of_day               :integer
+#  max_payment_per_session   :integer
+#  min_payment_per_session   :integer
+#  minute_of_day             :integer
+#  payment_per_student       :integer
+#  start_date                :datetime
+#  tags                      :jsonb
+#  title                     :string
 #  created_at                :datetime
 #  updated_at                :datetime
-#  payment_per_student       :integer
-#  min_payment_per_session   :integer
-#  max_payment_per_session   :integer
-#  accepts_unlimited_classes :boolean          default(TRUE)
-#  accepts_trial_classes     :boolean          default(TRUE)
+#  instructor_id             :integer
+#  spot_id                   :integer
 #
 
 class EventSchedule < ApplicationRecord
@@ -144,6 +145,10 @@ class EventSchedule < ApplicationRecord
     to_week_day = EventSchedule.day_of_weeks[day_of_week]
     day_count = (to_week_day - from_date.wday) % 7
     day_count.days
+  end
+
+  def tags=(new_tag_str)
+    super(new_tag_str.split(",").map { |tag| tag.downcase.squish })
   end
 
   private

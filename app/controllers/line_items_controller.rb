@@ -1,7 +1,7 @@
 class LineItemsController < ApplicationController
   before_action :validate_admin
-  before_action :set_categories, only: [ :edit, :new ]
-  before_action :set_hidden, only: [ :edit, :new ]
+  before_action :set_categories, only: [ :edit, :new, :update, :create ]
+  before_action :set_hidden, only: [ :edit, :new, :update, :create ]
 
   def index
     @items = LineItem.order(item_order: :asc)
@@ -25,13 +25,14 @@ class LineItemsController < ApplicationController
   end
 
   def update
-    item = LineItem.find(params[:id])
-    if item.update(item_params)
+    @item = LineItem.find(params[:id])
+    if @item.update(item_params)
       flash[:notice] = "Item successfully updated."
+      redirect_to dashboard_path
     else
-      flash[:alert] = "There was an error updating the item."
+      flash.now[:alert] = "There was an error updating the item."
+      render :edit
     end
-    redirect_to dashboard_path
   end
 
   def update_position
@@ -61,6 +62,7 @@ class LineItemsController < ApplicationController
 
   def set_hidden
     @hidden_items = LineItem.where(hidden: true).reorder(created_at: :desc).map { |item| [item.title, item.id] }
+    @plans = PlanItem.reorder(created_at: :desc).map { |item| [item.name, item.id] }
   end
 
   def item_params
@@ -68,6 +70,7 @@ class LineItemsController < ApplicationController
     params[:line_item][:instructors] = params[:line_item][:instructor_ids].try(:keys)&.join(",")
     params.require(:line_item).permit(
       :description,
+      :tags,
       :title,
       # :display,
       :cost_in_pennies,
@@ -81,6 +84,7 @@ class LineItemsController < ApplicationController
       :taxable,
       # :is_full_image,
       # :show_text_as_image,
+      :plan_item_id,
       :redemption_item_id,
       :instructors,
       :locations,

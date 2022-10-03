@@ -16,7 +16,10 @@ updateCartItems = function() {
     }
   });
   $("[data-bundle-amount]").each(function() {
-    var bundleAmount = parseInt($(this).attr("data-bundle-amount")), currentAmount = parseInt($(this).find("input").val()), $parent = $(this).parent();
+    let $parent = $(this).parent()
+    if ($parent.find(".discount-price").length > 0) { return }
+
+    var bundleAmount = parseInt($(this).attr("data-bundle-amount")), currentAmount = parseInt($(this).find("input").val());
     if (currentAmount >= bundleAmount && bundleAmount > 0) {
       $parent.find(".normal-price").addClass("strike");
       $parent.find(".bundle-price").removeClass("hidden");
@@ -25,4 +28,8 @@ updateCartItems = function() {
       $parent.find(".bundle-price").addClass("hidden");
     }
   });
+  $(".discount-price").each(function() {
+    let $parent = $(this).parents(".shopping-cart-line-item")
+    $parent.find(".normal-price").addClass("strike");
+  })
 }

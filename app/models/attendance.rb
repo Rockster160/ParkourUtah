@@ -2,15 +2,16 @@
 #
 # Table name: attendances
 #
-#  id             :integer          not null, primary key
-#  athlete_id     :integer
-#  instructor_id  :integer
-#  event_id       :integer
-#  location       :string
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  type_of_charge :string
-#  sent           :boolean          default(FALSE)
+#  id                     :integer          not null, primary key
+#  location               :string
+#  sent                   :boolean          default(FALSE)
+#  type_of_charge         :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  athlete_id             :integer
+#  event_id               :integer
+#  instructor_id          :integer
+#  purchased_plan_item_id :bigint
 #
 
 ##
@@ -26,6 +27,8 @@ class Attendance < ApplicationRecord
   belongs_to :instructor, class_name: "User"
   belongs_to :event
 
+  has_many :purchased_plan_items
+
   validate :one_per_athlete
 
   # enum type_of_charge: {
@@ -39,7 +42,7 @@ class Attendance < ApplicationRecord
       "Credits",
       "Unlimited Subscription",
       "Trial Class",
-      # "Plan",
+      "Plan",
     ]
   end
 

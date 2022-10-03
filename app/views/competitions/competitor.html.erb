@@ -1,7 +1,7 @@
 <div class="judgement-page skinny-container">
   <h3 class="pull-right"><a href="<%= competition_category_path(@competition, @category) %>" class="pkut-text">Back</a></h3>
   <h2>Category - <%= @category.titleize %></h2>
-  <div class="flex-row">
+  <div class="spaced-row">
     <h3><%= link_to @competitor.full_name, admin_user_path(@competitor.athlete.user_id) %></h3>
     <h5>
       Age: <%= @competitor.age || "?" %> | (<%= @competitor.athlete.date_of_birth %>) <br>

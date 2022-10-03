@@ -1,0 +1,42 @@
+<div class="central-container form-offset">
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %><br/><br/>
+
+  <%= form_for @plan do |f| %>
+    <div class="form-container">
+      <%= render partial: 'layouts/error_container', locals: { resource: @plan } %>
+
+      <div class="form-field">
+        <%= f.label :name, "Name (Not visible to customers)" %>
+        <%= f.text_field :name, class: "customRequired pkut-textbox" %>
+      </div>
+
+      <div class="">
+        <h3>Granted access for classes</h3>
+        <div class="infinite-wrapper">
+          <template>
+            <%= render partial: "row_template", locals: { item: nil, type: :free_items } %>
+          </template>
+          <div class="infinite-rows">
+            <% @plan.free_items&.each do |item| %>
+              <%= render partial: "row_template", locals: { item: item, type: :free_items } %>
+            <% end %>
+          </div>
+        </div>
+
+        <h3>Discounts for shop items</h3>
+        <div class="infinite-wrapper">
+          <template>
+            <%= render partial: "row_template", locals: { item: nil, type: :discount_items } %>
+          </template>
+          <div class="infinite-rows">
+            <% @plan.discount_items&.each do |item| %>
+              <%= render partial: "row_template", locals: { item: item, type: :discount_items } %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <%= submit_tag "Submit", class: "btn btn-success" %>
+    </div>
+  <% end %>
+</div>

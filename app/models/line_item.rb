@@ -3,37 +3,41 @@
 # Table name: line_items
 #
 #  id                     :integer          not null, primary key
-#  display_file_name      :string
-#  display_content_type   :string
-#  display_file_size      :integer
-#  display_updated_at     :datetime
-#  description            :text
-#  cost_in_pennies        :integer
-#  title                  :string
-#  category               :string
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
-#  size                   :string
-#  hidden                 :boolean
-#  item_order             :integer
-#  credits                :integer          default(0)
-#  is_subscription        :boolean          default(FALSE)
-#  taxable                :boolean          default(TRUE)
-#  color                  :string
-#  is_full_image          :boolean          default(FALSE)
-#  redemption_item_id     :integer
-#  show_text_as_image     :boolean          default(TRUE)
-#  instructor_ids         :string
-#  location_ids           :string
-#  time_range_start       :string
-#  time_range_end         :string
 #  bundle_amount          :integer
 #  bundle_cost_in_pennies :integer
+#  category               :string
+#  color                  :string
+#  cost_in_pennies        :integer
+#  credits                :integer          default(0)
+#  description            :text
+#  display_content_type   :string
+#  display_file_name      :string
+#  display_file_size      :integer
+#  display_updated_at     :datetime
+#  hidden                 :boolean
+#  instructor_ids         :string
+#  is_full_image          :boolean          default(FALSE)
+#  is_subscription        :boolean          default(FALSE)
+#  item_order             :integer
+#  location_ids           :string
+#  show_text_as_image     :boolean          default(TRUE)
+#  size                   :string
+#  tags                   :jsonb
+#  taxable                :boolean          default(TRUE)
+#  time_range_end         :string
+#  time_range_start       :string
+#  title                  :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  plan_item_id           :bigint
+#  redemption_item_id     :integer
 #
 
 class LineItem < ApplicationRecord
 
   has_many :redemption_keys
+  belongs_to :redemption_item, class_name: "LineItem", optional: true
+  belongs_to :plan_item, optional: true
 
   # has_attached_file :display,
   #   styles: { :medium => "300x300>", :thumb => "100x100#" },
@@ -48,10 +52,6 @@ class LineItem < ApplicationRecord
 
   def users_who_purchased
     User.joins(carts: [cart_items: [:line_item]]).where(line_items: {id: self.id}).where.not(carts: {purchased_at: nil}).distinct
-  end
-
-  def redemption_item
-    LineItem.find(redemption_item_id)
   end
 
   def destroy_keys
@@ -133,18 +133,61 @@ class LineItem < ApplicationRecord
     amount >= bundle_amount
   end
 
-  def cost_for(amount)
-    if exceeds_bundle?(amount)
-      (self.bundle_cost_in_pennies.to_f * amount).round
-    else
-      (self.cost.to_f * amount).round
-    end
+  def cost_for(amount, user=nil)
+    discount_data = discounted_cost_data(user)
+    possible_prices = [cost.to_f * amount]
+
+    possible_prices.push(discount_data[:cost] * amount) if discount_data
+    possible_prices.push(bundle_cost_in_pennies * amount) if exceeds_bundle?(amount)
+
+    possible_prices.sort.first.round
   end
 
-  def tax_for(amount)
+  def tax_for(amount, user=nil)
     return 0 unless taxable?
     tax_multiplier = 0.0825
-    (cost_for(amount) * tax_multiplier).round
+    (cost_for(amount, user) * tax_multiplier).round
+  end
+
+  def discounted_cost_in_dollars(user)
+    data = discounted_cost_data(user)
+    return unless data.present?
+
+    (data[:cost] / 100.to_f)
+  end
+
+  def discounted_cost_data(user)
+    return unless user.present?
+    return unless tags.present?
+
+    cip = cost_in_pennies
+    plans = user.purchased_plan_items.active.assigned
+
+    potential_discounts = plans.each_with_object([]) do |plan, arr|
+      # discount_items: [{"tags"=>["classes"], "discount"=>"50%"}]
+      plan.discount_items&.each do |item|
+        matching_tags = item["tags"] & tags
+        next unless matching_tags.any?
+
+        cost = cip
+        clean = item["discount"][/(\d|\.)*/].to_f
+        if item["discount"].include?("%")
+          cost = cip * (clean / 100.to_f)
+        elsif item["discount"].include?("$")
+          cost = cip - (clean * 100)
+        end
+
+        arr.push(
+          plan_id: plan.id,
+          discount: item["discount"],
+          tag: matching_tags.first,
+          cost: cost.clamp(0..),
+        )
+      end
+    end
+
+    # Best discount
+    potential_discounts.sort_by { |discount| discount[:cost] }.first
   end
 
   def assign_item_position_if_nil
@@ -152,6 +195,10 @@ class LineItem < ApplicationRecord
       self.item_order = (LineItem.all.map { |l| l.item_order }.compact.sort.last + 1)
       self.save!
     end
+  end
+
+  def tags=(new_tag_str)
+    super(new_tag_str.split(",").map { |tag| tag.downcase.squish })
   end
 
 end

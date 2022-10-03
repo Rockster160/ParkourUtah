@@ -62,6 +62,7 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :plan_items, except: [ :show, :destroy ]
   resources :line_items, except: [ :show ] do
     member do
       put :update_position
@@ -137,6 +138,8 @@ Rails.application.routes.draw do
   resources :athletes do
     member do
       post :reset_pin
+      post :assign_plan
+      delete :unsubscribe_plan
     end
     collection do
       post :verify

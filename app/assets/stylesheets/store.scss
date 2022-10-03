@@ -242,6 +242,23 @@ $height: 200px;
     120px 60px 2px $shadow-color;
 }
 
+.discounted-price {
+  font-size: 16px;
+  line-height: 16px;
+  position: relative;
+  text-shadow: none;
+
+  &:after {
+    content: "";
+    position: absolute;
+    top: 45%;
+    width: 60px;
+    left: calc(50% - 30px);
+    height: 2px;
+    background: white;
+  }
+}
+
 .items-container > .item-flip-container {
   margin: 8px;
   vertical-align: top;

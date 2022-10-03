@@ -49,7 +49,7 @@ class AthletesController < ApplicationController
     if pin == confirm
       if Athlete.find(params[:fast_pass_id]).update(fast_pass_pin: pin)
         flash[:notice] = "Pin successfully updated."
-        redirect_to account_path
+        redirect_to account_path(anchor: :athletes)
       else
         flash[:alert] = "There was an error saving your pin."
         redirect_back fallback_location: root_path
@@ -69,7 +69,7 @@ class AthletesController < ApplicationController
         end
       end
     end
-    redirect_to account_path
+    redirect_to account_path(anchor: :athletes)
   end
 
   def assign_subscription
@@ -79,12 +79,38 @@ class AthletesController < ApplicationController
     if user.recurring_subscriptions.unassigned.count > 0
       subscription = user.recurring_subscriptions.unassigned.last
       if subscription.assign_to_athlete(athlete)
-        redirect_to account_path, notice: "Successfully assigned! This subscription will auto-charge each month from now on."
+        redirect_to account_path(anchor: :subscriptions), notice: "Successfully assigned! This subscription will auto-charge each month from now on."
       else
-        redirect_to account_path, alert: "Failed to add the Subscription. The start and expiration dates will not be set until successfully assigned."
+        redirect_to account_path(anchor: :subscriptions), alert: "Failed to add the Subscription. The start and expiration dates will not be set until successfully assigned."
       end
     else
-      redirect_to account_path, alert: "No subscriptions to assign"
+      redirect_to account_path(anchor: :subscriptions), alert: "No subscriptions to assign"
+    end
+  end
+
+  def assign_plan
+    athlete = Athlete.find(params[:id])
+    plan = PurchasedPlanItem.find(params[:plan_id])
+
+    if plan.athlete_id.nil? && plan.user_id == athlete.user_id
+      if plan.assign_to_athlete(athlete)
+        redirect_to account_path(anchor: :subscriptions), notice: "Successfully assigned! This plan will auto-charge each month from now on."
+      else
+        redirect_to account_path(anchor: :subscriptions), alert: "Failed to add the Subscription. The start and expiration dates will not be set until successfully assigned."
+      end
+    else
+      redirect_to account_path(anchor: :subscriptions), alert: "No subscriptions to assign"
+    end
+  end
+
+  def unsubscribe_plan
+    athlete = Athlete.find(params[:id])
+    plan = PurchasedPlanItem.find(params[:plan_id])
+
+    if plan.update(auto_renew: false)
+      redirect_to account_path(anchor: :subscriptions), notice: 'Successfully Unsubscribed'
+    else
+      redirect_to account_path(anchor: :subscriptions), notice: 'There was an error unsubscribing.'
     end
   end
 
@@ -168,12 +194,12 @@ class AthletesController < ApplicationController
     if current_user.valid_password?(params[:password])
       @athlete = Athlete.find(params[:id])
       if params[:fast_pass_pin] == params[:pin_confirmation] && @athlete.update(fast_pass_pin: params[:fast_pass_pin].to_i)
-        redirect_to account_path, notice: "Successfully updated pin for #{@athlete.full_name}."
+        redirect_to account_path(anchor: :athletes), notice: "Successfully updated pin for #{@athlete.full_name}."
       else
-        redirect_to account_path, alert: 'The pins you entered did not match.'
+        redirect_to account_path(anchor: :athletes), alert: 'The pins you entered did not match.'
       end
     else
-      redirect_to account_path, alert: 'Sorry. Your password was not correct.'
+      redirect_to account_path(anchor: :athletes), alert: 'Sorry. Your password was not correct.'
     end
   end
 

@@ -1,0 +1,9 @@
+@import "config/variables";
+
+.flex { display: flex; }
+.flex-row {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: stretch;
+}

@@ -35,6 +35,7 @@ class Athlete < ApplicationRecord
   has_many :waivers,                 dependent: :destroy
   has_many :trial_classes,           dependent: :destroy
   has_many :recurring_subscriptions, dependent: :destroy
+  has_many :purchased_plan_items,    dependent: :destroy
   has_many :attendances,             dependent: :destroy
   has_many :competitors,             dependent: :destroy
 
@@ -93,24 +94,42 @@ class Athlete < ApplicationRecord
   end
 
   def attend_class(event, instructor)
-    attendance = nil
-    charge_type = charge_class(event)
-    if charge_type.present? && charge_type.is_a?(String)
-      attendance = attendances.create(instructor_id: instructor.id, event_id: event.id, type_of_charge: charge_type)
-    end
+    attendance = charge_class(event, instructor)
     attendance.try(:persisted?) || false
   end
 
-  def charge_class(event)
+  def charge_class(event, instructor)
     event_cost = event.cost_in_dollars.to_i
-    if event.accepts_unlimited_classes? && has_unlimited_access?
-      use_subscription! ? 'Unlimited Subscription' : false
-    elsif event.accepts_trial_classes? && has_trial?
-      use_trial! ? 'Trial Class' : false
-    elsif user.credits >= event_cost
-      user.charge_credits(event_cost) ? 'Credits' : false
-    else
-      false
+    attendance = attendances.new(instructor_id: instructor.id, event_id: event.id)
+    plan, item = nil
+
+    charge_type = (
+      if event.accepts_unlimited_classes? && has_unlimited_access?
+        use_subscription! ? "Unlimited Subscription" : false
+      elsif event.accepts_trial_classes? && has_trial?
+        use_trial! ? "Trial Class" : false
+      elsif (plan, item = relevant_plan(event)).present?
+        # TODO: Should probably add a spec to make sure these counts actually work
+        "Plan"
+      elsif user.credits >= event_cost
+        user.charge_credits(event_cost) ? "Credits" : false
+      else
+        false
+      end
+    )
+
+    if charge_type.present? && charge_type.is_a?(String)
+      attendance.purchased_plan_item_id = plan&.id
+      attendance.type_of_charge = charge_type
+      attendance.save
+
+      if attendance.persisted? && plan.present?
+        item["attendance_ids"] ||= []
+        item["attendance_ids"] << attendance.id
+        plan.save 
+      end
+
+      attendance
     end
   end
 
@@ -141,6 +160,43 @@ class Athlete < ApplicationRecord
   end
   def use_subscription!
     current_subscription.try(:use!) || false
+  end
+
+  def active_plans
+    purchased_plan_items.active
+  end
+  def relevant_plan(event)
+    tags = event.tags
+
+    active_plans.find do |plan|
+      # free_items: [{"tags"=>["classes"], "count"=>2, "interval"=>"week"}]
+      break plan.free_items&.find do |item|
+        matching_tags = item["tags"] & tags
+        next unless matching_tags.any?
+
+        attendance_ids = item["attendance_ids"] || []
+        next if item["count"].to_i > 0 && attendance_ids.count >= item["count"]
+
+        item_attendances = Attendance.where(id: attendance_ids)
+        now = Time.current
+        relevant_attendances = (
+          case item["interval"].to_sym
+          when :day
+            item_attendances.where(created_at: now.beginning_of_day..now.end_of_day)
+          when :week
+            item_attendances.where(created_at: now.beginning_of_week..now.end_of_week)
+          when :month
+            item_attendances.where(created_at: now.beginning_of_month..now.end_of_month)
+          end
+        )
+        next if relevant_attendances.count >= item["count"]
+
+        break [plan, item]
+      end
+    end
+  end
+  def has_active_plan?
+    active_plans.any?
   end
 
   def signed_waiver?
@@ -189,7 +245,7 @@ class Athlete < ApplicationRecord
   end
 
   def sign_up_verified
-    2.times { self.trial_classes.create }
+    self.trial_classes.create
   end
 
   private

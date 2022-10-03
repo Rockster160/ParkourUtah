@@ -24,9 +24,9 @@ class StoreController < ApplicationController
   def unsubscribe
     athlete = Athlete.find(params[:id])
     if athlete.current_subscription.update(auto_renew: false)
-      redirect_to account_path, notice: 'Successfully Unsubscribed'
+      redirect_to account_path(anchor: :subscriptions), notice: 'Successfully Unsubscribed'
     else
-      redirect_to account_path, notice: 'There was an error unsubscribing.'
+      redirect_to account_path(anchor: :subscriptions), notice: 'There was an error unsubscribing.'
     end
   end
 
@@ -34,18 +34,16 @@ class StoreController < ApplicationController
     if params[:delete_all]
       @cart.cart_items.destroy_all
     else
-      item_title = if params[:item_id]
-        item = LineItem.find(params[:item_id])
-        item.title
-      else
-        params[:item_name]
-      end
+      item = LineItem.find_by(id: params[:item_id]) if params[:item_id]
+      item_title = item&.title || params[:item_name]
       size = params[:size] ? "#{params[:size]} " : ""
       color = params[:color] ? "#{params[:color]} " : ""
       instructor = params[:instructor_name] ? "#{params[:instructor_name]} " : ""
       location = params[:location_name] ? " at #{params[:location_name]}" : ""
       time = params[:desired_time] ? ", #{params[:desired_time]}" : ""
       name = "#{size}#{color}#{instructor}#{item_title}#{location}#{time}"
+
+      discount_data = item&.discounted_cost_data(current_user) || {}
 
       orders = @cart.cart_items
       order = orders.where(order_name: name).first
@@ -61,7 +59,13 @@ class StoreController < ApplicationController
         if order
           order.increment!(:amount)
         else
-          order = CartItem.create(line_item_id: item.id, order_name: name)
+          order = CartItem.create(
+            line_item_id: item.id,
+            order_name: name,
+            discount_cost_in_pennies: discount_data[:cost],
+            discount_type: discount_data[:discount],
+            purchased_plan_item_id: discount_data[:plan_id],
+          )
           orders << order
           @order = order
         end
@@ -152,7 +156,7 @@ class StoreController < ApplicationController
         if RedemptionKey.redeem(order.redeemed_token)
           current_user.update(credits: (current_user.credits + (order.amount * line_item.credits))) if user_signed_in?
         end
-        if line_item.id == (Rails.env.development? ? 1 : 44)
+        if line_item.id == 44
           order.amount.times do
             new_sub = current_user.recurring_subscriptions.create(cost_in_pennies: 55, auto_renew: false)
             unless new_sub.persisted?
@@ -160,7 +164,20 @@ class StoreController < ApplicationController
             end
           end
         end
+        plan_item = line_item.plan_item
+        if plan_item.present?
+          @purchased_subscription = true
+          current_user.purchased_plan_items.create(
+            cart_id: @cart.id,
+            stripe_id: @customer.try(:id),
+            plan_item_id: plan_item.id,
+            cost_in_pennies: line_item.cost_in_pennies,
+            discount_items: plan_item.discount_items,
+            free_items: plan_item.free_items,
+          )
+        end
         if line_item.is_subscription? && user_signed_in?
+          @purchased_subscription = true
           order.amount.times do
             new_sub = current_user.recurring_subscriptions.create(cost_in_pennies: line_item.cost_in_pennies, stripe_id: @customer.try(:id))
             unless new_sub.persisted?
@@ -213,7 +230,7 @@ class StoreController < ApplicationController
     end
 
     if user_signed_in?
-      redirect_to account_path(trigger_fb_purchase: {value: @cart.total_in_dollars, item_ids: @cart.items.map(&:id), currency: 'USD'})
+      redirect_to account_path(anchor: @purchased_subscription ? :subscriptions : nil, trigger_fb_purchase: {value: @cart.total_in_dollars, item_ids: @cart.items.map(&:id), currency: 'USD'})
     else
       redirect_to root_path(trigger_fb_purchase: {value: @cart.total_in_dollars, item_ids: @cart.items.map(&:id), currency: 'USD'})
     end

@@ -1,0 +1,33 @@
+@import "config/variables";
+
+.plan-item-row {
+  label {
+    width: 100%;
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  input, select {
+    width: 100%;
+    margin-top: 0;
+    align-self: flex-end;
+  }
+  h4 {
+    margin-bottom: 0;
+    align-self: flex-start;
+  }
+  .remove-row {
+    color: $pkut-red;
+    padding-bottom: 15px;
+    align-self: flex-end;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $pkut-grey;
+    }
+  }
+}
