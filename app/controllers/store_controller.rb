@@ -156,7 +156,7 @@ class StoreController < ApplicationController
         if RedemptionKey.redeem(order.redeemed_token)
           current_user.update(credits: (current_user.credits + (order.amount * line_item.credits))) if user_signed_in?
         end
-        if line_item.id == (Rails.env.development? ? 1 : 44)
+        if line_item.id == 44
           order.amount.times do
             new_sub = current_user.recurring_subscriptions.create(cost_in_pennies: 55, auto_renew: false)
             unless new_sub.persisted?
