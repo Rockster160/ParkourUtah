@@ -327,7 +327,7 @@ GEM
       tilt (~> 2.0)
     slack-notifier (2.4.0)
     spring (4.0.0)
-    sprockets (3.6.3)
+    sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
     sprockets-rails (3.4.2)
@@ -374,6 +374,7 @@ GEM
 
 PLATFORMS
   x86_64-darwin-20
+  x86_64-linux
 
 DEPENDENCIES
   annotate
@@ -424,7 +425,7 @@ DEPENDENCIES
   sinatra
   slack-notifier
   spring
-  sprockets (= 3.6.3)
+  sprockets (= 3.7.2)
   stripe!
   turbolinks
   twilio-ruby
