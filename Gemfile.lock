@@ -196,7 +196,7 @@ GEM
       actionpack (>= 4)
       less (~> 2.6.0)
       sprockets (>= 2)
-    loofah (2.14.0)
+    loofah (2.19.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.1)
@@ -374,6 +374,7 @@ GEM
 
 PLATFORMS
   x86_64-darwin-20
+  x86_64-linux
 
 DEPENDENCIES
   annotate
