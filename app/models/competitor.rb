@@ -3,25 +3,28 @@
 # Table name: competitors
 #
 #  id               :integer          not null, primary key
-#  athlete_id       :integer
-#  competition_id   :integer
-#  years_training   :string
-#  instagram_handle :string
-#  song             :string
-#  bio              :string
-#  stripe_charge_id :string
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  approved_at      :datetime
 #  age              :integer
-#  sort_order       :integer
+#  approved_at      :datetime
+#  bio              :string
+#  coupon_code      :string
+#  instagram_handle :string
+#  referred_by      :string
 #  selected_comp    :string
 #  shirt_size       :string
-#  referred_by      :string
-#  coupon_code      :string
+#  signup_data      :text
+#  song             :string
+#  sort_order       :integer
+#  years_training   :string
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  athlete_id       :integer
+#  competition_id   :integer
+#  stripe_charge_id :string
 #
 
 class Competitor < ApplicationRecord
+  serialize :signup_data, JSONWrapper
+
   belongs_to :athlete
   belongs_to :competition
   has_many :competition_judgements
@@ -37,15 +40,6 @@ class Competitor < ApplicationRecord
   delegate :age_group, to: :athlete
 
   before_save -> { set_initial_values }
-
-  # Remove before next comp
-  def adult?
-    true
-  end
-
-  def youth?
-    false
-  end
 
   def cost
     costs = competition.options

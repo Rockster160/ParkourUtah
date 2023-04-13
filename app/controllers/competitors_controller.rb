@@ -57,7 +57,8 @@ class CompetitorsController < ApplicationController
       :bio,
       :selected_comp,
       :shirt_size,
-      :coupon_code
+      :coupon_code,
+      signup_data: [],
     )
   end
 

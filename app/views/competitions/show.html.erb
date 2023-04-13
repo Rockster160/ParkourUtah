@@ -56,11 +56,70 @@
           <!-- <div class="form-field">
             <%#= f.select :shirt_size, ["Adult XS", "Adult S", "Adult M", "Adult L", "Adult XL"], include_blank: "Select Shirt Size" %>
           </div> -->
-          <div class="form-field"><%= f.text_field :instagram_handle, placeholder: "Instagram Handle", class: "pkut-textbox disableEnterSubmit" %></div>
-          <% unless @competition.id == 7 # Quick hack- need to hide fields just for this one comp %>
-            <div class="form-field"><%= f.text_field :song, placeholder: "Song (family friendly - leave blank for random)", class: "pkut-textbox disableEnterSubmit" %></div>
-            <div class="form-field"><%= f.text_area :bio, placeholder: "Bio (140 character limit)", class: "pkut-textarea", maxlength: "140" %></div>
+          <% if @competition.slug == "fitcon2023" %>
+            <p class="comp-select-msg pkut-text hidden">Please use the checkboxes below to select the events you would like to participate in.</p>
+            <div class="form-field hidden comp-selections" style="padding: 0 100px; text-align: left;">
+              <div class="form-field">
+                <div class="pkut-checkbox">
+                  <%= f.check_box :signup_data, { multiple: true }, "TECHNIQUE", nil %>
+                  <%= f.label :signup_data_technique, "TECHNIQUE" %>
+                </div>
+              </div>
+              <div class="form-field">
+                <div class="pkut-checkbox">
+                  <%= f.check_box :signup_data, { multiple: true }, "SPEED", nil %>
+                  <%= f.label :signup_data_speed, "SPEED" %>
+                </div>
+              </div>
+              <div class="form-field">
+                <div class="pkut-checkbox">
+                  <%= f.check_box :signup_data, { multiple: true }, "FREESTYLE", nil %>
+                  <%= f.label :signup_data_freestyle, "FREESTYLE" %>
+                </div>
+              </div>
+              <div class="form-field">
+                <div class="pkut-checkbox">
+                  <%= f.check_box :signup_data, { multiple: true }, "ALL THREE", nil %>
+                  <%= f.label :signup_data_all_three, "ALL THREE" %>
+                </div>
+              </div>
+            </div>
+            <script type="text/javascript">
+              $(document).ready(function() {
+                let updateSelectedComp = function() {
+                  let check_count = $(".comp-selections input").filter(function() {
+                    return $(this).prop("checked")
+                  }).length
+
+                  if (check_count > 3) { check_count = 3 }
+                  if (check_count < 1) { return }
+
+                  $(".comp-select").each(function() {
+                    $(this).val($(this).find("option")[check_count-1].value)
+                  })
+                }
+
+                $(".comp-select").on("keydown mousedown touchstart", function(evt) {
+                  $(".comp-select-msg").removeClass("hidden")
+                  evt.preventDefault()
+                })
+
+                $("#competitor_athlete_id").change(function() {
+                  $(".comp-selections").removeClass("hidden")
+                })
+
+                $("#competitor_signup_data_all_three").change(function() {
+                  $(".comp-selections input").prop("checked", $(this).prop("checked"))
+                })
+                $(".comp-selections input").change(function() {
+                  updateSelectedComp()
+                })
+              })
+            </script>
           <% end %>
+          <div class="form-field"><%= f.text_field :instagram_handle, placeholder: "Instagram Handle", class: "pkut-textbox disableEnterSubmit" %></div>
+          <div class="form-field"><%= f.text_field :song, placeholder: "Song (family friendly - leave blank for random)", class: "pkut-textbox disableEnterSubmit" %></div>
+          <div class="form-field"><%= f.text_area :bio, placeholder: "Bio (140 character limit)", class: "pkut-textarea", maxlength: "140" %></div>
           <div class="form-field"><%= f.text_field :referred_by, placeholder: "Referred By", class: "pkut-textbox disableEnterSubmit" %></div>
           <div class="form-field"><%= f.text_field :coupon_code, placeholder: "Coupon Code", class: "pkut-textbox disableEnterSubmit" %></div>
         <% end %>
@@ -149,6 +208,9 @@
           <% end %>
           <li><strong>Referred by:</strong> <%= competitor.referred_by %></li>
           <li><strong>Payment Received:</strong> $<%= competitor.discounted_cost %> <%= "(#{competitor.coupon_code})" if competitor.coupon_code.present? %></li>
+          <% if competitor.signup_data.present? %>
+            <li><strong>Selected Comps:</strong> <%= competitor.signup_data.join(", ") %></li>
+          <% end %>
 
           <% if competitor.stripe_charge_id.present? %>
             <li><%= link_to "View in Stripe", "https://dashboard.stripe.com/payments/#{competitor.stripe_charge_id}" %></li>
