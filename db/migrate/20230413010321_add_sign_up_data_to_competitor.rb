@@ -4,7 +4,7 @@ class AddSignUpDataToCompetitor < ActiveRecord::Migration[6.1]
 
     competition = Competition.find_by(slug: "fitcon2023")
     competition.update(
-      sponsor_images: ["FitCon-comp20190412.png", "uspk.png"]
+      sponsor_images: ["FitCon-comp20190412.png", "uspk.png"],
       option_costs: {
         youth: {
           all: {
