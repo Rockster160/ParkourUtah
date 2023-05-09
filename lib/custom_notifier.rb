@@ -21,6 +21,15 @@ module ExceptionNotifier
         end
         text += " was processed by `#{kontroller.controller_name}##{kontroller.action_name}`" if kontroller
         text += "\n"
+        if data[:params]
+          data[:params] = data[:params].permit!.to_h if data[:params].is_a?(::ActionController::Parameters)
+          begin
+            text += "```#{JSON.pretty_generate(data[:params])}```"
+          rescue StandardError
+            text += "```#{data[:params]}```"
+          end
+          text += "\n"
+        end
       end
 
       clean_message = exception.message.gsub("`", "'")

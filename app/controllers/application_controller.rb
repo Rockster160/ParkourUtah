@@ -72,7 +72,10 @@ class ApplicationController < ActionController::Base
   def see_current_user
     Rails.logger.silence do
       if user_signed_in?
-        request.env['exception_notifier.exception_data'] = { current_user: "#{current_user.id} - #{current_user.email}" }
+        request.env['exception_notifier.exception_data'] = {
+          current_user: "#{current_user.id} - #{current_user.email}",
+          params: params
+        }
       end
     end
   end
