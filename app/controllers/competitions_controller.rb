@@ -69,35 +69,35 @@ class CompetitionsController < ApplicationController
   end
 
   def results
-    competition = Competition.find(params[:competition_id])
+    competition = comp_from_id
 
     render json: competition.competitor_hash
   end
 
   def judge
-    @competition = Competition.find(params[:competition_id])
+    @competition = comp_from_id
   end
 
   def category
-    @competition = Competition.find(params[:competition_id])
+    @competition = comp_from_id
     @competitors = @competition.competitors.approved.order(:sort_order)
     @category = params[:category]
   end
 
   def competitor
-    @competition = Competition.find(params[:competition_id])
+    @competition = comp_from_id
     @competitor = @competition.competitors.find(params[:competitor_id])
     @category = params[:category]
   end
 
   def monitor
-    @competition = Competition.find(params[:competition_id])
+    @competition = comp_from_id
     @competitors = @competition.competitors.approved.order(:sort_order)
     @categories = CompetitionJudgement.categories.keys.map(&:titleize)
   end
 
   def judge_competitor
-    @competition = Competition.find(params[:competition_id])
+    @competition = comp_from_id
     @competitor = @competition.competitors.find(params[:competitor_id])
     @category = params[:category]
 
