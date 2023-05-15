@@ -16,7 +16,7 @@ class CompetitionJudgement < ApplicationRecord
   belongs_to :competitor
   belongs_to :judge, class_name: "User"
 
-  scope :by_category, ->(category) { where(category: categories[category.to_s.downcase.squish]) }
+  scope :by_category, ->(category) { where(category: category) }
   scope :youth, -> { joins(:competitor).where("competitors.age < 14") }
   scope :adult, -> { joins(:competitor).where("competitors.age >= 14") }
 
@@ -26,9 +26,9 @@ class CompetitionJudgement < ApplicationRecord
   delegate :athlete,     to: :competitor
 
   enum category: [
-    "Judge 1", 
-    "Judge 2", 
-    "Judge 3", 
+    "Judge 1",
+    "Judge 2",
+    "Judge 3",
     "Judge 4"
   ]
 
