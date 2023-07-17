@@ -24,15 +24,15 @@ class RecurringSubscription < ApplicationRecord
   scope :auto_renew, -> { where(auto_renew: true) }
   scope :assigned, -> { where.not(athlete_id: nil) }
   scope :unassigned, -> { where(athlete_id: nil) }
-  scope :active, -> { assigned.where("expires_at > ?", Time.zone.now) }
-  scope :inactive, -> { assigned.where("expires_at <= ?", Time.zone.now) }
+  scope :active, -> { assigned.where("expires_at > ?", Time.zone.now.beginning_of_day - 1.day) }
+  scope :expired, -> { assigned.where("expires_at <= ?", Time.zone.now.end_of_day) }
 
   validates_presence_of :expires_at, if: -> { athlete_id.present? }
 
   before_validation :set_default_expiration_date
 
-  def active?; self.expires_at.to_date > Time.zone.now.to_date; end
-  def inactive?; self.expires_at.to_date <= Time.zone.now.to_date; end
+  def active?; self.expires_at > Time.zone.now.beginning_of_day - 1.day; end
+  def expired?; self.expires_at <= Time.zone.now.end_of_day; end
 
   def use!
     return false unless active?

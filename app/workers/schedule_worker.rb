@@ -103,7 +103,7 @@ class ScheduleWorker
 
   def monthly_subscription_charges(params)
     Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
-    RecurringSubscription.assigned.auto_renew.inactive.available.group_by(&:user).each do |user, recurring_subscriptions|
+    RecurringSubscription.assigned.auto_renew.expired.available.group_by(&:user).each do |user, recurring_subscriptions|
       recurring_subscriptions.group_by(&:stripe_id).each do |stripe_id, stripe_subscriptions|
         next unless stripe_id.present?
         total_cost = stripe_subscriptions.map(&:cost_in_pennies).sum
