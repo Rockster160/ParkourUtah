@@ -5,7 +5,7 @@
     <% @keys.each do |key| %>
       <p>
         <%= link_to redemption_key_path(key), class: "danger", method: :delete do %>
-          <i class="fa fa-times-circle-o"></i>
+          <i class="fa fa-times-circle"></i>
         <% end %>
         <%= key.line_item.title %> - <%= key.key %>
         <% if key.expiry_date %>

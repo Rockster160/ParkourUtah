@@ -24,16 +24,15 @@ class RedemptionKey < ApplicationRecord
   scope :not_expired, -> { where.not("expires_at < ?", Time.zone.now) }
   scope :redeemed, -> { where(redeemed: true) }
   scope :not_redeemed, -> { where.not(redeemed: true) }
-  scope :redeemable, -> { not_redeemed }
+  scope :redeemable, -> { not_redeemed.not_expired }
 
   def self.redeem(key)
-    key_to_redeem = self.where(key: key).first
-    if key_to_redeem
-      return false if key_to_redeem.expired?
+    self.not_expired.find_by(key: key).tap { |key_to_redeem|
       return true if key_to_redeem.try(:can_be_used_multiple_times?)
       return false if key_to_redeem.redeemed?
+
       key_to_redeem.update(redeemed: true)
-    end
+    }
     true
   end
 
@@ -56,6 +55,8 @@ class RedemptionKey < ApplicationRecord
   end
 
   def generate_key
+    return if key.present?
+
     caps = ('A'..'Z').to_a
     down = ('a'..'z').to_a
     nums = (0..9).to_a

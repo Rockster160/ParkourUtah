@@ -6,12 +6,13 @@ class RedemptionKeysController < ApplicationController
   end
 
   def new
-    @hidden = LineItem.where(hidden: true)
+    @items = LineItem.where(hidden: true).order(item_order: :desc)
   end
 
   def create
     item = LineItem.find(params[:line_item_id])
-    keys = params[:how_many].join("").to_i.times.map { item.redemption_keys.create(expiry_date: params[:expiry_date]) }
+    count = params[:how_many].presence&.to_i || 1
+    keys = count.times.map { item.redemption_keys.create(redemption_key_params) }
     slack_message = "*#{item.title}*\nKeys expire: "
     if keys.first.try(:expiry_date)
       slack_message += "_#{keys.first.expiry_date}_"
@@ -34,4 +35,9 @@ class RedemptionKeysController < ApplicationController
     end
   end
 
+  private
+
+  def redemption_key_params
+    params.permit(:expiry_date, :key)
+  end
 end
