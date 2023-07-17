@@ -46,12 +46,12 @@ class StoreController < ApplicationController
       discount_data = item&.discounted_cost_data(current_user) || {}
 
       orders = @cart.cart_items
-      order = orders.where(order_name: name).first
+      order = orders.find_by(order_name: name)
 
       if params[:new_amount]
         params[:new_amount] ||= "0"
         if params[:new_amount].to_i <= 0
-          order.destroy!
+          order&.destroy!
         else
           order&.update(amount: params[:new_amount])
         end
