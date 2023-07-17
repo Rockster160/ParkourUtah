@@ -27,7 +27,7 @@ class RedemptionKey < ApplicationRecord
   scope :redeemable, -> { not_redeemed.not_expired }
 
   def self.redeem(key)
-    self.not_expired.find_by(key: key).tap { |key_to_redeem|
+    self.not_expired.find_by(key: key)&.tap { |key_to_redeem|
       return true if key_to_redeem.try(:can_be_used_multiple_times?)
       return false if key_to_redeem.redeemed?
 
