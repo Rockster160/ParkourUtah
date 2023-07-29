@@ -1,5 +1,6 @@
 class MessagesController < ApplicationController
   before_action :set_chat_room
+  before_action :validate_user_signed_in
 
   def mark_messages_as_read
     Message.where(id: params[:ids]).each(&:read!)
