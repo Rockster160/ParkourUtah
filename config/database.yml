@@ -33,6 +33,7 @@ staging:
 
 production:
   <<: *default
+  user: postgres
   password: <%= ENV["PKUT_DB_PASSWORD"] %>
   database: parkour_utah_production
   pool: 5
