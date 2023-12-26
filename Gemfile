@@ -56,6 +56,7 @@ gem 'rubyzip'
 gem 'caxlsx'
 gem 'caxlsx_rails'
 # /Export class Summaries
+gem 'dotenv-rails'
 
 group :development, :test do
   gem 'annotate'
