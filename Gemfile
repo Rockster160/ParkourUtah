@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails', '~> 6.1.4'
+gem 'dotenv-rails'
 gem 'sprockets', '3.6.3'
 gem 'coffee-script'
 gem 'pg'
@@ -56,7 +57,6 @@ gem 'rubyzip'
 gem 'caxlsx'
 gem 'caxlsx_rails'
 # /Export class Summaries
-gem 'dotenv-rails'
 
 group :development, :test do
   gem 'annotate'
