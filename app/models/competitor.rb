@@ -47,7 +47,7 @@ class Competitor < ApplicationRecord
 
     registration_period = competition.late_registration?(created_at || Time.current) ? :late : :early
 
-    group = costs.key?(age_group) ? costs[age_group] : costs[:all]
+    group = (costs.key?(age_group) ? costs[age_group] : costs[:all]) || {}
     period = group.key?(registration_period) ? group[registration_period] : group[:all]
 
     period[selected_comp.to_s.to_sym]
