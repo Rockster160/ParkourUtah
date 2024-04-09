@@ -83,7 +83,7 @@ class ChatRoom < ApplicationRecord
 
   def support_user
     return nil unless text?
-    return nil unless name.gsub(/[^0-9]/, "").length == 10
+    return nil unless name && name.gsub(/[^0-9]/, "").length == 10
     return User.by_phone_number(name).first
   end
 
