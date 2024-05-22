@@ -3,7 +3,8 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :logit, :see_current_user, :merge_carts
+  before_action :pretty_logit, if: -> { should_log? }
+  before_action :see_current_user, :merge_carts
   before_action :store_current_location, unless: :devise_controller?
 
   def flash_message
@@ -21,11 +22,6 @@ class ApplicationController < ActionController::Base
       current_user.cart.add_items(items_to_add)
       session.delete("cart_id")
     end
-  end
-
-  def logit
-    return CustomLogger.log_blip! if params[:checker]
-    CustomLogger.log_request(request, current_user, session['cart_id'])
   end
 
   protected
@@ -80,8 +76,19 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def should_log?
+    user_signed_in?
+  end
+
+  # Override default from PrettyLogger
+  def request_logger
+    @request_logger ||= ::PrettyLogger::RequestLogger.new(
+      request: request,
+      current_user: current_user,
+    )
+  end
+
   def store_current_location
     store_location_for(:user, request.url)
   end
-
 end

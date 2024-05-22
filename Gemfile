@@ -57,6 +57,7 @@ gem 'rubyzip'
 gem 'caxlsx'
 gem 'caxlsx_rails'
 # /Export class Summaries
+gem "pretty_logger", "~> 1.2.4"
 
 group :development, :test do
   gem 'annotate'
