@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   before_action :store_current_location, unless: :devise_controller?
 
   def flash_message
-    flash.now[params[:flash_type].to_sym] = params[:message]
+    flash.now[params[:flash_type]&.to_sym] = params[:message]
     render partial: 'layouts/flashes'
   end
 

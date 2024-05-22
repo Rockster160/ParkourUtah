@@ -3,14 +3,14 @@ class EventsController < ApplicationController
 
   def show
     if params[:event_schedule_id].present?
-      @event = @event_schedule.event_by_id(params[:id], with_date: params[:date])
+      @event = event_schedule.event_by_id(params[:id], with_date: params[:date])
     else
       @event = Event.find(params[:id])
     end
   end
 
   def edit
-    @event = @event_schedule.event_by_id(params[:id], with_date: params[:date])
+    @event = event_schedule.event_by_id(params[:id], with_date: params[:date])
     @event.save
   end
 
@@ -24,7 +24,7 @@ class EventsController < ApplicationController
   end
 
   def detail
-    @event = @event_schedule.event_by_id(params[:id], with_date: params[:date])
+    @event = event_schedule.event_by_id(params[:id], with_date: params[:date])
     respond_to do |format|
       format.html { render layout: !request.xhr? }
     end
@@ -32,7 +32,7 @@ class EventsController < ApplicationController
 
   def cancel
     if params[:id] == "new"
-      event = @event_schedule.event_by_id(params[:id], with_date: params[:date])
+      event = event_schedule.event_by_id(params[:id], with_date: params[:date])
       event.save
     else
       event = Event.find(params[:id])
@@ -53,8 +53,12 @@ class EventsController < ApplicationController
     params.require(:event).permit(:str_date, :time_of_day)
   end
 
+  def event_schedule
+    @event_schedule = EventSchedule.find(params[:event_schedule_id])
+  end
+
   def set_event_schedule
-    @event_schedule = EventSchedule.find(params[:event_schedule_id]) if params[:event_schedule_id].present?
+    event_schedule if params[:event_schedule_id].present?
   end
 
   def validate_mod
