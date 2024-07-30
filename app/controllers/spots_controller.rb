@@ -3,7 +3,8 @@ class SpotsController < ApplicationController
   before_action :validate_admin, except: [:index, :show]
 
   def show
-    @instructors = @spot.instructors.distinct
+    # Hide Sarah from instructors in Spots
+    @instructors = @spot.instructors.distinct.where.not(id: 1022)
   end
 
   def index
