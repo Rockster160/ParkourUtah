@@ -15,7 +15,8 @@ Sidekiq.configure_client { |c| c.redis = config }
 
 # To reset Queues in case any changed:
 cron_jobs = [
-  { name: "uptime_ping",                  cron: "*/30 * * * *", class: "ScheduleWorker", args: {} },
+  # arg keys are used to call the method, NOT the cron name.
+  { name: "uptime_ping",                  cron: "*/30 * * * *", class: "ScheduleWorker", args: { uptime_ping: nil } },
   { name: "post_to_custom_logger",        cron: "*/5 * * * *",  class: "ScheduleWorker", args: { post_to_custom_logger: nil } },
   { name: "send_class_text",              cron: "*/30 * * * *", class: "ScheduleWorker", args: { send_class_text: nil } },
   { name: "subscribe_new_user",           cron: "*/30 * * * *", class: "ScheduleWorker", args: { subscribe_new_user: nil } },
