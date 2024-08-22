@@ -21,6 +21,17 @@ class ScheduleWorker
 
   private
 
+  def uptime_ping(params)
+    HTTParty.post(
+      "https://ardesian.com/jil/#{ENV["JIL_SIDEKIQ_PING_UUID"]}",
+      body: { sidekiq: { app: :pkut } }.to_json,
+      headers: {
+        "Authorization" => "Bearer #{ENV["JIL_API_KEY"]}",
+        "Content-Type" => "application/json"
+      }
+    )
+  end
+
   def post_to_custom_logger(params)
     CustomLogger.log_blip!("\e[32m")
   end
