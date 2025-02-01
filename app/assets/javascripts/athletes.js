@@ -24,6 +24,10 @@ var ready = function() {
         $('.waiver-athletes').append('<h5 class="warning-text athlete-verified">' + name + '</h5>')
       }
     });
+    $('.prev-athlete-info').each(function() {
+      var name = $($(this).find('.prev-athlete-name')[0]).text();
+      $('.waiver-athletes').append('<h5 class="warning-text athlete-verified">' + name + '</h5>')
+    });
   });
 
   $('#modal-submit input, #signed_by').keydown(function(e) {

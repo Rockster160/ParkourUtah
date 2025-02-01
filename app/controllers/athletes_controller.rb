@@ -138,13 +138,11 @@ class AthletesController < ApplicationController
     if params[:update_athlete].present?
       params[:update_athlete].each do |athlete_id, athlete_params|
         athlete = Athlete.find(athlete_id)
-        if validate_athlete_attributes(athlete_params)
-          athlete.waivers.create({
-            signed_for: athlete.full_name,
-            signed_by: params[:signed_by],
-          }).sign!
-          @valid << athlete
-        end
+        athlete.waivers.create({
+          signed_for: athlete.full_name,
+          signed_by: params[:signed_by],
+        }).sign!
+        @valid << athlete
       end
     end
   end

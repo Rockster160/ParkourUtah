@@ -2,9 +2,10 @@
   <h4 class="warning-text text-center">This form must be completed by a parent or legal guardian.</h4>
   <%= form_tag(waivers_path, {id: "modal-submit"}) do %>
     <% @athletes.each do |athlete| %>
-      <div class="row athlete-input-info">
+      <div class="row prev-athlete-info">
         <div class="col-sm-6">
-          <h3 id="athlete-<%= athlete.id %>" style="margin: 10px 0;"><li><%= athlete.full_name %></li></h3>
+          <%= hidden_field_tag "update_athlete[#{athlete.id}][name]", athlete.full_name %>
+          <h3 id="athlete-<%= athlete.id %>" style="margin: 10px 0;"><li class="prev-athlete-name"><%= athlete.full_name %></li></h3>
         </div>
         <div class="col-sm-6">
           <h4 style="margin: 12px 0;"><%= athlete.date_of_birth %></h4>
