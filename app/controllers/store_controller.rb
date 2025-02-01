@@ -148,6 +148,7 @@ class StoreController < ApplicationController
         stripe_charge = {failure_message: "Failed to Charge, try logging out and back in or trying a different browser."}
       end
     end
+    # Probably shouldn't be a nil check here- nil should be an invalid charge
     order_success = stripe_charge.nil? || stripe_charge.try(:status) == "succeeded"
     if order_success
       @cart.update(purchased_at: DateTime.current)
