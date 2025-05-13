@@ -7,6 +7,13 @@ class ApplicationController < ActionController::Base
   before_action :see_current_user, :merge_carts
   before_action :store_current_location, unless: :devise_controller?
 
+  if Rails.env.production?
+    rescue_from ActionController::ParameterMissing, ActionController::UnknownFormat do |exception|
+      Rails.logger.error(exception.message)
+      render file: Rails.root.join("public", "500.html"), status: :internal_server_error, layout: false
+    end
+  end
+
   def flash_message
     flash.now[params[:flash_type]&.to_sym] = params[:message]
     render partial: 'layouts/flashes'
