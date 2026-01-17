@@ -252,7 +252,7 @@ GEM
     puma (4.3.11)
       nio4r (~> 2.0)
     raabro (1.4.0)
-    rack (2.2.3)
+    rack (2.2.6.3)
     rack-protection (2.2.0)
       rack
     rack-test (1.1.0)
@@ -381,6 +381,7 @@ GEM
 PLATFORMS
   arm64-darwin-21
   x86_64-darwin-20
+  x86_64-linux
 
 DEPENDENCIES
   annotate
