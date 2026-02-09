@@ -7,7 +7,7 @@ class ContactRequestsController < ApplicationController
     @contacts = @contacts.by_fuzzy_text(params[:by_fuzzy_text]) if params[:by_fuzzy_text].present?
     @contacts = @contacts.where(success: true) if params[:show_blocked_requests] == "hide"
 
-    @current_filter = params.to_hash.symbolize_keys.slice(:by_fuzzy_text, :show_blocked_requests)
+    @current_filter = params.permit(:by_fuzzy_text, :show_blocked_requests).to_h.symbolize_keys
   end
 
   def show
