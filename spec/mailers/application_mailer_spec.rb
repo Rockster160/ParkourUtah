@@ -53,15 +53,9 @@ RSpec.describe ApplicationMailer, type: :mailer do
   describe "#pin_reset_mail" do
     it "sends pin reset email" do
       athlete = create(:athlete)
-      # The template uses reset_pin_url which is a routing bug (should be reset_pin_athlete_url)
-      # Just verify the mailer can be called; template rendering may fail due to route helper
-      begin
-        mail = ApplicationMailer.pin_reset_mail(athlete.id)
-        expect(mail.to).to eq([athlete.user.email])
-        expect(mail.subject).to include("Request for ID or Pin Reset")
-      rescue ActionView::Template::Error, NoMethodError => e
-        skip "Template has a routing bug (uses reset_pin_url instead of reset_pin_athlete_url): #{e.message}"
-      end
+      mail = ApplicationMailer.pin_reset_mail(athlete.id)
+      expect(mail.to).to eq([athlete.user.email])
+      expect(mail.subject).to include("Request for ID or Pin Reset")
     end
   end
 

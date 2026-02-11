@@ -162,7 +162,7 @@ class LineItem < ApplicationRecord
         next unless matching_tags.any?
 
         cost = cip
-        clean = item["discount"][/(\d|\.)*/].to_f
+        clean = item["discount"][/[\d.]+/].to_f
         if item["discount"].include?("%")
           cost = cip * (clean / 100.to_f)
         elsif item["discount"].include?("$")

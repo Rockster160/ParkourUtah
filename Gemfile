@@ -13,7 +13,7 @@ gem 'redis', '~> 5.0'
 gem 'sidekiq', '~> 7.2'
 gem 'sidekiq-cron', '~> 1.12'
 
-gem 'devise', '~> 4.9'
+gem 'devise', '~> 5.0'
 gem 'stripe'
 gem 'twilio-ruby'
 gem 'aws-sdk-s3', '~> 1.0'

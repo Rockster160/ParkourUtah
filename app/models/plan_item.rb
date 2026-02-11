@@ -34,11 +34,13 @@ class PlanItem < ApplicationRecord
       next if item[:discount].blank?
 
       item[:tags] = item[:tags].split(",").map { |tag| tag.squish.downcase.presence }.compact
-      item[:discount] = item[:discount].squish.tap { |discount|
+      item[:discount] = item[:discount].squish.then { |discount|
         if discount.include?("$")
-          "$#{discount[/(\d\.)+/]}"
+          "$#{discount[/[\d.]+/]}"
         elsif discount.include?("%")
-          "#{discount[/(\d\.)+/]}%"
+          "#{discount[/[\d.]+/]}%"
+        else
+          discount
         end
       }
       item

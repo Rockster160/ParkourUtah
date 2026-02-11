@@ -2,7 +2,7 @@
 <br/>
 <p><%= @athlete.full_name %></p>
 <p>Athlete ID: <%= @athlete.fast_pass_id %></p>
-<p><%= link_to 'Change Athlete Pin', reset_pin_url(@athlete.id) %></p>
+<p><%= link_to 'Change Athlete Pin', reset_pin_athlete_url(@athlete.id) %></p>
 </br>
 <p>If you didn't request this, please ignore this email.</p>
 <p>Your pin won't change until you access the link above and create a new one.</p>

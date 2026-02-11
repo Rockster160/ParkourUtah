@@ -115,19 +115,15 @@ RSpec.describe "Store Purchase Flow", type: :model do
     it "applies dollar discounts from active plans" do
       user = create(:user)
       athlete = create(:athlete, user: user)
-      # NOTE: The app's regex for parsing "$X" discounts has a bug — (/(\d|\.)*/
-      # matches 0 chars at the "$" position). Use "5.00$" format which the regex can parse,
-      # or test that the discount entry is at least returned.
-      plan_item = create(:plan_item, discount_items: [{ "tags" => "classes", "discount" => "25%" }])
+      plan_item = create(:plan_item, discount_items: [{ "tags" => "classes", "discount" => "$5" }])
       create(:purchased_plan_item, :active, user: user, athlete: athlete, plan_item: plan_item,
-        discount_items: [{ "tags" => ["classes"], "discount" => "25%" }])
+        discount_items: [{ "tags" => ["classes"], "discount" => "$5" }])
 
       item = create(:line_item, cost_in_pennies: 2000, tags: "classes", category: "Class")
       discount_data = item.discounted_cost_data(user)
 
       expect(discount_data).to be_present
-      expect(discount_data[:cost]).to eq(500.0) # 25% of 2000 = 500
-      expect(discount_data[:discount]).to eq("25%")
+      expect(discount_data[:cost]).to eq(1500.0) # $5 off $20 = $15 = 1500 pennies
     end
   end
 end
