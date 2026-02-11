@@ -24,6 +24,9 @@ todo.txt
 /.c9/*
 pkut.zip
 
+# Ignore backups
+backup*.dump
+
 # Ignore DB files
 *.sql
 commands.rb

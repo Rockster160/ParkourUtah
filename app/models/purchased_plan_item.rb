@@ -2,20 +2,20 @@
 #
 # Table name: purchased_plan_items
 #
-#  id              :bigint           not null, primary key
-#  auto_renew      :boolean          default(TRUE)
-#  card_declined   :text
+#  id              :integer          not null, primary key
+#  user_id         :integer
+#  athlete_id      :integer
+#  cart_id         :integer
+#  plan_item_id    :integer
 #  cost_in_pennies :integer
-#  discount_items  :jsonb
 #  expires_at      :datetime
+#  auto_renew      :boolean          default(TRUE)
+#  stripe_id       :text
+#  card_declined   :text
 #  free_items      :jsonb
+#  discount_items  :jsonb
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  athlete_id      :bigint
-#  cart_id         :bigint
-#  plan_item_id    :bigint
-#  stripe_id       :text
-#  user_id         :bigint
 #
 
 class PurchasedPlanItem < ApplicationRecord

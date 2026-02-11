@@ -136,4 +136,3 @@ arrUniq = function(arr) {
 };
 
 $(document).ready(mobile_calendar);
-$(document).on('page:load', mobile_calendar);

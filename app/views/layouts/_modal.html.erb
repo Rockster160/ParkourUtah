@@ -1,12 +1,14 @@
 <% content_for :modals do %>
   <div class="modal fade <%= additional_classes %>" id="<%= modal_id %>" tabindex="-1" aria-hidden="true">
-    <div class="modal-container">
-      <button type="button" class="close-btn" data-dismiss="modal" aria-hidden="true"><%= icon("far", "times-circle", '', class: 'fa-2x') %></button>
-      <%= yield %>
+    <div class="modal-dialog modal-container">
+      <div class="modal-content">
+        <button type="button" class="close-btn" data-bs-dismiss="modal" aria-hidden="true"><%= icon("far", "times-circle", '', class: 'fa-2x') %></button>
+        <%= yield %>
+      </div>
     </div>
   </div>
 <% end %>
 
-<!-- <a alt="..." class="pkut-btn" data-toggle="modal" data-target="#~~modal_id~~">~~texthere~~</a><br/> -->
+<!-- <a alt="..." class="pkut-btn" data-bs-toggle="modal" data-bs-target="#~~modal_id~~">~~texthere~~</a><br/> -->
 <%#= render_modal("~~modal_id~~") do %>
 <%# end %>

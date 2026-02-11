@@ -3,7 +3,7 @@ Rails.application.routes.default_url_options[:protocol] = 'https://'
 Rails.application.routes.default_url_options[:port] = nil
 Rails.application.configure do
 
-  config.cache_classes = true
+  config.enable_reloading = false
 
   config.eager_load = true
 
@@ -29,19 +29,10 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_deliveries = true
 
-  Paperclip.options.merge!(:command_path => "/usr/bin")
-  # config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
-  config.paperclip_defaults = {
-    :storage => :s3,
-    :s3_credentials => {
-      :bucket => ENV['PKUT_S3_BUCKET_NAME'],
-      :access_key_id => ENV['PKUT_AWS_ACCESS_KEY_ID'],
-      :secret_access_key => ENV['PKUT_AWS_SECRET_ACCESS_KEY']
-    }
-  }
+  config.active_storage.service = :amazon
 
   # Compress JavaScripts and CSS.
-  config.assets.js_compressor = Uglifier.new(harmony: true)
+  config.assets.js_compressor = :terser
   # config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
@@ -64,8 +55,6 @@ Rails.application.configure do
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
   config.log_level = :info
-  RAILS_DEFAULT_LOGGER = Logger.new('log/production.log')
-  # config.logger = Logger.new('log/production.log')
   config.log_formatter = ::Logger::Formatter.new
 
   # config.log_formatter = ::Logger::Formatter.new
@@ -93,7 +82,6 @@ Rails.application.configure do
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
 
-  config.active_record.belongs_to_required_by_default = true
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 

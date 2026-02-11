@@ -23,7 +23,7 @@
 #
 
 class Competitor < ApplicationRecord
-  serialize :signup_data, JSONWrapper
+  serialize :signup_data, coder: JSONWrapper
 
   belongs_to :athlete
   belongs_to :competition

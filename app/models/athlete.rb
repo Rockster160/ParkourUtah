@@ -39,14 +39,6 @@ class Athlete < ApplicationRecord
   has_many :attendances,             dependent: :destroy
   has_many :competitors,             dependent: :destroy
 
-  # has_attached_file :athlete_photo,
-  #              :styles => { :medium => "300", :thumb => "100x100#" },
-  #              storage: :s3,
-  #              s3_permissions: :private,
-  #              bucket: ENV['PKUT_S3_BUCKET_NAME'],
-  #              :convert_options => { :all => '-background white -flatten +matte' }
-  # validates_attachment_content_type :athlete_photo, :content_type => /\Aimage\/.*\Z/
-
   before_save :fix_attributes
 
   scope :verified, -> { where(verified: true) }

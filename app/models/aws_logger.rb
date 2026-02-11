@@ -3,26 +3,26 @@
 # Table name: aws_loggers
 #
 #  id                     :integer          not null, primary key
-#  bucket                 :string
-#  bucket_owner           :string
-#  bytes_sent             :bigint
-#  error_code             :string
-#  http_status            :string
-#  key                    :string
-#  object_size            :bigint
-#  operation              :string
 #  orginal_string         :text
-#  referrer               :string
-#  remote_ip              :string
-#  request_uri            :string
-#  requester              :string
-#  set_all_without_errors :boolean
+#  bucket_owner           :string
+#  bucket                 :string
 #  time                   :datetime
-#  total_time             :bigint
-#  turn_around_time       :bigint
-#  user_agent             :string
+#  remote_ip              :string
+#  requester              :string
 #  request_id             :string
+#  operation              :string
+#  key                    :string
+#  request_uri            :string
+#  http_status            :string
+#  error_code             :string
+#  bytes_sent             :integer
+#  object_size            :integer
+#  total_time             :integer
+#  turn_around_time       :integer
+#  referrer               :string
+#  user_agent             :string
 #  version_id             :string
+#  set_all_without_errors :boolean
 #
 
 class AwsLogger < ApplicationRecord

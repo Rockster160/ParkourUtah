@@ -2,13 +2,14 @@
 #
 # Table name: plan_items
 #
-#  id             :bigint           not null, primary key
-#  discount_items :jsonb
-#  free_items     :jsonb
+#  id             :integer          not null, primary key
 #  name           :text
+#  free_items     :jsonb
+#  discount_items :jsonb
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #
+
 class PlanItem < ApplicationRecord
   has_many :purchased_plan_items
   has_one :line_item

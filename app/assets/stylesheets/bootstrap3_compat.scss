@@ -1,0 +1,154 @@
+// Bootstrap 3 → 5 CSS Compatibility Layer
+// Maps removed/renamed Bootstrap 3 utility classes to their Bootstrap 5 equivalents.
+// This avoids having to update every single view file.
+
+// ─── Visibility classes ──────────────────────────────────────────
+// visible-xs = show ONLY on xs (< 576px)
+.visible-xs { display: none !important; }
+@media (max-width: 575.98px) { .visible-xs { display: block !important; } }
+br.visible-xs { display: none !important; }
+@media (max-width: 575.98px) { br.visible-xs { display: inline !important; } }
+span.visible-xs { display: none !important; }
+@media (max-width: 575.98px) { span.visible-xs { display: inline !important; } }
+
+// visible-sm = show ONLY on sm (576px – 767.98px)
+.visible-sm { display: none !important; }
+@media (min-width: 576px) and (max-width: 767.98px) { .visible-sm { display: block !important; } }
+br.visible-sm { display: none !important; }
+@media (min-width: 576px) and (max-width: 767.98px) { br.visible-sm { display: inline !important; } }
+
+// visible-md = show ONLY on md (768px – 991.98px)
+.visible-md { display: none !important; }
+@media (min-width: 768px) and (max-width: 991.98px) { .visible-md { display: block !important; } }
+
+// visible-lg = show ONLY on lg (≥ 992px)
+.visible-lg { display: none !important; }
+@media (min-width: 992px) { .visible-lg { display: block !important; } }
+
+// hidden-xs = hide on xs (< 576px), show on sm+
+.hidden-xs { display: block !important; }
+@media (max-width: 575.98px) { .hidden-xs { display: none !important; } }
+span.hidden-xs { display: inline !important; }
+@media (max-width: 575.98px) { span.hidden-xs { display: none !important; } }
+
+// hidden-sm = hide on sm (576px – 767.98px)
+.hidden-sm { display: block !important; }
+@media (min-width: 576px) and (max-width: 767.98px) { .hidden-sm { display: none !important; } }
+
+// hidden-md = hide on md (768px – 991.98px)
+.hidden-md { display: block !important; }
+@media (min-width: 768px) and (max-width: 991.98px) { .hidden-md { display: none !important; } }
+
+// hidden-lg = hide on lg (≥ 992px)
+.hidden-lg { display: block !important; }
+@media (min-width: 992px) { .hidden-lg { display: none !important; } }
+
+// ─── Hidden utility ──────────────────────────────────────────────
+.hidden { display: none !important; }
+
+// ─── Float classes ───────────────────────────────────────────────
+.pull-left  { float: left !important; }
+.pull-right { float: right !important; }
+
+// ─── Grid: col-xs-* → col-* ─────────────────────────────────────
+// Bootstrap 5 uses col-* (no xs prefix) for the smallest breakpoint
+// col-xs-N → col-N (Bootstrap 5 equivalent, mobile-first base)
+// Using @extend ensures same specificity/order as Bootstrap 5's col-* classes,
+// so responsive classes like col-md-8 properly override at larger breakpoints.
+@for $i from 1 through 12 {
+  .col-xs-#{$i} { @extend .col-#{$i} !optional; }
+}
+
+// ─── Grid offsets: col-*-offset-N → offset-*-N ──────────────────
+@for $i from 1 through 11 {
+  .col-xs-offset-#{$i} { margin-left: percentage($i * 1 / 12); }
+}
+@media (min-width: 576px) {
+  @for $i from 1 through 11 {
+    .col-sm-offset-#{$i} { margin-left: percentage($i * 1 / 12); }
+  }
+}
+@media (min-width: 768px) {
+  @for $i from 1 through 11 {
+    .col-md-offset-#{$i} { margin-left: percentage($i * 1 / 12); }
+  }
+}
+@media (min-width: 992px) {
+  @for $i from 1 through 11 {
+    .col-lg-offset-#{$i} { margin-left: percentage($i * 1 / 12); }
+  }
+}
+
+// ─── Text alignment ─────────────────────────────────────────────
+.text-left   { text-align: left !important; }
+.text-right  { text-align: right !important; }
+
+// ─── Well component ─────────────────────────────────────────────
+.well {
+  min-height: 20px;
+  padding: 19px;
+  margin-bottom: 20px;
+  background-color: #f5f5f5;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+}
+.well-lg { padding: 24px; }
+.well-sm { padding: 9px; }
+
+// ─── Image ──────────────────────────────────────────────────────
+.img-responsive {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+// ─── Centering ──────────────────────────────────────────────────
+.center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// ─── Button ─────────────────────────────────────────────────────
+.btn-default {
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+  &:hover { background-color: #e6e6e6; border-color: #adadad; }
+}
+
+// ─── Labels → Badges ────────────────────────────────────────────
+.label {
+  display: inline;
+  padding: .2em .6em .3em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25em;
+}
+.label-default { background-color: #777; }
+.label-primary { background-color: #337ab7; }
+.label-success { background-color: #5cb85c; }
+.label-info    { background-color: #5bc0de; }
+.label-warning { background-color: #f0ad4e; }
+.label-danger  { background-color: #d9534f; }
+
+// ─── Panel → Card (basic mapping) ──────────────────────────────
+.panel {
+  margin-bottom: 20px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.panel-body    { padding: 15px; }
+.panel-heading {
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+  border-radius: 3px 3px 0 0;
+}
+.panel-default { border-color: #ddd; }
+.panel-default > .panel-heading { background-color: #f5f5f5; }

@@ -48,15 +48,7 @@ class EventSchedule < ApplicationRecord
 
   scope :in_the_future, -> { where("end_date IS NULL OR end_date >= :recently", recently: 1.month.ago) }
 
-  enum day_of_week: {
-    sunday: 0,
-    monday: 1,
-    tuesday: 2,
-    wednesday: 3,
-    thursday: 4,
-    friday: 5,
-    saturday: 6,
-  }
+  enum :day_of_week, { sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6 }
 
   def self.events_today
     events_for_date(Time.zone.now)

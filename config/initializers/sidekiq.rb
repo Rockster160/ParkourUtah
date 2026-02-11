@@ -1,17 +1,15 @@
 require 'sidekiq/web'
+require 'sidekiq/cron/web'
 
-Sidekiq::Extensions.enable_delay!
+redis_url = ENV.fetch('REDIS_URL', 'redis://localhost:6379/0')
 
-config = {
-  host: Redis.current.client.host,
-  port: Redis.current.client.port,
-  password: Redis.current.client.password,
-  db: (!!defined?(REDIS_CONFIG) ? REDIS_CONFIG[:db_worker] : Redis.current.client.db),
-  namespace: "sidekiq_#{Rails.application.class.name}_#{Rails.env}".downcase
-}
+Sidekiq.configure_server do |config|
+  config.redis = { url: redis_url }
+end
 
-Sidekiq.configure_server { |c| c.redis = config }
-Sidekiq.configure_client { |c| c.redis = config }
+Sidekiq.configure_client do |config|
+  config.redis = { url: redis_url }
+end
 
 # To reset Queues in case any changed:
 cron_jobs = [

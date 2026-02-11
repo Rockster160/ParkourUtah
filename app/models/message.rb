@@ -32,10 +32,7 @@ class Message < ApplicationRecord
   scope :read, -> { where.not(read_at: nil) }
   scope :unread, -> { where(read_at: nil) }
 
-  enum message_type: {
-    text: 0,
-    chat: 1
-  }
+  enum :message_type, { text: 0, chat: 1 }
 
   def from_pkut?; sent_from_id == 0; end
   def from_admin?; !!sent_from.try(:admin?); end
@@ -90,7 +87,7 @@ class Message < ApplicationRecord
 
   def deliver
     if chat_room.try(:text?) && !chat_room.blacklisted?
-      SmsMailerWorker.perform_async(chat_room.name, body)
+      ::SmsMailerWorker.perform_async(chat_room.name, body)
     else
       error!("This user has Blacklisted ParkourUtah and cannot receive text messages from us.")
     end
@@ -132,7 +129,7 @@ class Message < ApplicationRecord
   private
 
   def try_to_notify_of_unread_message
-    NotifyOfUnreadMessageWorker.perform_in(1.minute, self.id) unless do_not_deliver
+    ::NotifyOfUnreadMessageWorker.perform_in(1.minute, self.id) unless do_not_deliver
   end
 
   def set_message_type_to_chat_room

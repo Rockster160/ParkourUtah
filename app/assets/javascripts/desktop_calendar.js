@@ -86,4 +86,3 @@ String.prototype.parameterize = function () {
 }
 
 $(document).ready(desktop_calendar);
-$(document).on('page:load', desktop_calendar);
