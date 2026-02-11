@@ -35,3 +35,6 @@ commands.rb
 git config core.fileMode false
 
 /config/master.key
+
+/_scripts
+_scripts/**/*
