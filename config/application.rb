@@ -13,6 +13,7 @@ module ParkourUtah
 
     config.autoloader = :zeitwerk
     Rails.autoloaders.main.inflector.inflect("json_wrapper" => "JSONWrapper")
+    Rails.autoloaders.main.ignore(Rails.root.join("lib/custom_notifier.rb"))
 
     config.public_file_server.enabled = false
     config.assets.initialize_on_precompile = true
