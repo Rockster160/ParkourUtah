@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+set -e
+
+SERVER="deploy@parkourutah.com"
+APP_DIR="/home/deploy/parkourutah/current"
+BRANCH="${1:-master}"
+
+log() { echo -e "\033[96m==> $1\033[0m"; } # Local log function
+err() { echo -e "\033[91m==> ERROR: $1\033[0m"; } # Local error function
+
+log "Deploying branch: $BRANCH"
+
+ssh $SERVER bash -l <<SCRIPT
+set -e
+cd $APP_DIR
+log() { echo -e "\033[96m==> \$1\033[0m"; } # Remote log function
+err() { echo -e "\033[91m==> ERROR: \$1\033[0m"; } # Remote error function
+
+step() {
+  log "\$1"
+  if ! eval "\$2"; then
+    err "\$1 failed!"
+    exit 1
+  fi
+}
+
+step "Pulling latest code..." "git fetch origin && git reset --hard origin/$BRANCH"
+
+step "Installing gems..." "bundle install --quiet"
+
+log "Loading environment..."
+set -a; source .env; set +a
+
+step "Running migrations..." "RAILS_ENV=production bundle exec rails db:migrate"
+
+step "Precompiling assets..." "RAILS_ENV=production bundle exec rails assets:precompile"
+
+step "Restarting Puma..." "sudo systemctl restart puma"
+
+log "Verifying Puma is running..."
+sleep 3
+if ! sudo systemctl is-active --quiet puma; then
+  err "Puma failed to start! Check logs:"
+  sudo journalctl -u puma --no-pager -n 20
+  exit 1
+fi
+
+step "Restarting Sidekiq..." "sudo systemctl restart sidekiq"
+
+sleep 2
+if ! sudo systemctl is-active --quiet sidekiq; then
+  err "Sidekiq failed to start! Check logs:"
+  sudo journalctl -u sidekiq --no-pager -n 20
+  exit 1
+fi
+
+log "Smoke testing HTTP response..."
+STATUS=\$(curl -s -o /dev/null -w "%{http_code}" http://localhost/)
+if [ "\$STATUS" -ge 200 ] && [ "\$STATUS" -lt 400 ]; then
+  log "\033[32mDeploy complete! (HTTP \$STATUS)"
+else
+  err "App returned HTTP \$STATUS — check logs:"
+  sudo journalctl -u puma --no-pager -n 20
+  exit 1
+fi
+SCRIPT
