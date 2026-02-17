@@ -51,13 +51,17 @@ span.hidden-xs { display: inline !important; }
 .pull-right { float: right !important; }
 
 // ─── Grid: col-xs-* → col-* ─────────────────────────────────────
-// Bootstrap 5 uses col-* (no xs prefix) for the smallest breakpoint
-// col-xs-N → col-N (Bootstrap 5 equivalent, mobile-first base)
-// Using @extend ensures same specificity/order as Bootstrap 5's col-* classes,
-// so responsive classes like col-md-8 properly override at larger breakpoints.
+// @extend gives Bootstrap 5 flex behavior inside .row containers.
+// Float fallback ensures col-xs-* works outside .row (e.g. numpad).
 @for $i from 1 through 12 {
-  .col-xs-#{$i} { @extend .col-#{$i} !optional; }
+  .col-xs-#{$i} {
+    @extend .col-#{$i} !optional;
+    float: left;
+    width: percentage($i * 1 / 12);
+  }
 }
+// Inside .row, disable float so flex takes over
+.row > [class*="col-xs-"] { float: none; }
 
 // ─── Grid offsets: col-*-offset-N → offset-*-N ──────────────────
 @for $i from 1 through 11 {
