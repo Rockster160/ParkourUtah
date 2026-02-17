@@ -10,6 +10,7 @@ gem 'terser'
 gem 'jbuilder', '~> 2.12'
 
 gem 'redis', '~> 5.0'
+gem 'connection_pool', '~> 2.4'
 gem 'sidekiq', '~> 7.2'
 gem 'sidekiq-cron', '~> 1.12'
 
