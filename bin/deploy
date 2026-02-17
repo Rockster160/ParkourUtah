@@ -10,7 +10,9 @@ err() { echo -e "\033[91m==> ERROR: $1\033[0m"; } # Local error function
 
 log "Deploying branch: $BRANCH"
 
-ssh $SERVER bash -l <<SCRIPT
+ssh $SERVER bash <<SCRIPT
+export PATH="\$HOME/.rbenv/bin:\$HOME/.rbenv/shims:\$PATH"
+eval "\$(\$HOME/.rbenv/bin/rbenv init - bash)"
 set -e
 cd $APP_DIR
 log() { echo -e "\033[96m==> \$1\033[0m"; } # Remote log function
@@ -37,8 +39,18 @@ step "Precompiling assets..." "RAILS_ENV=production bundle exec rails assets:pre
 
 step "Restarting Puma..." "sudo systemctl restart puma"
 
-log "Verifying Puma is running..."
-sleep 3
+log "Waiting for Puma to boot..."
+for i in 1 2 3 4 5 6; do
+  sleep 5
+  if sudo systemctl is-active --quiet puma; then
+    STATUS=\$(curl -s -o /dev/null -w "%{http_code}" http://localhost/ 2>/dev/null)
+    if [ "\$STATUS" -ge 200 ] && [ "\$STATUS" -lt 400 ]; then
+      break
+    fi
+  fi
+  log "Still waiting... (\${i}/6)"
+done
+
 if ! sudo systemctl is-active --quiet puma; then
   err "Puma failed to start! Check logs:"
   sudo journalctl -u puma --no-pager -n 20
@@ -47,7 +59,7 @@ fi
 
 step "Restarting Sidekiq..." "sudo systemctl restart sidekiq"
 
-sleep 2
+sleep 3
 if ! sudo systemctl is-active --quiet sidekiq; then
   err "Sidekiq failed to start! Check logs:"
   sudo journalctl -u sidekiq --no-pager -n 20
