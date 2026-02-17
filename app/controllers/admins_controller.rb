@@ -77,7 +77,7 @@ class AdminsController < ApplicationController
   def send_batch_emailer
     @email = EmailBody.new(*decoded_email_params)
     raw_html = html(@email.body)
-    BatchEmailerWorker.perform_async(+@email.subject, +raw_html, @email.recipients, +@email.email_type)
+    BatchEmailerWorker.perform_async(String.new(@email.subject), String.new(raw_html), @email.recipients, String.new(@email.email_type))
     redirect_to dashboard_path, notice: 'Sweet! I will send that out to them!'
   end
 
