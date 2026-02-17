@@ -3,15 +3,15 @@
 # Table name: attendances
 #
 #  id                     :integer          not null, primary key
+#  athlete_id             :integer
+#  instructor_id          :integer
+#  event_id               :integer
 #  location               :string
-#  sent                   :boolean          default(FALSE)
-#  type_of_charge         :string
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  athlete_id             :integer
-#  event_id               :integer
-#  instructor_id          :integer
-#  purchased_plan_item_id :bigint
+#  type_of_charge         :string
+#  sent                   :boolean          default(FALSE)
+#  purchased_plan_item_id :integer
 #
 
 ##

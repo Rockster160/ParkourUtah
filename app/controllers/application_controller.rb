@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   if Rails.env.production?
     rescue_from ActionController::ParameterMissing, ActionController::UnknownFormat do |exception|
       Rails.logger.error(exception.message)
-      render file: Rails.root.join("public", "500.html"), status: :internal_server_error, layout: false
+      render file: Rails.root.join("public", "500.html").to_s, status: :internal_server_error, layout: false
     end
   end
 
@@ -34,8 +34,8 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.sanitize(:account_update) { |u| u.permit(:avatar, :avatar_2, :bio, :phone_number) }
-    devise_parameter_sanitizer.sanitize(:sign_up) { |u| u.permit(:first_name) }
+    devise_parameter_sanitizer.permit(:account_update, keys: [:avatar, :avatar_2, :bio, :phone_number])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name])
   end
 
   def still_signed_in

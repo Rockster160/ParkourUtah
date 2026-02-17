@@ -1,81 +1,73 @@
+var map, markers = [];
+
 var initializeGmaps = function() {
   if ($('.gmap').length > 0) {
-
     var gmap = $('.gmap');
-    handler = Gmaps.build('Google');
-    handler.buildMap({
-        provider: {
-          // pass in other Google Maps API options here
-          mapTypeId: google.maps.MapTypeId.HYBRID // ROADMAP TERRAIN SATELLITE HYBRID
-        },
-        internal: {
-          id: 'map'
-        }
-      },
-      function() {
-        var marker_coords = $('.gmap_coord').map(function() {
-          return {
-            lat: $(this).data('lat'),
-            lng: $(this).data('lon'),
-            infowindow: '<a href="' + $(this).data('spot-url') + '">' + $(this).data('spot-name') + '<a>'
-          }
-        });
-        markers = handler.addMarkers(marker_coords, {
-          animation: google.maps.Animation.DROP,
-          draggable: true
-        });
-        if (gmap.data('contain')) {
-          handler.bounds.extendWith(markers);
-          handler.fitMapToBounds();
-        } else {
-          var pt = new google.maps.LatLng(gmap.data('lat'), gmap.data('lng'));
-          handler.map.centerOn(pt);
-          handler.map.serviceObject.setZoom(gmap.data('zoom'));
-        }
-      }
-    );
+    var center = new google.maps.LatLng(gmap.data('lat'), gmap.data('lng'));
+
+    map = new google.maps.Map(document.getElementById('map'), {
+      mapTypeId: google.maps.MapTypeId.HYBRID,
+      center: center,
+      zoom: gmap.data('zoom') || 15
+    });
+
+    var bounds = new google.maps.LatLngBounds();
+
+    $('.gmap_coord').each(function() {
+      var el = $(this);
+      var position = new google.maps.LatLng(el.data('lat'), el.data('lon'));
+      var marker = new google.maps.Marker({
+        position: position,
+        map: map,
+        animation: google.maps.Animation.DROP,
+        draggable: true
+      });
+
+      var infowindow = new google.maps.InfoWindow({
+        content: '<a href="' + el.data('spot-url') + '">' + el.data('spot-name') + '</a>'
+      });
+      marker.addListener('click', function() { infowindow.open(map, marker); });
+
+      markers.push(marker);
+      bounds.extend(position);
+    });
+
+    if (gmap.data('contain') && markers.length > 0) {
+      map.fitBounds(bounds);
+    }
 
     $('#gmaps_search').click(function() {
       geoLocate($('#gmaps_address').val());
     });
 
     $('#gmaps_form').on('submit', function() {
-      var lat = markers[0].getServiceObject().getPosition().lat(),
-        lon = markers[0].getServiceObject().getPosition().lng();
-
-      $('#lat').val(lat);
-      $('#lon').val(lon);
+      if (markers.length > 0) {
+        var pos = markers[0].getPosition();
+        $('#lat').val(pos.lat());
+        $('#lon').val(pos.lng());
+      }
     });
-
-    geoLocate = function(address) {
-      var geocoder = new google.maps.Geocoder();
-      geocoder.geocode({
-        address: address
-      }, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-          var latitude = results[0].geometry.location.lat();
-          var longitude = results[0].geometry.location.lng();
-          handler.removeMarkers(markers);
-          markers = handler.addMarkers(
-            [{
-              lat: latitude,
-              lng: longitude,
-            }], {
-              animation: google.maps.Animation.DROP,
-              draggable: true
-            }
-          );
-          markers[0].panTo();
-        } else {
-          console.log('error');
-          return false
-        }
-      })
-    }
-
   }
 }
 
+function geoLocate(address) {
+  var geocoder = new google.maps.Geocoder();
+  geocoder.geocode({ address: address }, function(results, status) {
+    if (status === google.maps.GeocoderStatus.OK) {
+      var position = results[0].geometry.location;
+      markers.forEach(function(m) { m.setMap(null); });
+      markers = [];
+
+      var marker = new google.maps.Marker({
+        position: position,
+        map: map,
+        animation: google.maps.Animation.DROP,
+        draggable: true
+      });
+      markers.push(marker);
+      map.panTo(position);
+    }
+  });
+}
 
 $(document).ready(initializeGmaps);
-$(document).on('page:load', initializeGmaps);

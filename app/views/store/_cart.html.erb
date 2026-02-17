@@ -38,12 +38,12 @@
 <% end %>
 
 <div class="modal fade" id="cart_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="central-container">
-    <div class="shop-modal center-block">
+  <div class="modal-dialog central-container">
+    <div class="modal-content shop-modal center-block">
 
       <div class="shopping-cart-container">
         <div class="shopping-cart">
-        <button type="button" class="close-btn shop-close" data-dismiss="modal" aria-hidden="true"><%= icon("far", "times-circle", '', class: 'fa-2x') %></button>
+        <button type="button" class="close-btn shop-close" data-bs-dismiss="modal" aria-hidden="true"><%= icon("far", "times-circle", '', class: 'fa-2x') %></button>
         <%= link_to "Checkout", '', class: 'fake-stripe-btn' %>
           <br>
           <div class="orders-placeholder">

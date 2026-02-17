@@ -107,24 +107,6 @@ class User < ApplicationRecord
   after_update :allow_user_to_receive_sms_again
 
 
-  # has_attached_file :avatar,
-  #                   :styles => { :medium => "300x400>", :thumb => "120x160" },
-  #                   storage: :s3,
-  #                   s3_permissions: :private,
-  #                   bucket: ENV['PKUT_S3_BUCKET_NAME'],
-  #                   :default_url => "http://parkourutah.com/images/missing.png",
-  #                   :convert_options => { :all => '-background white -flatten +matte' }
-  # validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
-  #
-  # has_attached_file :avatar_2,
-  #                   :styles => { :medium => "300x400>", :thumb => "120x160" },
-  #                   storage: :s3,
-  #                   s3_permissions: :private,
-  #                   bucket: ENV['PKUT_S3_BUCKET_NAME'],
-  #                   :default_url => "http://parkourutah.com/images/missing.png",
-  #                   :convert_options => { :all => '-background white -flatten +matte' }
-  # validates_attachment_content_type :avatar_2, :content_type => /\Aimage\/.*\Z/
-
   validate :valid_phone_number
   validate :positive_credits
 

@@ -226,7 +226,7 @@ class StoreController < ApplicationController
       redemption_items = items_with_redemption.map(&:redemption_item)
       redemption_keys = redemption_items.each do |item|
         key = item.redemption_keys.create
-        ApplicationMailer.delay.public_mailer(key.id, @cart.email)
+        ApplicationMailer.public_mailer(key.id, @cart.email).deliver_later
       end
     end
 

@@ -24,19 +24,10 @@ class ChatRoom < ApplicationRecord
   default_on_create last_message_received_at: Time.zone.now
 
   default_on_create visibility_level: 0 # admin
-  enum visibility_level: {
-    admin:      0,
-    mod:        1,
-    instructor: 2,
-    global:     3,
-    personal:   4
-  }
+  enum :visibility_level, { admin: 0, mod: 1, instructor: 2, global: 3, personal: 4 }
 
   default_on_create message_type: 1 # chat
-  enum message_type: {
-    text: 0,
-    chat: 1
-  }
+  enum :message_type, { text: 0, chat: 1 }
 
   validates_uniqueness_of :name, allow_nil: true
 

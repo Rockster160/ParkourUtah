@@ -18,9 +18,9 @@
 # Add sponsor names, registration closure date
 # ^^ Update index
 class Competition < ApplicationRecord
-  serialize :option_costs,   JSONWrapper
-  serialize :sponsor_images, JSONWrapper
-  serialize :coupon_codes,   JSONWrapper
+  serialize :option_costs,   coder: JSONWrapper
+  serialize :sponsor_images, coder: JSONWrapper
+  serialize :coupon_codes,   coder: JSONWrapper
 
   belongs_to :spot, optional: true
   has_many :competitors

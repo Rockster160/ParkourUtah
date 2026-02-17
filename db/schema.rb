@@ -10,63 +10,90 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_04_13_010321) do
-
+ActiveRecord::Schema[8.1].define(version: 2024_01_01_000000) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  enable_extension "pg_catalog.plpgsql"
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.string "content_type"
+    t.datetime "created_at", null: false
+    t.string "filename", null: false
+    t.string "key", null: false
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
 
   create_table "addresses", id: :serial, force: :cascade do |t|
-    t.integer "user_id"
+    t.string "city"
+    t.datetime "created_at", precision: nil, null: false
     t.string "line1"
     t.string "line2"
-    t.string "city"
     t.string "state"
+    t.datetime "updated_at", precision: nil, null: false
+    t.integer "user_id"
     t.string "zip"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_addresses_on_user_id"
   end
 
   create_table "announcements", id: :serial, force: :cascade do |t|
     t.integer "admin_id"
-    t.datetime "expires_at"
     t.text "body"
-    t.datetime "delivered_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "delivered_at", precision: nil
+    t.datetime "expires_at", precision: nil
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["admin_id"], name: "index_announcements_on_admin_id"
   end
 
   create_table "athletes", id: :serial, force: :cascade do |t|
-    t.integer "user_id"
-    t.string "full_name"
+    t.string "athlete_photo_content_type"
+    t.string "athlete_photo_file_name"
+    t.integer "athlete_photo_file_size"
+    t.datetime "athlete_photo_updated_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.string "date_of_birth"
     t.string "emergency_contact"
     t.integer "fast_pass_id"
     t.integer "fast_pass_pin"
-    t.string "athlete_photo_file_name"
-    t.string "athlete_photo_content_type"
-    t.integer "athlete_photo_file_size"
-    t.datetime "athlete_photo_updated_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.string "first_name"
-    t.string "middle_name"
+    t.string "full_name"
     t.string "last_name"
-    t.string "date_of_birth"
+    t.string "middle_name"
+    t.datetime "updated_at", precision: nil, null: false
+    t.integer "user_id"
     t.boolean "verified", default: false
     t.index ["user_id"], name: "index_athletes_on_user_id"
   end
 
   create_table "attendances", id: :serial, force: :cascade do |t|
     t.integer "athlete_id"
-    t.integer "instructor_id"
+    t.datetime "created_at", precision: nil, null: false
     t.integer "event_id"
+    t.integer "instructor_id"
     t.string "location"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "type_of_charge"
-    t.boolean "sent", default: false
     t.bigint "purchased_plan_item_id"
+    t.boolean "sent", default: false
+    t.string "type_of_charge"
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["athlete_id"], name: "index_attendances_on_athlete_id"
     t.index ["event_id"], name: "index_attendances_on_event_id"
     t.index ["instructor_id"], name: "index_attendances_on_instructor_id"
@@ -74,283 +101,283 @@ ActiveRecord::Schema.define(version: 2023_04_13_010321) do
   end
 
   create_table "aws_loggers", id: :serial, force: :cascade do |t|
-    t.text "orginal_string"
-    t.string "bucket_owner"
     t.string "bucket"
-    t.datetime "time"
-    t.string "remote_ip"
-    t.string "requester"
-    t.string "request_id"
-    t.string "operation"
-    t.string "key"
-    t.string "request_uri"
-    t.string "http_status"
-    t.string "error_code"
+    t.string "bucket_owner"
     t.bigint "bytes_sent"
+    t.string "error_code"
+    t.string "http_status"
+    t.string "key"
     t.bigint "object_size"
+    t.string "operation"
+    t.text "orginal_string"
+    t.string "referrer"
+    t.string "remote_ip"
+    t.string "request_id"
+    t.string "request_uri"
+    t.string "requester"
+    t.boolean "set_all_without_errors"
+    t.datetime "time", precision: nil
     t.bigint "total_time"
     t.bigint "turn_around_time"
-    t.string "referrer"
     t.string "user_agent"
     t.string "version_id"
-    t.boolean "set_all_without_errors"
   end
 
   create_table "cart_items", id: :serial, force: :cascade do |t|
-    t.integer "cart_id"
-    t.integer "line_item_id"
     t.integer "amount", default: 1
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "redeemed_token", default: ""
+    t.integer "cart_id"
+    t.datetime "created_at", precision: nil, null: false
+    t.integer "discount_cost_in_pennies"
+    t.text "discount_type"
+    t.integer "line_item_id"
     t.string "order_name"
     t.bigint "purchased_plan_item_id"
-    t.text "discount_type"
-    t.integer "discount_cost_in_pennies"
+    t.string "redeemed_token", default: ""
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["cart_id"], name: "index_cart_items_on_cart_id"
     t.index ["purchased_plan_item_id"], name: "index_cart_items_on_purchased_plan_item_id"
   end
 
   create_table "carts", id: :serial, force: :cascade do |t|
-    t.integer "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.string "email"
-    t.datetime "purchased_at"
+    t.datetime "purchased_at", precision: nil
+    t.datetime "updated_at", precision: nil, null: false
+    t.integer "user_id"
     t.index ["user_id"], name: "index_carts_on_user_id"
   end
 
   create_table "chat_room_users", id: :serial, force: :cascade do |t|
-    t.integer "chat_room_id"
-    t.integer "user_id"
-    t.boolean "has_unread_messages", default: true
-    t.boolean "notify_via_email", default: true
-    t.boolean "notify_via_css", default: false
-    t.boolean "muted", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.boolean "banned", default: false
+    t.integer "chat_room_id"
+    t.datetime "created_at", precision: nil, null: false
+    t.boolean "has_unread_messages", default: true
+    t.boolean "muted", default: false
+    t.boolean "notify_via_css", default: false
+    t.boolean "notify_via_email", default: true
+    t.datetime "updated_at", precision: nil, null: false
+    t.integer "user_id"
     t.index ["chat_room_id"], name: "index_chat_room_users_on_chat_room_id"
     t.index ["user_id"], name: "index_chat_room_users_on_user_id"
   end
 
   create_table "chat_rooms", id: :serial, force: :cascade do |t|
-    t.string "name"
-    t.integer "visibility_level"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "last_message_received_at", precision: nil
     t.integer "message_type"
-    t.datetime "last_message_received_at"
+    t.string "name"
+    t.datetime "updated_at", precision: nil, null: false
+    t.integer "visibility_level"
   end
 
   create_table "competition_judgements", id: :serial, force: :cascade do |t|
-    t.integer "competitor_id"
-    t.integer "judge_id"
     t.integer "category"
     t.float "category_score"
+    t.integer "competitor_id"
+    t.datetime "created_at", precision: nil, null: false
+    t.integer "judge_id"
     t.float "overall_impression"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["competitor_id"], name: "index_competition_judgements_on_competitor_id"
     t.index ["judge_id"], name: "index_competition_judgements_on_judge_id"
   end
 
   create_table "competitions", id: :serial, force: :cascade do |t|
-    t.integer "spot_id"
-    t.string "name"
-    t.datetime "start_time"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "slug"
-    t.text "description"
-    t.text "option_costs"
-    t.text "sponsor_images"
     t.text "coupon_codes"
+    t.datetime "created_at", precision: nil, null: false
+    t.text "description"
+    t.string "name"
+    t.text "option_costs"
+    t.string "slug"
+    t.text "sponsor_images"
+    t.integer "spot_id"
+    t.datetime "start_time", precision: nil
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["spot_id"], name: "index_competitions_on_spot_id"
   end
 
   create_table "competitors", id: :serial, force: :cascade do |t|
-    t.integer "athlete_id"
-    t.integer "competition_id"
-    t.string "years_training"
-    t.string "instagram_handle"
-    t.string "song"
-    t.string "bio"
-    t.string "stripe_charge_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "approved_at"
     t.integer "age"
-    t.integer "sort_order"
+    t.datetime "approved_at", precision: nil
+    t.integer "athlete_id"
+    t.string "bio"
+    t.integer "competition_id"
+    t.string "coupon_code"
+    t.datetime "created_at", precision: nil, null: false
+    t.string "instagram_handle"
+    t.string "referred_by"
     t.string "selected_comp"
     t.string "shirt_size"
-    t.string "referred_by"
-    t.string "coupon_code"
     t.text "signup_data"
+    t.string "song"
+    t.integer "sort_order"
+    t.string "stripe_charge_id"
+    t.datetime "updated_at", precision: nil, null: false
+    t.string "years_training"
     t.index ["athlete_id"], name: "index_competitors_on_athlete_id"
     t.index ["competition_id"], name: "index_competitors_on_competition_id"
   end
 
   create_table "contact_requests", id: :serial, force: :cascade do |t|
-    t.string "user_agent"
-    t.string "phone"
-    t.string "name"
-    t.string "email"
     t.string "body"
+    t.datetime "created_at", precision: nil, null: false
+    t.string "email"
+    t.string "name"
+    t.string "phone"
     t.boolean "success"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.string "user_agent"
   end
 
   create_table "emergency_contacts", id: :serial, force: :cascade do |t|
-    t.integer "user_id"
-    t.string "number"
     t.string "name"
+    t.string "number"
+    t.integer "user_id"
     t.index ["user_id"], name: "index_emergency_contacts_on_user_id"
   end
 
   create_table "event_schedules", id: :serial, force: :cascade do |t|
-    t.integer "instructor_id"
-    t.integer "spot_id"
-    t.datetime "start_date"
-    t.datetime "end_date"
-    t.integer "hour_of_day"
-    t.integer "minute_of_day"
-    t.integer "day_of_week"
-    t.integer "cost_in_pennies"
-    t.string "title"
-    t.text "description"
-    t.string "full_address"
+    t.boolean "accepts_trial_classes", default: true
+    t.boolean "accepts_unlimited_classes", default: true
     t.string "city"
     t.string "color"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer "payment_per_student"
-    t.integer "min_payment_per_session"
+    t.integer "cost_in_pennies"
+    t.datetime "created_at", precision: nil
+    t.integer "day_of_week"
+    t.text "description"
+    t.datetime "end_date", precision: nil
+    t.string "full_address"
+    t.integer "hour_of_day"
+    t.integer "instructor_id"
     t.integer "max_payment_per_session"
-    t.boolean "accepts_unlimited_classes", default: true
-    t.boolean "accepts_trial_classes", default: true
+    t.integer "min_payment_per_session"
+    t.integer "minute_of_day"
+    t.integer "payment_per_student"
+    t.integer "spot_id"
+    t.datetime "start_date", precision: nil
     t.jsonb "tags"
+    t.string "title"
+    t.datetime "updated_at", precision: nil
     t.index ["instructor_id"], name: "index_event_schedules_on_instructor_id"
     t.index ["spot_id"], name: "index_event_schedules_on_spot_id"
   end
 
   create_table "event_subscriptions", id: :serial, force: :cascade do |t|
-    t.integer "user_id"
     t.integer "event_schedule_id"
+    t.integer "user_id"
     t.index ["user_id"], name: "index_event_subscriptions_on_user_id"
   end
 
   create_table "events", id: :serial, force: :cascade do |t|
-    t.datetime "date"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "date", precision: nil
     t.integer "event_schedule_id"
-    t.datetime "original_date"
     t.boolean "is_cancelled", default: false
+    t.datetime "original_date", precision: nil
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "images", id: :serial, force: :cascade do |t|
+    t.datetime "created_at", precision: nil, null: false
     t.integer "spot_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["spot_id"], name: "index_images_on_spot_id"
   end
 
   create_table "line_items", id: :serial, force: :cascade do |t|
-    t.string "display_file_name"
-    t.string "display_content_type"
-    t.integer "display_file_size"
-    t.datetime "display_updated_at"
-    t.text "description"
-    t.integer "cost_in_pennies"
-    t.string "title"
-    t.string "category"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "size"
-    t.boolean "hidden"
-    t.integer "item_order"
-    t.integer "credits", default: 0
-    t.boolean "is_subscription", default: false
-    t.boolean "taxable", default: true
-    t.string "color"
-    t.boolean "is_full_image", default: false
-    t.integer "redemption_item_id"
-    t.boolean "show_text_as_image", default: true
-    t.string "instructor_ids"
-    t.string "location_ids"
-    t.string "time_range_start"
-    t.string "time_range_end"
     t.integer "bundle_amount"
     t.integer "bundle_cost_in_pennies"
+    t.string "category"
+    t.string "color"
+    t.integer "cost_in_pennies"
+    t.datetime "created_at", precision: nil, null: false
+    t.integer "credits", default: 0
+    t.text "description"
+    t.string "display_content_type"
+    t.string "display_file_name"
+    t.integer "display_file_size"
+    t.datetime "display_updated_at", precision: nil
+    t.boolean "hidden"
+    t.string "instructor_ids"
+    t.boolean "is_full_image", default: false
+    t.boolean "is_subscription", default: false
+    t.integer "item_order"
+    t.string "location_ids"
     t.bigint "plan_item_id"
+    t.integer "redemption_item_id"
+    t.boolean "show_text_as_image", default: true
+    t.string "size"
     t.jsonb "tags"
+    t.boolean "taxable", default: true
+    t.string "time_range_end"
+    t.string "time_range_start"
+    t.string "title"
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["plan_item_id"], name: "index_line_items_on_plan_item_id"
   end
 
   create_table "log_trackers", id: :serial, force: :cascade do |t|
-    t.string "user_agent"
-    t.string "ip_address"
+    t.datetime "created_at", precision: nil, null: false
     t.string "http_method"
-    t.string "url"
+    t.string "ip_address"
     t.string "params"
+    t.datetime "updated_at", precision: nil, null: false
+    t.string "url"
+    t.string "user_agent"
     t.integer "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_log_trackers_on_user_id"
   end
 
   create_table "messages", id: :serial, force: :cascade do |t|
-    t.integer "sent_from_id"
     t.text "body"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "read_at"
-    t.integer "message_type"
+    t.integer "chat_room_id"
+    t.datetime "created_at", precision: nil, null: false
     t.boolean "error", default: false
     t.string "error_message"
-    t.integer "chat_room_id"
+    t.integer "message_type"
+    t.datetime "read_at", precision: nil
+    t.integer "sent_from_id"
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["sent_from_id"], name: "index_messages_on_sent_from_id"
   end
 
   create_table "notifications", id: :serial, force: :cascade do |t|
-    t.integer "user_id"
+    t.boolean "email_class_cancelled", default: false
     t.boolean "email_class_reminder", default: false
-    t.boolean "text_class_reminder", default: false
     t.boolean "email_low_credits", default: false
-    t.boolean "text_low_credits", default: false
+    t.boolean "email_newsletter", default: true
     t.boolean "email_waiver_expiring", default: false
-    t.boolean "text_waiver_expiring", default: false
     t.boolean "sms_receivable"
     t.boolean "text_class_cancelled", default: false
-    t.boolean "email_class_cancelled", default: false
-    t.boolean "email_newsletter", default: true
+    t.boolean "text_class_reminder", default: false
+    t.boolean "text_low_credits", default: false
+    t.boolean "text_waiver_expiring", default: false
+    t.integer "user_id"
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
   create_table "plan_items", force: :cascade do |t|
-    t.text "name"
-    t.jsonb "free_items"
+    t.datetime "created_at", null: false
     t.jsonb "discount_items"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.jsonb "free_items"
+    t.text "name"
+    t.datetime "updated_at", null: false
   end
 
   create_table "purchased_plan_items", force: :cascade do |t|
-    t.bigint "user_id"
     t.bigint "athlete_id"
-    t.bigint "cart_id"
-    t.bigint "plan_item_id"
-    t.integer "cost_in_pennies"
-    t.datetime "expires_at"
     t.boolean "auto_renew", default: true
-    t.text "stripe_id"
     t.text "card_declined"
-    t.jsonb "free_items"
+    t.bigint "cart_id"
+    t.integer "cost_in_pennies"
+    t.datetime "created_at", null: false
     t.jsonb "discount_items"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "expires_at", precision: nil
+    t.jsonb "free_items"
+    t.bigint "plan_item_id"
+    t.text "stripe_id"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
     t.index ["athlete_id"], name: "index_purchased_plan_items_on_athlete_id"
     t.index ["cart_id"], name: "index_purchased_plan_items_on_cart_id"
     t.index ["plan_item_id"], name: "index_purchased_plan_items_on_plan_item_id"
@@ -358,119 +385,119 @@ ActiveRecord::Schema.define(version: 2023_04_13_010321) do
   end
 
   create_table "ratings", id: :serial, force: :cascade do |t|
+    t.datetime "created_at", precision: nil, null: false
     t.integer "rated"
     t.integer "spot_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["spot_id"], name: "index_ratings_on_spot_id"
   end
 
   create_table "recurring_subscriptions", id: :serial, force: :cascade do |t|
     t.integer "athlete_id"
-    t.integer "usages", default: 0
-    t.datetime "expires_at"
-    t.integer "cost_in_pennies", default: 0
     t.boolean "auto_renew", default: true
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "stripe_id"
-    t.integer "user_id"
     t.boolean "card_declined"
+    t.integer "cost_in_pennies", default: 0
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "expires_at", precision: nil
+    t.string "stripe_id"
+    t.datetime "updated_at", precision: nil, null: false
+    t.integer "usages", default: 0
+    t.integer "user_id"
     t.index ["athlete_id"], name: "index_recurring_subscriptions_on_athlete_id"
   end
 
   create_table "redemption_keys", id: :serial, force: :cascade do |t|
-    t.string "key"
-    t.string "redemption"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "redeemed", default: false
-    t.integer "line_item_id"
     t.boolean "can_be_used_multiple_times", default: false
-    t.datetime "expires_at"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "expires_at", precision: nil
+    t.string "key"
+    t.integer "line_item_id"
+    t.boolean "redeemed", default: false
+    t.string "redemption"
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["line_item_id"], name: "index_redemption_keys_on_line_item_id"
   end
 
   create_table "spots", id: :serial, force: :cascade do |t|
-    t.string "title"
-    t.text "description"
-    t.string "lon"
-    t.string "lat"
     t.boolean "approved", default: false
+    t.datetime "created_at", precision: nil, null: false
+    t.text "description"
     t.integer "event_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string "lat"
     t.string "location"
+    t.string "lon"
+    t.string "title"
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["event_id"], name: "index_spots_on_event_id"
   end
 
   create_table "trial_classes", id: :serial, force: :cascade do |t|
     t.integer "athlete_id"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "used", default: false
-    t.datetime "used_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "used_at", precision: nil
     t.index ["athlete_id"], name: "index_trial_classes_on_athlete_id"
   end
 
   create_table "unlimited_subscriptions", id: :serial, force: :cascade do |t|
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "expires_at", precision: nil
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "usages", default: 0
-    t.datetime "expires_at"
     t.integer "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_unlimited_subscriptions_on_user_id"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "first_name", default: "", null: false
-    t.string "last_name", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.inet "current_sign_in_ip"
-    t.inet "last_sign_in_ip"
-    t.integer "role", default: 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string "avatar_file_name"
-    t.string "avatar_content_type"
-    t.integer "avatar_file_size"
-    t.datetime "avatar_updated_at"
-    t.string "avatar_2_file_name"
     t.string "avatar_2_content_type"
+    t.string "avatar_2_file_name"
     t.integer "avatar_2_file_size"
-    t.datetime "avatar_2_updated_at"
+    t.datetime "avatar_2_updated_at", precision: nil
+    t.string "avatar_content_type"
+    t.string "avatar_file_name"
+    t.integer "avatar_file_size"
+    t.datetime "avatar_updated_at", precision: nil
     t.text "bio"
-    t.integer "credits", default: 0
-    t.string "phone_number"
-    t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
-    t.integer "instructor_position"
-    t.string "stats"
-    t.string "title"
-    t.string "nickname"
     t.boolean "can_receive_emails", default: true
-    t.string "stripe_id"
-    t.datetime "date_of_birth"
+    t.boolean "can_receive_sms", default: true
+    t.datetime "confirmation_sent_at", precision: nil
+    t.string "confirmation_token"
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "created_at", precision: nil
+    t.integer "credits", default: 0
+    t.datetime "current_sign_in_at", precision: nil
+    t.inet "current_sign_in_ip"
+    t.datetime "date_of_birth", precision: nil
     t.string "drivers_license_number"
     t.string "drivers_license_state"
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "first_name", default: "", null: false
+    t.string "full_name"
+    t.integer "instructor_position"
+    t.string "last_name", default: "", null: false
+    t.datetime "last_sign_in_at", precision: nil
+    t.inet "last_sign_in_ip"
+    t.string "nickname"
+    t.string "phone_number"
+    t.string "referrer", default: ""
     t.boolean "registration_complete", default: false
     t.integer "registration_step", default: 2
-    t.boolean "stripe_subscription", default: false
-    t.string "referrer", default: ""
-    t.integer "subscription_cost", default: 5000
-    t.integer "unassigned_subscriptions_count", default: 0
+    t.datetime "remember_created_at", precision: nil
+    t.datetime "reset_password_sent_at", precision: nil
+    t.string "reset_password_token"
+    t.integer "role", default: 0
     t.boolean "should_display_on_front_page", default: true
-    t.boolean "can_receive_sms", default: true
-    t.string "full_name"
+    t.integer "sign_in_count", default: 0, null: false
     t.boolean "skip_trials", default: false
+    t.string "stats"
+    t.string "stripe_id"
+    t.boolean "stripe_subscription", default: false
+    t.integer "subscription_cost", default: 5000
+    t.string "title"
+    t.integer "unassigned_subscriptions_count", default: 0
+    t.datetime "updated_at", precision: nil
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -478,15 +505,17 @@ ActiveRecord::Schema.define(version: 2023_04_13_010321) do
 
   create_table "waivers", id: :serial, force: :cascade do |t|
     t.integer "athlete_id"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "expiry_date", precision: nil
     t.boolean "signed"
-    t.string "signed_for"
     t.string "signed_by"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "expiry_date"
+    t.string "signed_for"
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["athlete_id"], name: "index_waivers_on_athlete_id"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "cart_items", "carts"
   add_foreign_key "carts", "users"
   add_foreign_key "chat_room_users", "chat_rooms"

@@ -3,7 +3,7 @@ Rails.application.routes.default_url_options[:protocol] = 'http://'
 Rails.application.routes.default_url_options[:port] = '7545'
 Rails.application.configure do
 
-  config.cache_classes = false
+  config.enable_reloading = true
 
   config.eager_load = false
 
@@ -27,15 +27,7 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.perform_deliveries = false
 
-  Paperclip.options[:command_path] = "/usr/local/bin/"
-  config.paperclip_defaults = {
-    :storage => :s3,
-    :s3_credentials => {
-      :bucket => ENV['PKUT_S3_BUCKET_NAME'],
-      :access_key_id => ENV['PKUT_AWS_ACCESS_KEY_ID'],
-      :secret_access_key => ENV['PKUT_AWS_SECRET_ACCESS_KEY']
-    }
-  }
+  config.active_storage.service = :amazon
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -52,12 +44,6 @@ Rails.application.configure do
   # yet still be able to expire them through the digest params.
   config.assets.digest = true
 
-  # Adds additional error checking when serving assets at runtime.
-  # Checks for improperly declared sprockets dependencies.
-  # Raises helpful error messages.
-  config.assets.raise_runtime_errors = true
-
-  config.active_record.belongs_to_required_by_default = true
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 end

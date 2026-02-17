@@ -87,4 +87,3 @@ Array.prototype.shuffle = function() {
 }
 
 $(document).ready(ready);
-$(document).on('page:load', ready);

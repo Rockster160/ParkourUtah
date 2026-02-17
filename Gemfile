@@ -1,62 +1,51 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 6.1.4'
-gem 'dotenv-rails'
-gem 'sprockets', '3.6.3'
-gem 'coffee-script'
+gem 'rails', '~> 8.0'
 gem 'pg'
-gem 'sass-rails', '~> 5.0'
-gem 'uglifier', '>= 1.3.0'
-gem 'turbolinks'
-gem 'jbuilder', '~> 2.0'
-# gem 'sdoc', '~> 0.4.0', group: :doc
-gem 'redis', '~> 3.3.3'
-gem 'redis-namespace'
+gem 'puma', '~> 6.4'
+gem 'sprockets', '~> 4.2'
+gem 'sprockets-rails'
+gem 'sassc-rails'
+gem 'terser'
+gem 'jbuilder', '~> 2.12'
 
-# gem 'faker'
-gem 'jquery-rails'
-gem "twitter-bootstrap-rails"
-gem 'twitter-typeahead-rails'
-gem "font-awesome-sass"
-gem "select2-rails"
-gem 'autoprefixer-rails'
-gem 'rails_12factor', group: :production
-gem 'devise'
-gem 'json'
-gem 'jquery-ui-rails'
-gem "paperclip"
-gem 'net-smtp', require: false
-gem 'net-pop', require: false
-# gem 'aws-sdk-rails'
-# gem 'aws-sdk-s3'
-gem 'httparty'
-gem 'rufus-scheduler'
-gem 'sidekiq'
-gem 'sidekiq-cron'
-gem 'sinatra', require: nil
+gem 'redis', '~> 5.0'
+gem 'sidekiq', '~> 7.2'
+gem 'sidekiq-cron', '~> 1.12'
+
+gem 'devise', '~> 5.0'
+gem 'stripe'
 gem 'twilio-ruby'
-gem 'puma', "~> 4"
-gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
-gem 'jquery-tablesorter'
-gem 'maskedinput-rails'
-gem 'recaptcha', require: 'recaptcha/rails'
-gem "dotimeout-rails"
+gem 'aws-sdk-s3', '~> 1.0'
+
+gem 'dotenv-rails'
+gem 'jquery-rails'
+gem 'jquery-ui-rails'
+gem 'select2-rails'
+gem 'bootstrap', '~> 5.3'
+gem 'font-awesome-sass'
+gem 'autoprefixer-rails'
 gem 'kaminari'
-gem 'nokogiri', "~> 1.10.4"
-gem 'gmaps4rails'
-gem 'underscore-rails'
 gem 'geocoder'
+gem 'recaptcha', require: 'recaptcha/rails'
+
+gem 'nokogiri'
+gem 'httparty'
 gem 'browser'
 gem 'chroma'
+gem 'colorize'
 gem 'exception_notification'
 gem 'slack-notifier'
-gem 'colorize'
-gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '01f92d86d15d85cfd0f20dabd025dcbd36a8a60f'
-# Export class Summaries
 gem 'rubyzip'
 gem 'caxlsx'
 gem 'caxlsx_rails'
-# /Export class Summaries
+gem 'csv'
+gem 'mutex_m'
+gem 'bigdecimal'
+gem 'drb'
+gem 'net-smtp', require: false
+gem 'net-pop', require: false
+gem 'ostruct', require: false
 gem "pretty_logger", "~> 1.2.4"
 
 group :development, :test do
@@ -66,9 +55,12 @@ group :development, :test do
   gem 'pry-rails'
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'spring'
+  gem 'rspec-rails'
+  gem 'factory_bot_rails'
+  gem 'shoulda-matchers'
+  gem 'database_cleaner-active_record'
 end
 
 group :development do
-  gem 'web-console', '~> 3.0'
+  gem 'web-console', '~> 4.2'
 end

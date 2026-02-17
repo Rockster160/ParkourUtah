@@ -1,7 +1,9 @@
 <div class="modal fade" id="modal_contact" tabindex="-1" aria-hidden="true">
-  <div class="central-container modal-dialog">
-    <button type="button" class="close-btn contact-close" data-dismiss="modal" aria-hidden="true"><%= icon("far", "times-circle", '', class: 'fa-2x') %></button>
-    <%= render partial: 'index/contact_us' %>
+  <div class="modal-dialog central-container">
+    <div class="modal-content">
+      <button type="button" class="close-btn contact-close" data-bs-dismiss="modal" aria-hidden="true"><%= icon("far", "times-circle", '', class: 'fa-2x') %></button>
+      <%= render partial: 'index/contact_us' %>
+    </div>
   </div>
 </div>
 
@@ -10,7 +12,7 @@
   <p class="error-message">Looks like we still need some information. Please fill in the remaining <span id="number_of_errors_container">fields.</span></p>
 <% end %>
 
-<div class="navigation <%= 'hidden' if @hide_nav %>">
+<div class="navigation" <%= 'hidden' if @hide_nav %>>
   <div class="container">
     <div class="navigation-items">
       <div class="navigation-brand">
