@@ -120,6 +120,21 @@ class LineItem < ApplicationRecord
     self.bundle_cost_in_pennies.to_f / 100
   end
 
+  def loyalty_cost_in_dollars=(new_dollar_cost)
+    self.loyalty_cost_in_pennies = new_dollar_cost.to_f * 100
+  end
+  def loyalty_cost_in_dollars
+    return unless loyalty_cost_in_pennies.to_i > 0
+    self.loyalty_cost_in_pennies.to_f / 100
+  end
+
+  def loyalty_cost_for(user)
+    return unless user.present?
+    return unless loyalty_cost_in_pennies.to_i > 0
+    return unless user.created_at < Date.new(2026, 3, 1)
+    loyalty_cost_in_pennies
+  end
+
   def exceeds_bundle?(amount)
     return false unless bundle_amount.to_i > 0 && bundle_cost_in_pennies.to_i > 0
     amount >= bundle_amount
@@ -131,6 +146,8 @@ class LineItem < ApplicationRecord
 
     possible_prices.push(discount_data[:cost] * amount) if discount_data
     possible_prices.push(bundle_cost_in_pennies * amount) if exceeds_bundle?(amount)
+    loyalty = loyalty_cost_for(user)
+    possible_prices.push(loyalty * amount) if loyalty
 
     possible_prices.sort.first.round
   end
@@ -142,10 +159,19 @@ class LineItem < ApplicationRecord
   end
 
   def discounted_cost_in_dollars(user)
-    data = discounted_cost_data(user)
-    return unless data.present?
+    candidates = []
 
-    (data[:cost] / 100.to_f)
+    data = discounted_cost_data(user)
+    candidates.push(data[:cost]) if data
+
+    loyalty = loyalty_cost_for(user)
+    candidates.push(loyalty) if loyalty
+
+    best = candidates.min
+    return unless best.present?
+    return if best >= cost_in_pennies
+
+    (best / 100.to_f)
   end
 
   def discounted_cost_data(user)

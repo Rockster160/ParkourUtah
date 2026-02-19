@@ -91,7 +91,8 @@ class LineItemsController < ApplicationController
       :time_range_start,
       :time_range_end,
       :bundle_cost,
-      :bundle_amount
+      :bundle_amount,
+      :loyalty_cost_in_dollars
     )
   end
 

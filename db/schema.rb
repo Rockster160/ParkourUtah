@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2024_01_01_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_19_043324) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -303,6 +303,7 @@ ActiveRecord::Schema[8.1].define(version: 2024_01_01_000000) do
     t.boolean "is_subscription", default: false
     t.integer "item_order"
     t.string "location_ids"
+    t.integer "loyalty_cost_in_pennies"
     t.bigint "plan_item_id"
     t.integer "redemption_item_id"
     t.boolean "show_text_as_image", default: true
