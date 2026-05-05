@@ -177,13 +177,14 @@ class ScheduleWorker
 
           plans.each do |plan|
             plan.update(auto_renew: false)
-            new_sub = current_user.purchased_plan_items.create(
+            new_sub = user.purchased_plan_items.create(
               athlete_id: plan.athlete_id,
               stripe_id: plan.stripe_id,
               plan_item_id: plan.plan_item_id,
               cost_in_pennies: plan.cost_in_pennies,
               discount_items: plan.discount_items,
               free_items: plan.free_items,
+              expires_at: 1.month.from_now,
             )
             unless new_sub.persisted?
               SlackNotifier.notify("Failed to create new sub: ```#{new_sub.try(:attributes)}\n#{new_sub.try(:errors).try(:full_messages)}```", "#server-errors")

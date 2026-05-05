@@ -14,7 +14,7 @@
       <p>You are currently set up to auto-pay for the below plans.</p>
       <p><a href="#" data-clickit=".stripe-button-el">Update Card Details</a></p>
     <% end %>
-    <% current_user.purchased_plan_items.order(:expires_at).each do |plan| %>
+    <% current_user.purchased_plan_items.active.order(:expires_at).each do |plan| %>
       <% athlete = plan.athlete %>
       <% if athlete.present? %>
         <% if plan.auto_renew? %>
