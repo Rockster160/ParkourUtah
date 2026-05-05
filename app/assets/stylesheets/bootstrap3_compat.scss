@@ -52,10 +52,13 @@ span.hidden-xs { display: inline !important; }
 
 // ─── Grid: col-xs-* → col-* ─────────────────────────────────────
 // @extend gives Bootstrap 5 flex behavior inside .row containers.
-// Float fallback ensures col-xs-* works outside .row (e.g. numpad).
+// Float fallback (scoped via :not) only kicks in when no larger
+// breakpoint class is present — e.g. numpad uses col-xs-4 alone
+// outside a .row. Without the :not guard, col-xs-12's width:100%
+// would override col-md-8 at desktop and break offset layouts.
 @for $i from 1 through 12 {
-  .col-xs-#{$i} {
-    @extend .col-#{$i} !optional;
+  .col-xs-#{$i} { @extend .col-#{$i} !optional; }
+  .col-xs-#{$i}:not([class*="col-sm-"]):not([class*="col-md-"]):not([class*="col-lg-"]):not([class*="col-xl-"]) {
     float: left;
     width: percentage($i * 1 / 12);
   }
