@@ -24,6 +24,10 @@
         <%= f.number_field :loyalty_cost_in_dollars, placeholder: '24.99', class: 'pkut-textbox', step: "any", min: "0" %>
       </div>
       <div class="form-field">
+        <%= f.label :bundled_loyalty_cost, "Loyalty Price per item when bundled" %>
+        <%= f.number_field :bundled_loyalty_cost, placeholder: '19.99', class: 'pkut-textbox', step: "any", min: "0" %>
+      </div>
+      <div class="form-field">
         <%= f.label :size %>
         <%= f.text_field :size, placeholder: 'S, M, L / 38.5, 39, 43', class: 'pkut-textbox' %>
       </div>

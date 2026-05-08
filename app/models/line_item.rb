@@ -3,8 +3,9 @@
 # Table name: line_items
 #
 #  id                     :integer          not null, primary key
-#  bundle_amount          :integer
-#  bundle_cost_in_pennies :integer
+#  bundle_amount                   :integer
+#  bundle_cost_in_pennies          :integer
+#  bundled_loyalty_cost_in_pennies :integer
 #  category               :string
 #  color                  :string
 #  cost_in_pennies        :integer
@@ -128,11 +129,29 @@ class LineItem < ApplicationRecord
     self.loyalty_cost_in_pennies.to_f / 100
   end
 
+  def bundled_loyalty_cost=(new_dollar_cost)
+    self.bundled_loyalty_cost_in_pennies = new_dollar_cost.to_f * 100
+  end
+  def bundled_loyalty_cost
+    return unless bundled_loyalty_cost_in_pennies.to_i > 0
+    self.bundled_loyalty_cost_in_pennies.to_f / 100
+  end
+
+  def loyalty_eligible?(user)
+    user.present? && user.created_at < Date.new(2026, 3, 1)
+  end
+
   def loyalty_cost_for(user)
-    return unless user.present?
+    return unless loyalty_eligible?(user)
     return unless loyalty_cost_in_pennies.to_i > 0
-    return unless user.created_at < Date.new(2026, 3, 1)
     loyalty_cost_in_pennies
+  end
+
+  def bundled_loyalty_cost_for(user, amount)
+    return unless loyalty_eligible?(user)
+    return unless bundled_loyalty_cost_in_pennies.to_i > 0
+    return unless bundle_amount.to_i > 0 && amount >= bundle_amount
+    bundled_loyalty_cost_in_pennies
   end
 
   def exceeds_bundle?(amount)
@@ -148,6 +167,8 @@ class LineItem < ApplicationRecord
     possible_prices.push(bundle_cost_in_pennies * amount) if exceeds_bundle?(amount)
     loyalty = loyalty_cost_for(user)
     possible_prices.push(loyalty * amount) if loyalty
+    bundled_loyalty = bundled_loyalty_cost_for(user, amount)
+    possible_prices.push(bundled_loyalty * amount) if bundled_loyalty
 
     possible_prices.sort.first.round
   end

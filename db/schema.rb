@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_19_043324) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_08_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -287,6 +287,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_043324) do
   create_table "line_items", id: :serial, force: :cascade do |t|
     t.integer "bundle_amount"
     t.integer "bundle_cost_in_pennies"
+    t.integer "bundled_loyalty_cost_in_pennies"
     t.string "category"
     t.string "color"
     t.integer "cost_in_pennies"
