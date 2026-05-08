@@ -1,8 +1,8 @@
 @import "config/variables";
-@import 'config/font-imports';
+@import "config/font-imports";
 
 .orders-placeholder {
-  @media(max-width: 767px) {
+  @media (max-width: 767px) {
     margin-top: 20px;
   }
 }
@@ -69,7 +69,7 @@
   height: 33px;
   border-radius: 7px;
 
-  font-family: 'MicroExtendFLF-Bold', Arial, sans-serif;
+  font-family: "MicroExtendFLF-Bold", Arial, sans-serif;
   text-align: center;
   font-size: 12px;
   color: white;
@@ -87,7 +87,7 @@
 }
 
 .shopping-cart-line-item-title {
-  font-family: 'Young', Arial, sans-serif;
+  font-family: "Young", Arial, sans-serif;
   width: 80%;
   height: 1.5em;
   overflow: hidden;
@@ -153,7 +153,10 @@ $height: 200px;
 }
 
 .full-item-img {
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   border-radius: 5px;
 
   max-height: 100%;
@@ -164,19 +167,22 @@ $height: 200px;
 .red-backed-item-title {
   position: absolute;
   background: $pkut-red;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   border-radius: 5px;
 
   color: white;
-  font-size: 40px;
-  line-height: 40px;
+  font-size: 35px;
+  line-height: 35px;
   font-weight: bold;
   letter-spacing: -3px;
   display: flex;
   justify-content: center;
   flex-direction: column;
   overflow: hidden;
-  font-family: 'roadgeek';
+  font-family: "roadgeek";
   $shadow-color: darken($pkut-red, 20%);
   // x=0;y=0;60.times {puts "#{x+=2}px #{y+=1}px 2px $shadow-color"}
   text-shadow:
@@ -267,11 +273,11 @@ $height: 200px;
 }
 
 .items-container:after {
-  content: '';
+  content: "";
   width: 100%;
   display: inline-block;
   font-size: 0;
-  line-height: 0
+  line-height: 0;
 }
 
 /* entire container, keeps perspective */
@@ -279,11 +285,14 @@ $height: 200px;
   perspective: 1000;
 }
 /* flip the pane when hovered */
-.item-flip-container:hover .item-flipper, .item-flip-container.hover .item-flipper {
+.item-flip-container:hover .item-flipper,
+.item-flip-container.hover .item-flipper {
   transform: rotateY(180deg);
 }
 
-.item-flip-container, .item-front, .item-back {
+.item-flip-container,
+.item-front,
+.item-back {
   width: $width;
   height: $height;
 }
@@ -297,7 +306,8 @@ $height: 200px;
 }
 
 /* hide back of pane during swap */
-.item-front, .item-back {
+.item-front,
+.item-back {
   backface-visibility: hidden;
 
   position: absolute;
