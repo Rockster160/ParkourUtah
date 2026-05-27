@@ -31,7 +31,7 @@ class UsersController < ApplicationController
   end
 
   def edit
-    redirect_to step_2_path unless current_user.registration_complete?
+    return redirect_to(registration_step_path_for(current_user)) unless current_user.registration_complete?
     @user = current_user
     set_notifications
   end

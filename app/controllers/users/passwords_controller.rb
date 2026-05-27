@@ -1,4 +1,8 @@
 class Users::PasswordsController < Devise::PasswordsController
+  def after_resetting_password_path_for(resource)
+    registration_step_path_for(resource) || super
+  end
+
   # GET /resource/password/new
   # def new
   #   super

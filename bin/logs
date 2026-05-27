@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -e
+
+SERVER="deploy@parkourutah.com"
+APP_DIR="/home/deploy/parkourutah/current"
+
+ssh -t "$SERVER" "APP_DIR=$APP_DIR bash -s" <<'SCRIPT'
+cd "$APP_DIR"
+
+tag() {
+  local color=$1 label=$2
+  while IFS= read -r line; do
+    printf "\033[%sm[%-7s]\033[0m %s\n" "$color" "$label" "$line"
+  done
+}
+
+pids=()
+cleanup() {
+  [ ${#pids[@]} -gt 0 ] && kill "${pids[@]}" 2>/dev/null
+  exit 0
+}
+trap cleanup INT TERM EXIT
+
+tail -n 20 -F log/production.log    2>/dev/null | tag 36 "rails"   & pids+=($!)
+tail -n 20 -F log/custom.log        2>/dev/null | tag 35 "custom"  & pids+=($!)
+tail -n 20 -F log/custom_logger.txt 2>/dev/null | tag 33 "cuslogr" & pids+=($!)
+sudo journalctl -fu puma    -n 20 --no-pager 2>/dev/null | tag 32 "puma"    & pids+=($!)
+sudo journalctl -fu sidekiq -n 20 --no-pager 2>/dev/null | tag 34 "sidekiq" & pids+=($!)
+
+wait
+SCRIPT

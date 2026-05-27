@@ -23,6 +23,21 @@ class ApplicationController < ActionController::Base
     step_2_path
   end
 
+  def after_sign_in_path_for(resource)
+    registration_step_path_for(resource) || super
+  end
+
+  def registration_step_path_for(resource)
+    return nil unless resource.is_a?(User)
+    return nil if resource.registration_complete?
+    case resource.registration_step
+    when 3 then step_3_path
+    when 4 then step_4_path
+    when 5 then step_5_path
+    else step_2_path
+    end
+  end
+
   def merge_carts
     if user_signed_in? && session["cart_id"]
       items_to_add = Cart.find(session["cart_id"].to_i).items.map(&:id)

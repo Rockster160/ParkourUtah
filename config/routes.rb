@@ -158,7 +158,7 @@ Rails.application.routes.draw do
   resource :user, except: [ :show ] do
     post :update_card_details
   end
-  devise_for :users
+  devise_for :users, controllers: { passwords: 'users/passwords' }
   devise_scope :user do
     get "/account" => "users#edit"
   end
