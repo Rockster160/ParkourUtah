@@ -178,5 +178,14 @@ RSpec.describe Athlete, type: :model do
       matched_plan, _ = athlete.relevant_plan(event)
       expect(matched_plan).to eq(plan)
     end
+
+    it "treats count: 0 as unlimited and matches no matter how many attendances exist" do
+      plan = create(:purchased_plan_item, :active, user: athlete.user, athlete: athlete, plan_item: plan_item)
+      plan.update!(free_items: [{ "tags" => ["classes"], "count" => 0, "interval" => "day" }])
+      20.times { record_attendance_on(plan, created_at: Time.current) }
+      matched_plan, matched_item = athlete.relevant_plan(event)
+      expect(matched_plan).to eq(plan)
+      expect(matched_item["count"].to_i).to eq(0)
+    end
   end
 end

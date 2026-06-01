@@ -21,6 +21,7 @@
     <p>Credits: <%= @user.credits %> -- <a data-toggle="modal" data-target="#adjust-<%= @user.id %>" class="forceOpen">Adjust</a></p>
     <p><a data-toggle="modal" data-target="#edit_user_notifications" class="forceOpen">Edit Notifications</a></p>
     <p><a data-toggle="modal" data-target="#edit_user_subscriptions" class="forceOpen">Edit Subscriptions</a></p>
+    <p><a data-toggle="modal" data-target="#edit_user_plans" class="forceOpen">Edit Plans</a> (<%= @user.purchased_plan_items.active.count %> active)</p>
     <p><a href="<%= attendance_admin_user_path(@user) %>">Attendance History</a></p>
     <p>Last seen:
       <% if @user.signed_in? %>
@@ -39,6 +40,17 @@
   <% @user.athletes_by_waiver_expiration.each do |athlete| %>
     <% if athlete.has_unlimited_access? %>
       <span style="color: green;">--Has unlimited access until: <%= athlete.has_access_until.strftime('%B %e, %Y') %></span><br/>
+    <% end %>
+    <% athlete.purchased_plan_items.active.order(:expires_at).each do |plan| %>
+      <% plan_name = plan.plan_item&.name.presence || plan.plan_item&.line_item&.title || "Plan ##{plan.id}" %>
+      <%
+        status_label, status_class = (
+          if plan.auto_renew? then ["Auto-renews", "status-good"]
+          else                      ["Auto-renew off", "status-warn"]
+          end
+        )
+      %>
+      <span style="color: green;">--Plan: <strong><%= plan_name %></strong><% if plan.expires_at.present? %> · <%= plan.auto_renew? ? "Next bill" : "Expires" %> <%= (plan.auto_renew? ? plan.expires_at + 1.day : plan.expires_at).strftime('%b %-d, %Y') %><% end %> <span class="status-badge <%= status_class %>"><%= status_label %></span></span><br/>
     <% end %>
     --<strong><%= athlete.full_name %></strong> - Fast Pass ID: <%= athlete.fast_pass_id.to_s.rjust(4, "0") %><%= athlete.current_subscription.try(:auto_renew) ? '*' : '' %><br/>
     <% if athlete.unused_trials.count > 0 %>
@@ -97,3 +109,4 @@
 
 <%= render partial: 'edit_user_notifications', locals: {user: @user} %>
 <%= render partial: 'edit_user_subscriptions', locals: {user: @user} %>
+<%= render partial: 'edit_user_plans', locals: {user: @user} %>

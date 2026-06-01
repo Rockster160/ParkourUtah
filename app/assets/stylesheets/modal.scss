@@ -1,42 +1,176 @@
 @import "config/variables";
 @import 'config/font-imports';
 
+// Shared compact components — used inside modals AND on listing pages.
+
+.tag-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  margin: 0 2px;
+  border-radius: 999px;
+  background: $pkut-grey-white;
+  color: $pkut-grey-dark;
+  font-size: 0.85em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  vertical-align: middle;
+
+  &.status-good    { background: $mat-green-light;  color: $mat-green-dark; }
+  &.status-warn    { background: $mat-orange-light; color: $mat-orange-dark; }
+  &.status-bad     { background: lighten($pkut-red, 35%); color: $pkut-red-dark; }
+  &.status-neutral { background: $pkut-grey-white; color: $pkut-grey-dark; }
+}
+
 .modal {
   overflow-y: auto;
-  .modal-container {
+
+  .modal-dialog.modal-container {
     margin: 70px auto auto;
     width: 900px;
     max-width: 90%;
-    min-height: 6em;
+  }
 
+  .modal-container .modal-content {
+    position: relative;
+    min-height: 6em;
     text-align: center;
     font-size: 14px;
     color: black;
-    padding: 1em 10% 2em;
-
+    padding: 1.5em 1.5em 2em;
     background: white;
-    border: 2px solid $pkut-grey-dark;
+    border: 1px solid $pkut-grey-light;
     border-radius: 7px;
-    padding-left: 10px;
-    padding-right: 30px;
-    .close-btn {
-      top: -15px;
-      right: -28px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px 8px;
+    background: transparent;
+    border: 0;
+    color: $pkut-grey-dark;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 2;
+
+    &:hover { color: $pkut-red; }
+
+    .fa, .far, .fas { font-size: 1.4em; }
+  }
+
+  &.skinny-modal .modal-dialog.modal-container { width: 450px; }
+  &.medium-modal .modal-dialog.modal-container { width: 700px; }
+  &.text-left .modal-content { text-align: left; }
+
+  // --- Shared content components ---
+
+  .modal-section {
+    text-align: left;
+    padding: 1em 0;
+    border-top: 1px solid $pkut-grey-white;
+
+    &:first-of-type {
+      border-top: none;
+      padding-top: 0.5em;
+    }
+
+    > h3 {
+      margin: 0 0 0.75em;
+      font-size: 1.1em;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: $pkut-grey-dark;
     }
   }
-  &.skinny-modal {
-    .modal-container {
-      width: 450px;
-    }
+
+  .modal-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    padding: 0.5em 0;
+
+    + .modal-row { border-top: 1px dashed $pkut-grey-white; }
+
+    .modal-row-body  { flex: 1; min-width: 0; }
+    .modal-row-actions { flex: 0 0 auto; .pkut-btn { margin: 0; } }
   }
-  &.medium-modal {
-    .modal-container {
-      width: 700px;
+
+  // --- Plan card ---
+
+  .plan-card {
+    border: 1px solid $pkut-grey-white;
+    border-radius: 6px;
+    padding: 0.85em 1em;
+    margin-bottom: 0.75em;
+    background: white;
+
+    .plan-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5em;
+      margin-bottom: 0.5em;
+
+      .plan-name { font-weight: 700; font-size: 1em; }
     }
-  }
-  &.text-left {
-    .modal-container {
-      text-align: left;
+
+    .plan-fields {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      column-gap: 0.75em;
+      row-gap: 0.25em;
+      margin-bottom: 0.5em;
+
+      dt { color: $pkut-grey-dark; font-weight: 600; }
+      dd { margin: 0; }
+    }
+
+    .plan-benefit-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.25em 0 0.5em;
+
+      li {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        padding: 0.25em 0;
+        font-size: 0.95em;
+
+        .benefit-value {
+          font-variant-numeric: tabular-nums;
+          min-width: 6em;
+          color: $pkut-grey-dark;
+        }
+      }
+
+      .empty-note { color: $pkut-grey; font-style: italic; }
+    }
+
+    .plan-benefit-heading {
+      margin: 0.5em 0 0.15em;
+      font-size: 0.8em;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: $pkut-grey;
+    }
+
+    .plan-card-actions {
+      margin-top: 0.5em;
+      text-align: right;
     }
   }
 }

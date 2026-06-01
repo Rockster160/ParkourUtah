@@ -179,7 +179,7 @@ class Athlete < ApplicationRecord
             item_attendances.where(created_at: now.beginning_of_month..now.end_of_month)
           end
         )
-        next if relevant_attendances.count >= item["count"]
+        next if item["count"].to_i > 0 && relevant_attendances.count >= item["count"].to_i
 
         break [plan, item]
       end

@@ -1,0 +1,33 @@
+<%= render_modal("edit_user_plans") do %>
+  <h1 class="pkut-text hidden-xs">Plans</h1>
+  <h4 class="pkut-text visible-xs">Plans</h4>
+
+  <% active_plans = @user.purchased_plan_items.active.order(:expires_at) %>
+  <% assigned_plans = active_plans.select { |p| p.athlete_id.present? } %>
+  <% unassigned_plans = active_plans.select { |p| p.athlete_id.nil? } %>
+
+  <% if active_plans.empty? %>
+    <div class="modal-section">
+      <p>This user has no active plans.</p>
+    </div>
+  <% end %>
+
+  <% if assigned_plans.any? %>
+    <div class="modal-section">
+      <h3>Assigned</h3>
+      <% assigned_plans.each do |plan| %>
+        <%= render partial: 'admin_users/plan_card', locals: { plan: plan } %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if unassigned_plans.any? %>
+    <div class="modal-section">
+      <h3>Unassigned</h3>
+      <p style="margin-bottom: 0.5em;"><small>Benefits do not apply until the user assigns these to an athlete.</small></p>
+      <% unassigned_plans.each do |plan| %>
+        <%= render partial: 'admin_users/plan_card', locals: { plan: plan } %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

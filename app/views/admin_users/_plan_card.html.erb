@@ -1,0 +1,84 @@
+<%#
+  Renders one PurchasedPlanItem as a structured card.
+  Locals:
+    plan — PurchasedPlanItem
+%>
+<%
+  plan_name  = plan.plan_item&.name.presence || plan.plan_item&.line_item&.title || "Plan ##{plan.id}"
+  free_items = Array(plan.free_items).reject { |i| Array(i["tags"]).empty? }
+  discounts  = Array(plan.discount_items).reject { |i| Array(i["tags"]).empty? || i["discount"].to_s.blank? }
+
+  status_label, status_class = (
+    if plan.athlete_id.blank?
+      ["Unassigned", "status-bad"]
+    elsif plan.auto_renew?
+      ["Auto-renews", "status-good"]
+    else
+      ["Auto-renew off", "status-warn"]
+    end
+  )
+%>
+<div class="plan-card">
+  <div class="plan-card-head">
+    <span class="plan-name"><%= plan_name %></span>
+    <span class="status-badge <%= status_class %>"><%= status_label %></span>
+  </div>
+
+  <dl class="plan-fields">
+    <dt>Athlete</dt>
+    <dd><%= plan.athlete&.full_name.presence || "—" %></dd>
+
+    <dt>Price</dt>
+    <dd><%= number_to_currency(plan.cost) %><% if plan.cost_in_pennies.to_i > 0 %>/mo<% end %></dd>
+
+    <% if plan.expires_at.present? %>
+      <dt><%= plan.auto_renew? ? "Next bill" : "Expires" %></dt>
+      <dd><%= (plan.auto_renew? ? plan.expires_at + 1.day : plan.expires_at).strftime('%b %-d, %Y') %></dd>
+    <% end %>
+
+    <dt>Purchased</dt>
+    <dd><%= plan.created_at.strftime('%b %-d, %Y') %></dd>
+  </dl>
+
+  <div class="plan-benefit-heading">Free Classes</div>
+  <ul class="plan-benefit-list">
+    <% if free_items.any? %>
+      <% free_items.each do |item| %>
+        <%
+          count = item["count"].to_i
+          value = count.zero? ? "Unlimited /  #{item["interval"]}" : "#{count} /  #{item["interval"]}"
+        %>
+        <li>
+          <span class="benefit-value"><%= value %></span>
+          <% Array(item["tags"]).each do |tag| %>
+            <span class="tag-pill"><%= tag %></span>
+          <% end %>
+        </li>
+      <% end %>
+    <% else %>
+      <li class="empty-note">None</li>
+    <% end %>
+  </ul>
+
+  <div class="plan-benefit-heading">Discounts</div>
+  <ul class="plan-benefit-list">
+    <% if discounts.any? %>
+      <% discounts.each do |item| %>
+        <li>
+          <span class="benefit-value"><%= item["discount"] %> off</span>
+          <% Array(item["tags"]).each do |tag| %>
+            <span class="tag-pill"><%= tag %></span>
+          <% end %>
+        </li>
+      <% end %>
+    <% else %>
+      <li class="empty-note">None</li>
+    <% end %>
+  </ul>
+
+  <% if plan.athlete_id.present? && plan.auto_renew? %>
+    <div class="plan-card-actions">
+      <%= link_to 'Cancel auto-renew', unsubscribe_plan_athlete_path(plan.athlete_id, plan_id: plan), class: 'pkut-btn', method: :delete %>
+    </div>
+  <% end %>
+</div>

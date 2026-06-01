@@ -10,29 +10,52 @@
         <%= f.text_field :name, class: "customRequired pkut-textbox" %>
       </div>
 
-      <div class="">
-        <h3>Granted access for classes</h3>
-        <div class="infinite-wrapper">
-          <template>
-            <%= render partial: "row_template", locals: { item: nil, type: :free_items } %>
-          </template>
-          <div class="infinite-rows">
-            <% @plan.free_items&.each do |item| %>
-              <%= render partial: "row_template", locals: { item: item, type: :free_items } %>
-            <% end %>
+      <h3>Granted access for classes</h3>
+      <div class="infinite-wrapper plan-row-grid plan-row-grid--free">
+        <div class="plan-row-header">
+          <div>
+            <h4>Tag(s)</h4>
+            <span>Comma separated</span>
           </div>
+          <div>
+            <h4>Count</h4>
+            <span>Classes per interval. 0 = unlimited.</span>
+          </div>
+          <div>
+            <h4>Interval</h4>
+          </div>
+          <div></div>
         </div>
+        <template>
+          <%= render partial: "row_template", locals: { item: nil, type: :free_items } %>
+        </template>
+        <div class="infinite-rows">
+          <% @plan.free_items&.each do |item| %>
+            <%= render partial: "row_template", locals: { item: item, type: :free_items } %>
+          <% end %>
+        </div>
+      </div>
 
-        <h3>Discounts for shop items</h3>
-        <div class="infinite-wrapper">
-          <template>
-            <%= render partial: "row_template", locals: { item: nil, type: :discount_items } %>
-          </template>
-          <div class="infinite-rows">
-            <% @plan.discount_items&.each do |item| %>
-              <%= render partial: "row_template", locals: { item: item, type: :discount_items } %>
-            <% end %>
+      <h3>Discounts for shop items</h3>
+      <div class="infinite-wrapper plan-row-grid plan-row-grid--discount">
+        <div class="plan-row-header">
+          <div>
+            <h4>Tag(s)</h4>
+            <span>Comma separated</span>
           </div>
+          <div>
+            <h4>Discount</h4>
+            <span>Use "$10" for a flat amount or "10%" for a percentage.</span>
+          </div>
+          <div></div>
+        </div>
+        <template>
+          <%= render partial: "row_template", locals: { item: nil, type: :discount_items } %>
+        </template>
+        <div class="infinite-rows">
+          <% @plan.discount_items&.each do |item| %>
+            <%= render partial: "row_template", locals: { item: item, type: :discount_items } %>
+          <% end %>
         </div>
       </div>
 
