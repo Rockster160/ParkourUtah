@@ -136,4 +136,47 @@ RSpec.describe Athlete, type: :model do
       expect(Athlete.verified).not_to include(unverified)
     end
   end
+
+  describe "#relevant_plan" do
+    let(:athlete) { create(:athlete) }
+    let(:plan_item) { create(:plan_item) }
+    let(:event) { create(:event) }
+
+    def record_attendance_on(plan, free_item_index: 0, created_at: Time.current)
+      attendance = create(:attendance, athlete: athlete, type_of_charge: "Plan", purchased_plan_item_id: plan.id)
+      attendance.update_columns(created_at: created_at)
+      plan.free_items[free_item_index]["attendance_ids"] ||= []
+      plan.free_items[free_item_index]["attendance_ids"] << attendance.id
+      plan.save!
+      attendance
+    end
+
+    it "matches for a freshly assigned plan with no prior attendances" do
+      plan = create(:purchased_plan_item, :active, user: athlete.user, athlete: athlete, plan_item: plan_item)
+      matched_plan, matched_item = athlete.relevant_plan(event)
+      expect(matched_plan).to eq(plan)
+      expect(matched_item["tags"]).to include("classes")
+    end
+
+    it "does not match when the per-interval limit is already used up this week" do
+      plan = create(:purchased_plan_item, :active, user: athlete.user, athlete: athlete, plan_item: plan_item)
+      2.times { record_attendance_on(plan, created_at: Time.current) }
+      expect(athlete.relevant_plan(event)).to be_nil
+    end
+
+    it "matches this week even after using the limit in a prior week (regression for cumulative-count bug)" do
+      plan = create(:purchased_plan_item, :active, user: athlete.user, athlete: athlete, plan_item: plan_item)
+      2.times { record_attendance_on(plan, created_at: 2.weeks.ago) }
+      matched_plan, _ = athlete.relevant_plan(event)
+      expect(matched_plan).to eq(plan)
+    end
+
+    it "matches this month for a monthly plan after using last month's allotment" do
+      plan = create(:purchased_plan_item, :active, user: athlete.user, athlete: athlete, plan_item: plan_item)
+      plan.update!(free_items: [{ "tags" => ["classes"], "count" => 5, "interval" => "month" }])
+      5.times { record_attendance_on(plan, created_at: 5.weeks.ago) }
+      matched_plan, _ = athlete.relevant_plan(event)
+      expect(matched_plan).to eq(plan)
+    end
+  end
 end

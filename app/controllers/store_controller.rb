@@ -135,64 +135,83 @@ class StoreController < ApplicationController
 
   def create_charge
     stripe_charge = nil
-    if @cart.price > 0
+
+    begin
+      ActiveRecord::Base.transaction do
+        @cart.update!(purchased_at: DateTime.current)
+
+        @cart.cart_items.each do |order|
+          line_item = LineItem.find(order.line_item_id)
+
+          if RedemptionKey.redeem(order.redeemed_token) && user_signed_in?
+            current_user.update!(credits: current_user.credits + (order.amount * line_item.credits))
+          end
+
+          if line_item.id == 44
+            order.amount.times do
+              current_user.recurring_subscriptions.create!(cost_in_pennies: 55, auto_renew: false)
+            end
+          end
+
+          plan_item = line_item.plan_item
+          if plan_item.present?
+            @purchased_subscription = true
+            current_user.purchased_plan_items.create!(
+              cart_id: @cart.id,
+              stripe_id: @customer.try(:id),
+              plan_item_id: plan_item.id,
+              cost_in_pennies: line_item.cost_in_pennies,
+              discount_items: plan_item.discount_items,
+              free_items: plan_item.free_items,
+            )
+          end
+
+          if line_item.is_subscription? && user_signed_in?
+            @purchased_subscription = true
+            order.amount.times do
+              current_user.recurring_subscriptions.create!(cost_in_pennies: line_item.cost_in_pennies, stripe_id: @customer.try(:id))
+            end
+          end
+        end
+
+        # Charge the card only after every record has been written successfully.
+        # If Stripe fails the entire transaction is rolled back so we never end up
+        # with money taken but no record on file (or records on file with no money taken).
+        if @cart.price > 0
+          begin
+            stripe_charge = Stripe::Charge.create({
+              amount: @cart.total,
+              currency: "usd"
+            }.merge(@customer.present? ? {customer: @customer.id} : {source: params[:stripeToken]}))
+          rescue Stripe::CardError => e
+            stripe_charge = {failure_message: "Failed to Charge: #{e}"}
+          rescue StandardError => e
+            CustomLogger.log("\e[31mOther error: \n#{e}\e[0m")
+            stripe_charge = {failure_message: "Failed to Charge, try logging out and back in or trying a different browser."}
+          end
+        end
+
+        order_success = stripe_charge.nil? || stripe_charge.try(:status) == "succeeded"
+        unless order_success
+          @stripe_error = stripe_charge.try(:failure_message)
+          CustomLogger.log("Stripe Error: \e[31m#{stripe_charge}\e[0m", current_user, nil)
+          raise ActiveRecord::Rollback
+        end
+      end
+    rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved, ActiveRecord::NotNullViolation => e
+      CustomLogger.log("Purchase DB error (no Stripe charge attempted): \e[31m#{e.class}: #{e.message}\e[0m", current_user, nil)
       begin
-        stripe_charge = Stripe::Charge.create({
-          amount: @cart.total,
-          currency: "usd"
-        }.merge(@customer.present? ? {customer: @customer.id} : {source: params[:stripeToken]}))
-      rescue Stripe::CardError => e
-        stripe_charge = {failure_message: "Failed to Charge: #{e}"}
-      rescue StandardError => e
-        CustomLogger.log("\e[31mOther error: \n#{e}\e[0m")
-        stripe_charge = {failure_message: "Failed to Charge, try logging out and back in or trying a different browser."}
+        SlackNotifier.notify("Purchase rolled back due to DB error before Stripe charge: User #{current_user&.id} | Cart #{@cart&.id} | #{e.class}: #{e.message}", "#server-errors")
+      rescue StandardError
+        # don't let a Slack hiccup mask the underlying error
       end
+      @stripe_error = "There was an error processing your purchase. You have not been charged. Please try again or contact support."
+      @did_charge = false
+      return false
     end
-    # Probably shouldn't be a nil check here- nil should be an invalid charge
-    order_success = stripe_charge.nil? || stripe_charge.try(:status) == "succeeded"
-    if order_success
-      @cart.update(purchased_at: DateTime.current)
-      @cart.cart_items.each do |order|
-        line_item = LineItem.find(order.line_item_id)
-        if RedemptionKey.redeem(order.redeemed_token)
-          current_user.update(credits: (current_user.credits + (order.amount * line_item.credits))) if user_signed_in?
-        end
-        if line_item.id == 44
-          order.amount.times do
-            new_sub = current_user.recurring_subscriptions.create(cost_in_pennies: 55, auto_renew: false)
-            unless new_sub.persisted?
-              CustomLogger.log("Discount Subscription Error! User: #{current_user.try(:id)} Item: #{line_item.try(:id)} Cost: #{line_item.try(:cost_in_pennies)}")
-            end
-          end
-        end
-        plan_item = line_item.plan_item
-        if plan_item.present?
-          @purchased_subscription = true
-          current_user.purchased_plan_items.create(
-            cart_id: @cart.id,
-            stripe_id: @customer.try(:id),
-            plan_item_id: plan_item.id,
-            cost_in_pennies: line_item.cost_in_pennies,
-            discount_items: plan_item.discount_items,
-            free_items: plan_item.free_items,
-          )
-        end
-        if line_item.is_subscription? && user_signed_in?
-          @purchased_subscription = true
-          order.amount.times do
-            new_sub = current_user.recurring_subscriptions.create(cost_in_pennies: line_item.cost_in_pennies, stripe_id: @customer.try(:id))
-            unless new_sub.persisted?
-              CustomLogger.log("Subscription Error! User: #{current_user.try(:id)} Item: #{line_item.try(:id)} Cost: #{line_item.try(:cost_in_pennies)} CustID: #{@customer.try(:id)}")
-            end
-          end
-        end
-      end
-    else
-      @stripe_error = stripe_charge.try(:failure_message)
-      CustomLogger.log("Stripe Error: \e[31m#{stripe_charge}\e[0m", current_user, nil)
-    end
-    @did_charge = order_success
-    return order_success
+
+    @did_charge = stripe_charge.nil? || stripe_charge.try(:status) == "succeeded"
+    @did_charge
   end
 
   def purchase_cart

@@ -167,8 +167,6 @@ class Athlete < ApplicationRecord
         next unless matching_tags.any?
 
         attendance_ids = item["attendance_ids"] || []
-        next if item["count"].to_i > 0 && attendance_ids.count >= item["count"]
-
         item_attendances = Attendance.where(id: attendance_ids)
         now = Time.current
         relevant_attendances = (
