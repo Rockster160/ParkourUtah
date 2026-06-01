@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -e
+
+SERVER="deploy@parkourutah.com"
+APP_DIR="/home/deploy/parkourutah/current"
+DB="parkourutah_production"
+DB_USER="deploy"
+
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+FILENAME="backup_${TIMESTAMP}.dump"
+REMOTE_PATH="/tmp/${FILENAME}"
+LOCAL_PATH="$(cd "$(dirname "$0")/.." && pwd)/${FILENAME}"
+
+log() { echo -e "\033[96m==> $1\033[0m"; }
+err() { echo -e "\033[91m==> ERROR: $1\033[0m"; }
+
+cleanup_remote() {
+  ssh "$SERVER" "rm -f $REMOTE_PATH" 2>/dev/null || true
+}
+trap 'err "Aborted — cleaning up remote dump"; cleanup_remote' INT TERM
+
+log "Dumping $DB on $SERVER → $REMOTE_PATH"
+ssh "$SERVER" "APP_DIR=$APP_DIR DB=$DB DB_USER=$DB_USER REMOTE_PATH=$REMOTE_PATH bash -s" <<'SCRIPT'
+set -e
+cd "$APP_DIR"
+set -a; source .env; set +a
+PGPASSWORD="$PKUT_DB_PASSWORD" pg_dump -U "$DB_USER" -h localhost -Fc -f "$REMOTE_PATH" "$DB"
+SCRIPT
+
+log "Downloading → $LOCAL_PATH"
+scp "$SERVER:$REMOTE_PATH" "$LOCAL_PATH"
+
+log "Removing remote dump"
+ssh "$SERVER" "rm -f $REMOTE_PATH"
+
+SIZE=$(du -h "$LOCAL_PATH" | cut -f1)
+log "\033[32mDone — $LOCAL_PATH ($SIZE)"
+echo
+echo -e "\033[90mTo restore locally:\033[0m"
+echo -e "  \033[33mbin/restore $FILENAME\033[0m"
