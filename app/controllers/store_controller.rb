@@ -153,6 +153,10 @@ class StoreController < ApplicationController
             end
           end
 
+          # Lock in the actual per-unit price the user paid (after any applicable
+          # plan-based discount) so renewals bill the same amount, not full price.
+          paid_unit_price = line_item.cost_for(1, current_user)
+
           plan_item = line_item.plan_item
           if plan_item.present?
             @purchased_subscription = true
@@ -161,7 +165,7 @@ class StoreController < ApplicationController
                 cart_id: @cart.id,
                 stripe_id: @customer.try(:id),
                 plan_item_id: plan_item.id,
-                cost_in_pennies: line_item.cost_in_pennies,
+                cost_in_pennies: paid_unit_price,
                 discount_items: plan_item.discount_items,
                 free_items: plan_item.free_items,
               )
@@ -171,7 +175,7 @@ class StoreController < ApplicationController
           if line_item.is_subscription? && user_signed_in?
             @purchased_subscription = true
             order.amount.times do
-              current_user.recurring_subscriptions.create!(cost_in_pennies: line_item.cost_in_pennies, stripe_id: @customer.try(:id))
+              current_user.recurring_subscriptions.create!(cost_in_pennies: paid_unit_price, stripe_id: @customer.try(:id))
             end
           end
         end
