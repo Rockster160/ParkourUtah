@@ -153,9 +153,10 @@ class StoreController < ApplicationController
             end
           end
 
-          # Lock in the actual per-unit price the user paid (after any applicable
-          # plan-based discount) so renewals bill the same amount, not full price.
-          paid_unit_price = line_item.cost_for(1, current_user)
+          # Lock in the actual per-unit price the user paid (after loyalty,
+          # bundle, bundled-loyalty, and plan-based discounts) so renewals bill
+          # the same amount instead of the full LineItem price.
+          paid_unit_price = (line_item.cost_for(order.amount, current_user) / order.amount.to_f).round
 
           plan_item = line_item.plan_item
           if plan_item.present?
