@@ -41,6 +41,26 @@ RSpec.describe ApplicationMailer, type: :mailer do
     end
   end
 
+  describe "#subscription_needs_reauth_mail" do
+    it "sends the reauth notice with a link to the subscriptions tab" do
+      user = create(:user)
+      mail = ApplicationMailer.subscription_needs_reauth_mail(user.id)
+      expect(mail.to).to eq([user.email])
+      expect(mail.subject).to include("didn't renew")
+      expect(mail.body.to_s).to include("tab=subscriptions")
+    end
+  end
+
+  describe "#subscription_charge_declined_mail" do
+    it "sends the decline notice with a link to the subscriptions tab" do
+      user = create(:user)
+      mail = ApplicationMailer.subscription_charge_declined_mail(user.id)
+      expect(mail.to).to eq([user.email])
+      expect(mail.subject).to include("declined")
+      expect(mail.body.to_s).to include("tab=subscriptions")
+    end
+  end
+
   describe "#low_credits_mail" do
     it "sends low credit warning" do
       user = create(:user)

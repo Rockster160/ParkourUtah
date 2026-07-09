@@ -177,7 +177,11 @@ class StoreController < ApplicationController
             end
           end
 
-          if line_item.is_subscription? && user_signed_in?
+          # Hybrid line items (both is_subscription AND plan_item_id set — LI #12)
+          # would previously create both an RS and a PPI, then both would try to
+          # renew and double-charge. When a plan_item is present, that PPI is the
+          # authoritative renewal record; skip the RS.
+          if line_item.is_subscription? && plan_item.blank? && user_signed_in?
             @purchased_subscription = true
             order.amount.times do
               current_user.recurring_subscriptions.create!(cost_in_pennies: paid_unit_price, stripe_id: @customer.try(:id))

@@ -118,32 +118,43 @@ class ScheduleWorker
       recurring_subscriptions.group_by(&:stripe_id).each do |stripe_id, stripe_subscriptions|
         next unless stripe_id.present?
         total_cost = stripe_subscriptions.map(&:cost_in_pennies).sum
-        begin
-          stripe_charge = Stripe::Charge.create({
-            amount:   total_cost,
-            currency: "usd",
-            customer: stripe_subscriptions.first.stripe_id
-          })
-        rescue Stripe::CardError => e
-          stripe_charge = {failure_message: "Stripe Error: Failed to Charge: #{e}"}
-        rescue StandardError => e
-          stripe_charge = {failure_message: "Failed to Charge: #{e}"}
+        # $0 subs (comp'd/legacy free) never had a real charge to attempt.
+        # Skip Stripe and just renew the record.
+        stripe_charge = nil
+        charge_succeeded = if total_cost <= 0
+          true
+        else
+          begin
+            stripe_charge = Stripe::Charge.create(amount: total_cost, currency: "usd", customer: stripe_subscriptions.first.stripe_id)
+          rescue Stripe::CardError => e
+            stripe_charge = {failure_message: "Stripe Error: Failed to Charge: #{e}"}
+          rescue StandardError => e
+            stripe_charge = {failure_message: "Failed to Charge: #{e}"}
+          end
+          stripe_charge.try(:status) == "succeeded"
         end
-        if stripe_charge.try(:status) == "succeeded"
+        if charge_succeeded
           slack_message = "Charged Unlimited Subscriptions for #{user.email} at #{number_to_currency(total_cost/100.to_f)}."
           channel = Rails.env.production? ? "#purchases" : "#slack-testing"
           SlackNotifier.notify(slack_message, channel)
 
           stripe_subscriptions.each do |recurring_subscription|
-            recurring_subscription.update(auto_renew: false)
-            new_sub = user.recurring_subscriptions.create(athlete_id: recurring_subscription.athlete_id, auto_renew: true, cost_in_pennies: recurring_subscription.cost_in_pennies, stripe_id: recurring_subscription.stripe_id)
-            unless new_sub.persisted?
-              SlackNotifier.notify("Failed to create new sub: ```#{new_sub.try(:attributes)}\n#{new_sub.try(:errors).try(:full_messages)}```", "#server-errors")
+            RecurringSubscription.transaction do
+              recurring_subscription.lock!
+              # Guard against races with users_controller#update_card_details:
+              # if the state already flipped, don't create a duplicate renewal.
+              next unless recurring_subscription.auto_renew?
+              recurring_subscription.update(auto_renew: false)
+              new_sub = user.recurring_subscriptions.create(athlete_id: recurring_subscription.athlete_id, auto_renew: true, cost_in_pennies: recurring_subscription.cost_in_pennies, stripe_id: recurring_subscription.stripe_id)
+              unless new_sub.persisted?
+                SlackNotifier.notify("Failed to create new sub: ```#{new_sub.try(:attributes)}\n#{new_sub.try(:errors).try(:full_messages)}```", "#server-errors")
+              end
             end
           end
         else
           stripe_subscriptions.each { |subscription| subscription.update(card_declined: true) }
           SlackNotifier.notify("There was an issue updating the subscription for #{user.email}\n```#{stripe_charge}```", "#server-errors")
+          ApplicationMailer.subscription_charge_declined_mail(user.id).deliver_later rescue nil
         end
       end
     end
@@ -155,44 +166,52 @@ class ScheduleWorker
       recurring_plan.group_by(&:stripe_id).each do |stripe_id, plans|
         next unless stripe_id.present?
         stripe_error = nil
+        stripe_charge = nil
 
         total_cost = plans.map(&:cost_in_pennies).sum
-        begin
-          stripe_charge = Stripe::Charge.create({
-            amount:   total_cost,
-            currency: "usd",
-            customer: stripe_id
-          })
-        rescue Stripe::CardError => e
-          stripe_charge = { failure_message: "Stripe Error: Failed to Charge: #{e}" }
-          stripe_error = e
-        rescue StandardError => e
-          stripe_charge = { failure_message: "Failed to Charge: #{e}" }
-          stripe_error = e
+        charge_succeeded = if total_cost <= 0
+          true
+        else
+          begin
+            stripe_charge = Stripe::Charge.create(amount: total_cost, currency: "usd", customer: stripe_id)
+          rescue Stripe::CardError => e
+            stripe_error = e
+            stripe_charge = { failure_message: "Stripe Error: Failed to Charge: #{e}" }
+          rescue StandardError => e
+            stripe_error = e
+            stripe_charge = { failure_message: "Failed to Charge: #{e}" }
+          end
+          stripe_charge.try(:status) == "succeeded"
         end
-        if stripe_charge.try(:status) == "succeeded"
+        if charge_succeeded
           slack_message = "Charged Plan Subscriptions for #{user.email} at #{number_to_currency(total_cost/100.to_f)}."
           channel = Rails.env.production? ? "#purchases" : "#slack-testing"
           SlackNotifier.notify(slack_message, channel)
 
           plans.each do |plan|
-            plan.update(auto_renew: false)
-            new_sub = user.purchased_plan_items.create(
-              athlete_id: plan.athlete_id,
-              stripe_id: plan.stripe_id,
-              plan_item_id: plan.plan_item_id,
-              cost_in_pennies: plan.cost_in_pennies,
-              discount_items: plan.discount_items,
-              free_items: plan.free_items,
-              expires_at: 1.month.from_now,
-            )
-            unless new_sub.persisted?
-              SlackNotifier.notify("Failed to create new sub: ```#{new_sub.try(:attributes)}\n#{new_sub.try(:errors).try(:full_messages)}```", "#server-errors")
+            PurchasedPlanItem.transaction do
+              plan.lock!
+              # Guard against races with users_controller#update_card_details.
+              next unless plan.auto_renew?
+              plan.update(auto_renew: false)
+              new_sub = user.purchased_plan_items.create(
+                athlete_id: plan.athlete_id,
+                stripe_id: plan.stripe_id,
+                plan_item_id: plan.plan_item_id,
+                cost_in_pennies: plan.cost_in_pennies,
+                discount_items: plan.discount_items,
+                free_items: plan.free_items,
+                expires_at: 1.month.from_now,
+              )
+              unless new_sub.persisted?
+                SlackNotifier.notify("Failed to create new sub: ```#{new_sub.try(:attributes)}\n#{new_sub.try(:errors).try(:full_messages)}```", "#server-errors")
+              end
             end
           end
         else
           plans.each { |subscription| subscription.update(card_declined: stripe_error) }
           SlackNotifier.notify("There was an issue updating the subscription for #{user.email}\n```#{stripe_charge}```", "#server-errors")
+          ApplicationMailer.subscription_charge_declined_mail(user.id).deliver_later rescue nil
         end
       end
     end

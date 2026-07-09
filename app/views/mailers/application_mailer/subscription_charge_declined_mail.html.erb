@@ -1,0 +1,9 @@
+<h2>Hi <%= @user.first_name.presence || "there" %>,</h2>
+
+<p>We tried to process your Parkour Utah subscription payment today, but the card on file was declined. This can happen if a card expired, was replaced, or the billing details changed.</p>
+
+<p><strong>To keep your subscription active, please visit <%= link_to "your account subscriptions page", account_url(tab: "subscriptions") %> and click "Update Billing Info" to save a new card.</strong> As soon as you do, we'll retry the payment and your student's access will resume without a gap.</p>
+
+<p>If you have any questions, please reply to this email and we'll be happy to help.</p>
+
+<p>- The Parkour Utah team</p>

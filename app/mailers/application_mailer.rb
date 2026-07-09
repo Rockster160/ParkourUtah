@@ -107,6 +107,11 @@ class ApplicationMailer < ActionMailer::Base
     mail(to: @user.email, subject: "Action needed: your Parkour Utah subscription didn't renew")
   end
 
+  def subscription_charge_declined_mail(user_id)
+    @user = User.find(user_id)
+    mail(to: @user.email, subject: "Action needed: your Parkour Utah payment was declined")
+  end
+
   def summary_mail(summary, to_email=nil, include_totals=false)
     @include_totals = include_totals
     @summary = summary
