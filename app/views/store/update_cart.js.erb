@@ -1,5 +1,5 @@
 $('body').prepend('<%= j render "layouts/flashes" %>');
-$('.shopping-cart-price-holder').html('<%= j number_to_currency(@cart.price_in_dollars) %>');
+$('.shopping-cart-price-holder').html('<%= j number_to_currency(@cart.subtotal_before_bundle_in_dollars) %>');
 $('.shopping-cart-taxes-holder').html('<%= j number_to_currency(@cart.taxes_in_dollars) %>');
 $('.shopping-cart-shipping-holder').html('<%= j number_to_currency(@cart.shipping_in_dollars) %>');
 $('.shopping-cart-total-holder').html('<%= j number_to_currency(@cart.total_in_dollars) %>');
@@ -8,10 +8,33 @@ $('.stripe-button').attr('data-amount', '<%= j number_to_currency(@cart.total) %
 $('.shopping-cart-line-item-quantity-input').each(function() {
   $(this).val(0);
 })
-<% @cart.cart_items.each do |order| %>
+<% @cart.cart_items.each do |order|
+     unit_price = order.item.effective_unit_price_for(order.amount, current_user)
+     has_discount = unit_price < order.item.cost_in_pennies
+     selector = order.order_name.parameterize
+%>
   var amount = "<%= order.amount %>";
-  $('.value-selector-<%= order.order_name.parameterize %>').val(amount);
+  $('.value-selector-<%= selector %>').val(amount);
+  (function() {
+    var $row = $('.value-selector-<%= selector %>').closest('.shopping-cart-line-item');
+    var $normal = $row.find('.normal-price');
+    var $discount = $row.find('.discount-price');
+    <% if has_discount %>
+      $normal.addClass('strike');
+      if ($discount.length) {
+        $discount.text('<%= j number_to_currency(unit_price / 100.0) %>');
+      } else {
+        $normal.after('<span class="discount-price"><%= j number_to_currency(unit_price / 100.0) %></span>');
+      }
+    <% else %>
+      $normal.removeClass('strike');
+      $discount.remove();
+    <% end %>
+  })();
 <% end %>
+
+// Re-render cart-wide discount summary
+$('.shopping-cart-discount-summary').html('<%= j render(partial: "store/discount_summary_rows", locals: { cart: @cart }) %>');
 
 <% if @order %>
   $('.orders-placeholder').append('<div class="hidden-holder"><%= j render partial: "shopping_cart_item", locals: {order: @order} %></div>');

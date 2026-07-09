@@ -102,6 +102,11 @@ class ApplicationMailer < ActionMailer::Base
     mail(to: @competitor.athlete.user.email, subject: "#{@competitor.athlete.full_name} has been approved!")
   end
 
+  def subscription_needs_reauth_mail(user_id)
+    @user = User.find(user_id)
+    mail(to: @user.email, subject: "Action needed: your Parkour Utah subscription didn't renew")
+  end
+
   def summary_mail(summary, to_email=nil, include_totals=false)
     @include_totals = include_totals
     @summary = summary

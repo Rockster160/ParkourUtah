@@ -12,7 +12,6 @@
   <div class="row">
     <% if current_user.purchased_plan_items.where(auto_renew: true).any? %>
       <p>You are currently set up to auto-pay for the below plans.</p>
-      <p><a href="#" data-clickit=".stripe-button-el">Update Card Details</a></p>
     <% end %>
     <% current_user.purchased_plan_items.active.order(:expires_at).each do |plan| %>
       <% athlete = plan.athlete %>
@@ -54,7 +53,6 @@
   <div class="row">
     <% if current_user.recurring_subscriptions.where(auto_renew: true).any? %>
       <p>You are currently set up to auto-pay for <strong class="pkut-text">monthly</strong> subscriptions.</p>
-      <p><a href="#" data-clickit=".stripe-button-el">Update Card Details</a></p>
     <% end %>
     <% current_user.subscribed_athletes.sort_by {|a|a.current_subscription.try(:expires_at)}.each do |athlete| %>
       <% subscription = athlete.current_subscription %>
@@ -105,13 +103,24 @@
   <% end %>
 <% end %>
 
-<%= form_tag update_card_details_user_path do %>
-  <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-          data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
-          data-image="http://parkourutah.com/favicon.ico"
-          data-name="Parkour Utah"
-          data-label="Update Card Details"
-          data-panel-label="Update Card Details"
-          data-locale="auto"
-          data-email="<%= @user.email %>"></script>
+<% if current_user.recurring_subscriptions.where(auto_renew: true).any? || current_user.purchased_plan_items.where(auto_renew: true).any? %>
+  <hr>
+  <div class="row" id="update-billing">
+    <h3>Update billing info</h3>
+    <p>Need to change the card on file? Use the button below to securely update your billing info at any time.</p>
+    <p>If your subscription didn't renew, updating your card here will restart it and process any missed charge.</p>
+    <div class="text-center">
+      <a href="#" class="pkut-btn" data-clickit=".stripe-button-el">Update Billing Info</a>
+    </div>
+    <%= form_tag update_card_details_user_path do %>
+      <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+              data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+              data-image="http://parkourutah.com/favicon.ico"
+              data-name="Parkour Utah"
+              data-label="Update Billing Info"
+              data-panel-label="Save Card"
+              data-locale="auto"
+              data-email="<%= @user.email %>"></script>
+    <% end %>
+  </div>
 <% end %>

@@ -160,17 +160,39 @@ class LineItem < ApplicationRecord
   end
 
   def cost_for(amount, user=nil)
+    priced_options_for(amount, user).min_by { |o| o[:total] }[:total].round
+  end
+
+  # Returns which discount produced the winning `cost_for` price, so the cart
+  # can explain why the total is what it is. nil means no discount applied.
+  def discount_label_for(amount, user=nil)
+    winner = priced_options_for(amount, user).min_by { |o| o[:total] }
+    winner[:label]
+  end
+
+  def effective_unit_price_for(amount, user=nil)
+    (cost_for(amount, user) / amount.to_f).round
+  end
+
+  # Per-unit price with only user-specific discounts applied (loyalty, plan).
+  # Bundle/family pricing is intentionally excluded so the cart can show it
+  # separately as a savings line.
+  def unit_price_for(user=nil)
+    cost_for(1, user)
+  end
+
+  def priced_options_for(amount, user=nil)
+    options = [{ total: cost.to_f * amount, label: nil }]
+
     discount_data = discounted_cost_data(user)
-    possible_prices = [cost.to_f * amount]
-
-    possible_prices.push(discount_data[:cost] * amount) if discount_data
-    possible_prices.push(bundle_cost_in_pennies * amount) if exceeds_bundle?(amount)
+    options << { total: discount_data[:cost] * amount, label: "Plan discount" } if discount_data
+    options << { total: bundle_cost_in_pennies * amount, label: "Family discount" } if exceeds_bundle?(amount)
     loyalty = loyalty_cost_for(user)
-    possible_prices.push(loyalty * amount) if loyalty
+    options << { total: loyalty * amount, label: "Loyalty discount" } if loyalty
     bundled_loyalty = bundled_loyalty_cost_for(user, amount)
-    possible_prices.push(bundled_loyalty * amount) if bundled_loyalty
+    options << { total: bundled_loyalty * amount, label: "Family + Loyalty discount" } if bundled_loyalty
 
-    possible_prices.sort.first.round
+    options
   end
 
   def tax_for(amount, user=nil)

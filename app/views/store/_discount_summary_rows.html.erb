@@ -1,0 +1,3 @@
+<% cart.discount_summary.each do |d| -%>
+<span class="shopping-cart-total shopping-cart-discount"><span><%= d[:label] %></span><span class="pull-right">&minus;<%= number_to_currency(d[:savings_in_pennies] / 100.0) %></span></span>
+<% end -%>

@@ -106,6 +106,27 @@ class Cart < ApplicationRecord
     cost <= 0 ? 0 : cost
   end
 
+  # Cart subtotal at the per-item price already shown inline (user-specific
+  # discounts only — no bundle/family reduction yet).
+  def subtotal_before_bundle
+    self.cart_items.sum { |order| order.item.unit_price_for(user) * order.amount.to_i }
+  end
+
+  def subtotal_before_bundle_in_dollars
+    (subtotal_before_bundle.to_f / 100).round(2)
+  end
+
+  # Cart-wide summary of reductions applied AFTER the inline per-item price.
+  # Currently that means bundle/family savings (the delta between the inline
+  # subtotal and the final `price`). Future coupons/credits would show here
+  # as additional entries.
+  def discount_summary
+    entries = []
+    bundle_savings = subtotal_before_bundle - price
+    entries << { label: "Family discount", savings_in_pennies: bundle_savings } if bundle_savings > 0
+    entries
+  end
+
   def shipping
     cost = 0
     self.cart_items.each do |order|

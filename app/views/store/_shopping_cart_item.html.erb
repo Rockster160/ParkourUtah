@@ -5,12 +5,12 @@
     <% end %>
     <span class="delete-x pull-right" id="<%= order.order_name %>">X</span>
     <div class="shopping-cart-line-item-title"><%= order.order_name %></div>
+    <% unit_price = order.item.unit_price_for(current_user) %>
+    <% has_discount = unit_price < order.item.cost_in_pennies %>
     <div class="shopping-cart-line-item-price">
-      <span class="normal-price"><%= number_to_currency(order.item.cost_in_dollars) %></span>
-      <% if order.discounted? %>
-        <span class="discount-price"><%= number_to_currency(order.discounted_cost) %></span>
-      <% else %>
-        <span class="bundle-price hidden"><%= number_to_currency(order.item.bundle_cost) %></span>
+      <span class="normal-price <%= 'strike' if has_discount %>"><%= number_to_currency(order.item.cost_in_dollars) %></span>
+      <% if has_discount %>
+        <span class="discount-price"><%= number_to_currency(unit_price / 100.0) %></span>
       <% end %>
     </div>
     <div class="shopping-cart-line-item-quantity" data-bundle-amount="<%= order.item.bundle_amount %>">

@@ -57,42 +57,71 @@ class UsersController < ApplicationController
   end
 
   def update_card_details
+    Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
+    user = current_user
+
     begin
-      user = current_user
-      stripe_id, subscriptions = current_user.recurring_subscriptions.where.not(stripe_id: nil).where(card_declined: true, auto_renew: true).group_by(&:stripe_id).first
-      stripe_id ||= current_user.recurring_subscriptions.where.not(stripe_id: nil).last.try(:stripe_id)
+      # Reuse any existing Stripe customer on file for this user (from prior
+      # RS or PPI); otherwise create a new one.
+      existing_stripe_id = user.recurring_subscriptions.where.not(stripe_id: [nil, ""]).order(created_at: :desc).limit(1).pluck(:stripe_id).first
+      existing_stripe_id ||= user.purchased_plan_items.where.not(stripe_id: [nil, ""]).order(created_at: :desc).limit(1).pluck(:stripe_id).first
 
-      customer = ::Stripe::Customer.retrieve(stripe_id)
-      customer.source = params["stripeToken"]
-      customer.save
-
-      total_cost = subscriptions.map(&:cost_in_pennies).sum
-      stripe_charge = Stripe::Charge.create({
-        amount:   total_cost,
-        currency: "usd",
-        customer: stripe_subscriptions.first.stripe_id
-      })
-
-      if stripe_charge.try(:status) == "succeeded"
-        slack_message = "Charged Unlimited Subscriptions for #{user.email} at #{number_to_currency(total_cost/100.to_f)}."
-        channel = Rails.env.production? ? "#purchases" : "#slack-testing"
-        SlackNotifier.notify(slack_message, channel)
-
-        subscriptions.each do |recurring_subscription|
-          recurring_subscription.update(auto_renew: false, card_declined: false)
-          new_sub = user.recurring_subscriptions.create(athlete_id: recurring_subscription.athlete_id, auto_renew: true, cost_in_pennies: recurring_subscription.cost_in_pennies, stripe_id: recurring_subscription.stripe_id)
-          unless new_sub.persisted?
-            SlackNotifier.notify("Failed to create new sub: ```#{new_sub.try(:attributes)}\n#{new_sub.try(:errors).try(:full_messages)}```", "#server-errors")
-          end
-        end
+      customer = if existing_stripe_id.present?
+        c = ::Stripe::Customer.retrieve(existing_stripe_id)
+        c.source = params["stripeToken"]
+        c.save
+        c
       else
-        stripe_subscriptions.update_all(card_declined: true)
-        SlackNotifier.notify("There was an issue updating the subscription for #{user.email}\n```#{stripe_charge}```", "#server-errors")
+        ::Stripe::Customer.create(source: params["stripeToken"], description: user.email)
+      end
+
+      # Point every current, auto-renewing sub/plan at this customer so the
+      # monthly worker actually finds it. Also clears any prior card-declined
+      # flag so declines get another shot.
+      user.recurring_subscriptions.where(auto_renew: true).update_all(stripe_id: customer.id, card_declined: false)
+      user.purchased_plan_items.where(auto_renew: true).update_all(stripe_id: customer.id, card_declined: nil)
+
+      # If any of those subs are already past due, retry the missed charge now
+      # so the customer doesn't wait for the next scheduled run.
+      overdue_ppis = user.purchased_plan_items.assigned.auto_renew.inactive.available.to_a
+      overdue_rs = user.recurring_subscriptions.assigned.auto_renew.expired.available.to_a
+
+      overdue_ppis.group_by(&:stripe_id).each do |stripe_id, plans|
+        next if stripe_id.blank?
+        total_cost = plans.map(&:cost_in_pennies).sum
+        stripe_charge = ::Stripe::Charge.create(amount: total_cost, currency: "usd", customer: stripe_id)
+        next unless stripe_charge.try(:status) == "succeeded"
+        SlackNotifier.notify("Charged Plan Subscriptions for #{user.email} at #{helpers.number_to_currency(total_cost/100.to_f)} (via billing update).", Rails.env.production? ? "#purchases" : "#slack-testing")
+        plans.each do |plan|
+          plan.update(auto_renew: false)
+          user.purchased_plan_items.create(
+            athlete_id: plan.athlete_id,
+            stripe_id: plan.stripe_id,
+            plan_item_id: plan.plan_item_id,
+            cost_in_pennies: plan.cost_in_pennies,
+            discount_items: plan.discount_items,
+            free_items: plan.free_items,
+            expires_at: 1.month.from_now,
+          )
+        end
+      end
+
+      overdue_rs.group_by(&:stripe_id).each do |stripe_id, subs|
+        next if stripe_id.blank?
+        total_cost = subs.map(&:cost_in_pennies).sum
+        stripe_charge = ::Stripe::Charge.create(amount: total_cost, currency: "usd", customer: stripe_id)
+        next unless stripe_charge.try(:status) == "succeeded"
+        SlackNotifier.notify("Charged Unlimited Subscriptions for #{user.email} at #{helpers.number_to_currency(total_cost/100.to_f)} (via billing update).", Rails.env.production? ? "#purchases" : "#slack-testing")
+        subs.each do |sub|
+          sub.update(auto_renew: false)
+          user.recurring_subscriptions.create(athlete_id: sub.athlete_id, auto_renew: true, cost_in_pennies: sub.cost_in_pennies, stripe_id: sub.stripe_id)
+        end
       end
 
       flash[:notice] = "Updated your card successfully!"
     rescue StandardError => e
-      flash[:alert] = "There was an error updating your card. Please try again."
+      SlackNotifier.notify("update_card_details failed for #{user.email}: ```#{e.class}: #{e.message}```", "#server-errors") rescue nil
+      flash[:alert] = "There was an error updating your card. Please try again or contact support."
     end
 
     redirect_to account_path(anchor: "subscriptions")

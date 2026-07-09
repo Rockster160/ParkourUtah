@@ -14,7 +14,8 @@
       <br/>
       <%= link_to 'Clear Cart', '', class: 'delete-all-transactions' %>
       <br/>
-      <span class="shopping-cart-total">Sub total: <span class="shopping-cart-price-holder pull-right"><%= number_to_currency(@cart.price_in_dollars) %></span></span><br/>
+      <span class="shopping-cart-total">Sub total: <span class="shopping-cart-price-holder pull-right"><%= number_to_currency(@cart.subtotal_before_bundle_in_dollars) %></span></span><br/>
+      <span class="shopping-cart-discount-summary"><%= render partial: "store/discount_summary_rows", locals: { cart: @cart } %></span>
       <span class="shopping-cart-total">Taxes: <span class="shopping-cart-taxes-holder pull-right"><%= number_to_currency(@cart.taxes_in_dollars) %></span></span><br/>
       <span class="shopping-cart-total">Shipping: <span class="shopping-cart-shipping-holder pull-right"><%= number_to_currency(@cart.shipping_in_dollars) %></span></span><br/>
       <br/>
@@ -54,7 +55,12 @@
           <br/>
           <%= link_to 'Clear Cart', '', class: 'delete-all-transactions' %>
           <br/>
-          <span class="shopping-cart-total">Sub total: <span class="shopping-cart-price-holder pull-right"><%= number_to_currency(@cart.price_in_dollars) %></span></span><br/>
+          <span class="shopping-cart-total">Sub total: <span class="shopping-cart-price-holder pull-right"><%= number_to_currency(@cart.subtotal_before_bundle_in_dollars) %></span></span><br/>
+          <div class="shopping-cart-discount-summary">
+            <% @cart.discount_summary.each do |d| %>
+              <span class="shopping-cart-total shopping-cart-discount"><%= d[:label] %>: <span class="pull-right">&minus;<%= number_to_currency(d[:savings_in_pennies] / 100.0) %></span></span><br/>
+            <% end %>
+          </div>
           <span class="shopping-cart-total">Taxes: <span class="shopping-cart-taxes-holder pull-right"><%= number_to_currency(@cart.taxes_in_dollars) %></span></span><br/>
           <span class="shopping-cart-total">Shipping: <span class="shopping-cart-shipping-holder pull-right"><%= number_to_currency(@cart.shipping_in_dollars) %></span></span><br/>
           <br/>

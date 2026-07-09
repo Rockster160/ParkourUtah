@@ -127,6 +127,18 @@ input.shopping-cart-line-item-quantity-input {
   border-bottom: 1px solid black;
 }
 
+.shopping-cart-discount {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.9em;
+
+  > .pull-right {
+    float: none !important;
+    white-space: nowrap;
+  }
+}
+
 // ----------------------------------------------------------------- Flip
 $width: 200px;
 $height: 200px;

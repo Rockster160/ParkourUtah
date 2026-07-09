@@ -108,7 +108,11 @@ class StoreController < ApplicationController
       purchase_cart
     else
       if user_signed_in?
-        @cart_is_subscription = @cart.items.any?(&:is_subscription)
+        # Plans-based line items (plan_item_id present) auto-renew via
+        # PurchasedPlanItem and need a persistent Stripe customer, even when
+        # LineItem#is_subscription is false. Without this, monthly_plan_charges
+        # silently skips them for lack of stripe_id.
+        @cart_is_subscription = @cart.items.any? { |i| i.is_subscription? || i.plan_item_id.present? }
         create_customer if @cart_is_subscription
         purchase_cart
       else
