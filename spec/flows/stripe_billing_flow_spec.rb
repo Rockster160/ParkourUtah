@@ -107,7 +107,7 @@ RSpec.describe "Stripe billing flow", type: :request do
       expect(overdue.reload.card_declined).to be_present
       expect(user.purchased_plan_items.count).to eq(1)
       expect(flash[:notice]).to include("Card updated successfully")
-      expect(flash[:alert]).to include("retry on the next scheduled run")
+      expect(flash[:alert]).to include("try a different card")
     end
   end
 

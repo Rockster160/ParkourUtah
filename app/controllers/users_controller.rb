@@ -98,7 +98,7 @@ class UsersController < ApplicationController
 
     def failure_message
       return nil if failures.empty?
-      "Your card is saved, but we couldn't collect a past-due charge. We'll retry on the next scheduled run — no action needed from you."
+      "Your card was saved, but the past-due charge was declined. Please try a different card to complete the payment."
     end
   end
 
