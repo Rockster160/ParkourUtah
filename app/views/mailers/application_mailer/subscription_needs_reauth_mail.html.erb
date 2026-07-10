@@ -1,9 +1,15 @@
 <h2>Hi <%= @user.first_name.presence || "there" %>,</h2>
 
-<p>We noticed your recent Parkour Utah subscription didn't auto-renew as expected. This was due to a technical issue on our end, not a card decline - your card was not charged, and you have not been billed for this renewal.</p>
+<% if @next_renewal_date %>
+  <p>Your Parkour Utah subscription is active - your student has access through <strong><%= @next_renewal_date.strftime("%B %-d, %Y") %></strong> - but we don't have a card on file with our payment processor for the next renewal on that date. Without a card set up, your subscription won't auto-renew and your student's access will lapse.</p>
 
-<p><strong>To get things back on track, please visit <%= link_to "your account subscriptions page", account_url(tab: "subscriptions") %> and click "Update Billing Info" to save your card.</strong> That will restart your subscription and process the missed charge, so your student's access continues without a gap.</p>
+  <p><strong>To keep everything running, please visit <%= link_to "your account subscriptions page", account_url(tab: "subscriptions") %> and click "Update Billing Info" to add a card before <%= @next_renewal_date.strftime("%B %-d") %>.</strong> Your card details are stored securely by our payment processor - we never see or store them ourselves. Nothing will be charged today; your card will simply be on file for the next renewal.</p>
+<% else %>
+  <p>We noticed your recent Parkour Utah subscription didn't auto-renew as expected. This was due to a technical issue on our end, not a card decline - your card was not charged, and you have not been billed for this renewal.</p>
 
-<p>We are so sorry for the inconvenience - your student will not have their access interrupted while we sort this out. If you have any questions, please reply to this email and we'll be happy to help.</p>
+  <p><strong>To get things back on track, please visit <%= link_to "your account subscriptions page", account_url(tab: "subscriptions") %> and click "Update Billing Info" to add a card.</strong> Your card details are stored securely by our payment processor - we never see or store them ourselves. Adding a card will restart your subscription and process the missed charge, so your student's access continues without a gap.</p>
+<% end %>
+
+<p>If you have any questions, please reply to this email and we'll be happy to help.</p>
 
 <p>- The Parkour Utah team</p>

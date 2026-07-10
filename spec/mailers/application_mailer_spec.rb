@@ -42,11 +42,29 @@ RSpec.describe ApplicationMailer, type: :mailer do
   end
 
   describe "#subscription_needs_reauth_mail" do
-    it "sends the reauth notice with a link to the subscriptions tab" do
+    it "uses the 'active until X' framing when the user has a future-dated auto-renewing sub" do
       user = create(:user)
+      athlete = create(:athlete, user: user)
+      create(:purchased_plan_item, :active,
+        user: user, athlete: athlete,
+        expires_at: Date.new(2026, 8, 8).to_time, stripe_id: nil
+      )
       mail = ApplicationMailer.subscription_needs_reauth_mail(user.id)
-      expect(mail.to).to eq([user.email])
+      expect(mail.subject).to include("Save a card")
+      expect(mail.body.to_s).to include("August 8, 2026")
+      expect(mail.body.to_s).to include("Nothing will be charged today")
+      expect(mail.body.to_s).to include("tab=subscriptions")
+    end
+
+    it "uses the overdue-renewal framing when the user has no future-dated sub" do
+      user = create(:user)
+      athlete = create(:athlete, user: user)
+      create(:purchased_plan_item, :expired,
+        user: user, athlete: athlete, stripe_id: nil
+      )
+      mail = ApplicationMailer.subscription_needs_reauth_mail(user.id)
       expect(mail.subject).to include("didn't renew")
+      expect(mail.body.to_s).to include("process the missed charge")
       expect(mail.body.to_s).to include("tab=subscriptions")
     end
   end

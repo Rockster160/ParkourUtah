@@ -104,13 +104,28 @@ class ApplicationMailer < ActionMailer::Base
 
   def subscription_needs_reauth_mail(user_id)
     @user = User.find(user_id)
-    mail(to: @user.email, subject: "Action needed: your Parkour Utah subscription didn't renew")
+    @next_renewal_date = next_renewal_date_for(@user)
+    subject = @next_renewal_date ? "Save a card so your Parkour Utah subscription can renew" : "Action needed: your Parkour Utah subscription didn't renew"
+    mail(to: @user.email, subject: subject)
   end
 
   def subscription_charge_declined_mail(user_id)
     @user = User.find(user_id)
     mail(to: @user.email, subject: "Action needed: your Parkour Utah payment was declined")
   end
+
+  private
+
+  # Earliest future expiry across the user's still-auto-renewing subs. Used to
+  # tell customers "your subscription is active until X, save a card before
+  # then" when their current period hasn't lapsed yet.
+  def next_renewal_date_for(user)
+    dates = user.recurring_subscriptions.where(auto_renew: true).where.not(expires_at: nil).pluck(:expires_at)
+    dates += user.purchased_plan_items.where(auto_renew: true).where.not(expires_at: nil).pluck(:expires_at)
+    dates.select { |d| d > Time.current }.min
+  end
+
+  public
 
   def summary_mail(summary, to_email=nil, include_totals=false)
     @include_totals = include_totals
