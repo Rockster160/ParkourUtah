@@ -115,6 +115,8 @@ Rails.application.routes.draw do
     post :send_batch_emailer
   end
 
+  resources :admin_exports, path: "admin/exports", only: [ :index ]
+
   resources :admin_users, path: "admin/users", only: [ :show, :index, :destroy ] do
     member do
       get :attendance

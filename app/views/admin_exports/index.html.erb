@@ -1,0 +1,167 @@
+<%
+  # Checkboxes that should default to *checked* on first load (before any submit).
+  default_true = ->(key) { !@submitted || params[key] == "1" }
+  default_false = ->(key) { params[key] == "1" }
+  range_style = "display: flex; gap: 12px; align-items: center; flex-wrap: wrap;"
+  narrow_input = { class: "pkut-textbox sm-textbox", style: "width: 155px;" }
+%>
+
+<div class="central-container form-offset">
+  <%= link_to "Back to Dashboard", dashboard_path, class: 'pkut-btn' %>
+  <h2>User Export</h2>
+  <p><em>All filters are optional. Date ranges are inclusive on both ends.</em></p>
+
+  <%= form_tag admin_exports_path, method: :get do %>
+
+    <fieldset class="form-container">
+      <legend><strong>Account</strong></legend>
+
+      <div class="form-field" style="<%= range_style %>">
+        <div>
+          <%= label_tag :signed_up_from, "Signed up from" %><br>
+          <%= text_field_tag :signed_up_from, params[:signed_up_from], narrow_input.merge(class: "#{narrow_input[:class]} datepicker-field") %>
+        </div>
+        <div>
+          <%= label_tag :signed_up_to, "to" %><br>
+          <%= text_field_tag :signed_up_to, params[:signed_up_to], narrow_input.merge(class: "#{narrow_input[:class]} datepicker-field") %>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <%= label_tag :signed_in_since, "Signed in since" %><br>
+        <%= text_field_tag :signed_in_since, params[:signed_in_since], narrow_input.merge(class: "#{narrow_input[:class]} datepicker-field") %>
+      </div>
+
+      <div class="form-field">
+        <label><%= check_box_tag :can_receive_emails, "1", default_true.call(:can_receive_emails) %> Can receive emails</label>
+        <label><%= check_box_tag :can_receive_sms,    "1", default_true.call(:can_receive_sms)    %> Can receive SMS</label>
+        <label><%= check_box_tag :never_signed_in,    "1", default_false.call(:never_signed_in)   %> Never signed in</label>
+      </div>
+    </fieldset>
+
+    <fieldset class="form-container">
+      <legend><strong>Attendance</strong></legend>
+
+      <div class="form-field" style="<%= range_style %>">
+        <div>
+          <%= label_tag :attended_from, "Attended from" %><br>
+          <%= text_field_tag :attended_from, params[:attended_from], narrow_input.merge(class: "#{narrow_input[:class]} datepicker-field") %>
+        </div>
+        <div>
+          <%= label_tag :attended_to, "to" %><br>
+          <%= text_field_tag :attended_to, params[:attended_to], narrow_input.merge(class: "#{narrow_input[:class]} datepicker-field") %>
+        </div>
+      </div>
+
+      <div class="form-field" style="<%= range_style %>">
+        <div>
+          <%= label_tag :min_attendances, "Minimum attendances in that window" %><br>
+          <%= number_field_tag :min_attendances, params[:min_attendances], narrow_input.merge(min: 0) %>
+        </div>
+        <div style="align-self: end; padding-bottom: 6px;">
+          <label><%= check_box_tag :exclude_trials, "1", default_false.call(:exclude_trials) %> Exclude trial classes</label>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <%= label_tag :event_schedule_ids, "Class (hold Cmd/Ctrl to select multiple)" %><br>
+        <% selected_ids = Array(params[:event_schedule_ids]).map(&:to_i) %>
+        <%= select_tag "event_schedule_ids[]",
+              options_from_collection_for_select(
+                @event_schedules,
+                :id,
+                ->(es) { "#{es.day_of_week.to_s.titleize} #{es.time_of_day} — #{es.title} (#{es.city})" },
+                selected_ids
+              ),
+              multiple: true, size: 14, class: "pkut-textbox",
+              style: "min-width: 350px; height: auto; padding: 6px; font-size: 15px;" %>
+      </div>
+
+      <div class="form-field">
+        Day of week:
+        <% selected_weekdays = Array(params[:weekdays]).map(&:to_i) %>
+        <% EventSchedule.day_of_weeks.each do |name, val| %>
+          <label style="margin-right: 8px;">
+            <%= check_box_tag "weekdays[]", val, selected_weekdays.include?(val) %>
+            <%= name.titleize %>
+          </label>
+        <% end %>
+      </div>
+    </fieldset>
+
+    <fieldset class="form-container">
+      <legend><strong>Membership</strong></legend>
+      <div class="form-field">
+        <label>
+          <%= check_box_tag :has_unlimited_access, "1", default_false.call(:has_unlimited_access) %>
+          Has active <strong>unlimited class access</strong> right now
+        </label><br>
+        <label>
+          <%= check_box_tag :has_auto_renew, "1", default_false.call(:has_auto_renew) %>
+          Has a <strong>membership set to auto-renew</strong> next month
+        </label><br>
+        <label>
+          <%= check_box_tag :has_active_plan, "1", default_false.call(:has_active_plan) %>
+          Has <strong>any active plan</strong> (unlimited plan, class pack, or shop-discount plan)
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset class="form-container">
+      <legend><strong>Athletes</strong></legend>
+      <div class="form-field" style="<%= range_style %>">
+        <div>
+          <%= label_tag :min_youngest_athlete_age, "Has an athlete age at least" %><br>
+          <%= number_field_tag :min_youngest_athlete_age, params[:min_youngest_athlete_age], narrow_input.merge(min: 0) %>
+        </div>
+        <div>
+          <%= label_tag :max_youngest_athlete_age, "and at most" %><br>
+          <%= number_field_tag :max_youngest_athlete_age, params[:max_youngest_athlete_age], narrow_input.merge(min: 0) %>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="form-container">
+      <legend><strong>Credits</strong></legend>
+      <div class="form-field">
+        <%= label_tag :min_credits, "Minimum credits" %><br>
+        <%= number_field_tag :min_credits, params[:min_credits], narrow_input.merge(min: 0) %>
+      </div>
+    </fieldset>
+
+    <fieldset class="form-container">
+      <legend><strong>Output</strong></legend>
+      <div class="form-field">
+        <% current_format = (params[:output_format].presence || "csv") %>
+        <label><%= radio_button_tag :output_format, "csv",    current_format == "csv"    %> CSV download</label><br>
+        <label><%= radio_button_tag :output_format, "emails", current_format == "emails" %> Comma-separated emails</label><br>
+        <label><%= radio_button_tag :output_format, "phones", current_format == "phones" %> Comma-separated phone numbers</label>
+      </div>
+
+      <div class="form-field">
+        <strong>CSV columns</strong> <em>(only applies to CSV download)</em><br>
+        <% AdminExportsController::CSV_COLUMNS.each do |col| %>
+          <label style="display: inline-block; margin: 2px 12px 2px 0;">
+            <%= check_box_tag "columns[]", col, @selected_columns.include?(col) %>
+            <%= AdminExportsController::CSV_COLUMN_LABELS[col] %>
+          </label>
+        <% end %>
+      </div>
+    </fieldset>
+
+    <div class="form-field">
+      <button type="submit" name="action_type" value="preview" class="pkut-btn">Preview count</button>
+      <button type="submit" name="action_type" value="export"  class="pkut-btn">Export</button>
+    </div>
+  <% end %>
+
+  <% if @count.present? %>
+    <hr>
+    <h3>Matching users: <%= @count %></h3>
+  <% end %>
+
+  <% if @output_text.present? %>
+    <h4><%= @output_label %></h4>
+    <textarea readonly rows="12" cols="90" style="width: 100%; font-family: monospace;"><%= @output_text %></textarea>
+  <% end %>
+</div>

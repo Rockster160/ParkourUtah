@@ -67,7 +67,7 @@
       <%= link_to "Delete", athlete_path(athlete.id), class: 'pkut-btn', method: :delete %>
     <% end %>
 
-    --Birthday: <%= athlete.date_of_birth %><br/>
+    --Birthday: <%= athlete.date_of_birth %><%= " (#{athlete.age})" if athlete.age %><%= " 🎂" if athlete.birthday_today? %><br/>
     --Waiver expires: <%= athlete.waiver ? athlete.waiver.expiry_date.strftime('%B %e, %Y') : "No waiver signed" %><br/>
     <% if current_user.is_admin? %>
       --<a alt="..." class="pkut-text forceOpen" data-toggle="modal" data-target="#edit<%= athlete.id %>">Delete Athlete</a><br/><br/>

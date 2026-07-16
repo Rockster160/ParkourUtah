@@ -203,10 +203,22 @@ class Athlete < ApplicationRecord
   def age
     return unless date_of_birth
     now = Time.now.utc.to_date
-    dob = DateTime.strptime(date_of_birth, '%m/%d/%Y') rescue nil
-    dob ||= DateTime.strptime(date_of_birth, '%d/%m/%Y') rescue nil
+    dob = parsed_date_of_birth
     return unless dob
     now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
+  end
+
+  def birthday_today?
+    dob = parsed_date_of_birth
+    return false unless dob
+    today = Time.zone.today
+    dob.month == today.month && dob.day == today.day
+  end
+
+  def parsed_date_of_birth
+    return nil if date_of_birth.blank?
+    (DateTime.strptime(date_of_birth, '%m/%d/%Y') rescue nil) ||
+      (DateTime.strptime(date_of_birth, '%d/%m/%Y') rescue nil)
   end
 
   def waiver
