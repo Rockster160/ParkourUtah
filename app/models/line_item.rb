@@ -34,6 +34,7 @@
 #  redemption_item_id     :integer
 #
 
+# DEPRECATED: `is_subscription` - use Plans instead to grant unlimited access.
 class LineItem < ApplicationRecord
 
   has_many :redemption_keys
