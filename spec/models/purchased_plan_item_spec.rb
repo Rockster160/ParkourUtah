@@ -34,6 +34,26 @@ RSpec.describe PurchasedPlanItem, type: :model do
       plan.assign_to_athlete(nil)
       expect(plan.reload.athlete_id).to be_nil
     end
+
+    it "expires a monthly plan one month out" do
+      user = create(:user)
+      athlete = create(:athlete, user: user)
+      plan = create(:purchased_plan_item, user: user,
+        plan_item: create(:plan_item, billing_interval: "month"))
+
+      plan.assign_to_athlete(athlete)
+      expect(plan.reload.expires_at).to be_within(2.minutes).of(1.month.from_now)
+    end
+
+    it "expires a yearly plan a full year out, not a month" do
+      user = create(:user)
+      athlete = create(:athlete, user: user)
+      plan = create(:purchased_plan_item, user: user,
+        plan_item: create(:plan_item, billing_interval: "year"))
+
+      plan.assign_to_athlete(athlete)
+      expect(plan.reload.expires_at).to be_within(2.minutes).of(1.year.from_now)
+    end
   end
 
   describe "scopes" do

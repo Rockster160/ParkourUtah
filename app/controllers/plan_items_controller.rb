@@ -40,6 +40,7 @@ class PlanItemsController < ApplicationController
   def plan_item_params
     params.require(:plan_item).permit(
       :name,
+      :billing_interval,
     ).tap do |whitelist|
       whitelist[:discount_items] = params.dig(:plan_item, :discount_items)&.map(&:permit!)
       whitelist[:free_items] = params.dig(:plan_item, :free_items)&.map(&:permit!)

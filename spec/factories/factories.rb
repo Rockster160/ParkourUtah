@@ -135,13 +135,6 @@ FactoryBot.define do
       taxable { false }
     end
 
-    trait :subscription do
-      title { "Monthly Subscription" }
-      category { "Class" }
-      is_subscription { true }
-      cost_in_pennies { 5500 }
-    end
-
     trait :with_plan do
       transient do
         plan { nil }

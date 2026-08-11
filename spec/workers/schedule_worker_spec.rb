@@ -240,5 +240,58 @@ RSpec.describe ScheduleWorker do
       expect(ppi.reload.auto_renew).to eq(false)
       expect(user.purchased_plan_items.where(auto_renew: true).count).to eq(1)
     end
+
+    it "renews a yearly plan a year out so it isn't re-charged monthly" do
+      stub_stripe_charge_success!
+      yearly = create(:plan_item, billing_interval: "year")
+      create(:purchased_plan_item, :expired,
+        user: user, athlete: athlete, plan_item: yearly,
+        stripe_id: "cus_a", cost_in_pennies: 170000
+      )
+
+      worker.send(:monthly_plan_charges, nil)
+
+      new_ppi = user.purchased_plan_items.where(auto_renew: true).first
+      expect(new_ppi.expires_at).to be_within(2.minutes).of(1.year.from_now)
+    end
+  end
+
+  describe "#remind_recurring_payments" do
+    let(:user) { create(:user) }
+    let(:athlete) { create(:athlete, user: user) }
+
+    it "reminds plan holders, who previously got no warning at all" do
+      create(:purchased_plan_item,
+        user: user, athlete: athlete, plan_item: create(:plan_item),
+        auto_renew: true, expires_at: 10.days.from_now.midday
+      )
+
+      expect(ApplicationMailer).to receive(:notify_subscription_updating)
+        .with(user.id).and_return(double(deliver: true))
+
+      worker.send(:remind_recurring_payments, nil)
+    end
+
+    it "still reminds recurring subscription holders" do
+      create(:recurring_subscription,
+        user: user, athlete: athlete, auto_renew: true, expires_at: 10.days.from_now.midday
+      )
+
+      expect(ApplicationMailer).to receive(:notify_subscription_updating)
+        .with(user.id).and_return(double(deliver: true))
+
+      worker.send(:remind_recurring_payments, nil)
+    end
+
+    it "does not remind anyone whose renewal is not 10 days out" do
+      create(:purchased_plan_item,
+        user: user, athlete: athlete, plan_item: create(:plan_item),
+        auto_renew: true, expires_at: 3.days.from_now.midday
+      )
+
+      expect(ApplicationMailer).not_to receive(:notify_subscription_updating)
+
+      worker.send(:remind_recurring_payments, nil)
+    end
   end
 end

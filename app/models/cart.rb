@@ -68,9 +68,6 @@ class Cart < ApplicationRecord
   def adds_credits?
     cart_items.any? { |cart_item| cart_item.item.credits > 0 }
   end
-  def is_subscription?
-    cart_items.any? { |cart_item| cart_item.item.is_subscription? }
-  end
 
   def purchased?
     purchased_at?

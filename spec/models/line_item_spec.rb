@@ -113,4 +113,20 @@ RSpec.describe LineItem, type: :model do
       expect(item.discounted_cost_data(user)).to be_nil
     end
   end
+
+  describe "#billing_suffix" do
+    it "is blank for a one-off item that isn't backed by a plan" do
+      expect(create(:line_item).billing_suffix).to eq("")
+    end
+
+    it "is /month for a plan billed monthly" do
+      item = create(:line_item, plan_item: create(:plan_item, billing_interval: "month"))
+      expect(item.billing_suffix).to eq("/month")
+    end
+
+    it "is /year for a plan billed annually" do
+      item = create(:line_item, plan_item: create(:plan_item, billing_interval: "year"))
+      expect(item.billing_suffix).to eq("/year")
+    end
+  end
 end

@@ -47,7 +47,12 @@ class ApplicationMailer < ActionMailer::Base
       .where(recurring_subscriptions: { expires_at: range })
       .where(recurring_subscriptions: { auto_renew: true })
     @expiring_athletes = @expiring_athletes.select { |expiring_athlete| range.cover?(expiring_athlete.has_access_until) }
-    return nil unless @expiring_athletes.any?
+
+    # Plans renew on their own records, so they need checking separately —
+    # has_access_until only ever reflects RecurringSubscriptions.
+    @expiring_plans = @user.purchased_plan_items.auto_renew.assigned.where(expires_at: range)
+
+    return nil unless @expiring_athletes.any? || @expiring_plans.any?
 
     mail(to: @user.email, subject: "Your recurring payment will charge again in 10 days!")
   end
@@ -58,7 +63,7 @@ class ApplicationMailer < ActionMailer::Base
     @is_gift_card = @order_items.any? { |cart_item| ["Gift Card"].include?(cart_item.item.category) }
     @is_physical = @order_items.any? { |cart_item| ["Clothing", "Accessories"].include?(cart_item.item.category) }
     @adds_credits = @order_items.any? { |cart_item| cart_item.item.credits > 0 }
-    @is_subscription = @order_items.any? { |cart_item| cart_item.item.is_subscription? }
+    @has_plan = @order_items.any? { |cart_item| cart_item.item.plan_item_id.present? }
     @user = @cart.user
     @address = @user.try(:address)
 
@@ -102,30 +107,10 @@ class ApplicationMailer < ActionMailer::Base
     mail(to: @competitor.athlete.user.email, subject: "#{@competitor.athlete.full_name} has been approved!")
   end
 
-  def subscription_needs_reauth_mail(user_id)
-    @user = User.find(user_id)
-    @next_renewal_date = next_renewal_date_for(@user)
-    subject = @next_renewal_date ? "Save a card so your Parkour Utah subscription can renew" : "Action needed: your Parkour Utah subscription didn't renew"
-    mail(to: @user.email, subject: subject)
-  end
-
   def subscription_charge_declined_mail(user_id)
     @user = User.find(user_id)
     mail(to: @user.email, subject: "Action needed: your Parkour Utah payment was declined")
   end
-
-  private
-
-  # Earliest future expiry across the user's still-auto-renewing subs. Used to
-  # tell customers "your subscription is active until X, save a card before
-  # then" when their current period hasn't lapsed yet.
-  def next_renewal_date_for(user)
-    dates = user.recurring_subscriptions.where(auto_renew: true).where.not(expires_at: nil).pluck(:expires_at)
-    dates += user.purchased_plan_items.where(auto_renew: true).where.not(expires_at: nil).pluck(:expires_at)
-    dates.select { |d| d > Time.current }.min
-  end
-
-  public
 
   def summary_mail(summary, to_email=nil, include_totals=false)
     @include_totals = include_totals

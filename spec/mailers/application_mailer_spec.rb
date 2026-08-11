@@ -27,6 +27,27 @@ RSpec.describe ApplicationMailer, type: :mailer do
     end
   end
 
+  describe "#notify_subscription_updating" do
+    it "sends to plan holders renewing in 10 days" do
+      user = create(:user)
+      athlete = create(:athlete, user: user)
+      create(:purchased_plan_item,
+        user: user, athlete: athlete, plan_item: create(:plan_item),
+        auto_renew: true, expires_at: 10.days.from_now.midday
+      )
+
+      mail = ApplicationMailer.notify_subscription_updating(user.id)
+      expect(mail.to).to eq([user.email])
+      expect(mail.subject).to include("10 days")
+    end
+
+    it "sends nothing when no subscription or plan is renewing" do
+      user = create(:user)
+      mail = ApplicationMailer.notify_subscription_updating(user.id)
+      expect(mail.message).to be_a(ActionMailer::Base::NullMail)
+    end
+  end
+
   describe "#customer_purchase_mail" do
     it "sends order confirmation" do
       user = create(:user, :with_address)
@@ -41,33 +62,6 @@ RSpec.describe ApplicationMailer, type: :mailer do
     end
   end
 
-  describe "#subscription_needs_reauth_mail" do
-    it "uses the 'active until X' framing when the user has a future-dated auto-renewing sub" do
-      user = create(:user)
-      athlete = create(:athlete, user: user)
-      create(:purchased_plan_item, :active,
-        user: user, athlete: athlete,
-        expires_at: Date.new(2026, 8, 8).to_time, stripe_id: nil
-      )
-      mail = ApplicationMailer.subscription_needs_reauth_mail(user.id)
-      expect(mail.subject).to include("Save a card")
-      expect(mail.body.to_s).to include("August 8, 2026")
-      expect(mail.body.to_s).to include("Nothing will be charged today")
-      expect(mail.body.to_s).to include("tab=subscriptions")
-    end
-
-    it "uses the overdue-renewal framing when the user has no future-dated sub" do
-      user = create(:user)
-      athlete = create(:athlete, user: user)
-      create(:purchased_plan_item, :expired,
-        user: user, athlete: athlete, stripe_id: nil
-      )
-      mail = ApplicationMailer.subscription_needs_reauth_mail(user.id)
-      expect(mail.subject).to include("didn't renew")
-      expect(mail.body.to_s).to include("process the missed charge")
-      expect(mail.body.to_s).to include("tab=subscriptions")
-    end
-  end
 
   describe "#subscription_charge_declined_mail" do
     it "sends the decline notice with a link to the subscriptions tab" do

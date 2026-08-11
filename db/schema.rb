@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_08_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_11_171427) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -301,7 +301,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_08_000000) do
     t.boolean "hidden"
     t.string "instructor_ids"
     t.boolean "is_full_image", default: false
-    t.boolean "is_subscription", default: false
     t.integer "item_order"
     t.string "location_ids"
     t.integer "loyalty_cost_in_pennies"
@@ -359,6 +358,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_08_000000) do
   end
 
   create_table "plan_items", force: :cascade do |t|
+    t.string "billing_interval", default: "month"
     t.datetime "created_at", null: false
     t.jsonb "discount_items"
     t.jsonb "free_items"

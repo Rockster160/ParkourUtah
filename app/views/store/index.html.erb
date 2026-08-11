@@ -35,7 +35,7 @@
                   <% unless item.is_full_image? %>
                     <br/>
                     <strong><%= item.title %></strong><br/>
-                    <%= number_to_currency(item.cost_in_dollars) %><%= item.is_subscription? ? "/month" : "" %><br/>
+                    <%= number_to_currency(item.cost_in_dollars) %><%= item.billing_suffix %><br/>
                   <% end %>
                   <% if item.show_text_as_image? %>
                     <div class="red-backed-item-title">

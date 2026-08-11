@@ -165,7 +165,7 @@ class UsersController < ApplicationController
           cost_in_pennies: plan.cost_in_pennies,
           discount_items: plan.discount_items,
           free_items: plan.free_items,
-          expires_at: 1.month.from_now,
+          expires_at: plan.next_expires_at,
         )
       end
     end
@@ -230,6 +230,13 @@ class UsersController < ApplicationController
     end
     @user.purchased_plan_items.unassigned.each do
       @notifications[:subscriptions] << "You have unassigned subscriptions!"
+    end
+    # Without a stripe_id the monthly worker skips the record entirely, so the
+    # renewal fails silently — no charge, no decline, no email. Say so here,
+    # right above the "Update Billing Info" button that fixes it.
+    if @user.purchased_plan_items.auto_renew.where(stripe_id: [nil, ""]).any? ||
+       @user.recurring_subscriptions.auto_renew.where(stripe_id: [nil, ""]).any?
+      @notifications[:subscriptions] << "We don't have a card on file, so your subscription can't renew. Click \"Update Billing Info\" below to add one."
     end
   end
 

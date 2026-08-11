@@ -38,11 +38,22 @@ class PurchasedPlanItem < ApplicationRecord
     (cost_in_pennies / 100.to_f).round(2)
   end
 
+  # Plans bill on their own cadence. A yearly pass must not come up for renewal
+  # a month after it was assigned, or the customer gets charged the full annual
+  # price twelve times a year.
+  def renewal_length
+    plan_item&.billing_interval == "year" ? 1.year : 1.month
+  end
+
+  def next_expires_at(from = Time.current)
+    from + renewal_length
+  end
+
   def assign_to_athlete(new_athlete)
     return unless new_athlete.present?
 
     self.athlete_id = new_athlete.id
-    update(expires_at: 1.month.from_now)
+    update(expires_at: next_expires_at)
   end
 
   # free_items: [{"tags"=>["classes"], "count"=>2, "interval"=>"week"}],

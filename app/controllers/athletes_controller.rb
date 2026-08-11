@@ -94,7 +94,8 @@ class AthletesController < ApplicationController
 
     if plan.athlete_id.nil? && plan.user_id == athlete.user_id
       if plan.assign_to_athlete(athlete)
-        redirect_to account_path(anchor: :subscriptions), notice: "Successfully assigned! This plan will auto-charge each month from now on."
+        cadence = plan.renewal_length == 1.year ? "year" : "month"
+        redirect_to account_path(anchor: :subscriptions), notice: "Successfully assigned! This plan will auto-charge each #{cadence} from now on."
       else
         redirect_to account_path(anchor: :subscriptions), alert: "Failed to add the Subscription. The start and expiration dates will not be set until successfully assigned."
       end

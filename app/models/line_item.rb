@@ -18,7 +18,6 @@
 #  hidden                 :boolean
 #  instructor_ids         :string
 #  is_full_image          :boolean          default(FALSE)
-#  is_subscription        :boolean          default(FALSE)
 #  item_order             :integer
 #  location_ids           :string
 #  show_text_as_image     :boolean          default(TRUE)
@@ -34,7 +33,6 @@
 #  redemption_item_id     :integer
 #
 
-# DEPRECATED: `is_subscription` - use Plans instead to grant unlimited access.
 class LineItem < ApplicationRecord
 
   has_many :redemption_keys
@@ -105,6 +103,13 @@ class LineItem < ApplicationRecord
 
   def cost
     self.cost_in_pennies
+  end
+
+  # Shop-facing "/month" or "/year" suffix. Only plan-backed items recur, and
+  # the plan is what decides how often the customer is billed.
+  def billing_suffix
+    return "" if plan_item.blank?
+    plan_item.billing_interval == "year" ? "/year" : "/month"
   end
 
   def cost_in_dollars=(new_dollar_cost)

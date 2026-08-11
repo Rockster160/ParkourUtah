@@ -2,17 +2,22 @@
 #
 # Table name: plan_items
 #
-#  id             :integer          not null, primary key
-#  name           :text
-#  free_items     :jsonb
-#  discount_items :jsonb
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
+#  id               :integer          not null, primary key
+#  name             :text
+#  free_items       :jsonb
+#  discount_items   :jsonb
+#  billing_interval :string           default("month")
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
 #
 
 class PlanItem < ApplicationRecord
+  BILLING_INTERVALS = %w[month year].freeze
+
   has_many :purchased_plan_items
   has_one :line_item
+
+  validates :billing_interval, inclusion: { in: BILLING_INTERVALS }
 
   def free_items=(new_json)
     fixed_json = new_json.map { |item|

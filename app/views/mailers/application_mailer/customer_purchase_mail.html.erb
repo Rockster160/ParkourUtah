@@ -13,12 +13,12 @@
   <p>Your credits have already been added to your account and your athletes are ready to attend class!</p>
   <br>
 <% end %>
-<% if @is_subscription %>
+<% if @has_plan %>
   <h3 style="color: red">You aren't done yet!</h3>
-  <p>Before you can use the subscription, you must assign it to your Athlete.</p>
-  <p>To do this, go to your <a href="<%= edit_user_registration_url %>">Account Page</a>. At the top of the page, click the button "Assign subscriptions to students!".</p>
+  <p>Before you can use your subscription, you must assign it to your Athlete.</p>
+  <p>To do this, go to your <a href="<%= account_url(tab: "subscriptions") %>">account subscriptions page</a> and find your new subscription in the list. Click the "Assign" button next to it.</p>
   <p>Finally, click the star next to the Athlete who will be using the subscription.</p>
-  <p>Done! Your student will now be able to attend class without charging credits from your account.</p>
+  <p>Done! Your student will now be able to attend class using the benefits of your subscription.</p>
   <br>
 <% end %>
 <% if @user && @is_physical %>

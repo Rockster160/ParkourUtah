@@ -80,7 +80,6 @@ class LineItemsController < ApplicationController
       :credits,
       :color,
       :size,
-      # :is_subscription, # Deprecated: use Plans instead to grant unlimited access.
       :taxable,
       # :is_full_image,
       # :show_text_as_image,

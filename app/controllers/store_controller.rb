@@ -4,7 +4,10 @@ class StoreController < ApplicationController
 
   def index
     @items_by_category = {}
-    LineItem.where.not(hidden: true).order(item_order: :asc).each do |item|
+    # hidden: [false, nil] rather than where.not(hidden: true) — in Postgres the
+    # latter drops rows where hidden IS NULL, silently keeping any item created
+    # without an explicit value out of the shop.
+    LineItem.where(hidden: [false, nil]).includes(:plan_item).order(item_order: :asc).each do |item|
       dest = case item.category
       when "Class" then :classes
       when "Clothing" then :clothing
@@ -109,11 +112,10 @@ class StoreController < ApplicationController
     else
       if user_signed_in?
         # Plans-based line items (plan_item_id present) auto-renew via
-        # PurchasedPlanItem and need a persistent Stripe customer, even when
-        # LineItem#is_subscription is false. Without this, monthly_plan_charges
-        # silently skips them for lack of stripe_id.
-        @cart_is_subscription = @cart.items.any? { |i| i.is_subscription? || i.plan_item_id.present? }
-        create_customer if @cart_is_subscription
+        # PurchasedPlanItem and need a persistent Stripe customer. Without one,
+        # monthly_plan_charges silently skips them for lack of stripe_id.
+        @cart_has_plan = @cart.items.any? { |i| i.plan_item_id.present? }
+        create_customer if @cart_has_plan
         purchase_cart
       else
         categories = @cart.items.map(&:category).uniq
@@ -174,17 +176,6 @@ class StoreController < ApplicationController
                 discount_items: plan_item.discount_items,
                 free_items: plan_item.free_items,
               )
-            end
-          end
-
-          # Hybrid line items (both is_subscription AND plan_item_id set — LI #12)
-          # would previously create both an RS and a PPI, then both would try to
-          # renew and double-charge. When a plan_item is present, that PPI is the
-          # authoritative renewal record; skip the RS.
-          if line_item.is_subscription? && plan_item.blank? && user_signed_in?
-            @purchased_subscription = true
-            order.amount.times do
-              current_user.recurring_subscriptions.create!(cost_in_pennies: paid_unit_price, stripe_id: @customer.try(:id))
             end
           end
         end

@@ -98,15 +98,23 @@ class ScheduleWorker
   end
 
   def remind_recurring_payments(params)
+    range = (days_from_now(10).beginning_of_day)..(days_from_now(10).end_of_day)
+
     athletes_expiring_soon = Athlete.joins(:recurring_subscriptions)
-      .where(recurring_subscriptions: { expires_at: (days_from_now(10).beginning_of_day)..(days_from_now(10).end_of_day) })
+      .where(recurring_subscriptions: { expires_at: range })
       .where(recurring_subscriptions: { auto_renew: true })
-    by_users = athletes_expiring_soon.group_by(&:user_id)
+
+    # Plan holders renew through PurchasedPlanItem and were never reminded.
+    plan_athletes_expiring_soon = Athlete.joins(:purchased_plan_items)
+      .where(purchased_plan_items: { expires_at: range })
+      .where(purchased_plan_items: { auto_renew: true })
+
+    by_users = (athletes_expiring_soon + plan_athletes_expiring_soon).uniq.group_by(&:user_id)
 
     by_users.each do |user_id, athletes|
       ApplicationMailer.notify_subscription_updating(user_id).deliver
 
-      slack_message = "Unlimited Subscriptions to update in 10 days: #{athletes.map(&:full_name).join(", ")}"
+      slack_message = "Subscriptions to update in 10 days: #{athletes.map(&:full_name).join(", ")}"
       channel = Rails.env.production? ? "#purchases" : "#slack-testing"
       SlackNotifier.notify(slack_message, channel)
     end
@@ -201,7 +209,7 @@ class ScheduleWorker
                 cost_in_pennies: plan.cost_in_pennies,
                 discount_items: plan.discount_items,
                 free_items: plan.free_items,
-                expires_at: 1.month.from_now,
+                expires_at: plan.next_expires_at,
               )
               unless new_sub.persisted?
                 SlackNotifier.notify("Failed to create new sub: ```#{new_sub.try(:attributes)}\n#{new_sub.try(:errors).try(:full_messages)}```", "#server-errors")

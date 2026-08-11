@@ -33,7 +33,7 @@
         </div>
       <% end %>
 
-      <% if athlete.waiver.expires_soon? %>
+      <% if athlete.waiver&.expires_soon? %>
         <div class="update-waiver">
           <%= link_to waivers_path do %>
             Click here to update Waiver

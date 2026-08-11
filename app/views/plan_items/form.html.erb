@@ -10,6 +10,11 @@
         <%= f.text_field :name, class: "customRequired pkut-textbox" %>
       </div>
 
+      <div class="form-field">
+        <%= f.label :billing_interval, "Billing interval (how the price is shown in the shop)" %>
+        <%= f.select :billing_interval, PlanItem::BILLING_INTERVALS.map { |i| ["Per #{i}", i] }, {}, class: "pkut-textbox" %>
+      </div>
+
       <h3>Granted access for classes</h3>
       <div class="infinite-wrapper plan-row-grid plan-row-grid--free">
         <div class="plan-row-header">

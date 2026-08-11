@@ -30,31 +30,6 @@ RSpec.describe "Store checkout — Stripe side effects", type: :request do
     expect(user.recurring_subscriptions.count).to eq(0)
   end
 
-  it "creates a RecurringSubscription (not a PPI) for a non-plan is_subscription line item" do
-    li = create(:line_item, :subscription, cost_in_pennies: 5500)
-    user.cart.cart_items.create!(line_item: li, amount: 1, order_name: li.title)
-
-    post charge_path, params: { stripeToken: "tok_visa" }
-
-    rs = user.recurring_subscriptions.last
-    expect(rs).to be_present
-    expect(rs.stripe_id).to eq("cus_checkout")
-    expect(rs.cost_in_pennies).to eq(5500)
-    expect(user.purchased_plan_items.count).to eq(0)
-  end
-
-  it "creates ONLY a PPI for a hybrid line item (regression: prevents double-billing)" do
-    plan_item = create(:plan_item)
-    li = create(:line_item, :subscription, cost_in_pennies: 17000)
-    li.update_column(:plan_item_id, plan_item.id)
-    user.cart.cart_items.create!(line_item: li, amount: 1, order_name: li.title)
-
-    post charge_path, params: { stripeToken: "tok_visa" }
-
-    expect(user.purchased_plan_items.count).to eq(1)
-    expect(user.recurring_subscriptions.count).to eq(0)
-  end
-
   it "locks in the actual paid unit price (loyalty/bundle applied) on the sub record" do
     plan_item = create(:plan_item)
     li = create(:line_item, cost_in_pennies: 13000,
