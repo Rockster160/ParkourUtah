@@ -8,6 +8,8 @@ BRANCH="${1:-master}"
 log() { echo -e "\033[96m==> $1\033[0m"; } # Local log function
 err() { echo -e "\033[91m==> ERROR: $1\033[0m"; } # Local error function
 
+git push origin "$BRANCH" || { err "Failed to push branch $BRANCH"; exit 1; }
+
 log "Deploying branch: $BRANCH"
 
 ssh $SERVER bash <<SCRIPT
