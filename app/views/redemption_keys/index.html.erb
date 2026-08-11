@@ -8,6 +8,11 @@
           <i class="fa fa-times-circle"></i>
         <% end %>
         <%= key.line_item.title %> - <%= key.key %>
+        <% if key.max_quantity.to_i > 1 %>
+          <div style="padding-left: 30px;">
+            Covers: <%= pluralize(key.max_quantity, "athlete") %>
+          </div>
+        <% end %>
         <% if key.expiry_date %>
           <div style="padding-left: 30px;">
             Expires: <%= key.expiry_date %>

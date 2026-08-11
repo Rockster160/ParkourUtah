@@ -11,6 +11,7 @@
 #  line_item_id               :integer
 #  can_be_used_multiple_times :boolean          default(FALSE)
 #  expires_at                 :datetime
+#  max_quantity               :integer
 #
 
 class RedemptionKey < ApplicationRecord
@@ -39,6 +40,16 @@ class RedemptionKey < ApplicationRecord
   def expired?
     return false unless expires_at
     self.expires_at < Time.zone.now
+  end
+
+  # How many units of the redeemed item a single code may put in the cart, so
+  # one code can cover siblings and reach the family/bundle price. nil means
+  # unlimited. When max_quantity is unset we keep the historical behavior:
+  # multi-use codes were never capped, everything else was locked at one.
+  def quantity_limit
+    return max_quantity if max_quantity.present?
+    return if can_be_used_multiple_times?
+    1
   end
 
   def item; self.line_item; end

@@ -60,7 +60,9 @@ class StoreController < ApplicationController
         end
       else
         if order
-          order.increment!(:amount)
+          # Not increment! — that writes via update_counters and would skip the
+          # redemption quantity cap in CartItem.
+          order.update(amount: order.amount.to_i + 1)
         else
           order = CartItem.create(
             line_item_id: item.id,
@@ -83,14 +85,28 @@ class StoreController < ApplicationController
 
   def redeem
     key = RedemptionKey.where(key: params[:redemption_key]).first
-    if key.present? && !key.redeemed? && !key.expired?
+    applied = false
+
+    if key.present? && !key.redeemed? && !key.expired? && key.item.present?
       items_with_key = @cart.cart_items.where(redeemed_token: params[:redemption_key])
-      if key.item.present? && (items_with_key.none? || key.can_be_used_multiple_times?)
+
+      if items_with_key.none? || key.can_be_used_multiple_times?
         @order = CartItem.create(line_item_id: key.line_item_id, redeemed_token: params[:redemption_key], cart_id: @cart.try(:id))
+        applied = @order.persisted?
+      else
+        # Code already in the cart. If it's allowed to cover more than one
+        # athlete, re-entering it bumps that row instead of reading as invalid.
+        # No @order: the row is already on the page, and update_cart.js refreshes
+        # its quantity — setting @order would append a duplicate.
+        existing = items_with_key.first
+        amount_before = existing.amount.to_i
+        existing.update(amount: amount_before + 1)
+        applied = existing.reload.amount.to_i > amount_before
       end
     end
+
     @redeemed_token = true
-    @invalid = !@order
+    @invalid = !applied
 
     render :update_cart
   end

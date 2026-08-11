@@ -44,6 +44,28 @@ RSpec.describe RedemptionKey, type: :model do
     end
   end
 
+  describe "#quantity_limit" do
+    it "returns max_quantity when set" do
+      key = build(:redemption_key, :covers_siblings)
+      expect(key.quantity_limit).to eq(2)
+    end
+
+    it "defaults to one when max_quantity is unset" do
+      key = build(:redemption_key)
+      expect(key.quantity_limit).to eq(1)
+    end
+
+    it "returns nil (uncapped) for multi-use keys with no max_quantity" do
+      key = build(:redemption_key, :multi_use)
+      expect(key.quantity_limit).to be_nil
+    end
+
+    it "lets max_quantity cap a multi-use key" do
+      key = build(:redemption_key, :multi_use, max_quantity: 3)
+      expect(key.quantity_limit).to eq(3)
+    end
+  end
+
   describe "#expired?" do
     it "returns true for expired key" do
       key = build(:redemption_key, expires_at: 1.day.ago)

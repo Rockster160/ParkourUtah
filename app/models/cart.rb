@@ -87,7 +87,8 @@ class Cart < ApplicationRecord
     item_ids.flatten.each do |item_id|
       order = cart_items.where(line_item_id: item_id).first
       if order
-        order.increment!(:amount)
+        # Not increment! — update_counters would bypass the redemption cap.
+        order.update(amount: order.amount.to_i + 1)
       else
         item = LineItem.find(item_id)
         cart_items.create(line_item_id: item_id, order_name: item.title, amount: 1)

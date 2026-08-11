@@ -265,6 +265,10 @@ FactoryBot.define do
     trait :multi_use do
       can_be_used_multiple_times { true }
     end
+
+    trait :covers_siblings do
+      max_quantity { 2 }
+    end
   end
 
   factory :spot do

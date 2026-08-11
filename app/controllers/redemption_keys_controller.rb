@@ -38,6 +38,6 @@ class RedemptionKeysController < ApplicationController
   private
 
   def redemption_key_params
-    params.permit(:expiry_date, :key)
+    params.permit(:expiry_date, :key, :max_quantity)
   end
 end

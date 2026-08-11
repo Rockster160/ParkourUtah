@@ -94,6 +94,57 @@ RSpec.describe "Store Purchase Flow", type: :model do
       expect(cart.cart_items.count).to eq(1)
       expect(cart.price).to eq(0) # Free with key
     end
+
+    it "reaches the family discount when one code covers two athletes" do
+      user = create(:user)
+      cart = user.cart
+      item = create(:line_item,
+        title: "3 Day Pass",
+        cost_in_pennies: 5000,
+        bundle_amount: 2,
+        bundle_cost_in_pennies: 4000,
+        credits: 3,
+        category: "Class"
+      )
+      key = create(:redemption_key, :covers_siblings, line_item: item)
+
+      cart_item = CartItem.create!(
+        line_item_id: item.id,
+        redeemed_token: key.key,
+        cart_id: cart.id,
+        order_name: item.title,
+        amount: 2
+      )
+
+      expect(cart_item.amount).to eq(2)
+      # Family price applies at the threshold: 4000 * 2, not 5000 * 2
+      expect(cart.price).to eq(8000)
+    end
+
+    it "keeps a single-athlete code off the family discount" do
+      user = create(:user)
+      cart = user.cart
+      item = create(:line_item,
+        title: "3 Day Pass",
+        cost_in_pennies: 5000,
+        bundle_amount: 2,
+        bundle_cost_in_pennies: 4000,
+        credits: 3,
+        category: "Class"
+      )
+      key = create(:redemption_key, line_item: item)
+
+      CartItem.create!(
+        line_item_id: item.id,
+        redeemed_token: key.key,
+        cart_id: cart.id,
+        order_name: item.title,
+        amount: 2
+      )
+
+      expect(cart.cart_items.first.amount).to eq(1)
+      expect(cart.price).to eq(5000)
+    end
   end
 
   describe "plan-based discounts at checkout" do
