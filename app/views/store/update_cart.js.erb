@@ -3,7 +3,12 @@ $('.shopping-cart-price-holder').html('<%= j number_to_currency(@cart.subtotal_b
 $('.shopping-cart-taxes-holder').html('<%= j number_to_currency(@cart.taxes_in_dollars) %>');
 $('.shopping-cart-shipping-holder').html('<%= j number_to_currency(@cart.shipping_in_dollars) %>');
 $('.shopping-cart-total-holder').html('<%= j number_to_currency(@cart.total_in_dollars) %>');
-$('.stripe-button').attr('data-amount', '<%= j number_to_currency(@cart.total) %>');
+<%# No data-amount update here: checkout.js reads the script tag's data-* attributes
+    once, in the Button constructor at page load, and open() replays that cached
+    options object — so writing the attribute afterwards does nothing. It also used
+    to write number_to_currency(pennies), which Stripe parseInt's to NaN. Showing
+    the real total in the payment modal needs the StripeCheckout.configure
+    integration, where the amount is passed at open() time. %>
 
 $('.shopping-cart-line-item-quantity-input').each(function() {
   $(this).val(0);

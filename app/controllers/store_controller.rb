@@ -163,6 +163,12 @@ class StoreController < ApplicationController
         @cart.update!(purchased_at: DateTime.current)
 
         @cart.cart_items.each do |order|
+          # A row sitting at zero contributes nothing to the order — the cart view
+          # hides it, and both `price` and `items` skip it — but it still reaches
+          # here, where dividing by the amount below would raise FloatDomainError
+          # on NaN and take the whole purchase down with it.
+          next if order.amount.to_i <= 0
+
           line_item = LineItem.find(order.line_item_id)
 
           if RedemptionKey.redeem(order.redeemed_token) && user_signed_in?

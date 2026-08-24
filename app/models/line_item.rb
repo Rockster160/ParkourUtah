@@ -177,6 +177,11 @@ class LineItem < ApplicationRecord
   end
 
   def effective_unit_price_for(amount, user=nil)
+    # Zero is reachable (CartItem#verify_amount_is_not_nil coerces a nil amount to
+    # it), and 0 / 0.0 is NaN, which blows up on .round. There is no per-unit
+    # bundle price to work out at that point, so fall back to the plain unit price.
+    return unit_price_for(user) if amount.to_i <= 0
+
     (cost_for(amount, user) / amount.to_f).round
   end
 

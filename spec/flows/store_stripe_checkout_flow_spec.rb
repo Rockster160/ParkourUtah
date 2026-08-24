@@ -69,4 +69,20 @@ RSpec.describe "Store checkout — Stripe side effects", type: :request do
     expect(user.purchased_plan_items.count).to eq(0)
     expect(user.recurring_subscriptions.count).to eq(0)
   end
+
+  it "checks out cleanly past a cart row sitting at zero" do
+    li = create(:line_item, cost_in_pennies: 1500, category: "Class", credits: 0, taxable: false)
+    stale = create(:line_item, cost_in_pennies: 2000, category: "Class", credits: 0, taxable: false)
+    user.cart.cart_items.create!(line_item: li, amount: 1, order_name: li.title)
+    # Invisible in the cart view, but still iterated at charge time — dividing by
+    # it used to raise FloatDomainError and roll the whole purchase back.
+    user.cart.cart_items.create!(line_item: stale, amount: 0, order_name: stale.title)
+
+    post charge_path, params: { stripeToken: "tok_visa" }
+
+    expect(::Stripe::Charge).to have_received(:create).with(
+      hash_including(amount: 1500)
+    )
+    expect(user.carts.purchased.count).to eq(1)
+  end
 end

@@ -22,7 +22,11 @@ class RedemptionKey < ApplicationRecord
   # LineItem.find(x).redemption_keys.create
 
   scope :expired, -> { where("expires_at < ?", Time.zone.now) }
-  scope :not_expired, -> { where.not("expires_at < ?", Time.zone.now) }
+  # A NULL expires_at means "never expires". `where.not("expires_at < ?")` drops
+  # those rows in Postgres — NULL < ts is NULL, and NOT NULL is still NULL — so
+  # this scope matched nothing at all, which meant `redeem` below could never
+  # find a key and no single-use code was ever marked as used.
+  scope :not_expired, -> { where(expires_at: nil).or(where("expires_at >= ?", Time.zone.now)) }
   scope :redeemed, -> { where(redeemed: true) }
   scope :not_redeemed, -> { where.not(redeemed: true) }
   scope :redeemable, -> { not_redeemed.not_expired }
@@ -34,6 +38,9 @@ class RedemptionKey < ApplicationRecord
 
       key_to_redeem.update(redeemed: true)
     }
+    # No key behind this token — the common case, since most cart items carry a
+    # blank one. Nothing to consume, but still truthy: create_charge gates the
+    # credit payout on this, and an ordinary purchase should award its credits.
     true
   end
 

@@ -33,6 +33,19 @@ RSpec.describe LineItem, type: :model do
     end
   end
 
+  describe "#effective_unit_price_for" do
+    it "divides the bundled total across the units" do
+      item = create(:line_item, cost_in_pennies: 1000, bundle_amount: 5, bundle_cost_in_pennies: 700)
+      expect(item.effective_unit_price_for(5)).to eq(700)
+    end
+
+    it "falls back to the unit price at zero rather than dividing by it" do
+      item = create(:line_item, cost_in_pennies: 1000)
+      expect { item.effective_unit_price_for(0) }.not_to raise_error
+      expect(item.effective_unit_price_for(0)).to eq(1000)
+    end
+  end
+
   describe "#tax_for" do
     it "calculates 8.25% tax" do
       item = create(:line_item, cost_in_pennies: 10000, taxable: true)

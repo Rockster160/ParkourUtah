@@ -34,6 +34,12 @@ RSpec.describe RedemptionKey, type: :model do
       expect(result).to be false
     end
 
+    it "marks a key with no expiry date as redeemed" do
+      key = create(:redemption_key, expires_at: nil)
+      expect(RedemptionKey.redeem(key.key)).to be true
+      expect(key.reload.redeemed).to be true
+    end
+
     it "allows multi-use keys to be redeemed repeatedly" do
       key = create(:redemption_key, :multi_use, expires_at: 1.year.from_now)
       result1 = RedemptionKey.redeem(key.key)
@@ -84,6 +90,19 @@ RSpec.describe RedemptionKey, type: :model do
   end
 
   describe "scopes" do
+    it ".not_expired keeps keys that never expire" do
+      never_expires = create(:redemption_key, expires_at: nil)
+      dated = create(:redemption_key, expires_at: 1.year.from_now)
+      expired = create(:redemption_key, :expired)
+      expect(RedemptionKey.not_expired).to include(never_expires, dated)
+      expect(RedemptionKey.not_expired).not_to include(expired)
+    end
+
+    it ".redeemable includes a key with no expiry date" do
+      never_expires = create(:redemption_key, expires_at: nil)
+      expect(RedemptionKey.redeemable).to include(never_expires)
+    end
+
     it ".redeemable returns non-redeemed, non-expired keys" do
       good = create(:redemption_key, expires_at: 1.year.from_now)
       redeemed = create(:redemption_key, :redeemed, expires_at: 1.year.from_now)
