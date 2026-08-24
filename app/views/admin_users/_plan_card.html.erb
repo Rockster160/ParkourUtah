@@ -8,9 +8,15 @@
   free_items = Array(plan.free_items).reject { |i| Array(i["tags"]).empty? }
   discounts  = Array(plan.discount_items).reject { |i| Array(i["tags"]).empty? || i["discount"].to_s.blank? }
 
+  # A plan past its expiry that is still set to renew has missed its charge —
+  # it reads as "Auto-renews" otherwise, which is the opposite of what happened.
+  overdue = plan.auto_renew? && plan.expires_at.present? && plan.expires_at < Time.current
+
   status_label, status_class = (
     if plan.athlete_id.blank?
       ["Unassigned", "status-bad"]
+    elsif overdue
+      ["Renewal overdue", "status-bad"]
     elsif plan.auto_renew?
       ["Auto-renews", "status-good"]
     else
@@ -22,6 +28,13 @@
   <div class="plan-card-head">
     <span class="plan-name"><%= plan_name %></span>
     <span class="status-badge <%= status_class %>"><%= status_label %></span>
+    <%# Why it is stuck. monthly_plan_charges skips a blank stripe_id outright, so
+        no charge is ever attempted and no decline notice ever reaches the customer. %>
+    <% if plan.stripe_id.blank? %>
+      <span class="status-badge status-bad">No card on file</span>
+    <% elsif plan.card_declined.present? %>
+      <span class="status-badge status-bad">Card declined</span>
+    <% end %>
   </div>
 
   <dl class="plan-fields">
@@ -32,8 +45,8 @@
     <dd><%= number_to_currency(plan.cost) %><% if plan.cost_in_pennies.to_i > 0 %>/mo<% end %></dd>
 
     <% if plan.expires_at.present? %>
-      <dt><%= plan.auto_renew? ? "Next bill" : "Expires" %></dt>
-      <dd><%= (plan.auto_renew? ? plan.expires_at + 1.day : plan.expires_at).strftime('%b %-d, %Y') %></dd>
+      <dt><%= overdue ? "Was due" : (plan.auto_renew? ? "Next bill" : "Expires") %></dt>
+      <dd><%= (plan.auto_renew? && !overdue ? plan.expires_at + 1.day : plan.expires_at).strftime('%b %-d, %Y') %></dd>
     <% end %>
 
     <dt>Purchased</dt>

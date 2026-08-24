@@ -2,11 +2,16 @@
   <h1 class="pkut-text hidden-xs">Plans</h1>
   <h4 class="pkut-text visible-xs">Plans</h4>
 
-  <% active_plans = @user.purchased_plan_items.active.order(:expires_at) %>
-  <% assigned_plans = active_plans.select { |p| p.athlete_id.present? } %>
-  <% unassigned_plans = active_plans.select { |p| p.athlete_id.nil? } %>
+  <%# Overdue plans — lapsed but still auto_renew — belong here too. They sit in
+      monthly_plan_charges' queue and the card already carries the "Cancel
+      auto-renew" action, but filtering on `.active` alone hid them, so the one
+      set of plans an admin actually needs to act on was the one set they could
+      not reach. %>
+  <% shown_plans = (@user.purchased_plan_items.active.to_a + @user.purchased_plan_items.inactive.auto_renew.to_a).sort_by { |p| p.expires_at || Time.current } %>
+  <% assigned_plans = shown_plans.select { |p| p.athlete_id.present? } %>
+  <% unassigned_plans = shown_plans.select { |p| p.athlete_id.nil? } %>
 
-  <% if active_plans.empty? %>
+  <% if shown_plans.empty? %>
     <div class="modal-section">
       <p>This user has no active plans.</p>
     </div>

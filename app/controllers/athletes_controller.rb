@@ -108,10 +108,14 @@ class AthletesController < ApplicationController
     athlete = Athlete.find(params[:id])
     plan = PurchasedPlanItem.find(params[:plan_id])
 
+    # Reachable from the admin user page as well as a customer's own account, and
+    # an admin cancelling someone else's plan should not land on their own account.
+    fallback = account_path(anchor: :subscriptions)
+
     if plan.update(auto_renew: false)
-      redirect_to account_path(anchor: :subscriptions), notice: 'Successfully Unsubscribed'
+      redirect_back fallback_location: fallback, notice: 'Successfully Unsubscribed'
     else
-      redirect_to account_path(anchor: :subscriptions), notice: 'There was an error unsubscribing.'
+      redirect_back fallback_location: fallback, notice: 'There was an error unsubscribing.'
     end
   end
 

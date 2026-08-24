@@ -15,23 +15,33 @@
         </div> -->
       </div>
     <% end %>
-    <h2 class="header-text">Add Athletes</h2>
-    <p>Add the first and last name, birthday, and desired Pin Code for each athlete (including yourself) who is going to participate in lessons.</p>
-    <% token = 10.times.map {(('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a).sample}.join %>
-    <div class="athlete-container">
-      <div class="row athlete-input-info">
-        <div class="col-sm-6">
-          <%= text_field_tag "athlete[#{token}][name]", '', placeholder: 'Full Name', class: "pkut-textbox formatName" %>
-        </div>
-        <div class="col-sm-6">
-          <%= telephone_field_tag "athlete[#{token}][dob]", '', placeholder: 'MM/DD/YYYY', class: "pkut-textbox sm-textbox formatDOB" %><span class="show-required"><a alt="..." data-toggle="modal" data-target="#what_is" class="hover-btn forceOpen what-is-pin"><sup>(What is this?)</sup></a><%= telephone_field_tag "athlete[#{token}][code]", '', placeholder: 'ex:1234', class: "pkut-textbox xs-textbox formatPin" %></span> <%= icon("far", "times-circle", '', class: 'fa-2x kill-athlete hover-btn') %>
+    <%# Renewals only re-sign the athletes listed above. The blank "Add Athletes"
+        row used to render here too, and parents renewing a waiver read it as
+        something they had to fill in — typing a child who already exists above,
+        which creates a duplicate Athlete via update_waiver#add_new_athletes_from_waivers.
+        Someone with nothing to renew still needs a way to add their first athlete,
+        so the block stays for them. %>
+    <% if @athletes.none? %>
+      <h2 class="header-text">Add Athletes</h2>
+      <p>Add the first and last name, birthday, and desired Pin Code for each athlete (including yourself) who is going to participate in lessons.</p>
+      <% token = 10.times.map {(('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a).sample}.join %>
+      <div class="athlete-container">
+        <div class="row athlete-input-info">
+          <div class="col-sm-6">
+            <%= text_field_tag "athlete[#{token}][name]", '', placeholder: 'Full Name', class: "pkut-textbox formatName" %>
+          </div>
+          <div class="col-sm-6">
+            <%= telephone_field_tag "athlete[#{token}][dob]", '', placeholder: 'MM/DD/YYYY', class: "pkut-textbox sm-textbox formatDOB" %><span class="show-required"><a alt="..." data-toggle="modal" data-target="#what_is" class="hover-btn forceOpen what-is-pin"><sup>(What is this?)</sup></a><%= telephone_field_tag "athlete[#{token}][code]", '', placeholder: 'ex:1234', class: "pkut-textbox xs-textbox formatPin" %></span> <%= icon("far", "times-circle", '', class: 'fa-2x kill-athlete hover-btn') %>
+          </div>
         </div>
       </div>
-    </div>
+    <% end %>
     <%= render partial: 'athletes/reiterate_waiver' %>
     <%= render partial: 'athletes/waivers' %>
   <% end %>
-  <h4><span class="add-athlete-btn hover-btn pkut-text"><%= icon("far", 'plus-square', '', class: 'fa-lg') %> Add Additional Athlete</span></h4>
+  <% if @athletes.none? %>
+    <h4><span class="add-athlete-btn hover-btn pkut-text"><%= icon("far", 'plus-square', '', class: 'fa-lg') %> Add Additional Athlete</span></h4>
+  <% end %>
   <a alt="..." class="pkut-btn pull-right populate-waiver-btn" data-toggle="modal" data-target="#waiver_modal">Sign Waiver</a><br/>
 </div>
 

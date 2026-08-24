@@ -21,7 +21,8 @@
     <p>Credits: <%= @user.credits %> -- <a data-toggle="modal" data-target="#adjust-<%= @user.id %>" class="forceOpen">Adjust</a></p>
     <p><a data-toggle="modal" data-target="#edit_user_notifications" class="forceOpen">Edit Notifications</a></p>
     <p><a data-toggle="modal" data-target="#edit_user_subscriptions" class="forceOpen">Edit Subscriptions</a></p>
-    <p><a data-toggle="modal" data-target="#edit_user_plans" class="forceOpen">Edit Plans</a> (<%= @user.purchased_plan_items.active.count %> active)</p>
+    <% overdue_plan_count = @user.purchased_plan_items.inactive.auto_renew.count %>
+    <p><a data-toggle="modal" data-target="#edit_user_plans" class="forceOpen">Edit Plans</a> (<%= @user.purchased_plan_items.active.count %> active<% if overdue_plan_count > 0 %>, <span class="status-badge status-bad"><%= overdue_plan_count %> overdue</span><% end %>)</p>
     <p><a href="<%= attendance_admin_user_path(@user) %>">Attendance History</a></p>
     <p>Last seen:
       <% if @user.signed_in? %>
@@ -41,16 +42,23 @@
     <% if athlete.has_unlimited_access? %>
       <span style="color: green;">--Has unlimited access until: <%= athlete.has_access_until.strftime('%B %e, %Y') %></span><br/>
     <% end %>
-    <% athlete.purchased_plan_items.active.order(:expires_at).each do |plan| %>
+    <%# Include lapsed-but-still-renewing plans. `.active` alone dropped them, so a
+        plan that had missed its charge showed nowhere on this page at all. %>
+    <% athlete_plans = (athlete.purchased_plan_items.active.to_a + athlete.purchased_plan_items.inactive.auto_renew.to_a).sort_by { |p| p.expires_at || Time.current } %>
+    <% athlete_plans.each do |plan| %>
       <% plan_name = plan.plan_item&.name.presence || plan.plan_item&.line_item&.title || "Plan ##{plan.id}" %>
       <%
+        overdue = plan.auto_renew? && plan.expires_at.present? && plan.expires_at < Time.current
         status_label, status_class = (
-          if plan.auto_renew? then ["Auto-renews", "status-good"]
-          else                      ["Auto-renew off", "status-warn"]
+          if overdue            then ["Renewal overdue", "status-bad"]
+          elsif plan.auto_renew? then ["Auto-renews", "status-good"]
+          else                       ["Auto-renew off", "status-warn"]
           end
         )
+        date_label = overdue ? "Was due" : (plan.auto_renew? ? "Next bill" : "Expires")
+        date_value = plan.auto_renew? && !overdue ? plan.expires_at + 1.day : plan.expires_at
       %>
-      <span style="color: green;">--Plan: <strong><%= plan_name %></strong><% if plan.expires_at.present? %> · <%= plan.auto_renew? ? "Next bill" : "Expires" %> <%= (plan.auto_renew? ? plan.expires_at + 1.day : plan.expires_at).strftime('%b %-d, %Y') %><% end %> <span class="status-badge <%= status_class %>"><%= status_label %></span></span><br/>
+      <span style="color: <%= overdue ? "orange" : "green" %>;">--Plan: <strong><%= plan_name %></strong><% if plan.expires_at.present? %> · <%= date_label %> <%= date_value.strftime('%b %-d, %Y') %><% end %> <span class="status-badge <%= status_class %>"><%= status_label %></span><% if plan.stripe_id.blank? %> <span class="status-badge status-bad">No card on file</span><% elsif plan.card_declined.present? %> <span class="status-badge status-bad">Card declined</span><% end %></span><br/>
     <% end %>
     --<strong><%= athlete.full_name %></strong> - Fast Pass ID: <%= athlete.fast_pass_id.to_s.rjust(4, "0") %><%= athlete.current_subscription.try(:auto_renew) ? '*' : '' %><br/>
     <% if athlete.unused_trials.count > 0 %>
