@@ -22,7 +22,7 @@
     <p><a data-toggle="modal" data-target="#edit_user_notifications" class="forceOpen">Edit Notifications</a></p>
     <p><a data-toggle="modal" data-target="#edit_user_subscriptions" class="forceOpen">Edit Subscriptions</a></p>
     <% overdue_plan_count = @user.purchased_plan_items.inactive.auto_renew.count %>
-    <p><a data-toggle="modal" data-target="#edit_user_plans" class="forceOpen">Edit Plans</a> (<%= @user.purchased_plan_items.active.count %> active<% if overdue_plan_count > 0 %>, <span class="status-badge status-bad"><%= overdue_plan_count %> overdue</span><% end %>)</p>
+    <p><a data-toggle="modal" data-target="#edit_user_plans" class="forceOpen">Edit Plans</a> (<%= @user.purchased_plan_items.active.count %> active<% if overdue_plan_count > 0 %>, <strong style="color: #8B0000;"><%= overdue_plan_count %> overdue</strong><% end %>)</p>
     <p><a href="<%= attendance_admin_user_path(@user) %>">Attendance History</a></p>
     <p>Last seen:
       <% if @user.signed_in? %>
@@ -40,7 +40,7 @@
   <h4>Athletes:</h4>
   <% @user.athletes_by_waiver_expiration.each do |athlete| %>
     <% if athlete.has_unlimited_access? %>
-      <span style="color: green;">--Has unlimited access until: <%= athlete.has_access_until.strftime('%B %e, %Y') %></span><br/>
+      <span style="color: #145214;">--Has unlimited access until: <%= athlete.has_access_until.strftime('%B %e, %Y') %></span><br/>
     <% end %>
     <%# Include lapsed-but-still-renewing plans. `.active` alone dropped them, so a
         plan that had missed its charge showed nowhere on this page at all. %>
@@ -49,16 +49,25 @@
       <% plan_name = plan.plan_item&.name.presence || plan.plan_item&.line_item&.title || "Plan ##{plan.id}" %>
       <%
         overdue = plan.auto_renew? && plan.expires_at.present? && plan.expires_at < Time.current
+        # Overdue carries no pill — the red line and the wording already say it,
+        # and a badge on top only competes with the plan name for attention.
         status_label, status_class = (
-          if overdue            then ["Renewal overdue", "status-bad"]
-          elsif plan.auto_renew? then ["Auto-renews", "status-good"]
-          else                       ["Auto-renew off", "status-warn"]
+          if plan.auto_renew? then ["Auto-renews", "status-good"]
+          else                     ["Auto-renew off", "status-warn"]
           end
         )
-        date_label = overdue ? "Was due" : (plan.auto_renew? ? "Next bill" : "Expires")
+        date_label = overdue ? "Overdue since" : (plan.auto_renew? ? "Next bill" : "Expires")
         date_value = plan.auto_renew? && !overdue ? plan.expires_at + 1.day : plan.expires_at
+        # Why it is stuck, as plain text. A second pill here stacked two loud
+        # blocks on every line and buried the plan name between them.
+        blocker = if plan.stripe_id.blank? then "no card on file"
+                  elsif plan.card_declined.present? then "card declined"
+                  end
       %>
-      <span style="color: <%= overdue ? "orange" : "green" %>;">--Plan: <strong><%= plan_name %></strong><% if plan.expires_at.present? %> · <%= date_label %> <%= date_value.strftime('%b %-d, %Y') %><% end %> <span class="status-badge <%= status_class %>"><%= status_label %></span><% if plan.stripe_id.blank? %> <span class="status-badge status-bad">No card on file</span><% elsif plan.card_declined.present? %> <span class="status-badge status-bad">Card declined</span><% end %></span><br/>
+      <%# Inks chosen against this page's #BDBDBD background: the CSS `green`
+          keyword sits at 2.73:1 there and plain `orange` at 1.05:1, which is why
+          these rows were unreadable. #145214 and #8B0000 clear AA on that grey. %>
+      <span style="color: <%= overdue ? "#8B0000" : "#145214" %>;">--Plan: <strong><%= plan_name %></strong><% if plan.expires_at.present? %> · <%= date_label %> <%= date_value.strftime('%b %-d, %Y') %><% end %><% if blocker %> · <%= blocker %><% end %><% unless overdue %> <span class="status-badge <%= status_class %>"><%= status_label %></span><% end %></span><br/>
     <% end %>
     --<strong><%= athlete.full_name %></strong> - Fast Pass ID: <%= athlete.fast_pass_id.to_s.rjust(4, "0") %><%= athlete.current_subscription.try(:auto_renew) ? '*' : '' %><br/>
     <% if athlete.unused_trials.count > 0 %>

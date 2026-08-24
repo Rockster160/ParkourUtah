@@ -25,9 +25,13 @@
   letter-spacing: 0.05em;
   vertical-align: middle;
 
-  &.status-good    { background: $mat-green-light;  color: $mat-green-dark; }
-  &.status-warn    { background: $mat-orange-light; color: $mat-orange-dark; }
-  &.status-bad     { background: lighten($pkut-red, 35%); color: $pkut-red-dark; }
+  // Badge text is 0.75em, so AA wants 4.5:1 and the original pairings were well
+  // under — good 3.12:1, warn 2.08:1, bad 2.91:1. Same hues, darker ink on paler
+  // grounds: it clears AA and the softer fills stop the badges shouting over the
+  // rows they annotate.
+  &.status-good    { background: lighten($mat-green-light, 10%);  color: darken($mat-green-dark, 8%); }
+  &.status-warn    { background: lighten($mat-orange-light, 10%); color: darken($mat-orange-dark, 18%); }
+  &.status-bad     { background: lighten($pkut-red, 40%);         color: $mat-pkut-red-dark; }
   &.status-neutral { background: $pkut-grey-white; color: $pkut-grey-dark; }
 }
 
