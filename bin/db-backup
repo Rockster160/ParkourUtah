@@ -6,13 +6,21 @@ APP_DIR="/home/deploy/parkourutah/current"
 DB="parkourutah_production"
 DB_USER="deploy"
 
+BACKUP_DIR="/Volumes/RoccoBackup/Backups/ParkourUtah"
+
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 FILENAME="backup_${TIMESTAMP}.dump"
 REMOTE_PATH="/tmp/${FILENAME}"
-LOCAL_PATH="$(cd "$(dirname "$0")/.." && pwd)/${FILENAME}"
+LOCAL_PATH="${BACKUP_DIR}/${FILENAME}"
 
 log() { echo -e "\033[96m==> $1\033[0m"; }
 err() { echo -e "\033[91m==> ERROR: $1\033[0m"; }
+
+if [ ! -d "/Volumes/RoccoBackup" ]; then
+  err "Backup drive not mounted — /Volumes/RoccoBackup"
+  exit 1
+fi
+mkdir -p "$BACKUP_DIR"
 
 cleanup_remote() {
   ssh "$SERVER" "rm -f $REMOTE_PATH" 2>/dev/null || true

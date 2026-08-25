@@ -2,18 +2,25 @@
 set -e
 
 DB="parkour_utah_development"
+BACKUP_DIR="/Volumes/RoccoBackup/Backups/ParkourUtah"
 
 log() { echo -e "\033[96m==> $1\033[0m"; }
 err() { echo -e "\033[91m==> ERROR: $1\033[0m"; }
 
+# No arg: newest dump in the backup dir. Bare filename: resolved against it.
 if [ -z "$1" ]; then
-  err "Usage: bin/restore <dump-file>"
-  exit 1
-fi
-
-DUMP="$1"
-if [ ! -f "$DUMP" ]; then
-  err "File not found: $DUMP"
+  DUMP=$(ls -1t "$BACKUP_DIR"/*.dump 2>/dev/null | head -1 || true)
+  if [ -z "$DUMP" ]; then
+    err "Usage: bin/restore <dump-file>  (no dumps found in $BACKUP_DIR)"
+    exit 1
+  fi
+  log "Using newest backup: \033[33m$DUMP"
+elif [ -f "$1" ]; then
+  DUMP="$1"
+elif [ -f "$BACKUP_DIR/$1" ]; then
+  DUMP="$BACKUP_DIR/$1"
+else
+  err "File not found: $1 (also looked in $BACKUP_DIR)"
   exit 1
 fi
 
