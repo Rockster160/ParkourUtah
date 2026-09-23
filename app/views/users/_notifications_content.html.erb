@@ -9,7 +9,7 @@
       <h5>To un-blacklist us, simply text the word 'start' to +1 (844) 435-5867 and then click the button below.</h5>
       <h5>You should receive a text message saying you will now be able to receive text notifications from ParkourUtah.</h5>
       <div class="text-center">
-        <%= link_to 'Text Me!', make_can_receive_sms_path, class: 'pkut-btn', method: :post %>
+        <%= link_to 'Text Me!', make_can_receive_sms_path(user_id: @user.id), class: 'pkut-btn', method: :post %>
       </div>
     </div>
   <% end %>

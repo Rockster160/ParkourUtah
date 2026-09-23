@@ -1,11 +1,20 @@
  require 'net/http'
 class IndexController < ApplicationController
   before_action :still_signed_in
+  before_action :validate_user_signed_in, only: [:can_receive_sms]
   skip_before_action :verify_authenticity_token
 
+  # Twilio forwards these along after it has already lifted its own opt-out.
+  OPT_IN_KEYWORDS = %w(START YES UNSTOP).freeze
+
   def can_receive_sms
-    current_user.update(can_receive_sms: true)
-    num = current_user.phone_number
+    user = user_to_unblock
+    if user.nil?
+      return redirect_back fallback_location: account_path, alert: "You are not authorized to do that."
+    end
+
+    user.update(can_receive_sms: true)
+    num = user.phone_number
     msg = "Thank you! You will once again be able to receive text message notifications from ParkourUtah."
     Message.text.create(body: msg, chat_room_name: num, sent_from_id: 0).deliver
     redirect_back fallback_location: account_path
@@ -38,7 +47,11 @@ class IndexController < ApplicationController
 
   def receive_sms
     raw_number = params["From"].gsub(/[^0-9]/, "").last(10)
-    Message.text.create(body: params["Body"], chat_room_name: raw_number)
+    body = params["Body"].to_s
+    Message.text.create(body: body, chat_room_name: raw_number)
+    if OPT_IN_KEYWORDS.include?(body.squish.upcase)
+      User.by_phone_number(raw_number).first.try(:update, can_receive_sms: true)
+    end
     head :ok
   end
 
@@ -100,6 +113,16 @@ class IndexController < ApplicationController
   end
 
   private
+
+  # The "Text Me!" button lives on both a member's own account page and on the
+  # admin page for someone else, so it names the user it is about. Anyone may
+  # unblock themselves; only an admin may unblock another member.
+  def user_to_unblock
+    requested_id = params[:user_id]
+    return current_user if requested_id.blank? || requested_id.to_i == current_user.id
+    return nil unless current_user.is_admin?
+    User.find_by(id: requested_id)
+  end
 
   def update_phone
     if params[:phone_number]
