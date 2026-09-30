@@ -126,7 +126,7 @@ class UsersController < ApplicationController
   def collect_missed_charges_for(user)
     results = MissedChargeResults.new([], [])
 
-    overdue_ppis = user.purchased_plan_items.assigned.auto_renew.inactive.available.to_a
+    overdue_ppis = user.purchased_plan_items.renewable.auto_renew.inactive.available.to_a
     overdue_rs = user.recurring_subscriptions.assigned.auto_renew.expired.available.to_a
 
     overdue_ppis.group_by(&:stripe_id).each do |stripe_id, plans|
@@ -228,7 +228,8 @@ class UsersController < ApplicationController
     @user.recurring_subscriptions.unassigned.each do
       @notifications[:subscriptions] << "You have unassigned subscriptions!"
     end
-    @user.purchased_plan_items.unassigned.each do
+    # A family pass has nobody to assign it to, so nagging about it is noise.
+    @user.purchased_plan_items.unassigned.reject(&:family?).each do
       @notifications[:subscriptions] << "You have unassigned subscriptions!"
     end
     # Without a stripe_id the monthly worker skips the record entirely, so the

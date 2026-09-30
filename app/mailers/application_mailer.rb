@@ -50,7 +50,7 @@ class ApplicationMailer < ActionMailer::Base
 
     # Plans renew on their own records, so they need checking separately —
     # has_access_until only ever reflects RecurringSubscriptions.
-    @expiring_plans = @user.purchased_plan_items.auto_renew.assigned.where(expires_at: range)
+    @expiring_plans = @user.purchased_plan_items.auto_renew.renewable.where(expires_at: range)
 
     return nil unless @expiring_athletes.any? || @expiring_plans.any?
 

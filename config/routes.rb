@@ -137,6 +137,10 @@ Rails.application.routes.draw do
 
   delete 'unsubscribe_monthly/:id' => 'store#unsubscribe', as: 'unsubscribe_monthly_subscription'
 
+  # A family pass covers the whole account and is never assigned to an athlete,
+  # so it cannot cancel through the athlete-scoped route.
+  delete 'unsubscribe_family_plan' => 'athletes#unsubscribe_family_plan', as: 'unsubscribe_family_plan'
+
   resources :athletes do
     member do
       post :reset_pin

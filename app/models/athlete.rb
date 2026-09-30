@@ -154,40 +154,71 @@ class Athlete < ApplicationRecord
     current_subscription.try(:use!) || false
   end
 
+  # Plans assigned to this athlete, plus every family plan on the account. A
+  # family pass is one flat purchase for the whole household, but a
+  # PurchasedPlanItem still hangs off a single athlete — without this every
+  # sibling but the assigned one would be charged for their classes.
+  #
+  # A family pass is never assigned to anyone; it starts covering the account
+  # the moment it is bought.
   def active_plans
-    purchased_plan_items.active
+    return PurchasedPlanItem.none if id.blank?
+
+    own = PurchasedPlanItem.where(athlete_id: id)
+    family = PurchasedPlanItem.family.where(user_id: user_id)
+
+    PurchasedPlanItem.active.merge(own.or(family)).order(:id)
   end
+
+  # Returns [plan, free_item] for the active plan that should cover this event,
+  # or nil. Every plan is considered: an athlete can hold a plan of their own
+  # alongside the household family pass, and an exhausted plan must not hide
+  # the one behind it.
   def relevant_plan(event)
     tags = event.tags
 
-    active_plans.find do |plan|
+    candidates = active_plans.filter_map do |plan|
       # free_items: [{"tags"=>["classes"], "count"=>2, "interval"=>"week"}]
-      break plan.free_items&.find do |item|
-        matching_tags = item["tags"] & tags
-        next unless matching_tags.any?
-
-        attendance_ids = item["attendance_ids"] || []
-        item_attendances = Attendance.where(id: attendance_ids)
-        now = Time.current
-        relevant_attendances = (
-          case item["interval"].to_sym
-          when :day
-            item_attendances.where(created_at: now.beginning_of_day..now.end_of_day)
-          when :week
-            item_attendances.where(created_at: now.beginning_of_week..now.end_of_week)
-          when :month
-            item_attendances.where(created_at: now.beginning_of_month..now.end_of_month)
-          end
-        )
-        next if item["count"].to_i > 0 && relevant_attendances.count >= item["count"].to_i
-
-        break [plan, item]
-      end
+      item = plan.free_items&.find { |free_item| free_item_covers?(free_item, tags) }
+      [plan, item] if item.present?
     end
+
+    # Spend the cheapest thing first, and nothing is cheaper than an unlimited
+    # grant: it costs the household nothing to draw on and cannot run out.
+    # That beats a counted allotment whatever its source — a finite family pass
+    # must not eat into the household pool while a sibling holds unlimited
+    # access of their own. Family passes only break the tie between two grants
+    # that are otherwise equal, being already paid for on everyone's behalf.
+    candidates.min_by { |plan, item|
+      [item["count"].to_i.zero? ? 0 : 1, plan.family? ? 0 : 1, plan.id]
+    }
   end
   def has_active_plan?
     active_plans.any?
   end
+
+  # A free_item grants this event when its tags match and its allowance for the
+  # current interval is not yet spent. A count of 0 means unlimited.
+  def free_item_covers?(free_item, tags)
+    return false if (Array(free_item["tags"]) & Array(tags)).empty?
+
+    count = free_item["count"].to_i
+    return true if count.zero?
+
+    now = Time.current
+    period = (
+      case free_item["interval"].to_s
+      when "day" then now.beginning_of_day..now.end_of_day
+      when "week" then now.beginning_of_week..now.end_of_week
+      when "month" then now.beginning_of_month..now.end_of_month
+      end
+    )
+    return true if period.nil?
+
+    used = Attendance.where(id: free_item["attendance_ids"] || [], created_at: period).count
+    used < count
+  end
+  private :free_item_covers?
 
   def signed_waiver?
     return false unless self.waiver

@@ -13,7 +13,7 @@
   overdue = plan.auto_renew? && plan.expires_at.present? && plan.expires_at < Time.current
 
   status_label, status_class = (
-    if plan.athlete_id.blank?
+    if plan.awaiting_assignment?
       ["Unassigned", "status-bad"]
     elsif overdue
       ["Renewal overdue", "status-bad"]
@@ -32,7 +32,13 @@
 
   <dl class="plan-fields">
     <dt>Athlete</dt>
-    <dd><%= plan.athlete&.full_name.presence || "—" %></dd>
+    <%# One flat purchase for the household, never assigned to anyone — there is
+        no athlete to name because it covers all of them. %>
+    <% if plan.family? %>
+      <dd><span class="tag-pill">covers all students</span></dd>
+    <% else %>
+      <dd><%= plan.athlete&.full_name.presence || "—" %></dd>
+    <% end %>
 
     <dt>Price</dt>
     <dd><%= number_to_currency(plan.cost) %><% if plan.cost_in_pennies.to_i > 0 %>/mo<% end %></dd>
@@ -97,9 +103,10 @@
     <% end %>
   </ul>
 
-  <% if plan.athlete_id.present? && plan.auto_renew? %>
+  <% if plan.auto_renew? && (plan.family? || plan.athlete_id.present?) %>
     <div class="plan-card-actions">
-      <%= link_to 'Cancel auto-renew', unsubscribe_plan_athlete_path(plan.athlete_id, plan_id: plan), class: 'pkut-btn', method: :delete %>
+      <% cancel_path = plan.family? ? unsubscribe_family_plan_path(plan_id: plan) : unsubscribe_plan_athlete_path(plan.athlete_id, plan_id: plan) %>
+      <%= link_to 'Cancel auto-renew', cancel_path, class: 'pkut-btn', method: :delete %>
     </div>
   <% end %>
 </div>

@@ -15,7 +15,25 @@
     <% end %>
     <% current_user.purchased_plan_items.active.order(:expires_at).each do |plan| %>
       <% athlete = plan.athlete %>
-      <% if athlete.present? %>
+      <%# A family pass is one payment covering the whole account. It is never
+          assigned to anyone, so it has no athlete to name and no athlete to
+          hang the unsubscribe link on. %>
+      <% if plan.family? %>
+        <% if plan.auto_renew? %>
+          <div class="row">
+            <div class="col-sm-6">
+              <p>The next payment of <%= number_to_currency(plan.cost) %> for everyone on your account will process on <%= (plan.expires_at + 1.day).strftime('%B %e, %Y') %>.</p>
+            </div>
+            <div class="col-sm-6 text-center">
+              <%= link_to 'Unsubscribe', unsubscribe_family_plan_path(plan_id: plan), class: 'pkut-btn', method: :delete %>
+            </div>
+          </div>
+        <% else %>
+          <div class="row">
+            <p>Everyone on your account has access to plan benefits until: <%= plan.expires_at.strftime('%B %-d, %Y') %></p>
+          </div>
+        <% end %>
+      <% elsif athlete.present? %>
         <% if plan.auto_renew? %>
           <div class="row">
             <div class="col-sm-6">

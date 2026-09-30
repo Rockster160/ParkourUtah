@@ -33,6 +33,19 @@ class PurchasedPlanItem < ApplicationRecord
   scope :assigned, -> { where.not(athlete_id: nil) }
   scope :unassigned, -> { where(athlete_id: nil) }
   scope :available, -> { where(card_declined: [nil, ""]) }
+  scope :family, -> { where(plan_item_id: PlanItem.covering_family.select(:id)) }
+
+  # Renewal candidates. A normal plan does nothing until it is assigned to an
+  # athlete, but a family pass covers the whole account and is never assigned,
+  # so filtering on `assigned` alone would let family passes run forever
+  # without ever billing again.
+  scope :renewable, -> { assigned.or(family) }
+
+  # A family pass covers every athlete on the account, so there is nobody to
+  # assign it to and nothing to wait for — it starts the moment it is bought.
+  # Every other plan has its clock started by `assign_to_athlete`.
+  after_create :start_family_coverage
+
 
   def cost
     (cost_in_pennies / 100.to_f).round(2)
@@ -49,6 +62,16 @@ class PurchasedPlanItem < ApplicationRecord
     from + renewal_length
   end
 
+  def family?
+    plan_item&.covers_family? || false
+  end
+
+  # A family pass needs no athlete, so the "assign me" prompts and the
+  # unassigned styling should leave it alone.
+  def awaiting_assignment?
+    athlete_id.blank? && !family?
+  end
+
   def assign_to_athlete(new_athlete)
     return unless new_athlete.present?
 
@@ -58,4 +81,15 @@ class PurchasedPlanItem < ApplicationRecord
 
   # free_items: [{"tags"=>["classes"], "count"=>2, "interval"=>"week"}],
   # discount_items: [{"tags"=>["classes"], "discount"=>"50%"}]
+
+  private
+
+  # Renewals and the billing-realignment service set their own expiry; only a
+  # fresh purchase arrives without one.
+  def start_family_coverage
+    return unless expires_at.nil?
+    return unless family?
+
+    update_column(:expires_at, next_expires_at(created_at || Time.current))
+  end
 end

@@ -187,5 +187,99 @@ RSpec.describe Athlete, type: :model do
       expect(matched_plan).to eq(plan)
       expect(matched_item["count"].to_i).to eq(0)
     end
+
+    context "with a family plan on the account" do
+      let(:sibling) { create(:athlete, user: athlete.user) }
+      let(:family_plan_item) { create(:plan_item, :family, :unlimited) }
+
+      # A family pass covers the whole account, so it is never assigned to an
+      # athlete and starts the moment it is bought.
+      def family_pass(user: athlete.user, **attrs)
+        create(:purchased_plan_item, user: user, athlete: nil, plan_item: family_plan_item, **attrs)
+      end
+
+      it "covers every athlete on the account without being assigned to anyone" do
+        plan = family_pass
+        expect(plan.athlete_id).to be_nil
+
+        [athlete, sibling].each do |covered|
+          matched_plan, _ = covered.relevant_plan(event)
+          expect(matched_plan).to eq(plan)
+        end
+      end
+
+      it "does not cover athletes on someone else's account" do
+        plan = family_pass
+        stranger = create(:athlete)
+        expect(stranger.relevant_plan(event)).to be_nil
+        expect(stranger.active_plans).not_to include(plan)
+      end
+
+      it "does not cover anyone once it has expired" do
+        family_pass(expires_at: 1.day.ago)
+        expect(sibling.relevant_plan(event)).to be_nil
+      end
+
+      it "leaves a non-family plan covering only the athlete it is assigned to" do
+        plan = create(:purchased_plan_item, :active, user: athlete.user, athlete: athlete, plan_item: plan_item)
+        expect(sibling.relevant_plan(event)).to be_nil
+        expect(sibling.active_plans).not_to include(plan)
+      end
+
+      it "an unlimited family pass is spent before an athlete's counted allotment" do
+        create(:purchased_plan_item, :active, user: athlete.user, athlete: sibling, plan_item: plan_item)
+        family = family_pass
+
+        matched_plan, matched_item = sibling.relevant_plan(event)
+        expect(matched_plan).to eq(family)
+        expect(matched_item["count"].to_i).to eq(0)
+      end
+
+      it "falls back to the athlete's own plan when the household allotment is used up" do
+        own = create(:purchased_plan_item, :active, user: athlete.user, athlete: sibling, plan_item: plan_item)
+        family = family_pass
+        family.update!(free_items: [{ "tags" => ["classes"], "count" => 1, "interval" => "week" }])
+
+        attendance = create(:attendance, athlete: athlete, type_of_charge: "Plan", purchased_plan_item_id: family.id)
+        family.free_items[0]["attendance_ids"] = [attendance.id]
+        family.save!
+
+        matched_plan, _ = sibling.relevant_plan(event)
+        expect(matched_plan).to eq(own)
+      end
+
+      it "leaves a finite family pass alone when the athlete holds unlimited of their own" do
+        finite_family = family_pass
+        finite_family.update!(free_items: [{ "tags" => ["classes"], "count" => 5, "interval" => "week" }])
+        own_unlimited = create(
+          :purchased_plan_item, :active,
+          user: athlete.user, athlete: sibling, plan_item: create(:plan_item, :unlimited)
+        )
+
+        matched_plan, matched_item = sibling.relevant_plan(event)
+        expect(matched_plan).to eq(own_unlimited)
+        expect(matched_item["count"].to_i).to eq(0)
+        expect(matched_plan).not_to eq(finite_family)
+      end
+
+      it "breaks a tie between two unlimited grants in the household's favour" do
+        create(:purchased_plan_item, :active, user: athlete.user, athlete: sibling, plan_item: create(:plan_item, :unlimited))
+        family = family_pass
+
+        matched_plan, _ = sibling.relevant_plan(event)
+        expect(matched_plan).to eq(family)
+      end
+
+      it "prefers an unlimited grant over a counted one so nobody pays twice" do
+        counted = create(:purchased_plan_item, :active, user: athlete.user, athlete: sibling, plan_item: plan_item)
+        unlimited_item = create(:plan_item, :unlimited)
+        unlimited = create(:purchased_plan_item, :active, user: athlete.user, athlete: sibling, plan_item: unlimited_item)
+
+        matched_plan, matched_item = sibling.relevant_plan(event)
+        expect(matched_plan).to eq(unlimited)
+        expect(matched_item["count"].to_i).to eq(0)
+        expect(matched_plan).not_to eq(counted)
+      end
+    end
   end
 end

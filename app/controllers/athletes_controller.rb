@@ -92,7 +92,9 @@ class AthletesController < ApplicationController
     athlete = Athlete.find(params[:id])
     plan = PurchasedPlanItem.find(params[:plan_id])
 
-    if plan.athlete_id.nil? && plan.user_id == athlete.user_id
+    # A family pass already covers every athlete on the account; assigning it
+    # to one of them would pin it to a single student.
+    if plan.athlete_id.nil? && !plan.family? && plan.user_id == athlete.user_id
       if plan.assign_to_athlete(athlete)
         cadence = plan.renewal_length == 1.year ? "year" : "month"
         redirect_to account_path(anchor: :subscriptions), notice: "Successfully assigned! This plan will auto-charge each #{cadence} from now on."
@@ -101,6 +103,23 @@ class AthletesController < ApplicationController
       end
     else
       redirect_to account_path(anchor: :subscriptions), alert: "No subscriptions to assign"
+    end
+  end
+
+  # A family pass has no athlete to route through, so ownership is checked
+  # against the plan itself rather than inherited from the athlete.
+  def unsubscribe_family_plan
+    plan = PurchasedPlanItem.family.find_by(id: params[:plan_id])
+    fallback = account_path(anchor: :subscriptions)
+
+    unless plan.present? && (current_user.admin? || plan.user_id == current_user.id)
+      return redirect_back fallback_location: fallback, alert: 'There was an error unsubscribing.'
+    end
+
+    if plan.update(auto_renew: false)
+      redirect_back fallback_location: fallback, notice: 'Successfully Unsubscribed'
+    else
+      redirect_back fallback_location: fallback, notice: 'There was an error unsubscribing.'
     end
   end
 

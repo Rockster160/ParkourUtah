@@ -15,6 +15,12 @@
         <%= f.select :billing_interval, PlanItem::BILLING_INTERVALS.map { |i| ["Per #{i}", i] }, {}, class: "pkut-textbox" %>
       </div>
 
+      <div class="form-field">
+        <%= f.check_box :covers_family %>
+        <%= f.label :covers_family, "Family plan - covers every student on the account" %>
+        <span>One flat price for the household. Leave unchecked and the plan only covers the student it is assigned to.</span>
+      </div>
+
       <h3>Granted access for classes</h3>
       <div class="infinite-wrapper plan-row-grid plan-row-grid--free">
         <div class="plan-row-header">

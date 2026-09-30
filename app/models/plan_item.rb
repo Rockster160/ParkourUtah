@@ -7,6 +7,7 @@
 #  free_items       :jsonb
 #  discount_items   :jsonb
 #  billing_interval :string           default("month")
+#  covers_family    :boolean          default(FALSE), not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #
@@ -18,6 +19,10 @@ class PlanItem < ApplicationRecord
   has_one :line_item
 
   validates :billing_interval, inclusion: { in: BILLING_INTERVALS }
+
+  # A family plan is bought once at a flat price and covers every athlete on
+  # the account, rather than only the one the purchase was assigned to.
+  scope :covering_family, -> { where(covers_family: true) }
 
   def free_items=(new_json)
     fixed_json = new_json.map { |item|

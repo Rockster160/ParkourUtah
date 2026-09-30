@@ -224,10 +224,17 @@ FactoryBot.define do
     cost_in_pennies { 7500 }
     auto_renew { true }
 
-    # Bypass PlanItem setters by writing jsonb directly
+    # Checkout copies the plan's terms onto the purchase, so mirror that here.
+    # Bypass PlanItem setters by writing jsonb directly.
     after(:build) do |ppi|
-      ppi.write_attribute(:free_items, [{ "tags" => ["classes"], "count" => 2, "interval" => "week" }]) if ppi.free_items.blank?
-      ppi.write_attribute(:discount_items, [{ "tags" => ["classes"], "discount" => "50%" }]) if ppi.discount_items.blank?
+      if ppi.free_items.blank?
+        default = [{ "tags" => ["classes"], "count" => 2, "interval" => "week" }]
+        ppi.write_attribute(:free_items, ppi.plan_item&.free_items.presence || default)
+      end
+      if ppi.discount_items.blank?
+        default = [{ "tags" => ["classes"], "discount" => "50%" }]
+        ppi.write_attribute(:discount_items, ppi.plan_item&.discount_items.presence || default)
+      end
     end
 
     trait :active do
@@ -247,6 +254,17 @@ FactoryBot.define do
     after(:build) do |pi|
       pi.write_attribute(:free_items, [{ "tags" => ["classes"], "count" => 2, "interval" => "week" }]) if pi.free_items.blank?
       pi.write_attribute(:discount_items, [{ "tags" => ["classes"], "discount" => "50%" }]) if pi.discount_items.blank?
+    end
+
+    trait :family do
+      name { "Family Pass" }
+      covers_family { true }
+    end
+
+    trait :unlimited do
+      after(:build) do |pi|
+        pi.write_attribute(:free_items, [{ "tags" => ["classes"], "count" => 0, "interval" => "day" }])
+      end
     end
   end
 

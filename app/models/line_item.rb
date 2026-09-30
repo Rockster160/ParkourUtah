@@ -233,7 +233,9 @@ class LineItem < ApplicationRecord
     return unless tags.present?
 
     cip = cost_in_pennies
-    plans = user.purchased_plan_items.active.assigned
+    # A family pass is never assigned to an athlete, but its shop discounts are
+    # just as real as an assigned plan's.
+    plans = user.purchased_plan_items.active.renewable
 
     potential_discounts = plans.each_with_object([]) do |plan, arr|
       # discount_items: [{"tags"=>["classes"], "discount"=>"50%"}]

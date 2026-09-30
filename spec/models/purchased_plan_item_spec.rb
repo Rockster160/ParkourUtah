@@ -81,5 +81,53 @@ RSpec.describe PurchasedPlanItem, type: :model do
       expect(PurchasedPlanItem.auto_renew).to include(auto)
       expect(PurchasedPlanItem.auto_renew).not_to include(manual)
     end
+
+    it ".renewable covers assigned plans and unassigned family passes" do
+      assigned = create(:purchased_plan_item, :active, user: user, athlete: athlete, plan_item: plan_item)
+      unassigned = create(:purchased_plan_item, user: user, plan_item: plan_item)
+      family = create(:purchased_plan_item, user: user, athlete: nil, plan_item: create(:plan_item, :family))
+
+      expect(PurchasedPlanItem.renewable).to include(assigned, family)
+      expect(PurchasedPlanItem.renewable).not_to include(unassigned)
+    end
+  end
+
+  describe "family passes" do
+    let(:user) { create(:user) }
+    let(:plan_item) { create(:plan_item) }
+    let(:family_plan_item) { create(:plan_item, :family) }
+    let(:yearly_family_plan_item) { create(:plan_item, :family, billing_interval: "year") }
+
+    it "starts covering the account as soon as it is bought, with no athlete" do
+      plan = create(:purchased_plan_item, user: user, athlete: nil, plan_item: family_plan_item)
+
+      expect(plan.athlete_id).to be_nil
+      expect(plan.expires_at).to be_within(1.minute).of(plan.created_at + 1.month)
+      expect(PurchasedPlanItem.active).to include(plan)
+    end
+
+    it "bills a yearly family pass a year out, not a month" do
+      plan = create(:purchased_plan_item, user: user, athlete: nil, plan_item: yearly_family_plan_item)
+      expect(plan.expires_at).to be_within(1.minute).of(plan.created_at + 1.year)
+    end
+
+    it "leaves an expiry the renewal flow already set alone" do
+      expires_at = 3.days.from_now
+      plan = create(:purchased_plan_item, user: user, athlete: nil, plan_item: family_plan_item, expires_at: expires_at)
+      expect(plan.expires_at).to be_within(1.second).of(expires_at)
+    end
+
+    it "does not start a normal plan before it is assigned" do
+      plan = create(:purchased_plan_item, user: user, athlete: nil, plan_item: plan_item)
+      expect(plan.expires_at).to be_nil
+    end
+
+    it "is not awaiting assignment, so it raises no assign-me prompt" do
+      family = create(:purchased_plan_item, user: user, athlete: nil, plan_item: family_plan_item)
+      normal = create(:purchased_plan_item, user: user, athlete: nil, plan_item: plan_item)
+
+      expect(family.awaiting_assignment?).to be false
+      expect(normal.awaiting_assignment?).to be true
+    end
   end
 end

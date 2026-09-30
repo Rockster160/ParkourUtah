@@ -111,10 +111,17 @@ class ScheduleWorker
 
     by_users = (athletes_expiring_soon + plan_athletes_expiring_soon).uniq.group_by(&:user_id)
 
+    # A family pass covers the account rather than an athlete, so it has no
+    # athlete to join through and would never be reminded about.
+    PurchasedPlanItem.family.auto_renew.where(expires_at: range).each do |plan|
+      by_users[plan.user_id] ||= []
+    end
+
     by_users.each do |user_id, athletes|
       ApplicationMailer.notify_subscription_updating(user_id).deliver
 
-      slack_message = "Subscriptions to update in 10 days: #{athletes.map(&:full_name).join(", ")}"
+      who = athletes.any? ? athletes.map(&:full_name).join(", ") : "family plan"
+      slack_message = "Subscriptions to update in 10 days: #{who}"
       channel = Rails.env.production? ? "#purchases" : "#slack-testing"
       SlackNotifier.notify(slack_message, channel)
     end
@@ -170,7 +177,7 @@ class ScheduleWorker
 
   def monthly_plan_charges(params)
     Stripe.api_key = ENV['PKUT_STRIPE_SECRET_KEY']
-    PurchasedPlanItem.assigned.auto_renew.inactive.available.group_by(&:user).each do |user, recurring_plan|
+    PurchasedPlanItem.renewable.auto_renew.inactive.available.group_by(&:user).each do |user, recurring_plan|
       recurring_plan.group_by(&:stripe_id).each do |stripe_id, plans|
         next unless stripe_id.present?
         stripe_error = nil
