@@ -105,6 +105,12 @@ class LineItem < ApplicationRecord
     self.cost_in_pennies
   end
 
+  # The admin form's Credits box saves a blank as nil, and checkout multiplies
+  # by this — an item with no credits grants none.
+  def credits
+    super.to_i
+  end
+
   # Shop-facing "/month" or "/year" suffix. Only plan-backed items recur, and
   # the plan is what decides how often the customer is billed.
   def billing_suffix

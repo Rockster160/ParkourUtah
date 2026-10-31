@@ -85,4 +85,20 @@ RSpec.describe "Store checkout — Stripe side effects", type: :request do
     )
     expect(user.carts.purchased.count).to eq(1)
   end
+
+  it "checks out an item whose credits were left blank in the admin form" do
+    li = create(:line_item, cost_in_pennies: 2000, category: "Other", taxable: false)
+    # The form's text field saves a blank as nil, and multiplying by it raised
+    # TypeError inside the transaction — a 500 with no charge ever attempted.
+    li.update_column(:credits, nil)
+    user.cart.cart_items.create!(line_item: li, amount: 1, order_name: li.title)
+
+    post charge_path, params: { stripeToken: "tok_visa" }
+
+    expect(::Stripe::Charge).to have_received(:create).with(
+      hash_including(amount: 2000)
+    )
+    expect(user.carts.purchased.count).to eq(1)
+    expect(user.reload.credits).to eq(0)
+  end
 end
